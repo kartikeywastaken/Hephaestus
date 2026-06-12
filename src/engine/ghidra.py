@@ -6,7 +6,7 @@ Executes headless analyzers or simulated headless components for Phase 1 determi
 
 import os
 from typing import Dict, Any, Optional
-from extraction.engine.base import BaseExtractor, ExtractorError, execute_with_retry
+from src.engine.base import BaseExtractor, ExtractorError, execute_with_retry
 
 class GhidraExtractor(BaseExtractor):
     """

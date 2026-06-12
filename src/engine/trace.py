@@ -6,7 +6,7 @@ Processes x64dbg trace logs, instruction registers, and dynamic program executio
 
 import os
 from typing import Dict, Any, List, Optional
-from extraction.engine.base import BaseExtractor, ExtractorError
+from src.engine.base import BaseExtractor, ExtractorError
 
 class TraceExtractor(BaseExtractor):
     """

@@ -7,7 +7,7 @@ Coordinates r2pipe analysis dispatches, symbols and CFG extraction, and JSON out
 import os
 import time
 from typing import Dict, Any, Optional
-from extraction.engine.base import BaseExtractor, ExtractorError, execute_with_retry
+from src.engine.base import BaseExtractor, ExtractorError, execute_with_retry
 
 class Radare2Extractor(BaseExtractor):
     """

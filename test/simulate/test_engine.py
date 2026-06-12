@@ -8,11 +8,11 @@ import unittest
 import tempfile
 import json
 import os
-from extraction.engine.base import BaseExtractor, ExtractorError, execute_with_retry, ExtractorRecoverableError
-from extraction.engine.ghidra import GhidraExtractor
-from extraction.engine.radare2 import Radare2Extractor
-from extraction.engine.trace import TraceExtractor
-from extraction.engine.orchestrator import PipelineOrchestrator
+from src.engine.base import BaseExtractor, ExtractorError, execute_with_retry, ExtractorRecoverableError
+from src.engine.ghidra import GhidraExtractor
+from src.engine.radare2 import Radare2Extractor
+from src.engine.trace import TraceExtractor
+from src.engine.orchestrator import PipelineOrchestrator
 
 class MockRecoverableOperation:
     """Simulates a volatile operation for testing retry sequences."""
@@ -50,8 +50,8 @@ class TestExtractionBaseAndExtractors(unittest.TestCase):
         with self.assertRaises(ExtractorError):
             execute_with_retry(op.call_me, retries=3)
 
-    @patch('extraction.engine.ghidra.GhidraExtractor.validate_environment', return_value=True)
-    @patch('extraction.engine.ghidra.GhidraExtractor._execute_ghidra_analysis')
+    @patch('src.engine.ghidra.GhidraExtractor.validate_environment', return_value=True)
+    @patch('src.engine.ghidra.GhidraExtractor._execute_ghidra_analysis')
     def test_ghidra_extractor_validates_and_extracts(self, mock_ghidra, mock_valid):
         mock_ghidra.return_value = {
             "functions": [{"entry_point": "0x401000", "name": "main", "cfg": {"nodes": [], "edges": []}}],
@@ -67,8 +67,8 @@ class TestExtractionBaseAndExtractors(unittest.TestCase):
         self.assertIn("functions", res["data"])
         self.assertTrue(os.path.exists(out_json))
 
-    @patch('extraction.engine.radare2.Radare2Extractor.validate_environment', return_value=True)
-    @patch('extraction.engine.radare2.Radare2Extractor._execute_radare2_analysis')
+    @patch('src.engine.radare2.Radare2Extractor.validate_environment', return_value=True)
+    @patch('src.engine.radare2.Radare2Extractor._execute_radare2_analysis')
     def test_radare2_extractor_validates_and_extracts(self, mock_r2, mock_valid):
         mock_r2.return_value = {
             "functions": [],
@@ -83,7 +83,7 @@ class TestExtractionBaseAndExtractors(unittest.TestCase):
         self.assertIn("call_graph", res["data"])
         self.assertTrue(os.path.exists(out_json))
 
-    @patch('extraction.engine.trace.TraceExtractor._parse_trace_file')
+    @patch('src.engine.trace.TraceExtractor._parse_trace_file')
     def test_trace_extractor_validates_and_extracts(self, mock_trace):
         mock_trace.return_value = {
             "instructions_executed": [],
@@ -99,11 +99,11 @@ class TestExtractionBaseAndExtractors(unittest.TestCase):
         self.assertIn("loops_detected", res["data"])
         self.assertTrue(os.path.exists(out_json))
 
-    @patch('extraction.engine.ghidra.GhidraExtractor.validate_environment', return_value=True)
-    @patch('extraction.engine.ghidra.GhidraExtractor._execute_ghidra_analysis')
-    @patch('extraction.engine.radare2.Radare2Extractor.validate_environment', return_value=True)
-    @patch('extraction.engine.radare2.Radare2Extractor._execute_radare2_analysis')
-    @patch('extraction.engine.trace.TraceExtractor._parse_trace_file')
+    @patch('src.engine.ghidra.GhidraExtractor.validate_environment', return_value=True)
+    @patch('src.engine.ghidra.GhidraExtractor._execute_ghidra_analysis')
+    @patch('src.engine.radare2.Radare2Extractor.validate_environment', return_value=True)
+    @patch('src.engine.radare2.Radare2Extractor._execute_radare2_analysis')
+    @patch('src.engine.trace.TraceExtractor._parse_trace_file')
     def test_pipeline_orchestration(self, mock_trace, mock_r2, mock_r2_valid, mock_ghidra, mock_ghidra_valid):
         mock_ghidra.return_value = {"functions": [], "symbols": [], "call_graph": {}}
         mock_r2.return_value = {"functions": [], "symbols": [], "call_graph": {"nodes": [], "edges": []}}

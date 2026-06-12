@@ -6,7 +6,7 @@ Converts static tool inputs (Ghidra, IDA) and trace outputs into canonical Unifi
 
 from typing import Dict, Any, List, Optional
 import hashlib
-from extraction.ir.models import UnifiedIR
+from src.ir.models import UnifiedIR
 
 class IRAssembler:
     """

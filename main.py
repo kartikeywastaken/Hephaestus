@@ -13,13 +13,13 @@ import dotenv
 dotenv.load_dotenv()
 import logging
 from typing import Dict, Any
-from extraction.engine.orchestrator import PipelineOrchestrator
-from extraction.engine.base import BaseExtractor, ExtractorError
-from extraction.ir.assembler import IRAssembler
-from extraction.ir.validator import IRValidator
-from extraction.recovery.types import TypeRecoveryEngine
-from extraction.reconstruction.generator import SourceReconstructor
-from extraction.validation.engine import ValidationAndRepairEngine
+from src.engine.orchestrator import PipelineOrchestrator
+from src.engine.base import BaseExtractor, ExtractorError
+from src.ir.assembler import IRAssembler
+from src.ir.validator import IRValidator
+from src.recovery.types import TypeRecoveryEngine
+from src.reconstruction.generator import SourceReconstructor
+from src.validation.engine import ValidationAndRepairEngine
 
 # Setup Structured CLI Logging
 logging.basicConfig(

@@ -7,10 +7,10 @@ Aggregates, compiles, and saves outputs across multiple distinct extraction runn
 import os
 import time
 from typing import Dict, Any, List, Optional
-from extraction.engine.base import BaseExtractor, ExtractorError
-from extraction.engine.ghidra import GhidraExtractor
-from extraction.engine.radare2 import Radare2Extractor
-from extraction.engine.trace import TraceExtractor
+from src.engine.base import BaseExtractor, ExtractorError
+from src.engine.ghidra import GhidraExtractor
+from src.engine.radare2 import Radare2Extractor
+from src.engine.trace import TraceExtractor
 
 class PipelineOrchestrator:
     """

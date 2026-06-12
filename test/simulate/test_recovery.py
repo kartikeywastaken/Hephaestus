@@ -5,7 +5,7 @@ Validates struct member layouts, VTable discovery, signature arity, confidence b
 """
 
 import unittest
-from extraction.recovery.types import TypeRecoveryEngine, StructType, ClassType, EnumType
+from src.recovery.types import TypeRecoveryEngine, StructType, ClassType, EnumType
 
 class TestTypeRecoveryEngine(unittest.TestCase):
 

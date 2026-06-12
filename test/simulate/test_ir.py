@@ -6,9 +6,9 @@ Tests canonical de-serialization, confidence heuristic solvers, and schematic st
 
 import unittest
 import json
-from extraction.ir.models import UnifiedIR
-from extraction.ir.assembler import IRAssembler
-from extraction.ir.validator import IRValidator
+from src.ir.models import UnifiedIR
+from src.ir.assembler import IRAssembler
+from src.ir.validator import IRValidator
 
 class TestUnifiedEvidenceModel(unittest.TestCase):
 

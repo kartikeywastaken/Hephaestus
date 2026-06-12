@@ -7,7 +7,7 @@ Validates AST mapping, explicit uncertain variable flags, structs headers format
 import unittest
 import os
 import shutil
-from extraction.reconstruction.generator import SourceReconstructor
+from src.reconstruction.generator import SourceReconstructor
 
 class TestSourceReconstruction(unittest.TestCase):
 

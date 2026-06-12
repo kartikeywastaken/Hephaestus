@@ -7,7 +7,7 @@ Validates AST/CFG mismatch correction and JSON reports persistence.
 import unittest
 import os
 import shutil
-from extraction.validation.engine import ValidationAndRepairEngine
+from src.validation.engine import ValidationAndRepairEngine
 
 class TestValidationAndRepair(unittest.TestCase):
 
