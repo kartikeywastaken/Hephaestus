@@ -9,6 +9,7 @@ import os
 import argparse
 import json
 import logging
+from typing import Dict, Any
 from extraction.engine.orchestrator import PipelineOrchestrator
 from extraction.engine.base import BaseExtractor, ExtractorError
 from extraction.ir.assembler import IRAssembler
