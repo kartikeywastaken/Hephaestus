@@ -17,9 +17,9 @@ from src.engine.orchestrator import PipelineOrchestrator
 from src.engine.base import BaseExtractor, ExtractorError
 from src.ir.assembler import IRAssembler
 from src.ir.validator import IRValidator
-from src.recovery.types import TypeRecoveryEngine
-from src.reconstruction.generator import SourceReconstructor
-from src.validation.engine import ValidationAndRepairEngine
+from test.simulate.recovery.types import TypeRecoveryEngine
+from test.simulate.reconstruction.generator import SourceReconstructor
+from test.simulate.validation.engine import ValidationAndRepairEngine
 
 # Setup Structured CLI Logging
 logging.basicConfig(
