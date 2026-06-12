@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UnifiedIntermediateRepresentation",
+  "type": "object",
+  "properties": {
+    "schema_version": { "type": "string" },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "binary_path": { "type": "string" },
+        "sha256": { "type": "string" },
+        "architecture": { "type": "string" },
+        "schema_version": { "type": "string" }
+      },
+      "required": ["binary_path", "schema_version"]
+    },
+    "data": {
+      "type": "object",
+      "properties": {
+        "functions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "entry_point": { "type": "string" },
+              "size_bytes": { "type": "integer" },
+              "calling_convention": { "type": "string" },
+              "signature": { "type": "string" },
+              "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+              "local_variables": { "type": "array" },
+              "stack_variables": { "type": "array" },
+              "heap_variables": { "type": "array" },
+              "basic_blocks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string" },
+                    "size": { "type": "integer" },
+                    "instructions": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "memory_accesses": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "address": { "type": "string" },
+                          "type": { "type": "string", "enum": ["read", "write"] },
+                          "size_bytes": { "type": "integer" }
+                        }
+                      }
+                    },
+                    "edges": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "source": { "type": "string" },
+                          "target": { "type": "string" },
+                          "type": { "type": "string", "enum": ["unconditional", "conditional_taken", "conditional_not_taken", "call", "return"] }
+                        }
+                      }
+                    }
+                  },
+                  "required": ["id", "instructions"]
+                }
+              }
+            },
+            "required": ["name", "entry_point"]
+          }
+        },
+        "call_graph": {
+          "type": "object",
+          "properties": {
+            "nodes": { "type": "array", "items": { "type": "string" } },
+            "edges": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "caller": { "type": "string" },
+                  "callee": { "type": "string" }
+                },
+                "required": ["caller", "callee"]
+              }
+            }
+          }
+        },
+        "symbols": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "address": { "type": "string" },
+              "name": { "type": "string" },
+              "type": { "type": "string" },
+              "visibility": { "type": "string" }
+            },
+            "required": ["address", "name"]
+          }
+        },
+        "imports": { "type": "array" },
+        "exports": { "type": "array" },
+        "strings": { "type": "array" },
+        "constants": { "type": "array" },
+        "dynamic_observations": { "type": "array" }
+      },
+      "required": ["functions", "call_graph", "symbols"]
+    }
+  },
+  "required": ["schema_version", "provenance", "data"]
+}

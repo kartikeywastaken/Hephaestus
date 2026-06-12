@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CallGraphSchema",
+  "version": "1.0.0",
+  "description": "Standardized schema for storing and validating binary call graph caller-callee networks",
+  "type": "object",
+  "required": ["nodes", "edges"],
+  "properties": {
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "Unique identifiers (human-readable function name or entry point address)."
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["caller", "callee", "site_address"],
+        "properties": {
+          "caller": {
+            "type": "string",
+            "description": "Function name or entry point of the parent caller."
+          },
+          "callee": {
+            "type": "string",
+            "description": "Function name or entry point of the target subprogram invocation."
+          },
+          "site_address": {
+            "type": "string",
+            "description": "Exact virtual address corresponding to the branch/call instruction."
+          }
+        }
+      }
+    }
+  }
+}

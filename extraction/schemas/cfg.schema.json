@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ControlFlowGraphSchema",
+  "version": "1.0.0",
+  "description": "Standardized schema for storing and validating binary function Control Flow Graphs (CFG)",
+  "type": "object",
+  "required": ["nodes", "edges"],
+  "properties": {
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "size", "instructions_count"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Hexadecimal base address matching the initial instruction of the basic block."
+          },
+          "size": {
+            "type": "integer",
+            "description": "The size of the basic block in bytes."
+          },
+          "instructions_count": {
+            "type": "integer",
+            "description": "Total count of disassembled machine instructions inside this basic block."
+          }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source", "target", "type"],
+        "properties": {
+          "source": {
+            "type": "string",
+            "description": "The address of the source basic block."
+          },
+          "target": {
+            "type": "string",
+            "description": "The address of the branch target basic block."
+          },
+          "type": {
+            "type": "string",
+            "enum": ["unconditional", "conditional_taken", "conditional_fallthrough", "indirect", "call", "return"],
+            "description": "Flow semantic category of the branch."
+          }
+        }
+      }
+    }
+  }
+}
