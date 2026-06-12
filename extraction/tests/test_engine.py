@@ -10,7 +10,7 @@ import json
 import os
 from extraction.engine.base import BaseExtractor, ExtractorError, execute_with_retry, ExtractorRecoverableError
 from extraction.engine.ghidra import GhidraExtractor
-from extraction.engine.ida import IDAExtractor
+from extraction.engine.radare2 import Radare2Extractor
 from extraction.engine.trace import TraceExtractor
 from extraction.engine.orchestrator import PipelineOrchestrator
 
@@ -25,6 +25,8 @@ class MockRecoverableOperation:
         if self.attempts <= self.fail_count:
             raise ExtractorRecoverableError(f"Transient error branch {self.attempts}")
         return "success"
+
+from unittest.mock import patch
 
 class TestExtractionBaseAndExtractors(unittest.TestCase):
 
@@ -48,7 +50,14 @@ class TestExtractionBaseAndExtractors(unittest.TestCase):
         with self.assertRaises(ExtractorError):
             execute_with_retry(op.call_me, retries=3)
 
-    def test_ghidra_extractor_validates_and_extracts(self):
+    @patch('extraction.engine.ghidra.GhidraExtractor.validate_environment', return_value=True)
+    @patch('extraction.engine.ghidra.GhidraExtractor._execute_ghidra_analysis')
+    def test_ghidra_extractor_validates_and_extracts(self, mock_ghidra, mock_valid):
+        mock_ghidra.return_value = {
+            "functions": [{"entry_point": "0x401000", "name": "main", "cfg": {"nodes": [], "edges": []}}],
+            "symbols": [],
+            "call_graph": {}
+        }
         out_json = os.path.join(self.temp_dir.name, "ghidra_out.json")
         ext = GhidraExtractor(self.binary_file, out_json)
         res = ext.extract()
@@ -58,16 +67,30 @@ class TestExtractionBaseAndExtractors(unittest.TestCase):
         self.assertIn("functions", res["data"])
         self.assertTrue(os.path.exists(out_json))
 
-    def test_ida_extractor_validates_and_extracts(self):
-        out_json = os.path.join(self.temp_dir.name, "ida_out.json")
-        ext = IDAExtractor(self.binary_file, out_json)
+    @patch('extraction.engine.radare2.Radare2Extractor.validate_environment', return_value=True)
+    @patch('extraction.engine.radare2.Radare2Extractor._execute_radare2_analysis')
+    def test_radare2_extractor_validates_and_extracts(self, mock_r2, mock_valid):
+        mock_r2.return_value = {
+            "functions": [],
+            "symbols": [],
+            "call_graph": {"nodes": [], "edges": []}
+        }
+        out_json = os.path.join(self.temp_dir.name, "radare2_out.json")
+        ext = Radare2Extractor(self.binary_file, out_json)
         res = ext.extract()
 
         self.assertEqual(res["schema_version"], "1.0.0")
         self.assertIn("call_graph", res["data"])
         self.assertTrue(os.path.exists(out_json))
 
-    def test_trace_extractor_validates_and_extracts(self):
+    @patch('extraction.engine.trace.TraceExtractor._parse_trace_file')
+    def test_trace_extractor_validates_and_extracts(self, mock_trace):
+        mock_trace.return_value = {
+            "instructions_executed": [],
+            "loops_detected": [],
+            "dynamic_cfg_nodes": [],
+            "trace_provenance": "Mock trace"
+        }
         out_json = os.path.join(self.temp_dir.name, "trace_out.json")
         ext = TraceExtractor(self.binary_file, out_json)
         res = ext.extract()
@@ -76,9 +99,18 @@ class TestExtractionBaseAndExtractors(unittest.TestCase):
         self.assertIn("loops_detected", res["data"])
         self.assertTrue(os.path.exists(out_json))
 
-    def test_pipeline_orchestration(self):
+    @patch('extraction.engine.ghidra.GhidraExtractor.validate_environment', return_value=True)
+    @patch('extraction.engine.ghidra.GhidraExtractor._execute_ghidra_analysis')
+    @patch('extraction.engine.radare2.Radare2Extractor.validate_environment', return_value=True)
+    @patch('extraction.engine.radare2.Radare2Extractor._execute_radare2_analysis')
+    @patch('extraction.engine.trace.TraceExtractor._parse_trace_file')
+    def test_pipeline_orchestration(self, mock_trace, mock_r2, mock_r2_valid, mock_ghidra, mock_ghidra_valid):
+        mock_ghidra.return_value = {"functions": [], "symbols": [], "call_graph": {}}
+        mock_r2.return_value = {"functions": [], "symbols": [], "call_graph": {"nodes": [], "edges": []}}
+        mock_trace.return_value = {"instructions_executed": [], "loops_detected": [], "dynamic_cfg_nodes": []}
+        
         orch = PipelineOrchestrator(self.binary_file, self.temp_dir.name)
-        manifest = orch.execute_all(run_ghidra=True, run_ida=True, run_trace=True)
+        manifest = orch.execute_all(run_ghidra=True, run_radare2=True, run_trace=True)
 
         self.assertEqual(manifest["status"], "success")
         self.assertEqual(manifest["total_jobs_run"], 3)

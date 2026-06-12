@@ -95,8 +95,8 @@ class TestUnifiedEvidenceModel(unittest.TestCase):
             }
         }
 
-        # Build mock IDA input data
-        i_data = {
+        # Build mock Radare2 input data
+        r_data = {
             "data": {
                 "functions": [
                     {
@@ -115,7 +115,7 @@ class TestUnifiedEvidenceModel(unittest.TestCase):
         }
 
         assembler = IRAssembler("target.bin")
-        unified = assembler.assemble(g_data, i_data, None)
+        unified = assembler.assemble(g_data, r_data, None)
         payload = unified.to_dict()
 
         funcs = payload["data"]["functions"]

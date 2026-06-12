@@ -16,12 +16,12 @@ class GhidraExtractor(BaseExtractor):
 
     def validate_environment(self) -> bool:
         """
-        Determines if Ghidra install directories exist or allows manual script overlays.
+        Determines if Ghidra install directories exist.
         """
         ghidra_home = self.config.get("GHIDRA_HOME") or os.environ.get("GHIDRA_HOME")
         if not ghidra_home:
-            self.logger.warning("GHIDRA_HOME not explicitly set; operating with local dynamic overlay rules.")
-            return True
+            self.logger.error("GHIDRA_HOME environment variable or config key is not set.")
+            return False
         return os.path.exists(ghidra_home)
 
     def extract(self) -> Dict[str, Any]:
@@ -29,10 +29,9 @@ class GhidraExtractor(BaseExtractor):
         Main extraction wrapper with integrated deterministic execution error tracking.
         """
         if not self.validate_environment():
-            raise ExtractorError("Encountered invalid or corrupt Ghidra analysis path configurations.")
+            raise ExtractorError("Encountered invalid or corrupt Ghidra analysis path configurations. Please check that GHIDRA_HOME is set.")
 
         def run_extraction() -> Dict[str, Any]:
-            # Simulate high-fidelity parsing of Ghidra headers or analytical outputs
             return self._execute_ghidra_analysis()
 
         raw_data = execute_with_retry(run_extraction, retries=2)
@@ -42,66 +41,68 @@ class GhidraExtractor(BaseExtractor):
 
     def _execute_ghidra_analysis(self) -> Dict[str, Any]:
         """
-        Simulates deterministic structure discovery of targeted binaries.
-        Emulates analytical script bindings collecting function definitions, symbols and CFG.
+        Executes a real headless Ghidra analysis using analyzeHeadless.
         """
-        functions = [
-            {
-                "entry_point": "0x00401000",
-                "name": "main",
-                "size_bytes": 142,
-                "is_thunk": False,
-                "calling_convention": "__cdecl",
-                "local_variables": ["argc", "argv", "local_10"],
-                "cfg": {
-                    "nodes": [
-                        {"id": "0x00401000", "size": 32, "instructions_count": 8},
-                        {"id": "0x00401020", "size": 48, "instructions_count": 12},
-                        {"id": "0x00401050", "size": 62, "instructions_count": 15}
-                    ],
-                    "edges": [
-                        {"source": "0x00401000", "target": "0x00401020", "type": "unconditional"},
-                        {"source": "0x00401020", "target": "0x00401050", "type": "conditional_taken"},
-                        {"source": "0x00401020", "target": "0x00401000", "type": "conditional_fallthrough"}
-                    ]
-                }
-            },
-            {
-                "entry_point": "0x00401120",
-                "name": "verify_license",
-                "size_bytes": 280,
-                "is_thunk": False,
-                "calling_convention": "__stdcall",
-                "local_variables": ["license_key", "status"],
-                "cfg": {
-                    "nodes": [
-                        {"id": "0x00401120", "size": 64, "instructions_count": 10},
-                        {"id": "0x00401160", "size": 116, "instructions_count": 22},
-                        {"id": "0x004011d4", "size": 100, "instructions_count": 18}
-                    ],
-                    "edges": [
-                        {"source": "0x00401120", "target": "0x00401160", "type": "conditional_taken"},
-                        {"source": "0x00401120", "target": "0x004011d4", "type": "conditional_fallthrough"}
-                    ]
-                }
-            }
-        ]
+        import subprocess
+        import tempfile
+        import json
 
-        symbols = [
-            {"address": "0x00401000", "name": "main", "type": "function", "visibility": "global"},
-            {"address": "0x00401120", "name": "verify_license", "type": "function", "visibility": "global"},
-            {"address": "0x0045e0c0", "name": "LICENSE_KEY_CACHE", "type": "data", "visibility": "static"}
-        ]
+        ghidra_home = self.config.get("GHIDRA_HOME") or os.environ.get("GHIDRA_HOME")
+        analyze_headless = os.path.join(ghidra_home, "support", "analyzeHeadless")
+        
+        # Handle macOS/Linux vs Windows executable naming
+        if not os.path.exists(analyze_headless):
+            analyze_headless_bat = os.path.join(ghidra_home, "support", "analyzeHeadless.bat")
+            if os.path.exists(analyze_headless_bat):
+                analyze_headless = analyze_headless_bat
+            else:
+                raise ExtractorError(f"analyzeHeadless executable not found in {ghidra_home}/support/")
 
-        call_graph = {
-            "nodes": ["main", "verify_license"],
-            "edges": [
-                {"caller": "main", "callee": "verify_license", "site_address": "0x0040101a"}
+        # Use temporary project directory within workspace
+        project_dir = os.path.join(os.path.dirname(self.output_path), "ghidra_temp_proj")
+        os.makedirs(project_dir, exist_ok=True)
+        project_name = "temp_ghidra_proj"
+        
+        script_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "scripts"))
+        script_name = "GhidraExtractorScript.java"
+        
+        # Temp file to read the script's output JSON
+        with tempfile.NamedTemporaryFile(suffix=".json", delete=False) as tf:
+            temp_json_path = tf.name
+
+        try:
+            cmd = [
+                analyze_headless,
+                project_dir,
+                project_name,
+                "-import", os.path.abspath(self.binary_path),
+                "-scriptPath", script_dir,
+                "-postScript", script_name, temp_json_path,
+                "-deleteProject",
+                "-overwrite"
             ]
-        }
 
-        return {
-            "functions": functions,
-            "symbols": symbols,
-            "call_graph": call_graph
-        }
+            self.logger.info(f"Executing Ghidra subprocess: {' '.join(cmd)}")
+            result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+            if result.returncode != 0:
+                raise ExtractorError(f"Ghidra execution failed (code {result.returncode}). Stderr: {result.stderr}")
+
+            if not os.path.exists(temp_json_path) or os.path.getsize(temp_json_path) == 0:
+                raise ExtractorError("Ghidra analysis finished but output JSON was not written or is empty.")
+
+            with open(temp_json_path, "r", encoding="utf-8") as f:
+                raw_data = json.load(f)
+
+            # Extract internal data structure if present
+            if "data" in raw_data:
+                return raw_data["data"]
+            return raw_data
+
+        finally:
+            # Clean up the temporary project directory and JSON file
+            if os.path.exists(project_dir):
+                import shutil
+                shutil.rmtree(project_dir, ignore_errors=True)
+            if os.path.exists(temp_json_path):
+                os.unlink(temp_json_path)

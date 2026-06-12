@@ -8,6 +8,9 @@ import sys
 import os
 import argparse
 import json
+import dotenv
+# Load environment variables from .env file if present
+dotenv.load_dotenv()
 import logging
 from typing import Dict, Any
 from extraction.engine.orchestrator import PipelineOrchestrator
@@ -50,9 +53,11 @@ def parse_args():
         help="Execute headless Ghidra disassembly and CFG generation scripts."
     )
     parser.add_argument(
-        "--ida",
+        "--radare2",
+        "--r2",
         action="store_true",
-        help="Execute IDAPython batches for structural code layout recovery."
+        dest="radare2",
+        help="Execute Radare2 analysis via r2pipe for structural code layout recovery."
     )
     parser.add_argument(
         "--trace",
@@ -91,11 +96,11 @@ def load_unified_ir_data(out_dir: str) -> Dict[str, Any]:
             with open(binary_path, "wb") as f:
                 f.write(b"\x7fELF\x02\x01\x01\x00_placeholder_bin")
         orchestrator = PipelineOrchestrator(binary_path, out_dir, {})
-        manifest = orchestrator.execute_all(run_ghidra=True, run_ida=True, run_trace=True)
+        manifest = orchestrator.execute_all(run_ghidra=True, run_radare2=True, run_trace=True)
         assembler = IRAssembler(binary_path)
         unified_ir = assembler.assemble(
             manifest["jobs"].get("ghidra"),
-            manifest["jobs"].get("ida"),
+            manifest["jobs"].get("radare2"),
             manifest["jobs"].get("trace")
         )
         ir_payload = unified_ir.to_dict()
@@ -506,9 +511,9 @@ def main():
     logger.info(f"Output directory destination: {args.out_dir}")
 
     # If no specific extractor is selected, default to all of them
-    run_all = not (args.ghidra or args.ida or args.trace)
+    run_all = not (args.ghidra or args.radare2 or args.trace)
     ghidra_flag = args.ghidra or run_all
-    ida_flag = args.ida or run_all
+    radare2_flag = args.radare2 or run_all
     trace_flag = args.trace or run_all
 
     orchestrator = PipelineOrchestrator(binary_path, args.out_dir, config_dict)
@@ -516,7 +521,7 @@ def main():
     try:
         manifest = orchestrator.execute_all(
             run_ghidra=ghidra_flag,
-            run_ida=ida_flag,
+            run_radare2=radare2_flag,
             run_trace=trace_flag
         )
         
@@ -529,10 +534,10 @@ def main():
             
             # Extract raw results from jobs run
             ghidra_raw = manifest["jobs"].get("ghidra")
-            ida_raw = manifest["jobs"].get("ida")
+            radare2_raw = manifest["jobs"].get("radare2")
             trace_raw = manifest["jobs"].get("trace")
 
-            unified_ir = assembler.assemble(ghidra_raw, ida_raw, trace_raw)
+            unified_ir = assembler.assemble(ghidra_raw, radare2_raw, trace_raw)
             ir_payload = unified_ir.to_dict()
 
             # Self-validate generated IR before export

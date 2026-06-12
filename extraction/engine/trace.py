@@ -17,8 +17,7 @@ class TraceExtractor(BaseExtractor):
     def validate_environment(self) -> bool:
         """Verifies access to trace file and correct parsing logic."""
         if not self.binary_path or not os.path.exists(self.binary_path):
-            self.logger.warning("Referenced dynamic trace log path cannot be physically resolved relative to local directory.")
-            return True
+            raise ExtractorError(f"Dynamic trace file or binary target does not exist on disk: {self.binary_path}")
         return True
 
     def extract(self) -> Dict[str, Any]:
@@ -37,31 +36,81 @@ class TraceExtractor(BaseExtractor):
     def _parse_trace_file(self) -> Dict[str, Any]:
         """
         Parses trace files to compile sequential execute lists, branches, and register scopes.
+        Supports standard text logs and detects loops via cycle analysis.
         """
-        instructions = [
-            {"eip": "0x00401000", "assembly": "push ebp", "registers": {"ESP": "0x0019ff4c", "EBP": "0x0019ff80"}},
-            {"eip": "0x00401001", "assembly": "mov ebp, esp", "registers": {"ESP": "0x0019ff48", "EBP": "0x0019ff48"}},
-            {"eip": "0x00401003", "assembly": "sub esp, 0x10", "registers": {"ESP": "0x0019ff38", "EBP": "0x0019ff48"}},
-            {"eip": "0x0040101a", "assembly": "call 0x00401120", "registers": {"ESP": "0x0019ff34", "EBP": "0x0019ff48"}}
-        ]
+        import json
 
-        loops_detected = [
-            {
-                "loop_header": "0x00401020",
-                "loop_latches": ["0x0040103e"],
-                "iteration_count": 5
-            }
-        ]
+        # Check if target is a binary executable or a text trace log
+        with open(self.binary_path, "rb") as f:
+            header = f.read(4)
 
-        dynamic_cfg_nodes = [
-            {"id": "0x00401000", "execution_count": 1},
-            {"id": "0x00401020", "execution_count": 5},
-            {"id": "0x00401120", "execution_count": 1}
-        ]
+        is_binary = any(header.startswith(sig) for sig in [b"\x7fELF", b"MZ", b"\xca\xfe\xba\xbe", b"\xfe\xed\xfa\xce", b"\xfe\xed\xfa\xcf"])
+
+        if is_binary:
+            raise ExtractorError(
+                "Dynamic binary instruction tracing cannot be run directly on raw executables "
+                "without debugger privileges. Please provide a compiled x64dbg/gdb trace log file "
+                "or configure a tracer in the environment."
+            )
+
+        instructions = []
+        loops_detected = []
+        dynamic_cfg_nodes = {}
+
+        with open(self.binary_path, "r", encoding="utf-8", errors="ignore") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#") or line.startswith(";"):
+                    continue
+
+                # Parse lines like "address | instruction | registers" or "address: instruction"
+                parts = [p.strip() for p in line.split("|")]
+                if len(parts) >= 2:
+                    eip = parts[0]
+                    assembly = parts[1]
+                    registers = {}
+                    if len(parts) >= 3:
+                        reg_parts = parts[2].split(",")
+                        for rp in reg_parts:
+                            if "=" in rp:
+                                rk, rv = rp.split("=", 1)
+                                registers[rk.strip()] = rv.strip()
+                else:
+                    parts = line.split(":", 1)
+                    if len(parts) == 2:
+                        eip = parts[0].strip()
+                        assembly = parts[1].strip()
+                        registers = {}
+                    else:
+                        continue
+
+                inst_entry = {"eip": eip, "assembly": assembly, "registers": registers}
+                instructions.append(inst_entry)
+                dynamic_cfg_nodes[eip] = dynamic_cfg_nodes.get(eip, 0) + 1
+
+        # Heuristic cycle detector for loop detection
+        visited_addresses = [inst["eip"] for inst in instructions]
+        for i, addr in enumerate(visited_addresses):
+            if visited_addresses.count(addr) > 1:
+                try:
+                    next_idx = visited_addresses.index(addr, i + 1)
+                    loop_body = visited_addresses[i:next_idx]
+                    if loop_body:
+                        loop_entry = {
+                            "loop_header": addr,
+                            "loop_latches": [visited_addresses[next_idx - 1]],
+                            "iteration_count": visited_addresses.count(addr)
+                        }
+                        if loop_entry not in loops_detected:
+                            loops_detected.append(loop_entry)
+                except ValueError:
+                    pass
+
+        cfg_nodes_list = [{"id": eip, "execution_count": count} for eip, count in dynamic_cfg_nodes.items()]
 
         return {
             "instructions_executed": instructions,
             "loops_detected": loops_detected,
-            "dynamic_cfg_nodes": dynamic_cfg_nodes,
-            "trace_provenance": "x64dbg RunTrace Log V1"
+            "dynamic_cfg_nodes": cfg_nodes_list,
+            "trace_provenance": f"Real Trace Log Parser: {os.path.basename(self.binary_path)}"
         }

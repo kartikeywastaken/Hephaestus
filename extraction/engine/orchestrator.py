@@ -9,7 +9,7 @@ import time
 from typing import Dict, Any, List, Optional
 from extraction.engine.base import BaseExtractor, ExtractorError
 from extraction.engine.ghidra import GhidraExtractor
-from extraction.engine.ida import IDAExtractor
+from extraction.engine.radare2 import Radare2Extractor
 from extraction.engine.trace import TraceExtractor
 
 class PipelineOrchestrator:
@@ -24,7 +24,7 @@ class PipelineOrchestrator:
         self.config = config or {}
         os.makedirs(output_directory, exist_ok=True)
 
-    def execute_all(self, run_ghidra: bool = True, run_ida: bool = True, run_trace: bool = True) -> Dict[str, Any]:
+    def execute_all(self, run_ghidra: bool = True, run_radare2: bool = True, run_trace: bool = True) -> Dict[str, Any]:
         """
         Executes active extraction components and forms a consolidated system manifest.
         """
@@ -39,13 +39,13 @@ class PipelineOrchestrator:
             except Exception as e:
                 errors.append(f"Ghidra extraction pipeline failed: {e}")
 
-        if run_ida:
-            ida_out_path = os.path.join(self.output_directory, "ida_extraction.json")
+        if run_radare2:
+            radare2_out_path = os.path.join(self.output_directory, "radare2_extraction.json")
             try:
-                ida_extractor = IDAExtractor(self.binary_path, ida_out_path, self.config)
-                results["ida"] = ida_extractor.extract()
+                radare2_extractor = Radare2Extractor(self.binary_path, radare2_out_path, self.config)
+                results["radare2"] = radare2_extractor.extract()
             except Exception as e:
-                errors.append(f"IDA extraction pipeline failed: {e}")
+                errors.append(f"Radare2 extraction pipeline failed: {e}")
 
         if run_trace:
             trace_out_path = os.path.join(self.output_directory, "trace_extraction.json")

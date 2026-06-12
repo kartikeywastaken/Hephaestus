@@ -22,7 +22,7 @@ class IRAssembler:
     def assemble(
         self,
         ghidra_data: Optional[Dict[str, Any]] = None,
-        ida_data: Optional[Dict[str, Any]] = None,
+        radare2_data: Optional[Dict[str, Any]] = None,
         trace_data: Optional[Dict[str, Any]] = None
     ) -> UnifiedIR:
         """
@@ -41,7 +41,7 @@ class IRAssembler:
         # Extraction payload maps
         # Extract underlying data maps from envelopes if present
         g_payload = ghidra_data.get("data", {}) if ghidra_data and "data" in ghidra_data else (ghidra_data or {})
-        i_payload = ida_data.get("data", {}) if ida_data and "data" in ida_data else (ida_data or {})
+        r_payload = radare2_data.get("data", {}) if radare2_data and "data" in radare2_data else (radare2_data or {})
         t_payload = trace_data.get("data", {}) if trace_data and "data" in trace_data else (trace_data or {})
 
         # 1. Merge all functions
@@ -64,22 +64,22 @@ class IRAssembler:
                 "edges": func.get("cfg", {}).get("edges", [])
             }
 
-        # Parse IDA static functions & deconflict
-        for func in i_payload.get("functions", []):
+        # Parse Radare2 static functions & deconflict
+        for func in r_payload.get("functions", []):
             entry = func.get("entry_point")
             if not entry:
                 continue
             if entry in func_map:
                 # Merge logic
-                func_map[entry]["provenance"].append("ida")
-                # Prefer IDA function size/name if larger
+                func_map[entry]["provenance"].append("radare2")
+                # Prefer Radare2 function size/name if larger
                 if func.get("size_bytes", 0) > func_map[entry]["size_bytes"]:
                     func_map[entry]["size_bytes"] = func.get("size_bytes", 0)
                 # Union of local variables
                 for var in func.get("local_variables", []):
                     if var not in func_map[entry]["local_variables"]:
                         func_map[entry]["local_variables"].append(var)
-                # Merge basic blocks if IDA returns more refined lists
+                # Merge basic blocks if Radare2 returns more refined lists
                 if len(func.get("cfg", {}).get("nodes", [])) > len(func_map[entry]["basic_blocks"]):
                     func_map[entry]["basic_blocks"] = func.get("cfg", {}).get("nodes", [])
                     func_map[entry]["edges"] = func.get("cfg", {}).get("edges", [])
@@ -90,7 +90,7 @@ class IRAssembler:
                     "size_bytes": func.get("size_bytes", 0),
                     "calling_convention": func.get("calling_convention", "unknown"),
                     "signature": f"{func.get('calling_convention', 'void')} {func.get('name', 'func')}()",
-                    "provenance": ["ida"],
+                    "provenance": ["radare2"],
                     "local_variables": list(func.get("local_variables", [])),
                     "basic_blocks": func.get("cfg", {}).get("nodes", []),
                     "edges": func.get("cfg", {}).get("edges", [])
@@ -126,9 +126,9 @@ class IRAssembler:
             # - Found by only one static tool: 0.8 confidence
             # - Found only dynamically: 0.5 confidence
             prov_set = set(fdata["provenance"])
-            if "ghidra" in prov_set and "ida" in prov_set:
+            if "ghidra" in prov_set and "radare2" in prov_set:
                 conf = 1.0
-            elif "ghidra" in prov_set or "ida" in prov_set:
+            elif "ghidra" in prov_set or "radare2" in prov_set:
                 conf = 0.8
             else:
                 conf = 0.5
@@ -201,11 +201,11 @@ class IRAssembler:
         for e in g_cg.get("edges", []):
             cg_edges.append({"caller": e.get("caller"), "callee": e.get("callee")})
 
-        # IDA Call Graph
-        i_cg = i_payload.get("call_graph", {})
-        for n in i_cg.get("nodes", []):
+        # Radare2 Call Graph
+        r_cg = r_payload.get("call_graph", {})
+        for n in r_cg.get("nodes", []):
             cg_nodes.add(n)
-        for e in i_cg.get("edges", []):
+        for e in r_cg.get("edges", []):
             edge_struct = {"caller": e.get("caller"), "callee": e.get("callee")}
             if edge_struct not in cg_edges:
                 cg_edges.append(edge_struct)
@@ -221,7 +221,7 @@ class IRAssembler:
                 ir.add_symbol(addr, sym.get("name"), sym.get("type"), sym.get("visibility", "global"))
                 sym_added.add(addr)
 
-        for sym in i_payload.get("symbols", []):
+        for sym in r_payload.get("symbols", []):
             addr = sym.get("address")
             if addr and addr not in sym_added:
                 ir.add_symbol(addr, sym.get("name"), sym.get("type"), sym.get("visibility", "global"))
