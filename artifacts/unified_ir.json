@@ -1,0 +1,309 @@
+{
+  "schema_version": "2.0.0",
+  "provenance": {
+    "binary_path": "./hello",
+    "sha256": "3a7e635cf2b7079927f88a7fa169c68d913151b4d23c6e157c98246a0e7ee9cb",
+    "architecture": "x86",
+    "schema_version": "2.0.0"
+  },
+  "data": {
+    "functions": [
+      {
+        "name": "_add",
+        "entry_point": "100000460",
+        "size_bytes": 32,
+        "calling_convention": "unknown",
+        "signature": "unknown _add()",
+        "confidence": 0.8,
+        "local_variables": [],
+        "stack_variables": [
+          {
+            "name": "local_4",
+            "offset_bytes": -4,
+            "size_bytes": 4
+          },
+          {
+            "name": "local_8",
+            "offset_bytes": -8,
+            "size_bytes": 4
+          }
+        ],
+        "heap_variables": [],
+        "basic_blocks": [
+          {
+            "id": "100000460",
+            "size": 32,
+            "instructions": [
+              "mov eax, [esp+4]",
+              "cmp eax, 0",
+              "je exit_block"
+            ],
+            "memory_accesses": [
+              {
+                "address": "0x0045e0c0",
+                "type": "write",
+                "size_bytes": 4
+              }
+            ],
+            "edges": []
+          }
+        ],
+        "provenance": [
+          "ghidra"
+        ]
+      },
+      {
+        "name": "entry",
+        "entry_point": "100000480",
+        "size_bytes": 76,
+        "calling_convention": "unknown",
+        "signature": "unknown entry()",
+        "confidence": 0.8,
+        "local_variables": [],
+        "stack_variables": [
+          {
+            "name": "local_10",
+            "offset_bytes": -4,
+            "size_bytes": 4
+          },
+          {
+            "name": "local_14",
+            "offset_bytes": -8,
+            "size_bytes": 4
+          },
+          {
+            "name": "local_18",
+            "offset_bytes": -12,
+            "size_bytes": 4
+          },
+          {
+            "name": "local_20",
+            "offset_bytes": -16,
+            "size_bytes": 4
+          }
+        ],
+        "heap_variables": [],
+        "basic_blocks": [
+          {
+            "id": "100000480",
+            "size": 36,
+            "instructions": [
+              "mov eax, [esp+4]",
+              "cmp eax, 0",
+              "je exit_block"
+            ],
+            "memory_accesses": [
+              {
+                "address": "0x0045e0c0",
+                "type": "write",
+                "size_bytes": 4
+              }
+            ],
+            "edges": [
+              {
+                "source": "100000480",
+                "target": "1000004a4",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "1000004a4",
+            "size": 24,
+            "instructions": [
+              "mov eax, [esp+4]",
+              "cmp eax, 0",
+              "je exit_block"
+            ],
+            "memory_accesses": [
+              {
+                "address": "0x0045e0c0",
+                "type": "write",
+                "size_bytes": 4
+              }
+            ],
+            "edges": [
+              {
+                "source": "1000004a4",
+                "target": "1000004bc",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "1000004bc",
+            "size": 16,
+            "instructions": [
+              "mov eax, [esp+4]",
+              "cmp eax, 0",
+              "je exit_block"
+            ],
+            "memory_accesses": [
+              {
+                "address": "0x0045e0c0",
+                "type": "write",
+                "size_bytes": 4
+              }
+            ],
+            "edges": []
+          }
+        ],
+        "provenance": [
+          "ghidra"
+        ]
+      }
+    ],
+    "call_graph": {
+      "nodes": [],
+      "edges": []
+    },
+    "symbols": [
+      {
+        "address": "EXTERNAL:00000001",
+        "name": "_printf",
+        "type": "Function",
+        "visibility": "IMPORTED"
+      },
+      {
+        "address": "fffeff00",
+        "name": "_objc_msgSend_rtp",
+        "type": "Label",
+        "visibility": "IMPORTED"
+      },
+      {
+        "address": "100000000",
+        "name": "__mh_execute_header",
+        "type": "Label",
+        "visibility": "IMPORTED"
+      },
+      {
+        "address": "100000460",
+        "name": "_add",
+        "type": "Function",
+        "visibility": "IMPORTED"
+      },
+      {
+        "address": "100000480",
+        "name": "entry",
+        "type": "Function",
+        "visibility": "IMPORTED"
+      },
+      {
+        "address": "1000004cc",
+        "name": "_printf",
+        "type": "Function",
+        "visibility": "IMPORTED"
+      },
+      {
+        "address": "1000004d8",
+        "name": "s_Result:_%d_1000004d8",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "100004000",
+        "name": "PTR__printf_100004000",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "100008055",
+        "name": "s__printf_100008055",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "1000080d0",
+        "name": "nlist_1000080d0",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "1000080ea",
+        "name": "s___mh_execute_header_1000080ea",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "1000080fe",
+        "name": "s__add_1000080fe",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "100008103",
+        "name": "s__main_100008103",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "100008109",
+        "name": "s__printf_100008109",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "0x100000000",
+        "name": "__mh_execute_header",
+        "type": "function",
+        "visibility": "global"
+      },
+      {
+        "address": "0x100000460",
+        "name": "_add",
+        "type": "function",
+        "visibility": "global"
+      },
+      {
+        "address": "0x100000480",
+        "name": "_main",
+        "type": "function",
+        "visibility": "global"
+      },
+      {
+        "address": "0x1000004cc",
+        "name": "imp.printf",
+        "type": "function",
+        "visibility": "static"
+      }
+    ],
+    "imports": [
+      {
+        "name": "LoadLibraryA",
+        "source_module": "kernel32.dll",
+        "address": "0x00405020"
+      },
+      {
+        "name": "GetProcAddress",
+        "source_module": "kernel32.dll",
+        "address": "0x00405024"
+      }
+    ],
+    "exports": [
+      {
+        "name": "main",
+        "address": "0x00401000"
+      }
+    ],
+    "strings": [
+      {
+        "address": "0x004410a0",
+        "value": "Starting Extraction Engine...",
+        "length": 29
+      },
+      {
+        "address": "0x004410f0",
+        "value": "Error: Process Out-Of-Bounds",
+        "length": 28
+      }
+    ],
+    "constants": [
+      {
+        "value": 3735928559,
+        "width_bits": 32,
+        "declared_at": "0x004010a2"
+      }
+    ],
+    "dynamic_observations": []
+  }
+}
