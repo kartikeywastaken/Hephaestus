@@ -81,9 +81,9 @@ public class GhidraExtractorScript extends GhidraScript {
             while (blockIter.hasNext()) {
                 CodeBlock block = blockIter.next();
                 Map<String, Object> node = new HashMap<>();
-                node.add("id", block.getMinAddress().toString());
-                node.add("size", block.getNumAddresses());
-                node.add("instructions_count", (block.getNumAddresses() / 4) + 1); // rough static estimation
+                node.put("id", block.getMinAddress().toString());
+                node.put("size", block.getNumAddresses());
+                node.put("instructions_count", (block.getNumAddresses() / 4) + 1); // rough static estimation
                 cfgNodes.add(node);
 
                 CodeBlockReferenceIterator destIter = block.getDestinations(monitor);
@@ -92,9 +92,9 @@ public class GhidraExtractorScript extends GhidraScript {
                     CodeBlock destBlock = ref.getDestinationBlock();
                     if (func.getBody().contains(destBlock.getMinAddress())) {
                         Map<String, Object> edge = new HashMap<>();
-                        edge.add("source", block.getMinAddress().toString());
-                        edge.add("target", destBlock.getMinAddress().toString());
-                        edge.add("type", ref.getFlowType().isConditional() ? "conditional_taken" : "unconditional");
+                        edge.put("source", block.getMinAddress().toString());
+                        edge.put("target", destBlock.getMinAddress().toString());
+                        edge.put("type", ref.getFlowType().isConditional() ? "conditional_taken" : "unconditional");
                         cfgEdges.add(edge);
                     }
                 }

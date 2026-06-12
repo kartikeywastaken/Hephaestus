@@ -82,8 +82,14 @@ class GhidraExtractor(BaseExtractor):
                 "-overwrite"
             ]
 
+            env = os.environ.copy()
+            java_home = self.config.get("JAVA_HOME") or os.environ.get("JAVA_HOME")
+            if java_home:
+                env["JAVA_HOME"] = java_home
+                env["PATH"] = os.path.join(java_home, "bin") + os.pathsep + env.get("PATH", "")
+
             self.logger.info(f"Executing Ghidra subprocess: {' '.join(cmd)}")
-            result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, env=env)
 
             if result.returncode != 0:
                 raise ExtractorError(f"Ghidra execution failed (code {result.returncode}). Stderr: {result.stderr}")
