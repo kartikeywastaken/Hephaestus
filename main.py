@@ -441,29 +441,46 @@ def handle_analyze_cfg(out_dir: str):
     
     # Import the structuring functions
     from src.ir.structuring.analysis import analyze_function
+    from src.ir.structuring.builder import structure_function
     
     funcs = ir_payload.get("data", {}).get("functions", [])
-    reports = []
+    analysis_reports = []
+    structuring_reports = []
     
     for func in funcs:
+        # Phase 3A
         report = analyze_function(func, logger)
-        reports.append(report)
+        analysis_reports.append(report)
         
-    # Save the output
+        # Phase 3B
+        structured_tree = structure_function(func, logger)
+        structuring_reports.append({
+            "function_name": func.get("name", "unknown"),
+            "structured_body": structured_tree.to_dict()
+        })
+        
+    # Save Phase 3A output
     structuring_path = os.path.join(out_dir, "structuring_analysis.json")
     os.makedirs(out_dir, exist_ok=True)
     with open(structuring_path, 'w', encoding='utf-8') as f:
-        json.dump(reports, f, indent=2, ensure_ascii=False)
+        json.dump(analysis_reports, f, indent=2, ensure_ascii=False)
         
     logger.info(f"[+] Output CFG structuring analysis reports committed: {structuring_path}")
     
+    # Save Phase 3B output
+    regions_path = os.path.join(out_dir, "structuring_regions.json")
+    with open(regions_path, 'w', encoding='utf-8') as f:
+        json.dump(structuring_reports, f, indent=2, ensure_ascii=False)
+        
+    logger.info(f"[+] Output structured regions tree committed: {regions_path}")
+    
     # Print a summary
     print("\n============================================================")
-    print("                 PHASE 3A: CFG ANALYSIS SUMMARY")
+    print("                 PHASE 3: CFG STRUCTURAL ANALYSIS")
     print("============================================================")
-    print(f"Total analyzed functions: {len(reports)}")
+    print(f"Total analyzed functions: {len(analysis_reports)}")
     print("------------------------------------------------------------")
-    for r in reports:
+    for r, sr in zip(analysis_reports, structuring_reports):
         print(f"Function: {r['function_name']} (Entry: {r['entry_node']})")
         print(f"  Nodes: {len(r['nodes'])} | Edges: {len(r['edges'])}")
         print(f"  Exits: {', '.join(r['exit_nodes'])}")
@@ -471,6 +488,7 @@ def handle_analyze_cfg(out_dir: str):
         print(f"  Back-edges: {len(back_edges)}")
         for be in back_edges:
             print(f"    - {be['source']} -> {be['destination']} (Header: {be['candidate_loop_header']}, Latch: {be['candidate_latch']})")
+        print(f"  Structured root node type: {sr['structured_body']['type']}")
     print("============================================================")
     sys.exit(0)
 

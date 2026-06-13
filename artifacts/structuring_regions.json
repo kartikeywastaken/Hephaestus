@@ -1,0 +1,43 @@
+[
+  {
+    "function_name": "printf",
+    "structured_body": {
+      "type": "block",
+      "id": "0x1000004b8"
+    }
+  },
+  {
+    "function_name": "_main",
+    "structured_body": {
+      "type": "sequence",
+      "children": [
+        {
+          "type": "if_else",
+          "condition_block": "0x100000460",
+          "then_branch": {
+            "type": "sequence",
+            "children": [
+              {
+                "type": "block",
+                "id": "0x100000484"
+              },
+              {
+                "type": "block",
+                "id": "0x100000488"
+              }
+            ]
+          },
+          "else_branch": {
+            "type": "block",
+            "id": "0x100000498"
+          },
+          "merge_block": "0x1000004a8"
+        },
+        {
+          "type": "block",
+          "id": "0x1000004a8"
+        }
+      ]
+    }
+  }
+]
