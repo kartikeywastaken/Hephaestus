@@ -1,13 +1,13 @@
 {
-  "orchestrated_at": "2026-06-13T12:02:42-07:00",
-  "binary_profiled": "./test1",
+  "orchestrated_at": "2026-06-13T12:13:05-07:00",
+  "binary_profiled": "./1",
   "jobs": {
     "ghidra": {
       "schema_version": "1.0.0",
       "provenance": {
         "tool_name": "Ghidra Headless Analyzer",
-        "timestamp": "2026-06-13T12:02:42-07:00",
-        "binary_path": "./test1",
+        "timestamp": "2026-06-13T12:13:05-07:00",
+        "binary_path": "./1",
         "config": {}
       },
       "data": {
@@ -17,85 +17,123 @@
           "format": "Mac OS X Mach-O",
           "language_id": "AARCH64:LE:64:AppleSilicon",
           "compiler": "unknown",
-          "timestamp": "Sat Jun 13 12:02:41 IST 2026"
+          "timestamp": "Sat Jun 13 12:13:04 IST 2026"
         },
         "functions": [
           {
-            "size_bytes": 88,
+            "size_bytes": 96,
             "calling_convention": "unknown",
             "cfg": {
               "nodes": [
                 {
-                  "size": 36,
-                  "instructions_count": 10,
+                  "size": 28,
+                  "instructions_count": 8,
                   "id": "100000460"
                 },
                 {
                   "size": 4,
                   "instructions_count": 2,
-                  "id": "100000484"
+                  "id": "10000047c"
                 },
                 {
                   "size": 12,
                   "instructions_count": 4,
-                  "id": "100000488"
+                  "id": "100000480"
                 },
                 {
-                  "size": 4,
-                  "instructions_count": 2,
-                  "id": "100000494"
-                },
-                {
-                  "size": 12,
-                  "instructions_count": 4,
-                  "id": "100000498"
-                },
-                {
-                  "size": 4,
-                  "instructions_count": 2,
-                  "id": "1000004a4"
+                  "size": 20,
+                  "instructions_count": 6,
+                  "id": "10000048c"
                 },
                 {
                   "size": 16,
                   "instructions_count": 5,
-                  "id": "1000004a8"
+                  "id": "1000004a0"
+                },
+                {
+                  "size": 16,
+                  "instructions_count": 5,
+                  "id": "1000004b0"
                 }
               ],
               "edges": [
                 {
                   "source": "100000460",
                   "type": "conditional_taken",
-                  "target": "100000498"
+                  "target": "10000048c"
                 },
                 {
                   "source": "100000460",
                   "type": "unconditional",
-                  "target": "100000484"
+                  "target": "10000047c"
                 },
                 {
-                  "source": "100000484",
+                  "source": "10000047c",
                   "type": "unconditional",
-                  "target": "100000488"
+                  "target": "100000480"
                 },
                 {
-                  "source": "100000488",
+                  "source": "100000480",
                   "type": "unconditional",
-                  "target": "100000494"
+                  "target": "1000004b0"
                 },
                 {
-                  "source": "100000494",
+                  "source": "10000048c",
                   "type": "unconditional",
-                  "target": "1000004a8"
+                  "target": "100000460"
                 },
                 {
-                  "source": "100000498",
+                  "source": "10000048c",
                   "type": "unconditional",
-                  "target": "1000004a4"
+                  "target": "1000004a0"
                 },
                 {
-                  "source": "1000004a4",
+                  "source": "1000004a0",
                   "type": "unconditional",
-                  "target": "1000004a8"
+                  "target": "1000004b0"
+                }
+              ]
+            },
+            "name": "_fact",
+            "local_variables": [
+              "local_10",
+              "local_14",
+              "local_18",
+              "local_1c"
+            ],
+            "entry_point": "100000460"
+          },
+          {
+            "size_bytes": 72,
+            "calling_convention": "unknown",
+            "cfg": {
+              "nodes": [
+                {
+                  "size": 32,
+                  "instructions_count": 9,
+                  "id": "1000004c0"
+                },
+                {
+                  "size": 24,
+                  "instructions_count": 7,
+                  "id": "1000004e0"
+                },
+                {
+                  "size": 16,
+                  "instructions_count": 5,
+                  "id": "1000004f8"
+                }
+              ],
+              "edges": [
+                {
+                  "source": "1000004c0",
+                  "type": "unconditional",
+                  "target": "1000004e0"
+                },
+                {
+                  "source": "1000004e0",
+                  "type": "unconditional",
+                  "target": "1000004f8"
                 }
               ]
             },
@@ -103,9 +141,10 @@
             "local_variables": [
               "local_10",
               "local_14",
-              "local_18"
+              "local_18",
+              "local_20"
             ],
-            "entry_point": "100000460"
+            "entry_point": "1000004c0"
           }
         ],
         "symbols": [
@@ -136,49 +175,49 @@
           {
             "address": "100000460",
             "visibility": "IMPORTED",
+            "name": "_fact",
+            "type": "Function"
+          },
+          {
+            "address": "100000480",
+            "visibility": "DEFAULT",
+            "name": "LAB_100000480",
+            "type": "Label"
+          },
+          {
+            "address": "10000048c",
+            "visibility": "DEFAULT",
+            "name": "LAB_10000048c",
+            "type": "Label"
+          },
+          {
+            "address": "1000004b0",
+            "visibility": "DEFAULT",
+            "name": "LAB_1000004b0",
+            "type": "Label"
+          },
+          {
+            "address": "1000004c0",
+            "visibility": "IMPORTED",
             "name": "entry",
             "type": "Function"
           },
           {
-            "address": "100000460",
+            "address": "1000004c0",
             "visibility": "IMPORTED",
             "name": "_main",
             "type": "Label"
           },
           {
-            "address": "100000488",
-            "visibility": "DEFAULT",
-            "name": "LAB_100000488",
-            "type": "Label"
-          },
-          {
-            "address": "100000498",
-            "visibility": "DEFAULT",
-            "name": "LAB_100000498",
-            "type": "Label"
-          },
-          {
-            "address": "1000004a8",
-            "visibility": "DEFAULT",
-            "name": "LAB_1000004a8",
-            "type": "Label"
-          },
-          {
-            "address": "1000004b8",
+            "address": "100000508",
             "visibility": "IMPORTED",
             "name": "_printf",
             "type": "Function"
           },
           {
-            "address": "1000004c4",
+            "address": "100000514",
             "visibility": "DEFAULT",
-            "name": "s_large_1000004c4",
-            "type": "Label"
-          },
-          {
-            "address": "1000004cb",
-            "visibility": "DEFAULT",
-            "name": "s_small_1000004cb",
+            "name": "s_%d_100000514",
             "type": "Label"
           },
           {
@@ -194,27 +233,33 @@
             "type": "Label"
           },
           {
-            "address": "1000080b8",
+            "address": "1000080d8",
             "visibility": "DEFAULT",
-            "name": "nlist_1000080b8",
+            "name": "nlist_1000080d8",
             "type": "Label"
           },
           {
-            "address": "1000080d2",
+            "address": "1000080f2",
             "visibility": "DEFAULT",
-            "name": "s___mh_execute_header_1000080d2",
+            "name": "s___mh_execute_header_1000080f2",
             "type": "Label"
           },
           {
-            "address": "1000080e6",
+            "address": "100008106",
             "visibility": "DEFAULT",
-            "name": "s__main_1000080e6",
+            "name": "s__fact_100008106",
             "type": "Label"
           },
           {
-            "address": "1000080ec",
+            "address": "10000810c",
             "visibility": "DEFAULT",
-            "name": "s__printf_1000080ec",
+            "name": "s__main_10000810c",
+            "type": "Label"
+          },
+          {
+            "address": "100008112",
+            "visibility": "DEFAULT",
+            "name": "s__printf_100008112",
             "type": "Label"
           }
         ]
@@ -224,8 +269,8 @@
       "schema_version": "1.0.0",
       "provenance": {
         "tool_name": "Radare2 Headless Analyser",
-        "timestamp": "2026-06-13T12:02:42-07:00",
-        "binary_path": "./test1",
+        "timestamp": "2026-06-13T12:13:05-07:00",
+        "binary_path": "./1",
         "config": {}
       },
       "data": {
@@ -237,14 +282,14 @@
         "functions": [
           {
             "name": "printf",
-            "entry_point": "0x1000004b8",
+            "entry_point": "0x100000508",
             "size_bytes": 16,
             "calling_convention": 1,
             "local_variables": [],
             "cfg": {
               "nodes": [
                 {
-                  "id": "0x1000004b8",
+                  "id": "0x100000508",
                   "size": 16,
                   "instructions_count": 4
                 }
@@ -254,12 +299,38 @@
           },
           {
             "name": "_main",
-            "entry_point": "0x100000460",
-            "size_bytes": 88,
-            "calling_convention": 2,
+            "entry_point": "0x1000004c0",
+            "size_bytes": 72,
+            "calling_convention": 1,
             "local_variables": [
               "argc",
               "argv",
+              "var_0h_2",
+              "var_8h",
+              "var_0h",
+              "var_10h",
+              "var_10h_2"
+            ],
+            "cfg": {
+              "nodes": [
+                {
+                  "id": "0x1000004c0",
+                  "size": 72,
+                  "instructions_count": 18
+                }
+              ],
+              "edges": []
+            }
+          },
+          {
+            "name": "_fact",
+            "entry_point": "0x100000460",
+            "size_bytes": 96,
+            "calling_convention": 2,
+            "local_variables": [
+              "arg1",
+              "arg_20h",
+              "var_4h",
               "var_8h",
               "var_0h",
               "var_10h",
@@ -269,26 +340,26 @@
               "nodes": [
                 {
                   "id": "0x100000460",
-                  "size": 36,
-                  "instructions_count": 9
+                  "size": 28,
+                  "instructions_count": 7
                 },
                 {
-                  "id": "0x100000484",
+                  "id": "0x10000047c",
                   "size": 4,
                   "instructions_count": 1
                 },
                 {
-                  "id": "0x100000488",
-                  "size": 16,
-                  "instructions_count": 4
+                  "id": "0x100000480",
+                  "size": 12,
+                  "instructions_count": 3
                 },
                 {
-                  "id": "0x100000498",
-                  "size": 16,
-                  "instructions_count": 4
+                  "id": "0x10000048c",
+                  "size": 36,
+                  "instructions_count": 9
                 },
                 {
-                  "id": "0x1000004a8",
+                  "id": "0x1000004b0",
                   "size": 16,
                   "instructions_count": 4
                 }
@@ -296,27 +367,27 @@
               "edges": [
                 {
                   "source": "0x100000460",
-                  "target": "0x100000498",
+                  "target": "0x10000048c",
                   "type": "conditional"
                 },
                 {
                   "source": "0x100000460",
-                  "target": "0x100000484",
+                  "target": "0x10000047c",
                   "type": "conditional"
                 },
                 {
-                  "source": "0x100000484",
-                  "target": "0x100000488",
+                  "source": "0x10000047c",
+                  "target": "0x100000480",
                   "type": "unconditional"
                 },
                 {
-                  "source": "0x100000488",
-                  "target": "0x1000004a8",
+                  "source": "0x100000480",
+                  "target": "0x1000004b0",
                   "type": "unconditional"
                 },
                 {
-                  "source": "0x100000498",
-                  "target": "0x1000004a8",
+                  "source": "0x10000048c",
+                  "target": "0x1000004b0",
                   "type": "unconditional"
                 }
               ]
@@ -332,12 +403,18 @@
           },
           {
             "address": "0x100000460",
+            "name": "_fact",
+            "type": "function",
+            "visibility": "global"
+          },
+          {
+            "address": "0x1000004c0",
             "name": "_main",
             "type": "function",
             "visibility": "global"
           },
           {
-            "address": "0x1000004b8",
+            "address": "0x100000508",
             "name": "printf",
             "type": "function",
             "visibility": "static"
@@ -347,21 +424,32 @@
             "name": "func.100000460",
             "type": "function",
             "visibility": "static"
+          },
+          {
+            "address": "0x1000004c0",
+            "name": "func.1000004c0",
+            "type": "function",
+            "visibility": "static"
           }
         ],
         "call_graph": {
           "nodes": [
-            "_main",
-            "printf"
+            "_fact",
+            "printf",
+            "_main"
           ],
           "edges": [
+            {
+              "caller": "_main",
+              "callee": "_fact"
+            },
             {
               "caller": "_main",
               "callee": "printf"
             },
             {
-              "caller": "_main",
-              "callee": "printf"
+              "caller": "_fact",
+              "callee": "_fact"
             }
           ]
         }

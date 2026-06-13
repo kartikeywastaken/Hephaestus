@@ -2,8 +2,8 @@
   "schema_version": "1.0.0",
   "provenance": {
     "tool_name": "Radare2 Headless Analyser",
-    "timestamp": "2026-06-13T12:02:42-07:00",
-    "binary_path": "./test1",
+    "timestamp": "2026-06-13T12:13:05-07:00",
+    "binary_path": "./1",
     "config": {}
   },
   "data": {
@@ -15,14 +15,14 @@
     "functions": [
       {
         "name": "printf",
-        "entry_point": "0x1000004b8",
+        "entry_point": "0x100000508",
         "size_bytes": 16,
         "calling_convention": 1,
         "local_variables": [],
         "cfg": {
           "nodes": [
             {
-              "id": "0x1000004b8",
+              "id": "0x100000508",
               "size": 16,
               "instructions_count": 4
             }
@@ -32,12 +32,38 @@
       },
       {
         "name": "_main",
-        "entry_point": "0x100000460",
-        "size_bytes": 88,
-        "calling_convention": 2,
+        "entry_point": "0x1000004c0",
+        "size_bytes": 72,
+        "calling_convention": 1,
         "local_variables": [
           "argc",
           "argv",
+          "var_0h_2",
+          "var_8h",
+          "var_0h",
+          "var_10h",
+          "var_10h_2"
+        ],
+        "cfg": {
+          "nodes": [
+            {
+              "id": "0x1000004c0",
+              "size": 72,
+              "instructions_count": 18
+            }
+          ],
+          "edges": []
+        }
+      },
+      {
+        "name": "_fact",
+        "entry_point": "0x100000460",
+        "size_bytes": 96,
+        "calling_convention": 2,
+        "local_variables": [
+          "arg1",
+          "arg_20h",
+          "var_4h",
           "var_8h",
           "var_0h",
           "var_10h",
@@ -47,26 +73,26 @@
           "nodes": [
             {
               "id": "0x100000460",
-              "size": 36,
-              "instructions_count": 9
+              "size": 28,
+              "instructions_count": 7
             },
             {
-              "id": "0x100000484",
+              "id": "0x10000047c",
               "size": 4,
               "instructions_count": 1
             },
             {
-              "id": "0x100000488",
-              "size": 16,
-              "instructions_count": 4
+              "id": "0x100000480",
+              "size": 12,
+              "instructions_count": 3
             },
             {
-              "id": "0x100000498",
-              "size": 16,
-              "instructions_count": 4
+              "id": "0x10000048c",
+              "size": 36,
+              "instructions_count": 9
             },
             {
-              "id": "0x1000004a8",
+              "id": "0x1000004b0",
               "size": 16,
               "instructions_count": 4
             }
@@ -74,27 +100,27 @@
           "edges": [
             {
               "source": "0x100000460",
-              "target": "0x100000498",
+              "target": "0x10000048c",
               "type": "conditional"
             },
             {
               "source": "0x100000460",
-              "target": "0x100000484",
+              "target": "0x10000047c",
               "type": "conditional"
             },
             {
-              "source": "0x100000484",
-              "target": "0x100000488",
+              "source": "0x10000047c",
+              "target": "0x100000480",
               "type": "unconditional"
             },
             {
-              "source": "0x100000488",
-              "target": "0x1000004a8",
+              "source": "0x100000480",
+              "target": "0x1000004b0",
               "type": "unconditional"
             },
             {
-              "source": "0x100000498",
-              "target": "0x1000004a8",
+              "source": "0x10000048c",
+              "target": "0x1000004b0",
               "type": "unconditional"
             }
           ]
@@ -110,12 +136,18 @@
       },
       {
         "address": "0x100000460",
+        "name": "_fact",
+        "type": "function",
+        "visibility": "global"
+      },
+      {
+        "address": "0x1000004c0",
         "name": "_main",
         "type": "function",
         "visibility": "global"
       },
       {
-        "address": "0x1000004b8",
+        "address": "0x100000508",
         "name": "printf",
         "type": "function",
         "visibility": "static"
@@ -125,21 +157,32 @@
         "name": "func.100000460",
         "type": "function",
         "visibility": "static"
+      },
+      {
+        "address": "0x1000004c0",
+        "name": "func.1000004c0",
+        "type": "function",
+        "visibility": "static"
       }
     ],
     "call_graph": {
       "nodes": [
-        "_main",
-        "printf"
+        "_fact",
+        "printf",
+        "_main"
       ],
       "edges": [
+        {
+          "caller": "_main",
+          "callee": "_fact"
+        },
         {
           "caller": "_main",
           "callee": "printf"
         },
         {
-          "caller": "_main",
-          "callee": "printf"
+          "caller": "_fact",
+          "callee": "_fact"
         }
       ]
     }
