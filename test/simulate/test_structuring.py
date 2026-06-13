@@ -844,5 +844,108 @@ class TestCFGStructuringAnalysis(unittest.TestCase):
         root = structure_function(func_data, self.logger)
         self.assertIsInstance(root, UnstructuredRegionNode)
 
+    def test_weak_loop_body_not_reducing_is_rejected(self):
+        """
+        Verify that a candidate loop is rejected if its back-edge-removed body
+        does not reduce to a single structured root.
+        """
+        func_data = {
+            "name": "weak_loop_rejected",
+            "entry_point": "0x1000",
+            "basic_blocks": [
+                {
+                    "id": "0x1000",
+                    "edges": [
+                        {"source": "0x1000", "target": "0x1004"},
+                        {"source": "0x1000", "target": "0x1008"}
+                    ]
+                },
+                {"id": "0x1008", "edges": [{"source": "0x1008", "target": "0x1004"}, {"source": "0x1008", "target": "0x100c"}]},
+                {"id": "0x1004", "edges": [{"source": "0x1004", "target": "0x100c"}]},
+                {"id": "0x100c", "edges": [{"source": "0x100c", "target": "0x1000"}]}
+            ]
+        }
+        root = structure_function(func_data, self.logger)
+        # Should NOT contain a LoopNode because the loop was rejected
+        def has_loop_node(node):
+            if isinstance(node, LoopNode):
+                return True
+            if hasattr(node, "children"):
+                return any(has_loop_node(c) for c in node.children)
+            if hasattr(node, "then_branch") and node.then_branch:
+                if has_loop_node(node.then_branch):
+                    return True
+            if hasattr(node, "else_branch") and node.else_branch:
+                if has_loop_node(node.else_branch):
+                    return True
+            return False
+
+        self.assertFalse(has_loop_node(root), "Weak loop candidate was incorrectly structured as a LoopNode")
+        self.assertIsInstance(root, UnstructuredRegionNode)
+
+    def test_helper_false_positive_rejected(self):
+        """
+        Recreates the _helper CFG structure where recursive call back-edges
+        form a natural loop that is weak and must be rejected.
+        """
+        func_data = {
+            "name": "_helper_mock",
+            "entry_point": "0x460",
+            "basic_blocks": [
+                {
+                    "id": "0x460",
+                    "edges": [
+                        {"source": "0x460", "target": "0x47c"},
+                        {"source": "0x460", "target": "0x48c"}
+                    ]
+                },
+                {"id": "0x47c", "edges": [{"source": "0x47c", "target": "0x480"}]},
+                {"id": "0x480", "edges": [{"source": "0x480", "target": "0x4f0"}]},
+                {
+                    "id": "0x48c",
+                    "edges": [
+                        {"source": "0x48c", "target": "0x4a4"},
+                        {"source": "0x48c", "target": "0x4cc"}
+                    ]
+                },
+                {"id": "0x4a4", "edges": [{"source": "0x4a4", "target": "0x4a8"}]},
+                {
+                    "id": "0x4a8",
+                    "edges": [
+                        {"source": "0x4a8", "target": "0x460"}, # back-edge
+                        {"source": "0x4a8", "target": "0x4bc"}
+                    ]
+                },
+                {"id": "0x4bc", "edges": [{"source": "0x4bc", "target": "0x4f0"}]},
+                {
+                    "id": "0x4cc",
+                    "edges": [
+                        {"source": "0x4cc", "target": "0x460"}, # back-edge
+                        {"source": "0x4cc", "target": "0x4e0"}
+                    ]
+                },
+                {"id": "0x4e0", "edges": [{"source": "0x4e0", "target": "0x4f0"}]},
+                {"id": "0x4f0", "edges": []}
+            ]
+        }
+        root = structure_function(func_data, self.logger)
+        
+        # Verify that no LoopNode is constructed
+        def has_loop_node(node):
+            if isinstance(node, LoopNode):
+                return True
+            if hasattr(node, "children"):
+                return any(has_loop_node(c) for c in node.children)
+            if hasattr(node, "then_branch") and node.then_branch:
+                if has_loop_node(node.then_branch):
+                    return True
+            if hasattr(node, "else_branch") and node.else_branch:
+                if has_loop_node(node.else_branch):
+                    return True
+            return False
+
+        self.assertFalse(has_loop_node(root), "Helper recursive back-edge was incorrectly structured as a LoopNode")
+        self.assertIsInstance(root, UnstructuredRegionNode)
+
 if __name__ == "__main__":
     unittest.main()

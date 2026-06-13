@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "provenance": {
     "tool_name": "Radare2 Headless Analyser",
-    "timestamp": "2026-06-13T18:42:42-07:00",
+    "timestamp": "2026-06-13T19:02:27-07:00",
     "binary_path": "./te",
     "config": {}
   },
@@ -848,10 +848,10 @@
     ],
     "call_graph": {
       "nodes": [
-        "_classify",
+        "printf",
         "_helper",
-        "_main",
-        "printf"
+        "_classify",
+        "_main"
       ],
       "edges": [
         {

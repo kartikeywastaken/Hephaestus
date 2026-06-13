@@ -161,30 +161,13 @@ def try_loop_reduction(graph: ReductionGraph, ipdom: Dict[str, Optional[str]], l
 
         # Extract structured loop body node
         remaining_ids = sorted(list(sub_graph.nodes.keys()))
-        if len(sub_graph.nodes) == 1:
-            body_node = sub_graph.nodes[remaining_ids[0]]
-        else:
-            # Fallback wrapping if loop body doesn't collapse to 1 node
-            visited_sub = set()
-            sorted_sub = []
-            
-            def dfs_sort_sub(node_id):
-                if node_id in visited_sub:
-                    return
-                visited_sub.add(node_id)
-                for succ in sorted(sub_graph.successors.get(node_id, [])):
-                    if succ in sub_graph.nodes:
-                        dfs_sort_sub(succ)
-                sorted_sub.insert(0, sub_graph.nodes[node_id])
+        if len(sub_graph.nodes) != 1:
+            logger.info(
+                f"Rejecting loop candidate at header {h}: loop body did not reduce to a single structured root"
+            )
+            continue
 
-            if sub_graph.entry_node_id in sub_graph.nodes:
-                dfs_sort_sub(sub_graph.entry_node_id)
-
-            for nid in remaining_ids:
-                if nid not in visited_sub:
-                    dfs_sort_sub(nid)
-
-            body_node = UnstructuredRegionNode(sorted_sub)
+        body_node = sub_graph.nodes[remaining_ids[0]]
 
         # 8. Collapse Loop in Main ReductionGraph
         new_node = LoopNode(
