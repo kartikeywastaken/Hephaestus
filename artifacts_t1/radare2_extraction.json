@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0.0",
+  "provenance": {
+    "tool_name": "Radare2 Headless Analyser",
+    "timestamp": "2026-06-13T10:13:16-07:00",
+    "binary_path": "./test1",
+    "config": {}
+  },
+  "data": {
+    "functions": [],
+    "symbols": [
+      {
+        "address": "0x100000000",
+        "name": "__mh_execute_header",
+        "type": "function",
+        "visibility": "global"
+      },
+      {
+        "address": "0x100000460",
+        "name": "_main",
+        "type": "function",
+        "visibility": "global"
+      },
+      {
+        "address": "0x1000004b8",
+        "name": "imp.printf",
+        "type": "function",
+        "visibility": "static"
+      },
+      {
+        "address": "0x100000460",
+        "name": "func.100000460",
+        "type": "function",
+        "visibility": "static"
+      }
+    ],
+    "call_graph": {
+      "nodes": [],
+      "edges": []
+    }
+  }
+}

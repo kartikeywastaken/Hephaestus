@@ -1,0 +1,363 @@
+{
+  "schema_version": "2.0.0",
+  "provenance": {
+    "binary_path": "./test1",
+    "sha256": "8772439e4a83b73f16f3fa15be9381e531c79157e45e579e4f50de1c26fdfa41",
+    "architecture": "x86",
+    "schema_version": "2.0.0"
+  },
+  "data": {
+    "functions": [
+      {
+        "name": "entry",
+        "entry_point": "100000460",
+        "size_bytes": 88,
+        "calling_convention": "unknown",
+        "signature": "unknown entry()",
+        "confidence": 0.8,
+        "local_variables": [],
+        "stack_variables": [
+          {
+            "name": "local_10",
+            "offset_bytes": -4,
+            "size_bytes": 4
+          },
+          {
+            "name": "local_14",
+            "offset_bytes": -8,
+            "size_bytes": 4
+          },
+          {
+            "name": "local_18",
+            "offset_bytes": -12,
+            "size_bytes": 4
+          }
+        ],
+        "heap_variables": [],
+        "basic_blocks": [
+          {
+            "id": "100000460",
+            "size": 36,
+            "instructions": [
+              "mov eax, [esp+4]",
+              "cmp eax, 0",
+              "je exit_block"
+            ],
+            "memory_accesses": [
+              {
+                "address": "0x0045e0c0",
+                "type": "write",
+                "size_bytes": 4
+              }
+            ],
+            "edges": [
+              {
+                "source": "100000460",
+                "target": "100000498",
+                "type": "conditional_taken"
+              },
+              {
+                "source": "100000460",
+                "target": "100000484",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "100000484",
+            "size": 4,
+            "instructions": [
+              "mov eax, [esp+4]",
+              "cmp eax, 0",
+              "je exit_block"
+            ],
+            "memory_accesses": [
+              {
+                "address": "0x0045e0c0",
+                "type": "write",
+                "size_bytes": 4
+              }
+            ],
+            "edges": [
+              {
+                "source": "100000484",
+                "target": "100000488",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "100000488",
+            "size": 12,
+            "instructions": [
+              "mov eax, [esp+4]",
+              "cmp eax, 0",
+              "je exit_block"
+            ],
+            "memory_accesses": [
+              {
+                "address": "0x0045e0c0",
+                "type": "write",
+                "size_bytes": 4
+              }
+            ],
+            "edges": [
+              {
+                "source": "100000488",
+                "target": "100000494",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "100000494",
+            "size": 4,
+            "instructions": [
+              "mov eax, [esp+4]",
+              "cmp eax, 0",
+              "je exit_block"
+            ],
+            "memory_accesses": [
+              {
+                "address": "0x0045e0c0",
+                "type": "write",
+                "size_bytes": 4
+              }
+            ],
+            "edges": [
+              {
+                "source": "100000494",
+                "target": "1000004a8",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "100000498",
+            "size": 12,
+            "instructions": [
+              "mov eax, [esp+4]",
+              "cmp eax, 0",
+              "je exit_block"
+            ],
+            "memory_accesses": [
+              {
+                "address": "0x0045e0c0",
+                "type": "write",
+                "size_bytes": 4
+              }
+            ],
+            "edges": [
+              {
+                "source": "100000498",
+                "target": "1000004a4",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "1000004a4",
+            "size": 4,
+            "instructions": [
+              "mov eax, [esp+4]",
+              "cmp eax, 0",
+              "je exit_block"
+            ],
+            "memory_accesses": [
+              {
+                "address": "0x0045e0c0",
+                "type": "write",
+                "size_bytes": 4
+              }
+            ],
+            "edges": [
+              {
+                "source": "1000004a4",
+                "target": "1000004a8",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "1000004a8",
+            "size": 16,
+            "instructions": [
+              "mov eax, [esp+4]",
+              "cmp eax, 0",
+              "je exit_block"
+            ],
+            "memory_accesses": [
+              {
+                "address": "0x0045e0c0",
+                "type": "write",
+                "size_bytes": 4
+              }
+            ],
+            "edges": []
+          }
+        ],
+        "provenance": [
+          "ghidra"
+        ]
+      }
+    ],
+    "call_graph": {
+      "nodes": [],
+      "edges": []
+    },
+    "symbols": [
+      {
+        "address": "EXTERNAL:00000001",
+        "name": "_printf",
+        "type": "Function",
+        "visibility": "IMPORTED"
+      },
+      {
+        "address": "fffeff00",
+        "name": "_objc_msgSend_rtp",
+        "type": "Label",
+        "visibility": "IMPORTED"
+      },
+      {
+        "address": "100000000",
+        "name": "__mh_execute_header",
+        "type": "Label",
+        "visibility": "IMPORTED"
+      },
+      {
+        "address": "100000460",
+        "name": "entry",
+        "type": "Function",
+        "visibility": "IMPORTED"
+      },
+      {
+        "address": "100000488",
+        "name": "LAB_100000488",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "100000498",
+        "name": "LAB_100000498",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "1000004a8",
+        "name": "LAB_1000004a8",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "1000004b8",
+        "name": "_printf",
+        "type": "Function",
+        "visibility": "IMPORTED"
+      },
+      {
+        "address": "1000004c4",
+        "name": "s_large_1000004c4",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "1000004cb",
+        "name": "s_small_1000004cb",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "100004000",
+        "name": "PTR__printf_100004000",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "100008055",
+        "name": "s__printf_100008055",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "1000080b8",
+        "name": "nlist_1000080b8",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "1000080d2",
+        "name": "s___mh_execute_header_1000080d2",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "1000080e6",
+        "name": "s__main_1000080e6",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "1000080ec",
+        "name": "s__printf_1000080ec",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "0x100000000",
+        "name": "__mh_execute_header",
+        "type": "function",
+        "visibility": "global"
+      },
+      {
+        "address": "0x100000460",
+        "name": "_main",
+        "type": "function",
+        "visibility": "global"
+      },
+      {
+        "address": "0x1000004b8",
+        "name": "imp.printf",
+        "type": "function",
+        "visibility": "static"
+      }
+    ],
+    "imports": [
+      {
+        "name": "LoadLibraryA",
+        "source_module": "kernel32.dll",
+        "address": "0x00405020"
+      },
+      {
+        "name": "GetProcAddress",
+        "source_module": "kernel32.dll",
+        "address": "0x00405024"
+      }
+    ],
+    "exports": [
+      {
+        "name": "main",
+        "address": "0x00401000"
+      }
+    ],
+    "strings": [
+      {
+        "address": "0x004410a0",
+        "value": "Starting Extraction Engine...",
+        "length": 29
+      },
+      {
+        "address": "0x004410f0",
+        "value": "Error: Process Out-Of-Bounds",
+        "length": 28
+      }
+    ],
+    "constants": [
+      {
+        "value": 3735928559,
+        "width_bits": 32,
+        "declared_at": "0x004010a2"
+      }
+    ],
+    "dynamic_observations": []
+  }
+}
