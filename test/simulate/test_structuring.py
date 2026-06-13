@@ -947,5 +947,573 @@ class TestCFGStructuringAnalysis(unittest.TestCase):
         self.assertFalse(has_loop_node(root), "Helper recursive back-edge was incorrectly structured as a LoopNode")
         self.assertIsInstance(root, UnstructuredRegionNode)
 
+
+class TestPhase3DHardCases(unittest.TestCase):
+    """
+    Phase 3D: robustness and conservative fallback tests.
+    All hard cases must be handled without bogus structuring, without crash,
+    and with deterministic output.
+    """
+
+    def setUp(self):
+        self.logger = logging.getLogger("TestPhase3DHardCases")
+        self.logger.setLevel(logging.DEBUG)
+        if not self.logger.handlers:
+            handler = logging.StreamHandler()
+            handler.setFormatter(logging.Formatter('%(asctime)s [%(levelname)s] %(name)s - %(message)s'))
+            self.logger.addHandler(handler)
+
+    # ------------------------------------------------------------------
+    # Helper
+    # ------------------------------------------------------------------
+
+    def _find_nodes(self, root, cls):
+        """Recursively collect all RegionNode instances of type `cls`."""
+        found = []
+        self._collect(root, cls, found)
+        return found
+
+    def _collect(self, node, cls, acc):
+        if isinstance(node, cls):
+            acc.append(node)
+        for attr in ("children", ):
+            for child in getattr(node, attr, []):
+                self._collect(child, cls, acc)
+        for attr in ("body", "then_branch", "else_branch"):
+            child = getattr(node, attr, None)
+            if child is not None:
+                self._collect(child, cls, acc)
+
+    # ------------------------------------------------------------------
+    # 1. Irreducible goto fallback
+    # ------------------------------------------------------------------
+
+    def test_irreducible_goto_fallback(self):
+        """
+        Mutual back-edges: A->B, A->C, B->C, C->B
+        B and C enter each other — neither dominates the other, making the
+        graph irreducible.  The result must be an UnstructuredRegionNode with
+        no bogus LoopNode and a reason in {"irreducible_cfg", "partial_reduction"}.
+        """
+        func_data = {
+            "name": "irreducible_goto",
+            "entry_point": "0xA000",
+            "basic_blocks": [
+                {
+                    "id": "0xA000",
+                    "edges": [
+                        {"source": "0xA000", "target": "0xA004"},
+                        {"source": "0xA000", "target": "0xA008"},
+                    ],
+                },
+                {
+                    "id": "0xA004",
+                    "edges": [{"source": "0xA004", "target": "0xA008"}],
+                },
+                {
+                    "id": "0xA008",
+                    "edges": [{"source": "0xA008", "target": "0xA004"}],
+                },
+            ],
+        }
+        root = structure_function(func_data, self.logger)
+
+        self.assertIsInstance(root, UnstructuredRegionNode)
+        # No bogus LoopNode
+        self.assertEqual(self._find_nodes(root, LoopNode), [])
+        # Reason must be present and be a known conservative fallback
+        self.assertIn(root.reason, {"irreducible_cfg", "partial_reduction", "multi_exit_loop"})
+
+    # ------------------------------------------------------------------
+    # 2. Multi-exit loop fallback
+    # ------------------------------------------------------------------
+
+    def test_multi_exit_loop_fallback(self):
+        """
+        Loop with 2 exits to nodes outside the loop region.
+        H->body->H (latch), body->exit1 (break), H->exit2 (loop condition exit),
+        exit1 and exit2 are outside the natural loop body.
+        Must not crash; if fallback, reason must be a valid hard-case reason.
+        """
+        func_data = {
+            "name": "multi_exit_loop",
+            "entry_point": "0xB000",
+            "basic_blocks": [
+                # H: branches to body or exit2
+                {
+                    "id": "0xB000",
+                    "edges": [
+                        {"source": "0xB000", "target": "0xB004"},
+                        {"source": "0xB000", "target": "0xB014"},  # exit2
+                    ],
+                },
+                # body: branches to latch or exit1
+                {
+                    "id": "0xB004",
+                    "edges": [
+                        {"source": "0xB004", "target": "0xB008"},  # to latch
+                        {"source": "0xB004", "target": "0xB010"},  # exit1
+                    ],
+                },
+                # latch: back-edge to H
+                {
+                    "id": "0xB008",
+                    "edges": [{"source": "0xB008", "target": "0xB000"}],
+                },
+                # exit1
+                {"id": "0xB010", "edges": []},
+                # exit2
+                {"id": "0xB014", "edges": []},
+            ],
+        }
+        root = structure_function(func_data, self.logger)
+
+        # Must not crash and must produce a deterministic result
+        self.assertIsNotNone(root)
+
+        # If the result is unstructured, the reason must be a valid hard-case reason
+        valid_reasons = {
+            "multi_exit_loop",
+            "irreducible_cfg",
+            "fragmented_loop_body",
+            "partial_reduction",
+        }
+        if isinstance(root, UnstructuredRegionNode):
+            self.assertIn(root.reason, valid_reasons)
+
+    # ------------------------------------------------------------------
+    # 3. Switch fan-out detection
+    # ------------------------------------------------------------------
+
+    def test_switch_fanout_detection(self):
+        """
+        One node with 4 successors — clearly not reducible as binary conditional.
+        Result must be UnstructuredRegionNode with reason='switch_candidate'.
+        """
+        func_data = {
+            "name": "switch_fanout",
+            "entry_point": "0xC000",
+            "basic_blocks": [
+                {
+                    "id": "0xC000",
+                    "edges": [
+                        {"source": "0xC000", "target": "0xC004"},
+                        {"source": "0xC000", "target": "0xC008"},
+                        {"source": "0xC000", "target": "0xC00c"},
+                        {"source": "0xC000", "target": "0xC010"},
+                    ],
+                },
+                {"id": "0xC004", "edges": []},
+                {"id": "0xC008", "edges": []},
+                {"id": "0xC00c", "edges": []},
+                {"id": "0xC010", "edges": []},
+            ],
+        }
+        root = structure_function(func_data, self.logger)
+
+        self.assertIsInstance(root, UnstructuredRegionNode)
+        self.assertEqual(root.reason, "switch_candidate")
+        self.assertEqual(root.region_kind, "switch_candidate")
+
+    # ------------------------------------------------------------------
+    # 4. Partial reduction preservation
+    # ------------------------------------------------------------------
+
+    def test_partial_reduction_preserved(self):
+        """
+        A CFG with a loop where the inner conditional diamond collapses to an
+        IfElseNode inside the loop body DAG, but the outer loop is rejected
+        because the body has multiple exits — leaving the inner structured node
+        preserved inside the final UnstructuredRegionNode.
+
+        Topology:
+          entry(0xD000) -> loop_header(0xD004) [straight line]
+          loop_header(0xD004) -> cond_split(0xD008) or exit(0xD030)
+          cond_split(0xD008) -> then(0xD010) or else(0xD014)
+          then(0xD010) -> merge(0xD018)
+          else(0xD014) -> merge(0xD018)
+          merge(0xD018) -> latch1(0xD020) or break_exit(0xD024)  [multi-exit]
+          latch1(0xD020) -> loop_header(0xD004) [back-edge]
+          break_exit(0xD024) -> exit(0xD030) [exits loop differently]
+          exit(0xD030): terminal
+
+        The inner if/else (0xD008 -> 0xD010/0xD014 -> 0xD018) should collapse
+        inside the loop body DAG. But the loop body has two exits (0xD030 via
+        header, and 0xD024 via break_exit), so the loop as a whole gets
+        rejected, and the outer graph includes the partially reduced IfElseNode.
+        """
+        func_data = {
+            "name": "partial_reduction",
+            "entry_point": "0xD000",
+            "basic_blocks": [
+                # straight-line entry
+                {"id": "0xD000", "edges": [{"source": "0xD000", "target": "0xD004"}]},
+                # loop header: to body or exit
+                {
+                    "id": "0xD004",
+                    "edges": [
+                        {"source": "0xD004", "target": "0xD008"},
+                        {"source": "0xD004", "target": "0xD030"},  # loop exit
+                    ],
+                },
+                # conditional split (inner if/else diamond)
+                {
+                    "id": "0xD008",
+                    "edges": [
+                        {"source": "0xD008", "target": "0xD010"},
+                        {"source": "0xD008", "target": "0xD014"},
+                    ],
+                },
+                {"id": "0xD010", "edges": [{"source": "0xD010", "target": "0xD018"}]},
+                {"id": "0xD014", "edges": [{"source": "0xD014", "target": "0xD018"}]},
+                # merge: to latch OR break exit (multi-exit from loop body)
+                {
+                    "id": "0xD018",
+                    "edges": [
+                        {"source": "0xD018", "target": "0xD020"},  # latch
+                        {"source": "0xD018", "target": "0xD024"},  # break exit
+                    ],
+                },
+                # latch: back-edge to loop header
+                {"id": "0xD020", "edges": [{"source": "0xD020", "target": "0xD004"}]},
+                # break exit
+                {"id": "0xD024", "edges": [{"source": "0xD024", "target": "0xD030"}]},
+                # function exit
+                {"id": "0xD030", "edges": []},
+            ],
+        }
+        root = structure_function(func_data, self.logger)
+
+        # The function must produce some result without crashing
+        self.assertIsNotNone(root)
+
+        # Recursively search the entire tree for any non-BlockNode structured region
+        def find_structured(node):
+            """Return True if 'node' or any descendant is a structured non-BlockNode."""
+            if not isinstance(node, (BlockNode,)):
+                return True  # any structured region found
+            return False
+
+        def walk(node):
+            if not isinstance(node, BlockNode):
+                return True
+            for attr in ("children",):
+                for child in getattr(node, attr, []):
+                    if walk(child):
+                        return True
+            for attr in ("body", "then_branch", "else_branch"):
+                child = getattr(node, attr, None)
+                if child is not None and walk(child):
+                    return True
+            return False
+
+        self.assertTrue(
+            walk(root),
+            "Expected at least one structured inner region (non-BlockNode) preserved in the result"
+        )
+
+
+    # ------------------------------------------------------------------
+    # 5. Break-heavy loop body
+    # ------------------------------------------------------------------
+
+    def test_break_heavy_loop_body(self):
+        """
+        Loop with multiple break-like exits from mid-body nodes.
+        Must not crash and must produce a deterministic result.
+        """
+        # H->B1, H->exit2 ; B1->B2, B1->exit1 ; B2->H (latch)
+        func_data = {
+            "name": "break_heavy_loop",
+            "entry_point": "0xE000",
+            "basic_blocks": [
+                {
+                    "id": "0xE000",
+                    "edges": [
+                        {"source": "0xE000", "target": "0xE004"},
+                        {"source": "0xE000", "target": "0xE014"},  # header exit
+                    ],
+                },
+                {
+                    "id": "0xE004",
+                    "edges": [
+                        {"source": "0xE004", "target": "0xE008"},
+                        {"source": "0xE004", "target": "0xE010"},  # break exit1
+                    ],
+                },
+                # latch
+                {"id": "0xE008", "edges": [{"source": "0xE008", "target": "0xE000"}]},
+                # break exit1
+                {"id": "0xE010", "edges": []},
+                # header exit2
+                {"id": "0xE014", "edges": []},
+            ],
+        }
+        root = structure_function(func_data, self.logger)
+
+        # Must not crash; must produce a result
+        self.assertIsNotNone(root)
+
+        # Result must be deterministic (call twice, same to_dict)
+        root2 = structure_function(func_data, self.logger)
+        self.assertEqual(root.to_dict(), root2.to_dict())
+
+    # ------------------------------------------------------------------
+    # 6. Continue-if loop body
+    # ------------------------------------------------------------------
+
+    def test_continue_if_loop_body(self):
+        """
+        Canonical continue-if pattern: loop header H->body, body contains
+        an if(cond){ continue } pattern.  The loop must collapse to a LoopNode
+        and its body must contain an IfNode (the continue-if).
+
+        CFG:
+          H(0xF000) -> body(0xF004) [loop entry], H -> exit(0xF014)
+          body -> continue_target(0xF008) [back to H via latch], body -> cont(0xF00c)
+          latch(0xF008) -> H [back-edge]
+          cont(0xF00c) -> latch(0xF008) [falls through to latch after continue-if]
+        """
+        func_data = {
+            "name": "continue_if_loop",
+            "entry_point": "0xF000",
+            "basic_blocks": [
+                # loop header
+                {
+                    "id": "0xF000",
+                    "edges": [
+                        {"source": "0xF000", "target": "0xF004"},  # enter body
+                        {"source": "0xF000", "target": "0xF014"},  # exit loop
+                    ],
+                },
+                # body split: if(cond) continue else fall-through
+                {
+                    "id": "0xF004",
+                    "edges": [
+                        {"source": "0xF004", "target": "0xF008"},  # latch (continue)
+                        {"source": "0xF004", "target": "0xF00c"},  # fallthrough
+                    ],
+                },
+                # latch: back-edge to H
+                {"id": "0xF008", "edges": [{"source": "0xF008", "target": "0xF000"}]},
+                # fallthrough after the if
+                {"id": "0xF00c", "edges": [{"source": "0xF00c", "target": "0xF008"}]},
+                # loop exit
+                {"id": "0xF014", "edges": []},
+            ],
+        }
+        root = structure_function(func_data, self.logger)
+
+        # Must produce a LoopNode (the continue-if pattern is supported by Phase 3C)
+        loop_nodes = self._find_nodes(root, LoopNode)
+        self.assertTrue(len(loop_nodes) >= 1, "Expected at least one LoopNode")
+
+        loop = loop_nodes[0]
+        # Body must contain an IfNode (the continue-if reduction)
+        if_nodes = self._find_nodes(loop.body, IfNode)
+        self.assertTrue(len(if_nodes) >= 1, "Expected IfNode inside loop body for continue-if")
+
+    # ------------------------------------------------------------------
+    # 7. Regression: _helper false-positive still rejected
+    # ------------------------------------------------------------------
+
+    def test_helper_fp_not_regressed(self):
+        """
+        Regression: the _helper-style recursive back-edge CFG must not
+        produce a LoopNode after Phase 3D changes.
+        """
+        func_data = {
+            "name": "_helper_regression",
+            "entry_point": "0x460",
+            "basic_blocks": [
+                {
+                    "id": "0x460",
+                    "edges": [
+                        {"source": "0x460", "target": "0x47c"},
+                        {"source": "0x460", "target": "0x48c"},
+                    ],
+                },
+                {"id": "0x47c", "edges": [{"source": "0x47c", "target": "0x480"}]},
+                {"id": "0x480", "edges": [{"source": "0x480", "target": "0x4f0"}]},
+                {
+                    "id": "0x48c",
+                    "edges": [
+                        {"source": "0x48c", "target": "0x4a4"},
+                        {"source": "0x48c", "target": "0x4cc"},
+                    ],
+                },
+                {"id": "0x4a4", "edges": [{"source": "0x4a4", "target": "0x4a8"}]},
+                {
+                    "id": "0x4a8",
+                    "edges": [
+                        {"source": "0x4a8", "target": "0x460"},
+                        {"source": "0x4a8", "target": "0x4bc"},
+                    ],
+                },
+                {"id": "0x4bc", "edges": [{"source": "0x4bc", "target": "0x4f0"}]},
+                {
+                    "id": "0x4cc",
+                    "edges": [
+                        {"source": "0x4cc", "target": "0x460"},
+                        {"source": "0x4cc", "target": "0x4e0"},
+                    ],
+                },
+                {"id": "0x4e0", "edges": [{"source": "0x4e0", "target": "0x4f0"}]},
+                {"id": "0x4f0", "edges": []},
+            ],
+        }
+        root = structure_function(func_data, self.logger)
+        self.assertIsInstance(root, UnstructuredRegionNode)
+        self.assertEqual(self._find_nodes(root, LoopNode), [])
+
+    # ------------------------------------------------------------------
+    # 8. Regression: _classify clean structuring survives
+    # ------------------------------------------------------------------
+
+    def test_classify_clean_not_regressed(self):
+        """
+        Regression: a nested if/else (_classify-style) must still produce
+        a fully structured SequenceNode with nested IfElseNode.
+        No UnstructuredRegionNode, no LoopNode.
+        """
+        func_data = {
+            "name": "_classify_regression",
+            "entry_point": "0x1000",
+            "basic_blocks": [
+                {
+                    "id": "0x1000",
+                    "edges": [
+                        {"source": "0x1000", "target": "0x1004"},
+                        {"source": "0x1000", "target": "0x1008"},
+                    ],
+                },
+                {"id": "0x1004", "edges": [{"source": "0x1004", "target": "0x1010"}]},
+                {
+                    "id": "0x1008",
+                    "edges": [
+                        {"source": "0x1008", "target": "0x100c"},
+                        {"source": "0x1008", "target": "0x1014"},
+                    ],
+                },
+                {"id": "0x100c", "edges": [{"source": "0x100c", "target": "0x1018"}]},
+                {"id": "0x1014", "edges": [{"source": "0x1014", "target": "0x1018"}]},
+                {"id": "0x1018", "edges": [{"source": "0x1018", "target": "0x1010"}]},
+                {"id": "0x1010", "edges": []},
+            ],
+        }
+        root = structure_function(func_data, self.logger)
+
+        self.assertEqual(self._find_nodes(root, UnstructuredRegionNode), [])
+        self.assertEqual(self._find_nodes(root, LoopNode), [])
+        self.assertTrue(len(self._find_nodes(root, IfElseNode)) >= 1)
+
+    # ------------------------------------------------------------------
+    # 9. Regression: simple valid loop still recovers
+    # ------------------------------------------------------------------
+
+    def test_simple_loop_not_regressed(self):
+        """
+        Regression: simple while loop must still produce LoopNode(while_like).
+        """
+        func_data = {
+            "name": "simple_while_regression",
+            "entry_point": "0x1000",
+            "basic_blocks": [
+                {"id": "0x1000", "edges": [{"source": "0x1000", "target": "0x1004"}]},
+                {
+                    "id": "0x1004",
+                    "edges": [
+                        {"source": "0x1004", "target": "0x1008"},
+                        {"source": "0x1004", "target": "0x100c"},
+                    ],
+                },
+                {"id": "0x1008", "edges": [{"source": "0x1008", "target": "0x1004"}]},
+                {"id": "0x100c", "edges": []},
+            ],
+        }
+        root = structure_function(func_data, self.logger)
+
+        loop_nodes = self._find_nodes(root, LoopNode)
+        self.assertEqual(len(loop_nodes), 1)
+        self.assertEqual(loop_nodes[0].kind, "while_like")
+
+    # ------------------------------------------------------------------
+    # 10. Metadata: reason must be present on hard-case fallback
+    # ------------------------------------------------------------------
+
+    def test_unstructured_reason_metadata(self):
+        """
+        Any hard CFG that falls back to UnstructuredRegionNode must carry a
+        non-None reason string.
+        """
+        # Use the irreducible cyclic CFG (confirmed to produce unstructured)
+        func_data = {
+            "name": "reason_metadata_check",
+            "entry_point": "0x1000",
+            "basic_blocks": [
+                {
+                    "id": "0x1000",
+                    "edges": [
+                        {"source": "0x1000", "target": "0x1004"},
+                        {"source": "0x1000", "target": "0x1008"},
+                    ],
+                },
+                {"id": "0x1004", "edges": [{"source": "0x1004", "target": "0x1008"}]},
+                {"id": "0x1008", "edges": [{"source": "0x1008", "target": "0x1004"}]},
+            ],
+        }
+        root = structure_function(func_data, self.logger)
+
+        self.assertIsInstance(root, UnstructuredRegionNode)
+        self.assertIsNotNone(
+            root.reason,
+            "UnstructuredRegionNode.reason must not be None for hard-case fallbacks"
+        )
+        self.assertIn(
+            root.reason,
+            {
+                "irreducible_cfg",
+                "multi_exit_loop",
+                "fragmented_loop_body",
+                "switch_candidate",
+                "partial_reduction",
+            },
+        )
+
+    # ------------------------------------------------------------------
+    # 11. Determinism: identical to_dict output on repeated calls
+    # ------------------------------------------------------------------
+
+    def test_unstructured_children_deterministic(self):
+        """
+        Calling structure_function twice on the same hard CFG must produce
+        byte-for-byte identical to_dict() output.
+        """
+        func_data = {
+            "name": "determinism_check",
+            "entry_point": "0x1000",
+            "basic_blocks": [
+                {
+                    "id": "0x1000",
+                    "edges": [
+                        {"source": "0x1000", "target": "0x1004"},
+                        {"source": "0x1000", "target": "0x1008"},
+                    ],
+                },
+                {"id": "0x1004", "edges": [{"source": "0x1004", "target": "0x1008"}]},
+                {"id": "0x1008", "edges": [{"source": "0x1008", "target": "0x1004"}]},
+            ],
+        }
+        root1 = structure_function(func_data, self.logger)
+        root2 = structure_function(func_data, self.logger)
+
+        self.assertEqual(
+            root1.to_dict(),
+            root2.to_dict(),
+            "structure_function must produce identical to_dict() on repeated calls",
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
+

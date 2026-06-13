@@ -5,7 +5,7 @@ Phase 3C: Loop Detection, Validation, and Collapsing
 
 import logging
 from typing import Dict, List, Set, Optional, Tuple
-from src.ir.structuring.models import RegionNode, LoopNode, SequenceNode, UnstructuredRegionNode
+from src.ir.structuring.models import BlockNode, RegionNode, LoopNode, SequenceNode, UnstructuredRegionNode
 from src.ir.structuring.reducers import ReductionGraph, run_sequence_reductions
 from src.ir.structuring.conditionals import try_conditional_reduction
 from src.ir.structuring.postdominators import compute_post_dominators, compute_immediate_post_dominators
@@ -395,8 +395,16 @@ def try_loop_reduction(graph: ReductionGraph, ipdom: Dict[str, Optional[str]], l
         remaining_ids = sorted(list(sub_graph.nodes.keys()))
         if len(sub_graph.nodes) != 1:
             logger.info(
-                f"Rejecting loop candidate at header {h}: loop body did not reduce to a single structured root"
+                f"Rejecting loop candidate at header {h}: fragmented reduced body "
+                f"with {len(sub_graph.nodes)} residual nodes"
             )
+            # Phase 3D: log any already-structured inner nodes preserved in the body
+            for nid, node in sorted(sub_graph.nodes.items()):
+                if not isinstance(node, BlockNode):
+                    logger.info(
+                        f"Preserving {type(node).__name__} inside rejected loop body "
+                        f"rooted at {h}, subnode {nid}"
+                    )
             continue
 
         body_node = sub_graph.nodes[remaining_ids[0]]

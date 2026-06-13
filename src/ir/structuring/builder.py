@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Phase 3B: Orchestration of Structuring Passes
+Phase 3B/3D: Orchestration of Structuring Passes
 """
 
 import logging
@@ -9,6 +9,7 @@ from src.ir.structuring.analysis import analyze_function
 from src.ir.structuring.models import RegionNode, BlockNode, UnstructuredRegionNode
 from src.ir.structuring.reducers import ReductionGraph, run_sequence_reductions
 from src.ir.structuring.conditionals import try_conditional_reduction
+from src.ir.structuring.fallbacks import classify_unstructured_region
 
 def structure_function(function_data: Dict[str, Any], logger: logging.Logger) -> RegionNode:
     """
@@ -61,29 +62,46 @@ def structure_function(function_data: Dict[str, Any], logger: logging.Logger) ->
     if len(graph.nodes) == 1:
         root_node = graph.nodes[remaining_ids[0]]
     else:
-        # Perform a stable topological sort on remaining nodes
+        # Perform a stable entry-rooted DFS ordering on remaining nodes
         visited = set()
         sorted_nodes = []
-        
+
         def dfs_sort(node_id):
             if node_id in visited:
                 return
             visited.add(node_id)
-            # Sort successors to ensure deterministic topological sort
+            # Sort successors to ensure deterministic order
             for succ in sorted(graph.successors.get(node_id, [])):
                 if succ in graph.nodes:
                     dfs_sort(succ)
             sorted_nodes.insert(0, graph.nodes[node_id])
-            
+
         # Start sorting from entry if still present in graph
         if graph.entry_node_id in graph.nodes:
             dfs_sort(graph.entry_node_id)
-            
+
         for nid in remaining_ids:
             if nid not in visited:
                 dfs_sort(nid)
-                
-        root_node = UnstructuredRegionNode(sorted_nodes)
-        
+
+        # Phase 3D: classify why the graph remained unstructured, then wrap
+        reason, region_kind = classify_unstructured_region(graph, logger)
+        logger.info(
+            f"Wrapping remaining reduced graph in "
+            f"UnstructuredRegionNode(reason='{reason}', region_kind='{region_kind}')"
+        )
+        for nid, node in sorted(graph.nodes.items()):
+            if not isinstance(node, BlockNode):
+                logger.info(
+                    f"Preserving {type(node).__name__} inside fallback region "
+                    f"rooted at {nid}"
+                )
+
+        root_node = UnstructuredRegionNode(
+            sorted_nodes,
+            reason=reason,
+            region_kind=region_kind,
+        )
+
     logger.info(f"Structured function {func_name} into root node type {type(root_node).__name__}")
     return root_node

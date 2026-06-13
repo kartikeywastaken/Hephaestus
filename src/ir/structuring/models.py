@@ -1,9 +1,23 @@
 # -*- coding: utf-8 -*-
 """
-Phase 3B: Structured Region Node Models
+Phase 3B/3D: Structured Region Node Models
 """
 
 from typing import List, Optional
+
+# ---------------------------------------------------------------------------
+# Fallback reason constants (Phase 3D)
+# These are diagnostic metadata only — they do not affect reduction behaviour.
+# ---------------------------------------------------------------------------
+REASON_IRREDUCIBLE_CFG      = "irreducible_cfg"
+REASON_MULTI_EXIT_LOOP      = "multi_exit_loop"
+REASON_FRAGMENTED_LOOP_BODY = "fragmented_loop_body"
+REASON_SWITCH_CANDIDATE     = "switch_candidate"
+REASON_PARTIAL_REDUCTION    = "partial_reduction"
+
+REGION_KIND_CYCLIC           = "cyclic"
+REGION_KIND_ACYCLIC          = "acyclic"
+REGION_KIND_SWITCH_CANDIDATE = "switch_candidate"
 
 class RegionNode:
     """
@@ -97,19 +111,38 @@ class IfElseNode(RegionNode):
 class UnstructuredRegionNode(RegionNode):
     """
     Explicit fallback wrapper for partially structured or irreducible graphs.
+
+    Parameters
+    ----------
+    children     : The ordered list of remaining RegionNodes.
+    reason       : Diagnostic classification string (Phase 3D), e.g.
+                   REASON_IRREDUCIBLE_CFG.  Does not affect graph semantics.
+    region_kind  : Broad shape descriptor, e.g. REGION_KIND_CYCLIC.  Same.
     """
-    def __init__(self, children: List[RegionNode]):
+    def __init__(
+        self,
+        children: List[RegionNode],
+        reason: Optional[str] = None,
+        region_kind: Optional[str] = None,
+    ):
         self.children = children
+        self.reason = reason
+        self.region_kind = region_kind
 
     @property
     def node_id(self) -> str:
         return self.children[0].node_id if self.children else "empty_unstructured"
 
     def to_dict(self) -> dict:
-        return {
+        d: dict = {
             "type": "unstructured",
-            "children": [c.to_dict() for c in self.children]
+            "children": [c.to_dict() for c in self.children],
         }
+        if self.reason is not None:
+            d["reason"] = self.reason
+        if self.region_kind is not None:
+            d["region_kind"] = self.region_kind
+        return d
 
 class LoopNode(RegionNode):
     """

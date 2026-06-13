@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "provenance": {
     "tool_name": "Radare2 Headless Analyser",
-    "timestamp": "2026-06-13T19:02:27-07:00",
+    "timestamp": "2026-06-13T21:32:51-07:00",
     "binary_path": "./te",
     "config": {}
   },
@@ -15,16 +15,16 @@
     "functions": [
       {
         "name": "printf",
-        "entry_point": "0x1000007d0",
-        "size_bytes": 20,
+        "entry_point": "0x1000005c4",
+        "size_bytes": 16,
         "calling_convention": 1,
         "local_variables": [],
         "cfg": {
           "nodes": [
             {
-              "id": "0x1000007d0",
-              "size": 20,
-              "instructions_count": 5
+              "id": "0x1000005c4",
+              "size": 16,
+              "instructions_count": 4
             }
           ],
           "edges": []
@@ -32,28 +32,141 @@
       },
       {
         "name": "_main",
-        "entry_point": "0x10000054c",
-        "size_bytes": 644,
-        "calling_convention": 14,
+        "entry_point": "0x100000460",
+        "size_bytes": 356,
+        "calling_convention": 9,
         "local_variables": [
           "argc",
           "argv",
-          "var_0h_5",
-          "var_0h_6",
-          "var_0h_7",
           "var_0h_4",
+          "var_10h",
           "var_0h_3",
           "var_0h_2",
           "var_0h",
-          "var_30h",
-          "var_30h_2"
+          "var_20h",
+          "var_20h_2"
         ],
         "cfg": {
           "nodes": [
             {
-              "id": "0x10000054c",
+              "id": "0x100000460",
               "size": 32,
               "instructions_count": 8
+            },
+            {
+              "id": "0x100000480",
+              "size": 12,
+              "instructions_count": 3
+            },
+            {
+              "id": "0x10000048c",
+              "size": 4,
+              "instructions_count": 1
+            },
+            {
+              "id": "0x100000490",
+              "size": 8,
+              "instructions_count": 2
+            },
+            {
+              "id": "0x100000498",
+              "size": 12,
+              "instructions_count": 3
+            },
+            {
+              "id": "0x1000004a4",
+              "size": 4,
+              "instructions_count": 1
+            },
+            {
+              "id": "0x1000004a8",
+              "size": 12,
+              "instructions_count": 3
+            },
+            {
+              "id": "0x1000004b4",
+              "size": 4,
+              "instructions_count": 1
+            },
+            {
+              "id": "0x1000004b8",
+              "size": 16,
+              "instructions_count": 4
+            },
+            {
+              "id": "0x1000004c8",
+              "size": 12,
+              "instructions_count": 3
+            },
+            {
+              "id": "0x1000004d4",
+              "size": 4,
+              "instructions_count": 1
+            },
+            {
+              "id": "0x1000004d8",
+              "size": 12,
+              "instructions_count": 3
+            },
+            {
+              "id": "0x1000004e4",
+              "size": 4,
+              "instructions_count": 1
+            },
+            {
+              "id": "0x1000004e8",
+              "size": 4,
+              "instructions_count": 1
+            },
+            {
+              "id": "0x1000004ec",
+              "size": 40,
+              "instructions_count": 10
+            },
+            {
+              "id": "0x100000514",
+              "size": 12,
+              "instructions_count": 3
+            },
+            {
+              "id": "0x100000520",
+              "size": 4,
+              "instructions_count": 1
+            },
+            {
+              "id": "0x100000524",
+              "size": 4,
+              "instructions_count": 1
+            },
+            {
+              "id": "0x100000528",
+              "size": 12,
+              "instructions_count": 3
+            },
+            {
+              "id": "0x100000534",
+              "size": 4,
+              "instructions_count": 1
+            },
+            {
+              "id": "0x100000538",
+              "size": 16,
+              "instructions_count": 4
+            },
+            {
+              "id": "0x100000548",
+              "size": 16,
+              "instructions_count": 4
+            },
+            {
+              "id": "0x100000558",
+              "size": 4,
+              "instructions_count": 1
+            },
+            {
+              "id": "0x10000055c",
+              "size": 16,
+              "instructions_count": 4
             },
             {
               "id": "0x10000056c",
@@ -67,234 +180,179 @@
             },
             {
               "id": "0x10000057c",
-              "size": 12,
-              "instructions_count": 3
+              "size": 28,
+              "instructions_count": 7
             },
             {
-              "id": "0x100000588",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x10000058c",
-              "size": 16,
-              "instructions_count": 4
-            },
-            {
-              "id": "0x10000059c",
-              "size": 8,
-              "instructions_count": 2
-            },
-            {
-              "id": "0x1000005a4",
-              "size": 12,
-              "instructions_count": 3
-            },
-            {
-              "id": "0x1000005b0",
-              "size": 4,
-              "instructions_count": 1
+              "id": "0x100000598",
+              "size": 28,
+              "instructions_count": 7
             },
             {
               "id": "0x1000005b4",
-              "size": 12,
-              "instructions_count": 3
-            },
-            {
-              "id": "0x1000005c0",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x1000005c4",
-              "size": 12,
-              "instructions_count": 3
-            },
-            {
-              "id": "0x1000005d0",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x1000005d4",
-              "size": 16,
-              "instructions_count": 4
-            },
-            {
-              "id": "0x1000005e4",
-              "size": 12,
-              "instructions_count": 3
-            },
-            {
-              "id": "0x1000005f0",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x1000005f4",
-              "size": 12,
-              "instructions_count": 3
-            },
-            {
-              "id": "0x100000600",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x100000604",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x100000608",
-              "size": 32,
-              "instructions_count": 8
-            },
-            {
-              "id": "0x100000628",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x10000062c",
-              "size": 80,
-              "instructions_count": 20
-            },
-            {
-              "id": "0x10000067c",
-              "size": 80,
-              "instructions_count": 20
-            },
-            {
-              "id": "0x1000006cc",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x1000006d0",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x1000006d4",
-              "size": 12,
-              "instructions_count": 3
-            },
-            {
-              "id": "0x1000006e0",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x1000006e4",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x1000006e8",
-              "size": 16,
-              "instructions_count": 4
-            },
-            {
-              "id": "0x1000006f8",
-              "size": 12,
-              "instructions_count": 3
-            },
-            {
-              "id": "0x100000704",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x100000708",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x10000070c",
-              "size": 8,
-              "instructions_count": 2
-            },
-            {
-              "id": "0x100000714",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x100000718",
-              "size": 8,
-              "instructions_count": 2
-            },
-            {
-              "id": "0x100000720",
-              "size": 20,
-              "instructions_count": 5
-            },
-            {
-              "id": "0x100000734",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x100000738",
-              "size": 16,
-              "instructions_count": 4
-            },
-            {
-              "id": "0x100000748",
-              "size": 12,
-              "instructions_count": 3
-            },
-            {
-              "id": "0x100000754",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x100000758",
-              "size": 28,
-              "instructions_count": 7
-            },
-            {
-              "id": "0x100000774",
-              "size": 12,
-              "instructions_count": 3
-            },
-            {
-              "id": "0x100000780",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x100000784",
-              "size": 28,
-              "instructions_count": 7
-            },
-            {
-              "id": "0x1000007a0",
-              "size": 28,
-              "instructions_count": 7
-            },
-            {
-              "id": "0x1000007bc",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x1000007c0",
               "size": 16,
               "instructions_count": 4
             }
           ],
           "edges": [
             {
-              "source": "0x10000054c",
+              "source": "0x100000460",
+              "target": "0x100000480",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x100000480",
+              "target": "0x10000056c",
+              "type": "conditional"
+            },
+            {
+              "source": "0x100000480",
+              "target": "0x10000048c",
+              "type": "conditional"
+            },
+            {
+              "source": "0x10000048c",
+              "target": "0x100000490",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x100000490",
+              "target": "0x100000498",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x100000498",
+              "target": "0x100000514",
+              "type": "conditional"
+            },
+            {
+              "source": "0x100000498",
+              "target": "0x1000004a4",
+              "type": "conditional"
+            },
+            {
+              "source": "0x1000004a4",
+              "target": "0x1000004a8",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x1000004a8",
+              "target": "0x1000004c8",
+              "type": "conditional"
+            },
+            {
+              "source": "0x1000004a8",
+              "target": "0x1000004b4",
+              "type": "conditional"
+            },
+            {
+              "source": "0x1000004b4",
+              "target": "0x1000004b8",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x1000004b8",
+              "target": "0x100000498",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x1000004c8",
+              "target": "0x1000004ec",
+              "type": "conditional"
+            },
+            {
+              "source": "0x1000004c8",
+              "target": "0x1000004d4",
+              "type": "conditional"
+            },
+            {
+              "source": "0x1000004d4",
+              "target": "0x1000004d8",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x1000004d8",
+              "target": "0x1000004ec",
+              "type": "conditional"
+            },
+            {
+              "source": "0x1000004d8",
+              "target": "0x1000004e4",
+              "type": "conditional"
+            },
+            {
+              "source": "0x1000004e4",
+              "target": "0x1000004e8",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x1000004e8",
+              "target": "0x100000514",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x1000004ec",
+              "target": "0x100000498",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x100000514",
+              "target": "0x100000528",
+              "type": "conditional"
+            },
+            {
+              "source": "0x100000514",
+              "target": "0x100000520",
+              "type": "conditional"
+            },
+            {
+              "source": "0x100000520",
+              "target": "0x100000524",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x100000524",
               "target": "0x10000056c",
               "type": "unconditional"
             },
             {
+              "source": "0x100000528",
+              "target": "0x100000548",
+              "type": "conditional"
+            },
+            {
+              "source": "0x100000528",
+              "target": "0x100000534",
+              "type": "conditional"
+            },
+            {
+              "source": "0x100000534",
+              "target": "0x100000538",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x100000538",
+              "target": "0x100000558",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x100000548",
+              "target": "0x100000558",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x100000558",
+              "target": "0x10000055c",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x10000055c",
+              "target": "0x100000480",
+              "type": "unconditional"
+            },
+            {
               "source": "0x10000056c",
-              "target": "0x100000748",
+              "target": "0x100000598",
               "type": "conditional"
             },
             {
@@ -309,487 +367,12 @@
             },
             {
               "source": "0x10000057c",
-              "target": "0x10000059c",
-              "type": "conditional"
-            },
-            {
-              "source": "0x10000057c",
-              "target": "0x100000588",
-              "type": "conditional"
-            },
-            {
-              "source": "0x100000588",
-              "target": "0x10000058c",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x10000058c",
-              "target": "0x10000056c",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x10000059c",
-              "target": "0x1000005a4",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x1000005a4",
-              "target": "0x1000006f8",
-              "type": "conditional"
-            },
-            {
-              "source": "0x1000005a4",
-              "target": "0x1000005b0",
-              "type": "conditional"
-            },
-            {
-              "source": "0x1000005b0",
               "target": "0x1000005b4",
               "type": "unconditional"
             },
             {
-              "source": "0x1000005b4",
-              "target": "0x1000005e4",
-              "type": "conditional"
-            },
-            {
-              "source": "0x1000005b4",
-              "target": "0x1000005c0",
-              "type": "conditional"
-            },
-            {
-              "source": "0x1000005c0",
-              "target": "0x1000005c4",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x1000005c4",
-              "target": "0x1000005e4",
-              "type": "conditional"
-            },
-            {
-              "source": "0x1000005c4",
-              "target": "0x1000005d0",
-              "type": "conditional"
-            },
-            {
-              "source": "0x1000005d0",
-              "target": "0x1000005d4",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x1000005d4",
-              "target": "0x1000005a4",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x1000005e4",
-              "target": "0x100000608",
-              "type": "conditional"
-            },
-            {
-              "source": "0x1000005e4",
-              "target": "0x1000005f0",
-              "type": "conditional"
-            },
-            {
-              "source": "0x1000005f0",
-              "target": "0x1000005f4",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x1000005f4",
-              "target": "0x100000608",
-              "type": "conditional"
-            },
-            {
-              "source": "0x1000005f4",
-              "target": "0x100000600",
-              "type": "conditional"
-            },
-            {
-              "source": "0x100000600",
-              "target": "0x100000604",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x100000604",
-              "target": "0x1000006f8",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x100000608",
-              "target": "0x10000067c",
-              "type": "conditional"
-            },
-            {
-              "source": "0x100000608",
-              "target": "0x100000628",
-              "type": "conditional"
-            },
-            {
-              "source": "0x100000628",
-              "target": "0x10000062c",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x10000062c",
-              "target": "0x1000006cc",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x10000067c",
-              "target": "0x1000006cc",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x1000006cc",
-              "target": "0x1000006d0",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x1000006d0",
-              "target": "0x1000006d4",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x1000006d4",
-              "target": "0x1000006e8",
-              "type": "conditional"
-            },
-            {
-              "source": "0x1000006d4",
-              "target": "0x1000006e0",
-              "type": "conditional"
-            },
-            {
-              "source": "0x1000006e0",
-              "target": "0x1000006e4",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x1000006e4",
-              "target": "0x1000006f8",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x1000006e8",
-              "target": "0x1000005a4",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x1000006f8",
-              "target": "0x10000070c",
-              "type": "conditional"
-            },
-            {
-              "source": "0x1000006f8",
-              "target": "0x100000704",
-              "type": "conditional"
-            },
-            {
-              "source": "0x100000704",
-              "target": "0x100000708",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x100000708",
-              "target": "0x100000748",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x10000070c",
-              "target": "0x100000720",
-              "type": "conditional"
-            },
-            {
-              "source": "0x10000070c",
-              "target": "0x100000714",
-              "type": "conditional"
-            },
-            {
-              "source": "0x100000714",
-              "target": "0x100000718",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x100000718",
-              "target": "0x100000734",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x100000720",
-              "target": "0x100000734",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x100000734",
-              "target": "0x100000738",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x100000738",
-              "target": "0x10000056c",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x100000748",
-              "target": "0x100000774",
-              "type": "conditional"
-            },
-            {
-              "source": "0x100000748",
-              "target": "0x100000754",
-              "type": "conditional"
-            },
-            {
-              "source": "0x100000754",
-              "target": "0x100000758",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x100000758",
-              "target": "0x1000007c0",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x100000774",
-              "target": "0x1000007a0",
-              "type": "conditional"
-            },
-            {
-              "source": "0x100000774",
-              "target": "0x100000780",
-              "type": "conditional"
-            },
-            {
-              "source": "0x100000780",
-              "target": "0x100000784",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x100000784",
-              "target": "0x1000007bc",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x1000007a0",
-              "target": "0x1000007bc",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x1000007bc",
-              "target": "0x1000007c0",
-              "type": "unconditional"
-            }
-          ]
-        }
-      },
-      {
-        "name": "_classify",
-        "entry_point": "0x100000500",
-        "size_bytes": 76,
-        "calling_convention": 3,
-        "local_variables": [
-          "arg1",
-          "arg_10h",
-          "var_8h",
-          "var_0h"
-        ],
-        "cfg": {
-          "nodes": [
-            {
-              "id": "0x100000500",
-              "size": 16,
-              "instructions_count": 4
-            },
-            {
-              "id": "0x100000510",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x100000514",
-              "size": 12,
-              "instructions_count": 3
-            },
-            {
-              "id": "0x100000520",
-              "size": 8,
-              "instructions_count": 2
-            },
-            {
-              "id": "0x100000528",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x10000052c",
-              "size": 8,
-              "instructions_count": 2
-            },
-            {
-              "id": "0x100000534",
-              "size": 12,
-              "instructions_count": 3
-            },
-            {
-              "id": "0x100000540",
-              "size": 12,
-              "instructions_count": 3
-            }
-          ],
-          "edges": [
-            {
-              "source": "0x100000500",
-              "target": "0x100000520",
-              "type": "conditional"
-            },
-            {
-              "source": "0x100000500",
-              "target": "0x100000510",
-              "type": "conditional"
-            },
-            {
-              "source": "0x100000510",
-              "target": "0x100000514",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x100000514",
-              "target": "0x100000540",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x100000520",
-              "target": "0x100000534",
-              "type": "conditional"
-            },
-            {
-              "source": "0x100000520",
-              "target": "0x100000528",
-              "type": "conditional"
-            },
-            {
-              "source": "0x100000528",
-              "target": "0x10000052c",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x10000052c",
-              "target": "0x100000540",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x100000534",
-              "target": "0x100000540",
-              "type": "unconditional"
-            }
-          ]
-        }
-      },
-      {
-        "name": "_helper",
-        "entry_point": "0x100000460",
-        "size_bytes": 160,
-        "calling_convention": 3,
-        "local_variables": [
-          "arg1",
-          "arg_20h",
-          "var_0h",
-          "var_0h_3",
-          "var_8h",
-          "var_0h_2",
-          "var_10h",
-          "var_10h_2"
-        ],
-        "cfg": {
-          "nodes": [
-            {
-              "id": "0x100000460",
-              "size": 28,
-              "instructions_count": 7
-            },
-            {
-              "id": "0x10000047c",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x100000480",
-              "size": 12,
-              "instructions_count": 3
-            },
-            {
-              "id": "0x10000048c",
-              "size": 24,
-              "instructions_count": 6
-            },
-            {
-              "id": "0x1000004a4",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x1000004a8",
-              "size": 36,
-              "instructions_count": 9
-            },
-            {
-              "id": "0x1000004cc",
-              "size": 36,
-              "instructions_count": 9
-            },
-            {
-              "id": "0x1000004f0",
-              "size": 16,
-              "instructions_count": 4
-            }
-          ],
-          "edges": [
-            {
-              "source": "0x100000460",
-              "target": "0x10000048c",
-              "type": "conditional"
-            },
-            {
-              "source": "0x100000460",
-              "target": "0x10000047c",
-              "type": "conditional"
-            },
-            {
-              "source": "0x10000047c",
-              "target": "0x100000480",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x100000480",
-              "target": "0x1000004f0",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x10000048c",
-              "target": "0x1000004cc",
-              "type": "conditional"
-            },
-            {
-              "source": "0x10000048c",
-              "target": "0x1000004a4",
-              "type": "conditional"
-            },
-            {
-              "source": "0x1000004a4",
-              "target": "0x1000004a8",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x1000004a8",
-              "target": "0x1000004f0",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x1000004cc",
-              "target": "0x1000004f0",
+              "source": "0x100000598",
+              "target": "0x1000005b4",
               "type": "unconditional"
             }
           ]
@@ -804,25 +387,13 @@
         "visibility": "global"
       },
       {
-        "address": "0x100000500",
-        "name": "_classify",
-        "type": "function",
-        "visibility": "global"
-      },
-      {
         "address": "0x100000460",
-        "name": "_helper",
-        "type": "function",
-        "visibility": "global"
-      },
-      {
-        "address": "0x10000054c",
         "name": "_main",
         "type": "function",
         "visibility": "global"
       },
       {
-        "address": "0x1000007d0",
+        "address": "0x1000005c4",
         "name": "printf",
         "type": "function",
         "visibility": "static"
@@ -832,63 +403,21 @@
         "name": "func.100000460",
         "type": "function",
         "visibility": "static"
-      },
-      {
-        "address": "0x100000500",
-        "name": "func.100000500",
-        "type": "function",
-        "visibility": "static"
-      },
-      {
-        "address": "0x10000054c",
-        "name": "func.10000054c",
-        "type": "function",
-        "visibility": "static"
       }
     ],
     "call_graph": {
       "nodes": [
-        "printf",
-        "_helper",
-        "_classify",
-        "_main"
+        "_main",
+        "printf"
       ],
       "edges": [
         {
           "caller": "_main",
-          "callee": "_helper"
-        },
-        {
-          "caller": "_main",
-          "callee": "printf"
-        },
-        {
-          "caller": "_main",
-          "callee": "_classify"
-        },
-        {
-          "caller": "_main",
           "callee": "printf"
         },
         {
           "caller": "_main",
           "callee": "printf"
-        },
-        {
-          "caller": "_main",
-          "callee": "printf"
-        },
-        {
-          "caller": "_main",
-          "callee": "printf"
-        },
-        {
-          "caller": "_helper",
-          "callee": "_helper"
-        },
-        {
-          "caller": "_helper",
-          "callee": "_helper"
         }
       ]
     }

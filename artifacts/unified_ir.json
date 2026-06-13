@@ -9,394 +9,11 @@
   "data": {
     "functions": [
       {
-        "name": "_helper",
-        "entry_point": "0x100000460",
-        "size_bytes": 160,
-        "calling_convention": 3,
-        "signature": "3 _helper()",
-        "confidence": 1.0,
-        "local_variables": [],
-        "stack_variables": [
-          {
-            "name": "local_10",
-            "offset_bytes": -4,
-            "size_bytes": 4
-          },
-          {
-            "name": "local_14",
-            "offset_bytes": -8,
-            "size_bytes": 4
-          },
-          {
-            "name": "local_18",
-            "offset_bytes": -12,
-            "size_bytes": 4
-          },
-          {
-            "name": "local_1c",
-            "offset_bytes": -16,
-            "size_bytes": 4
-          },
-          {
-            "name": "local_20",
-            "offset_bytes": -20,
-            "size_bytes": 4
-          },
-          {
-            "name": "arg1",
-            "offset_bytes": -24,
-            "size_bytes": 4
-          },
-          {
-            "name": "arg_20h",
-            "offset_bytes": -28,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_0h",
-            "offset_bytes": -32,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_0h_3",
-            "offset_bytes": -36,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_8h",
-            "offset_bytes": -40,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_0h_2",
-            "offset_bytes": -44,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_10h",
-            "offset_bytes": -48,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_10h_2",
-            "offset_bytes": -52,
-            "size_bytes": 4
-          }
-        ],
-        "heap_variables": [],
-        "basic_blocks": [
-          {
-            "id": "0x100000460",
-            "size": 28,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000460",
-                "target": "0x10000048c",
-                "type": "conditional_taken"
-              },
-              {
-                "source": "0x100000460",
-                "target": "0x10000047c",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x10000047c",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x10000047c",
-                "target": "0x100000480",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000480",
-            "size": 12,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000480",
-                "target": "0x1000004f0",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x10000048c",
-            "size": 24,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x10000048c",
-                "target": "0x1000004cc",
-                "type": "conditional_taken"
-              },
-              {
-                "source": "0x10000048c",
-                "target": "0x1000004a4",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000004a4",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000004a4",
-                "target": "0x1000004a8",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000004a8",
-            "size": 20,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000004a8",
-                "target": "0x100000460",
-                "type": "unconditional"
-              },
-              {
-                "source": "0x1000004a8",
-                "target": "0x1000004bc",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000004bc",
-            "size": 16,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000004bc",
-                "target": "0x1000004f0",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000004cc",
-            "size": 20,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000004cc",
-                "target": "0x100000460",
-                "type": "unconditional"
-              },
-              {
-                "source": "0x1000004cc",
-                "target": "0x1000004e0",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000004e0",
-            "size": 16,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000004e0",
-                "target": "0x1000004f0",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000004f0",
-            "size": 16,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": []
-          }
-        ],
-        "provenance": [
-          "ghidra",
-          "radare2"
-        ]
-      },
-      {
-        "name": "_classify",
-        "entry_point": "0x100000500",
-        "size_bytes": 76,
-        "calling_convention": 3,
-        "signature": "3 _classify()",
-        "confidence": 1.0,
-        "local_variables": [],
-        "stack_variables": [
-          {
-            "name": "local_4",
-            "offset_bytes": -4,
-            "size_bytes": 4
-          },
-          {
-            "name": "local_8",
-            "offset_bytes": -8,
-            "size_bytes": 4
-          },
-          {
-            "name": "arg1",
-            "offset_bytes": -12,
-            "size_bytes": 4
-          },
-          {
-            "name": "arg_10h",
-            "offset_bytes": -16,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_8h",
-            "offset_bytes": -20,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_0h",
-            "offset_bytes": -24,
-            "size_bytes": 4
-          }
-        ],
-        "heap_variables": [],
-        "basic_blocks": [
-          {
-            "id": "0x100000500",
-            "size": 16,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000500",
-                "target": "0x100000520",
-                "type": "conditional_taken"
-              },
-              {
-                "source": "0x100000500",
-                "target": "0x100000510",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000510",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000510",
-                "target": "0x100000514",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000514",
-            "size": 12,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000514",
-                "target": "0x100000540",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000520",
-            "size": 8,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000520",
-                "target": "0x100000534",
-                "type": "conditional_taken"
-              },
-              {
-                "source": "0x100000520",
-                "target": "0x100000528",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000528",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000528",
-                "target": "0x10000052c",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x10000052c",
-            "size": 8,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x10000052c",
-                "target": "0x100000540",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000534",
-            "size": 12,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000534",
-                "target": "0x100000540",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000540",
-            "size": 12,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": []
-          }
-        ],
-        "provenance": [
-          "ghidra",
-          "radare2"
-        ]
-      },
-      {
         "name": "_main",
-        "entry_point": "0x10000054c",
-        "size_bytes": 644,
-        "calling_convention": 14,
-        "signature": "14 _main()",
+        "entry_point": "0x100000460",
+        "size_bytes": 356,
+        "calling_convention": 9,
+        "signature": "9 _main()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -431,82 +48,396 @@
             "size_bytes": 4
           },
           {
-            "name": "local_38",
+            "name": "argc",
             "offset_bytes": -28,
             "size_bytes": 4
           },
           {
-            "name": "local_40",
+            "name": "argv",
             "offset_bytes": -32,
             "size_bytes": 4
           },
           {
-            "name": "argc",
+            "name": "var_0h_4",
             "offset_bytes": -36,
             "size_bytes": 4
           },
           {
-            "name": "argv",
+            "name": "var_10h",
             "offset_bytes": -40,
             "size_bytes": 4
           },
           {
-            "name": "var_0h_5",
+            "name": "var_0h_3",
             "offset_bytes": -44,
             "size_bytes": 4
           },
           {
-            "name": "var_0h_6",
+            "name": "var_0h_2",
             "offset_bytes": -48,
             "size_bytes": 4
           },
           {
-            "name": "var_0h_7",
+            "name": "var_0h",
             "offset_bytes": -52,
             "size_bytes": 4
           },
           {
-            "name": "var_0h_4",
+            "name": "var_20h",
             "offset_bytes": -56,
             "size_bytes": 4
           },
           {
-            "name": "var_0h_3",
+            "name": "var_20h_2",
             "offset_bytes": -60,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_0h_2",
-            "offset_bytes": -64,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_0h",
-            "offset_bytes": -68,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_30h",
-            "offset_bytes": -72,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_30h_2",
-            "offset_bytes": -76,
             "size_bytes": 4
           }
         ],
         "heap_variables": [],
         "basic_blocks": [
           {
-            "id": "0x10000054c",
+            "id": "0x100000460",
             "size": 32,
             "instructions": [],
             "memory_accesses": [],
             "edges": [
               {
-                "source": "0x10000054c",
+                "source": "0x100000460",
+                "target": "0x100000480",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x100000480",
+            "size": 12,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x100000480",
                 "target": "0x10000056c",
+                "type": "conditional_taken"
+              },
+              {
+                "source": "0x100000480",
+                "target": "0x10000048c",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x10000048c",
+            "size": 4,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x10000048c",
+                "target": "0x100000490",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x100000490",
+            "size": 8,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x100000490",
+                "target": "0x100000498",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x100000498",
+            "size": 12,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x100000498",
+                "target": "0x100000514",
+                "type": "conditional_taken"
+              },
+              {
+                "source": "0x100000498",
+                "target": "0x1000004a4",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x1000004a4",
+            "size": 4,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x1000004a4",
+                "target": "0x1000004a8",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x1000004a8",
+            "size": 12,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x1000004a8",
+                "target": "0x1000004c8",
+                "type": "conditional_taken"
+              },
+              {
+                "source": "0x1000004a8",
+                "target": "0x1000004b4",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x1000004b4",
+            "size": 4,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x1000004b4",
+                "target": "0x1000004b8",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x1000004b8",
+            "size": 16,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x1000004b8",
+                "target": "0x100000498",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x1000004c8",
+            "size": 12,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x1000004c8",
+                "target": "0x1000004ec",
+                "type": "conditional_taken"
+              },
+              {
+                "source": "0x1000004c8",
+                "target": "0x1000004d4",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x1000004d4",
+            "size": 4,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x1000004d4",
+                "target": "0x1000004d8",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x1000004d8",
+            "size": 12,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x1000004d8",
+                "target": "0x1000004ec",
+                "type": "conditional_taken"
+              },
+              {
+                "source": "0x1000004d8",
+                "target": "0x1000004e4",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x1000004e4",
+            "size": 4,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x1000004e4",
+                "target": "0x1000004e8",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x1000004e8",
+            "size": 4,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x1000004e8",
+                "target": "0x100000514",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x1000004ec",
+            "size": 40,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x1000004ec",
+                "target": "0x100000498",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x100000514",
+            "size": 12,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x100000514",
+                "target": "0x100000528",
+                "type": "conditional_taken"
+              },
+              {
+                "source": "0x100000514",
+                "target": "0x100000520",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x100000520",
+            "size": 4,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x100000520",
+                "target": "0x100000524",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x100000524",
+            "size": 4,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x100000524",
+                "target": "0x10000056c",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x100000528",
+            "size": 12,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x100000528",
+                "target": "0x100000548",
+                "type": "conditional_taken"
+              },
+              {
+                "source": "0x100000528",
+                "target": "0x100000534",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x100000534",
+            "size": 4,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x100000534",
+                "target": "0x100000538",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x100000538",
+            "size": 16,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x100000538",
+                "target": "0x100000558",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x100000548",
+            "size": 16,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x100000548",
+                "target": "0x100000558",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x100000558",
+            "size": 4,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x100000558",
+                "target": "0x10000055c",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x10000055c",
+            "size": 16,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x10000055c",
+                "target": "0x100000480",
                 "type": "unconditional"
               }
             ]
@@ -519,7 +450,7 @@
             "edges": [
               {
                 "source": "0x10000056c",
-                "target": "0x100000748",
+                "target": "0x100000598",
                 "type": "conditional_taken"
               },
               {
@@ -544,74 +475,38 @@
           },
           {
             "id": "0x10000057c",
-            "size": 12,
+            "size": 24,
             "instructions": [],
             "memory_accesses": [],
             "edges": [
               {
                 "source": "0x10000057c",
-                "target": "0x10000059c",
-                "type": "conditional_taken"
-              },
-              {
-                "source": "0x10000057c",
-                "target": "0x100000588",
+                "target": "0x100000594",
                 "type": "unconditional"
               }
             ]
           },
           {
-            "id": "0x100000588",
+            "id": "0x100000594",
             "size": 4,
             "instructions": [],
             "memory_accesses": [],
             "edges": [
               {
-                "source": "0x100000588",
-                "target": "0x10000058c",
+                "source": "0x100000594",
+                "target": "0x1000005b4",
                 "type": "unconditional"
               }
             ]
           },
           {
-            "id": "0x10000058c",
-            "size": 16,
+            "id": "0x100000598",
+            "size": 24,
             "instructions": [],
             "memory_accesses": [],
             "edges": [
               {
-                "source": "0x10000058c",
-                "target": "0x10000056c",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x10000059c",
-            "size": 8,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x10000059c",
-                "target": "0x1000005a4",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000005a4",
-            "size": 12,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000005a4",
-                "target": "0x1000006f8",
-                "type": "conditional_taken"
-              },
-              {
-                "source": "0x1000005a4",
+                "source": "0x100000598",
                 "target": "0x1000005b0",
                 "type": "unconditional"
               }
@@ -632,628 +527,6 @@
           },
           {
             "id": "0x1000005b4",
-            "size": 12,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000005b4",
-                "target": "0x1000005e4",
-                "type": "conditional_taken"
-              },
-              {
-                "source": "0x1000005b4",
-                "target": "0x1000005c0",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000005c0",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000005c0",
-                "target": "0x1000005c4",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000005c4",
-            "size": 12,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000005c4",
-                "target": "0x1000005e4",
-                "type": "conditional_taken"
-              },
-              {
-                "source": "0x1000005c4",
-                "target": "0x1000005d0",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000005d0",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000005d0",
-                "target": "0x1000005d4",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000005d4",
-            "size": 16,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000005d4",
-                "target": "0x1000005a4",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000005e4",
-            "size": 12,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000005e4",
-                "target": "0x100000608",
-                "type": "conditional_taken"
-              },
-              {
-                "source": "0x1000005e4",
-                "target": "0x1000005f0",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000005f0",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000005f0",
-                "target": "0x1000005f4",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000005f4",
-            "size": 12,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000005f4",
-                "target": "0x100000608",
-                "type": "conditional_taken"
-              },
-              {
-                "source": "0x1000005f4",
-                "target": "0x100000600",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000600",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000600",
-                "target": "0x100000604",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000604",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000604",
-                "target": "0x1000006f8",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000608",
-            "size": 32,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000608",
-                "target": "0x10000067c",
-                "type": "conditional_taken"
-              },
-              {
-                "source": "0x100000608",
-                "target": "0x100000628",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000628",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000628",
-                "target": "0x10000062c",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x10000062c",
-            "size": 16,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x10000062c",
-                "target": "0x10000063c",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x10000063c",
-            "size": 60,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x10000063c",
-                "target": "0x100000678",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000678",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000678",
-                "target": "0x1000006cc",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x10000067c",
-            "size": 16,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x10000067c",
-                "target": "0x10000068c",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x10000068c",
-            "size": 60,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x10000068c",
-                "target": "0x1000006c8",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000006c8",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000006c8",
-                "target": "0x1000006cc",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000006cc",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000006cc",
-                "target": "0x1000006d0",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000006d0",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000006d0",
-                "target": "0x1000006d4",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000006d4",
-            "size": 12,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000006d4",
-                "target": "0x1000006e8",
-                "type": "conditional_taken"
-              },
-              {
-                "source": "0x1000006d4",
-                "target": "0x1000006e0",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000006e0",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000006e0",
-                "target": "0x1000006e4",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000006e4",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000006e4",
-                "target": "0x1000006f8",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000006e8",
-            "size": 16,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000006e8",
-                "target": "0x1000005a4",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000006f8",
-            "size": 12,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000006f8",
-                "target": "0x10000070c",
-                "type": "conditional_taken"
-              },
-              {
-                "source": "0x1000006f8",
-                "target": "0x100000704",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000704",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000704",
-                "target": "0x100000708",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000708",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000708",
-                "target": "0x100000748",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x10000070c",
-            "size": 8,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x10000070c",
-                "target": "0x100000720",
-                "type": "conditional_taken"
-              },
-              {
-                "source": "0x10000070c",
-                "target": "0x100000714",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000714",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000714",
-                "target": "0x100000718",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000718",
-            "size": 8,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000718",
-                "target": "0x100000734",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000720",
-            "size": 20,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000720",
-                "target": "0x100000734",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000734",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000734",
-                "target": "0x100000738",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000738",
-            "size": 16,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000738",
-                "target": "0x10000056c",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000748",
-            "size": 12,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000748",
-                "target": "0x100000774",
-                "type": "conditional_taken"
-              },
-              {
-                "source": "0x100000748",
-                "target": "0x100000754",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000754",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000754",
-                "target": "0x100000758",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000758",
-            "size": 24,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000758",
-                "target": "0x100000770",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000770",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000770",
-                "target": "0x1000007c0",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000774",
-            "size": 12,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000774",
-                "target": "0x1000007a0",
-                "type": "conditional_taken"
-              },
-              {
-                "source": "0x100000774",
-                "target": "0x100000780",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000780",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000780",
-                "target": "0x100000784",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000784",
-            "size": 24,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000784",
-                "target": "0x10000079c",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x10000079c",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x10000079c",
-                "target": "0x1000007bc",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000007a0",
-            "size": 24,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000007a0",
-                "target": "0x1000007b8",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000007b8",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000007b8",
-                "target": "0x1000007bc",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000007bc",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000007bc",
-                "target": "0x1000007c0",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000007c0",
             "size": 16,
             "instructions": [],
             "memory_accesses": [],
@@ -1267,8 +540,8 @@
       },
       {
         "name": "printf",
-        "entry_point": "0x1000007d0",
-        "size_bytes": 20,
+        "entry_point": "0x1000005c4",
+        "size_bytes": 16,
         "calling_convention": 1,
         "signature": "1 printf()",
         "confidence": 0.8,
@@ -1277,8 +550,8 @@
         "heap_variables": [],
         "basic_blocks": [
           {
-            "id": "0x1000007d0",
-            "size": 20,
+            "id": "0x1000005c4",
+            "size": 16,
             "instructions": [],
             "memory_accesses": [],
             "edges": []
@@ -1291,27 +564,13 @@
     ],
     "call_graph": {
       "nodes": [
-        "printf",
-        "_helper",
-        "_classify",
-        "_main"
+        "_main",
+        "printf"
       ],
       "edges": [
         {
           "caller": "_main",
-          "callee": "_helper"
-        },
-        {
-          "caller": "_main",
           "callee": "printf"
-        },
-        {
-          "caller": "_main",
-          "callee": "_classify"
-        },
-        {
-          "caller": "_helper",
-          "callee": "_helper"
         }
       ]
     },
@@ -1336,7 +595,7 @@
       },
       {
         "address": "0x100000460",
-        "name": "_helper",
+        "name": "_main",
         "type": "function",
         "visibility": "global"
       },
@@ -1347,8 +606,14 @@
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x10000048c",
-        "name": "LAB_10000048c",
+        "address": "0x100000490",
+        "name": "LAB_100000490",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "0x100000498",
+        "name": "LAB_100000498",
         "type": "Label",
         "visibility": "DEFAULT"
       },
@@ -1359,22 +624,34 @@
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000004cc",
-        "name": "LAB_1000004cc",
+        "address": "0x1000004b8",
+        "name": "LAB_1000004b8",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000004f0",
-        "name": "LAB_1000004f0",
+        "address": "0x1000004c8",
+        "name": "LAB_1000004c8",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100000500",
-        "name": "_classify",
-        "type": "function",
-        "visibility": "global"
+        "address": "0x1000004d8",
+        "name": "LAB_1000004d8",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "0x1000004e8",
+        "name": "LAB_1000004e8",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "0x1000004ec",
+        "name": "LAB_1000004ec",
+        "type": "Label",
+        "visibility": "DEFAULT"
       },
       {
         "address": "0x100000514",
@@ -1383,34 +660,40 @@
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100000520",
-        "name": "LAB_100000520",
+        "address": "0x100000524",
+        "name": "LAB_100000524",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x10000052c",
-        "name": "LAB_10000052c",
+        "address": "0x100000528",
+        "name": "LAB_100000528",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100000534",
-        "name": "LAB_100000534",
+        "address": "0x100000538",
+        "name": "LAB_100000538",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100000540",
-        "name": "LAB_100000540",
+        "address": "0x100000548",
+        "name": "LAB_100000548",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x10000054c",
-        "name": "_main",
-        "type": "function",
-        "visibility": "global"
+        "address": "0x100000558",
+        "name": "LAB_100000558",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "0x10000055c",
+        "name": "LAB_10000055c",
+        "type": "Label",
+        "visibility": "DEFAULT"
       },
       {
         "address": "0x10000056c",
@@ -1425,20 +708,8 @@
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x10000058c",
-        "name": "LAB_10000058c",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x10000059c",
-        "name": "LAB_10000059c",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x1000005a4",
-        "name": "LAB_1000005a4",
+        "address": "0x100000598",
+        "name": "LAB_100000598",
         "type": "Label",
         "visibility": "DEFAULT"
       },
@@ -1450,199 +721,19 @@
       },
       {
         "address": "0x1000005c4",
-        "name": "LAB_1000005c4",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x1000005d4",
-        "name": "LAB_1000005d4",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x1000005e4",
-        "name": "LAB_1000005e4",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x1000005f4",
-        "name": "LAB_1000005f4",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x100000604",
-        "name": "LAB_100000604",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x100000608",
-        "name": "LAB_100000608",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x10000062c",
-        "name": "LAB_10000062c",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x10000067c",
-        "name": "LAB_10000067c",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x1000006cc",
-        "name": "LAB_1000006cc",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x1000006d0",
-        "name": "LAB_1000006d0",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x1000006d4",
-        "name": "LAB_1000006d4",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x1000006e4",
-        "name": "LAB_1000006e4",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x1000006e8",
-        "name": "LAB_1000006e8",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x1000006f8",
-        "name": "LAB_1000006f8",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x100000708",
-        "name": "LAB_100000708",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x10000070c",
-        "name": "LAB_10000070c",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x100000718",
-        "name": "LAB_100000718",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x100000720",
-        "name": "LAB_100000720",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x100000734",
-        "name": "LAB_100000734",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x100000738",
-        "name": "LAB_100000738",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x100000748",
-        "name": "LAB_100000748",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x100000758",
-        "name": "LAB_100000758",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x100000774",
-        "name": "LAB_100000774",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x100000784",
-        "name": "LAB_100000784",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x1000007a0",
-        "name": "LAB_1000007a0",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x1000007bc",
-        "name": "LAB_1000007bc",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x1000007c0",
-        "name": "LAB_1000007c0",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x1000007d0",
         "name": "printf",
         "type": "function",
         "visibility": "static"
       },
       {
-        "address": "0x1000007dc",
-        "name": "s_even_path:_i=%d_j=%d_total=%d_1000007dc",
+        "address": "0x1000005d0",
+        "name": "s_large_%d_1000005d0",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000007fb",
-        "name": "s_odd_path:_i=%d_j=%d_total=%d_1000007fb",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x100000819",
-        "name": "s_large_total:_%d_100000819",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x10000082a",
-        "name": "s_exact_total:_%d_10000082a",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x10000083b",
-        "name": "s_small_total:_%d_10000083b",
+        "address": "0x1000005da",
+        "name": "s_small_%d_1000005da",
         "type": "Label",
         "visibility": "DEFAULT"
       },
@@ -1659,38 +750,26 @@
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000080f8",
-        "name": "nlist_1000080f8",
+        "address": "0x1000080b8",
+        "name": "nlist_1000080b8",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100008112",
-        "name": "s___mh_execute_header_100008112",
+        "address": "0x1000080d2",
+        "name": "s___mh_execute_header_1000080d2",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100008126",
-        "name": "s__classify_100008126",
+        "address": "0x1000080e6",
+        "name": "s__main_1000080e6",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100008130",
-        "name": "s__helper_100008130",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x100008138",
-        "name": "s__main_100008138",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x10000813e",
-        "name": "s__printf_10000813e",
+        "address": "0x1000080ec",
+        "name": "s__printf_1000080ec",
         "type": "Label",
         "visibility": "DEFAULT"
       }

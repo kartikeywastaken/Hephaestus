@@ -93,6 +93,14 @@ def try_conditional_reduction(graph: ReductionGraph, ipdom: Dict[str, Optional[s
             succs = graph.successors.get(node_id, [])
             if len(succs) == 2:
                 split_nodes.append(node_id)
+            elif len(succs) >= 3:
+                # Phase 3D: flag potential switch-like fan-out; do not attempt
+                # binary conditional reduction on high-arity branch nodes.
+                logger.debug(
+                    f"Skipping conditional reduction for switch-like fan-out at "
+                    f"{node_id} (out-degree={len(succs)})"
+                )
+
             
     split_nodes.sort()
     
