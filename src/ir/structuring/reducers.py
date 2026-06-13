@@ -19,16 +19,17 @@ class ReductionGraph:
 
     def replace_nodes(self, old_node_ids: List[str], new_node: RegionNode, new_successors: List[str], new_predecessors: List[str]):
         new_id = new_node.node_id
+        old_ids_set = set(old_node_ids)
         
         # 1. Update predecessor connections of successors of the collapsed region
         for old_id in old_node_ids:
             for s in self.successors.get(old_id, []):
-                if s not in old_node_ids:
+                if s not in old_ids_set:
                     preds = self.predecessors.get(s, [])
                     # Replace old_id with new_id in predecessor list
                     new_preds = []
                     for p in preds:
-                        if p in old_node_ids:
+                        if p in old_ids_set:
                             if new_id not in new_preds:
                                 new_preds.append(new_id)
                         else:
@@ -38,12 +39,12 @@ class ReductionGraph:
         # 2. Update successor connections of predecessors of the collapsed region
         for old_id in old_node_ids:
             for p in self.predecessors.get(old_id, []):
-                if p not in old_node_ids:
+                if p not in old_ids_set:
                     succs = self.successors.get(p, [])
                     # Replace old_id with new_id in successor list
                     new_succs = []
                     for s in succs:
-                        if s in old_node_ids:
+                        if s in old_ids_set:
                             if new_id not in new_succs:
                                 new_succs.append(new_id)
                         else:
@@ -56,13 +57,32 @@ class ReductionGraph:
             self.successors.pop(old_id, None)
             self.predecessors.pop(old_id, None)
 
-        # 4. Insert new node
+        # 4. Insert new node (replacing internal references with new_id to preserve self-loops/cycles)
         self.nodes[new_id] = new_node
-        self.successors[new_id] = list(new_successors)
-        self.predecessors[new_id] = list(new_predecessors)
+        
+        mapped_succs = []
+        for s in new_successors:
+            if s in old_ids_set:
+                if new_id not in mapped_succs:
+                    mapped_succs.append(new_id)
+            else:
+                if s not in mapped_succs:
+                    mapped_succs.append(s)
+                    
+        mapped_preds = []
+        for p in new_predecessors:
+            if p in old_ids_set:
+                if new_id not in mapped_preds:
+                    mapped_preds.append(new_id)
+            else:
+                if p not in mapped_preds:
+                    mapped_preds.append(p)
+
+        self.successors[new_id] = mapped_succs
+        self.predecessors[new_id] = mapped_preds
 
         # 5. Update entry node if it was collapsed
-        if self.entry_node_id in old_node_ids:
+        if self.entry_node_id in old_ids_set:
             self.entry_node_id = new_id
 
 def run_sequence_reductions(graph: ReductionGraph, logger: logging.Logger) -> bool:

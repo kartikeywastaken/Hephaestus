@@ -79,6 +79,8 @@ def _candidate_loop_body(graph: ReductionGraph, head: str, tail: str) -> Set[str
     body.add(tail)
     while worklist:
         n = worklist.pop()
+        if n == head:
+            continue
         for p in graph.predecessors.get(n, []):
             if p in graph.nodes and p not in body:
                 body.add(p)

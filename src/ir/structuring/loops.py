@@ -221,6 +221,37 @@ def try_conditional_reduction_body(
 
     return False
 
+def is_suspicious_entry_header_loop(
+    header: str,
+    function_entry: str,
+    latches: List[str],
+    exit_blocks: Set[str],
+    body_node: RegionNode,
+    graph: ReductionGraph,
+    body_set: Set[str],
+    logger: logging.Logger
+) -> bool:
+    """
+    Detects if a candidate loop is likely a false-positive recursion collapse.
+    """
+    if header != function_entry:
+        return False
+        
+    if len(latches) >= 2 and len(exit_blocks) >= 3:
+        outer_remainder = set(graph.nodes.keys()) - body_set
+        if len(outer_remainder) >= 2:
+            logger.info(
+                f"Rejected suspicious entry-header loop at {header} because collapse would leave a large fragmented outer remainder"
+            )
+            return True
+            
+        logger.info(
+            f"Rejecting loop candidate at header {header}: entry-header candidate with {len(latches)} latches and {len(exit_blocks)} exit blocks"
+        )
+        return True
+        
+    return False
+
 def try_loop_reduction(graph: ReductionGraph, ipdom: Dict[str, Optional[str]], logger: logging.Logger) -> bool:
     """
     Detects, validates, and collapses one loop region in the ReductionGraph.
@@ -287,6 +318,8 @@ def try_loop_reduction(graph: ReductionGraph, ipdom: Dict[str, Optional[str]], l
             
         while worklist:
             n = worklist.pop()
+            if n == h:
+                continue
             for p in graph.predecessors.get(n, []):
                 if p not in body_set:
                     body_set.add(p)
@@ -408,6 +441,18 @@ def try_loop_reduction(graph: ReductionGraph, ipdom: Dict[str, Optional[str]], l
             continue
 
         body_node = sub_graph.nodes[remaining_ids[0]]
+
+        if is_suspicious_entry_header_loop(
+            header=h,
+            function_entry=graph.entry_node_id,
+            latches=latches,
+            exit_blocks=exit_blocks,
+            body_node=body_node,
+            graph=graph,
+            body_set=body_set,
+            logger=logger
+        ):
+            continue
 
         # 8. Collapse Loop in Main ReductionGraph
         new_node = LoopNode(
