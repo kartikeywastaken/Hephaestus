@@ -110,3 +110,27 @@ class UnstructuredRegionNode(RegionNode):
             "type": "unstructured",
             "children": [c.to_dict() for c in self.children]
         }
+
+class LoopNode(RegionNode):
+    """
+    Groups a structured loop region associated with a loop header.
+    """
+    def __init__(self, kind: str, header_block: str, body: RegionNode, exit_blocks: List[str]):
+        self.kind = kind
+        self.header_block = header_block
+        self.body = body
+        self.exit_blocks = exit_blocks
+
+    @property
+    def node_id(self) -> str:
+        return self.header_block
+
+    def to_dict(self) -> dict:
+        return {
+            "type": "loop",
+            "kind": self.kind,
+            "header_block": self.header_block,
+            "body": self.body.to_dict(),
+            "exit_blocks": sorted(self.exit_blocks)
+        }
+

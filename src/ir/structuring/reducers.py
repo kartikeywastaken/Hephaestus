@@ -78,7 +78,7 @@ def run_sequence_reductions(graph: ReductionGraph, logger: logging.Logger) -> bo
             if len(succs) == 1:
                 v_id = succs[0]
                 preds = graph.predecessors.get(v_id, [])
-                if len(preds) == 1 and preds[0] == u_id:
+                if len(preds) == 1 and preds[0] == u_id and v_id != graph.entry_node_id:
                     # u_id -> v_id sequence candidate found
                     candidate = (u_id, v_id)
                     break
@@ -96,10 +96,8 @@ def run_sequence_reductions(graph: ReductionGraph, logger: logging.Logger) -> bo
         else:
             children.append(u_node)
             
-        if isinstance(v_node, SequenceNode):
-            children.extend(v_node.children)
-        else:
-            children.append(v_node)
+        # Do not flatten v_node to preserve already structured subregions
+        children.append(v_node)
             
         new_node = SequenceNode(children)
         new_succs = list(graph.successors.get(v_id, []))

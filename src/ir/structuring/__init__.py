@@ -12,5 +12,6 @@ from src.ir.structuring.models import (
     IfNode,
     IfElseNode,
     UnstructuredRegionNode,
+    LoopNode,
 )
 from src.ir.structuring.builder import structure_function

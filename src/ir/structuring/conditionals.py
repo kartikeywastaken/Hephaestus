@@ -5,7 +5,7 @@ Phase 3B: Conditional Region Detection
 
 import logging
 from typing import Dict, List, Set, Optional, Tuple
-from src.ir.structuring.models import RegionNode, IfNode, IfElseNode, SequenceNode
+from src.ir.structuring.models import RegionNode, BlockNode, IfNode, IfElseNode, SequenceNode
 from src.ir.structuring.reducers import ReductionGraph
 
 def extract_branch_region(graph: ReductionGraph, start: str, merge: Optional[str]) -> Set[str]:
@@ -89,9 +89,10 @@ def try_conditional_reduction(graph: ReductionGraph, ipdom: Dict[str, Optional[s
     # Sort split nodes deterministically
     split_nodes = []
     for node_id, node in graph.nodes.items():
-        succs = graph.successors.get(node_id, [])
-        if len(succs) == 2:
-            split_nodes.append(node_id)
+        if isinstance(node, BlockNode):
+            succs = graph.successors.get(node_id, [])
+            if len(succs) == 2:
+                split_nodes.append(node_id)
             
     split_nodes.sort()
     

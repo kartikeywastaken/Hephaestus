@@ -33,7 +33,8 @@ def structure_function(function_data: Dict[str, Any], logger: logging.Logger) ->
     
     ipdom = report["immediate_post_dominators"]
     
-    # 4. Orchestrate reduction loop with sequence restart rule
+    # 4. Orchestrate reduction loop with sequence + conditional + loop restart rule
+    from src.ir.structuring.loops import try_loop_reduction
     reductions = 0
     while True:
         # Step A: Reduce sequences to fixpoint
@@ -41,13 +42,19 @@ def structure_function(function_data: Dict[str, Any], logger: logging.Logger) ->
         
         # Step B: Detect and collapse one conditional region
         collapsed_conditional = try_conditional_reduction(graph, ipdom, logger)
-        
         if collapsed_conditional:
             reductions += 1
             # Restart sequence reductions after a conditional collapse
             continue
-        else:
-            break
+            
+        # Step C: Detect and collapse one loop region
+        collapsed_loop = try_loop_reduction(graph, ipdom, logger)
+        if collapsed_loop:
+            reductions += 1
+            # Restart sequence and conditional passes after a loop collapse
+            continue
+            
+        break
             
     # 5. Fallback wrapping for partially structured graphs
     remaining_ids = sorted(list(graph.nodes.keys()))

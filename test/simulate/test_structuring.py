@@ -13,6 +13,7 @@ from src.ir.structuring.models import (
     IfNode,
     IfElseNode,
     UnstructuredRegionNode,
+    LoopNode,
 )
 
 class TestCFGStructuringAnalysis(unittest.TestCase):
@@ -540,6 +541,308 @@ class TestCFGStructuringAnalysis(unittest.TestCase):
         
         self.assertIsInstance(root, UnstructuredRegionNode)
         self.assertTrue(len(root.children) > 1)
+
+    def test_simple_while_loop_structuring(self):
+        """
+        Verify detection, loop header, latch, body containment, and 'while_like' heuristic.
+        0x1000 (entry) -> 0x1004 (header)
+        0x1004 -> 0x1008 (body) & 0x1004 -> 0x100c (exit)
+        0x1008 -> 0x1004 (latch back-edge)
+        """
+        func_data = {
+            "name": "simple_while",
+            "entry_point": "0x1000",
+            "basic_blocks": [
+                {"id": "0x1000", "edges": [{"source": "0x1000", "target": "0x1004"}]},
+                {
+                    "id": "0x1004",
+                    "edges": [
+                        {"source": "0x1004", "target": "0x1008"},
+                        {"source": "0x1004", "target": "0x100c"}
+                    ]
+                },
+                {"id": "0x1008", "edges": [{"source": "0x1008", "target": "0x1004"}]},
+                {"id": "0x100c", "edges": []}
+            ]
+        }
+        root = structure_function(func_data, self.logger)
+        
+        # Expect: SequenceNode([BlockNode(0x1000), LoopNode(while_like, header=0x1004), BlockNode(0x100c)])
+        self.assertIsInstance(root, SequenceNode)
+        self.assertEqual(len(root.children), 3)
+        
+        entry = root.children[0]
+        self.assertEqual(entry.node_id, "0x1000")
+        
+        loop = root.children[1]
+        self.assertIsInstance(loop, LoopNode)
+        self.assertEqual(loop.kind, "while_like")
+        self.assertEqual(loop.header_block, "0x1004")
+        self.assertEqual(loop.exit_blocks, ["0x100c"])
+        
+        # Body contains the header and latch as a SequenceNode([0x1004, 0x1008])
+        self.assertIsInstance(loop.body, SequenceNode)
+        self.assertEqual(len(loop.body.children), 2)
+        self.assertEqual(loop.body.children[0].node_id, "0x1004")
+        self.assertEqual(loop.body.children[1].node_id, "0x1008")
+        
+        exit_block = root.children[2]
+        self.assertEqual(exit_block.node_id, "0x100c")
+
+    def test_simple_for_loop_structuring(self):
+        """
+        Verify loops with increment/latch sequence are collapsed.
+        0x1004 (header) -> 0x1008 (body)
+        0x1008 -> 0x100a (increment) -> 0x1004 (latch)
+        0x1004 -> 0x100c (exit)
+        """
+        func_data = {
+            "name": "for_loop",
+            "entry_point": "0x1004",
+            "basic_blocks": [
+                {
+                    "id": "0x1004",
+                    "edges": [
+                        {"source": "0x1004", "target": "0x1008"},
+                        {"source": "0x1004", "target": "0x100c"}
+                    ]
+                },
+                {"id": "0x1008", "edges": [{"source": "0x1008", "target": "0x100a"}]},
+                {"id": "0x100a", "edges": [{"source": "0x100a", "target": "0x1004"}]},
+                {"id": "0x100c", "edges": []}
+            ]
+        }
+        root = structure_function(func_data, self.logger)
+        
+        self.assertIsInstance(root, SequenceNode)
+        self.assertEqual(len(root.children), 2)
+        
+        loop = root.children[0]
+        self.assertIsInstance(loop, LoopNode)
+        self.assertEqual(loop.header_block, "0x1004")
+        
+        # Body is Sequence([BlockNode(0x1004), SequenceNode([0x1008, 0x100a])])
+        self.assertIsInstance(loop.body, SequenceNode)
+        self.assertEqual(len(loop.body.children), 2)
+        self.assertEqual(loop.body.children[0].node_id, "0x1004")
+        self.assertIsInstance(loop.body.children[1], SequenceNode)
+        self.assertEqual(len(loop.body.children[1].children), 2)
+
+    def test_loop_with_nested_if_else(self):
+        """
+        Verify that inner conditional diamond collapses inside the loop body.
+        """
+        func_data = {
+            "name": "loop_nested_if",
+            "entry_point": "0x1004",
+            "basic_blocks": [
+                {
+                    "id": "0x1004",
+                    "edges": [
+                        {"source": "0x1004", "target": "0x1008"},
+                        {"source": "0x1004", "target": "0x100c"}
+                    ]
+                },
+                {
+                    "id": "0x1008",
+                    "edges": [
+                        {"source": "0x1008", "target": "0x1010"},
+                        {"source": "0x1008", "target": "0x1014"}
+                    ]
+                },
+                {"id": "0x1010", "edges": [{"source": "0x1010", "target": "0x1018"}]},
+                {"id": "0x1014", "edges": [{"source": "0x1014", "target": "0x1018"}]},
+                {"id": "0x1018", "edges": [{"source": "0x1018", "target": "0x1004"}]},
+                {"id": "0x100c", "edges": []}
+            ]
+        }
+        root = structure_function(func_data, self.logger)
+        
+        self.assertIsInstance(root, SequenceNode)
+        loop = root.children[0]
+        self.assertIsInstance(loop, LoopNode)
+        
+        # Body should be SequenceNode([Block(0x1004), SequenceNode([IfElseNode, Block(0x1018)])])
+        body_seq = loop.body
+        self.assertIsInstance(body_seq, SequenceNode)
+        self.assertEqual(len(body_seq.children), 2)
+        self.assertEqual(body_seq.children[0].node_id, "0x1004")
+        
+        inner_seq = body_seq.children[1]
+        self.assertIsInstance(inner_seq, SequenceNode)
+        self.assertIsInstance(inner_seq.children[0], IfElseNode)
+        self.assertEqual(inner_seq.children[1].node_id, "0x1018")
+
+    def test_loop_with_asymmetric_body(self):
+        """
+        Verify asymmetric body inside the loop.
+        """
+        func_data = {
+            "name": "loop_asymmetric",
+            "entry_point": "0x1004",
+            "basic_blocks": [
+                {
+                    "id": "0x1004",
+                    "edges": [
+                        {"source": "0x1004", "target": "0x1008"},
+                        {"source": "0x1004", "target": "0x100c"}
+                    ]
+                },
+                {
+                    "id": "0x1008",
+                    "edges": [
+                        {"source": "0x1008", "target": "0x100a"},
+                        {"source": "0x1008", "target": "0x100e"}
+                    ]
+                },
+                {"id": "0x100a", "edges": [{"source": "0x100a", "target": "0x1010"}]},
+                {"id": "0x100e", "edges": [{"source": "0x100e", "target": "0x1010"}]},
+                {"id": "0x1010", "edges": [{"source": "0x1010", "target": "0x1004"}]},
+                {"id": "0x100c", "edges": []}
+            ]
+        }
+        root = structure_function(func_data, self.logger)
+        
+        self.assertIsInstance(root, SequenceNode)
+        loop = root.children[0]
+        self.assertIsInstance(loop, LoopNode)
+        
+        # Body contains h, and then the structured IfElseNode and merge block
+        self.assertIsInstance(loop.body, SequenceNode)
+        self.assertEqual(loop.body.children[0].node_id, "0x1004")
+        
+        body_rest = loop.body.children[1]
+        self.assertIsInstance(body_rest, SequenceNode)
+        self.assertIsInstance(body_rest.children[0], IfElseNode)
+        self.assertEqual(body_rest.children[1].node_id, "0x1010")
+
+    def test_loop_with_post_loop_continuation(self):
+        """
+        Verify that continuation blocks after the loop are not absorbed.
+        """
+        func_data = {
+            "name": "loop_continuation",
+            "entry_point": "0x1000",
+            "basic_blocks": [
+                {"id": "0x1000", "edges": [{"source": "0x1000", "target": "0x1004"}]},
+                {
+                    "id": "0x1004",
+                    "edges": [
+                        {"source": "0x1004", "target": "0x1008"},
+                        {"source": "0x1004", "target": "0x100c"}
+                    ]
+                },
+                {"id": "0x1008", "edges": [{"source": "0x1008", "target": "0x1004"}]},
+                {"id": "0x100c", "edges": [{"source": "0x100c", "target": "0x1010"}]},
+                {"id": "0x1010", "edges": [{"source": "0x1010", "target": "0x1014"}]},
+                {"id": "0x1014", "edges": []}
+            ]
+        }
+        root = structure_function(func_data, self.logger)
+        
+        # Sequence([Block(0x1000), LoopNode, SequenceNode([0x100c, 0x1010, 0x1014])])
+        self.assertIsInstance(root, SequenceNode)
+        self.assertEqual(len(root.children), 3)
+        self.assertEqual(root.children[0].node_id, "0x1000")
+        self.assertIsInstance(root.children[1], LoopNode)
+        self.assertIsInstance(root.children[2], SequenceNode)
+        self.assertEqual(len(root.children[2].children), 3)
+
+    def test_nested_loops_structuring(self):
+        """
+        Verify that inner loops collapse first.
+        """
+        func_data = {
+            "name": "nested_loops",
+            "entry_point": "0x1000",
+            "basic_blocks": [
+                {"id": "0x1000", "edges": [{"source": "0x1000", "target": "0x1004"}]},
+                {
+                    "id": "0x1004",
+                    "edges": [
+                        {"source": "0x1004", "target": "0x1008"},
+                        {"source": "0x1004", "target": "0x101c"}
+                    ]
+                },
+                {
+                    "id": "0x1008",
+                    "edges": [
+                        {"source": "0x1008", "target": "0x100c"},
+                        {"source": "0x1008", "target": "0x1010"}
+                    ]
+                },
+                {"id": "0x100c", "edges": [{"source": "0x100c", "target": "0x1008"}]},
+                {"id": "0x1010", "edges": [{"source": "0x1010", "target": "0x1004"}]},
+                {"id": "0x101c", "edges": []}
+            ]
+        }
+        root = structure_function(func_data, self.logger)
+        
+        self.assertIsInstance(root, SequenceNode)
+        outer_loop = root.children[1]
+        self.assertIsInstance(outer_loop, LoopNode)
+        self.assertEqual(outer_loop.header_block, "0x1004")
+        
+        # Outer loop body contains: Block(0x1004), SequenceNode([LoopNode(inner), Block(0x1010)])
+        self.assertIsInstance(outer_loop.body, SequenceNode)
+        self.assertEqual(outer_loop.body.children[0].node_id, "0x1004")
+        
+        outer_body_rest = outer_loop.body.children[1]
+        self.assertIsInstance(outer_body_rest, SequenceNode)
+        
+        inner_loop = outer_body_rest.children[0]
+        self.assertIsInstance(inner_loop, LoopNode)
+        self.assertEqual(inner_loop.header_block, "0x1008")
+        self.assertEqual(inner_loop.body.children[0].node_id, "0x1008")
+        self.assertEqual(inner_loop.body.children[1].node_id, "0x100c")
+        
+        inner_exit = outer_body_rest.children[1]
+        self.assertEqual(inner_exit.node_id, "0x1010")
+
+    def test_recursion_loop_coexistence(self):
+        """
+        Verify that recursion alone does not trigger LoopNode.
+        """
+        func_data = {
+            "name": "fact_recursion",
+            "entry_point": "0x2000",
+            "basic_blocks": [
+                {
+                    "id": "0x2000",
+                    "edges": [
+                        {"source": "0x2000", "target": "0x2004"},
+                        {"source": "0x2000", "target": "0x2008"}
+                    ]
+                },
+                {"id": "0x2004", "edges": []},
+                {"id": "0x2008", "edges": []} # recursive call block in original code, no CFG edges to 0x2000
+            ]
+        }
+        root = structure_function(func_data, self.logger)
+        # Recursion is call-level, not CFG cycle, so it structures to IfElseNode
+        self.assertIsInstance(root, IfElseNode)
+
+    def test_ambiguous_cyclic_fallback(self):
+        """
+        Verify fallback to UnstructuredRegionNode for non-reducible cyclic graphs.
+        """
+        func_data = {
+            "name": "irreducible_cycle",
+            "entry_point": "0x1000",
+            "basic_blocks": [
+                {
+                    "id": "0x1000",
+                    "edges": [
+                        {"source": "0x1000", "target": "0x1004"},
+                        {"source": "0x1000", "target": "0x1008"}
+                    ]
+                },
+                {"id": "0x1004", "edges": [{"source": "0x1004", "target": "0x1008"}]},
+                {"id": "0x1008", "edges": [{"source": "0x1008", "target": "0x1004"}]}
+            ]
+        }
+        root = structure_function(func_data, self.logger)
+        self.assertIsInstance(root, UnstructuredRegionNode)
 
 if __name__ == "__main__":
     unittest.main()
