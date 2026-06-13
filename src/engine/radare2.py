@@ -9,6 +9,20 @@ import time
 from typing import Dict, Any, Optional
 from src.engine.base import BaseExtractor, ExtractorError, execute_with_retry
 
+def clean_r2_name(name: str) -> str:
+    """Removes common Radare2 prefixes from symbol and function names."""
+    if not name:
+        return name
+    if name.startswith("sym.imp."):
+        return name[len("sym.imp."):]
+    if name.startswith("sym.fcn."):
+        return name[len("sym.fcn."):]
+    if name.startswith("sym."):
+        return name[len("sym."):]
+    if name.startswith("imp."):
+        return name[len("imp."):]
+    return name
+
 class Radare2Extractor(BaseExtractor):
     """
     Subsystem managing custom headless Radare2 environments using r2pipe dispatches.
@@ -62,12 +76,26 @@ class Radare2Extractor(BaseExtractor):
             self.logger.info("Running Radare2 analyzer auto-analysis (aaa)...")
             r2.cmd("aaa")
 
+            # Query binary info
+            try:
+                info_raw = r2.cmdj("ij") or {}
+                bin_info = info_raw.get("bin", {})
+                arch = bin_info.get("arch", "")
+                bits = bin_info.get("bits", 0)
+                self.logger.info(f"Radare2 binary info: arch={arch}, bits={bits}")
+            except Exception as e:
+                self.logger.warning(f"Failed to get binary info (ij): {e}")
+                arch, bits = "", 0
+
             # Extract functions
             try:
                 functions_raw = r2.cmdj("aflj") or []
             except Exception as e:
                 self.logger.warning(f"Failed to get functions list (aflj): {e}")
                 functions_raw = []
+            self.logger.info(f"aflj returned {len(functions_raw)} functions")
+            if functions_raw:
+                self.logger.debug(f"First aflj function object: {functions_raw[0]}")
 
             # Extract symbols
             try:
@@ -75,22 +103,48 @@ class Radare2Extractor(BaseExtractor):
             except Exception as e:
                 self.logger.warning(f"Failed to get symbols list (isj): {e}")
                 symbols_raw = []
+            self.logger.info(f"isj returned {len(symbols_raw)} symbols")
+
+            # Parse symbols and build an address-to-name map
+            addr_to_symbol: Dict[str, str] = {}
+            for sym in symbols_raw:
+                name = sym.get("name", "")
+                if not name:
+                    continue
+                vaddr = sym.get("vaddr") or sym.get("offset")
+                if vaddr is not None:
+                    cleaned_name = clean_r2_name(name)
+                    vaddr_hex = hex(vaddr)
+                    if vaddr_hex not in addr_to_symbol:
+                        addr_to_symbol[vaddr_hex] = cleaned_name
+                    else:
+                        current = addr_to_symbol[vaddr_hex]
+                        if current.startswith("func.") and not cleaned_name.startswith("func."):
+                            addr_to_symbol[vaddr_hex] = cleaned_name
 
             # Structure functions
             functions = []
             call_nodes = set()
             call_edges = []
 
+            discarded_missing_name = 0
+            discarded_missing_offset = 0
+
             for func in functions_raw:
-                func_name = func.get("name", "")
-                if not func_name:
+                raw_func_name = func.get("name", "")
+                if not raw_func_name:
+                    self.logger.warning("Function object discarded: empty/missing name field")
+                    discarded_missing_name += 1
                     continue
                 
-                offset = func.get("offset")
+                offset = func.get("addr") or func.get("offset")
                 if offset is None:
+                    self.logger.warning(f"Function {raw_func_name} discarded: missing address/offset")
+                    discarded_missing_offset += 1
                     continue
                 
                 func_ea = hex(offset)
+                func_name = addr_to_symbol.get(func_ea) or clean_r2_name(raw_func_name)
                 call_nodes.add(func_name)
 
                 # Calling convention
@@ -130,6 +184,7 @@ class Radare2Extractor(BaseExtractor):
                 cfg_edges = []
                 try:
                     blocks = r2.cmdj(f"afbj @ {func_ea}") or []
+                    self.logger.info(f"Function {func_name} basic blocks (CFG nodes) count: {len(blocks)}")
                     for block in blocks:
                         addr = block.get("addr")
                         if addr is None:
@@ -192,22 +247,27 @@ class Radare2Extractor(BaseExtractor):
 
                 # Extract callees / calls inside this function
                 try:
-                    callees = r2.cmdj(f"afcj @ {func_ea}") or []
-                    for callee in callees:
-                        if isinstance(callee, str):
-                            callee_name = callee
-                        elif isinstance(callee, dict) and "name" in callee:
-                            callee_name = callee["name"]
-                        else:
-                            continue
-                        call_edges.append({
-                            "caller": func_name,
-                            "callee": callee_name
-                        })
+                    refs = r2.cmdj(f"axffj @ {func_ea}") or []
+                    self.logger.info(f"axffj for {func_name} at {func_ea} returned {len(refs)} references")
+                    for ref in refs:
+                        if ref.get("type") == "CALL":
+                            raw_callee_name = ref.get("name")
+                            if raw_callee_name:
+                                callee_name = clean_r2_name(raw_callee_name)
+                                call_edges.append({
+                                    "caller": func_name,
+                                    "callee": callee_name
+                                })
+                                call_nodes.add(callee_name)
                 except Exception as e:
-                    self.logger.debug(f"Failed to get callers/callees (afcj) for {func_name}: {e}")
+                    self.logger.warning(f"Failed to get callers/callees (axffj) for {func_name}: {e}")
 
-            # Structure symbols
+            if discarded_missing_name > 0:
+                self.logger.info(f"Discarded {discarded_missing_name} functions due to missing name")
+            if discarded_missing_offset > 0:
+                self.logger.info(f"Discarded {discarded_missing_offset} functions due to missing address/offset")
+
+            # Structure symbols for return
             symbols = []
             for sym in symbols_raw:
                 name = sym.get("name", "")
@@ -223,12 +283,19 @@ class Radare2Extractor(BaseExtractor):
 
                 symbols.append({
                     "address": hex(vaddr),
-                    "name": name,
+                    "name": clean_r2_name(name),
                     "type": "function" if sym_type == "FUNC" else "data",
                     "visibility": "global" if sym_bind in ["GLOBAL", "WEAK"] else "static"
                 })
 
+            self.logger.info(f"Recovered {len(call_edges)} call edges")
+
             data = {
+                "provenance": {
+                    "tool_name": "Radare2",
+                    "arch": arch,
+                    "bits": bits
+                },
                 "functions": functions,
                 "symbols": symbols,
                 "call_graph": {

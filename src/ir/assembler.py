@@ -8,6 +8,57 @@ from typing import Dict, Any, List, Optional
 import hashlib
 from src.ir.models import UnifiedIR
 
+def clean_tool_prefix(name: str) -> str:
+    """Removes common tool-specific prefixes from symbol and function names."""
+    if not name:
+        return name
+    if name.startswith("sym.imp."):
+        return name[len("sym.imp."):]
+    if name.startswith("sym.fcn."):
+        return name[len("sym.fcn."):]
+    if name.startswith("sym."):
+        return name[len("sym."):]
+    if name.startswith("imp."):
+        return name[len("imp."):]
+    return name
+
+def name_score(name: str) -> int:
+    """Assigns quality scores to symbol/function names to prioritize real names."""
+    if not name:
+        return 0
+    cleaned = clean_tool_prefix(name)
+    if cleaned.startswith("_") and "func." not in cleaned:
+        return 100
+    if cleaned in {"printf", "malloc", "free"}:
+        return 95
+    if cleaned == "entry":
+        return 60
+    if cleaned.startswith("func."):
+        return 10
+    return 50
+
+def choose_canonical_name(names: List[str]) -> str:
+    """Chooses the highest-scoring canonical name from a list of names."""
+    valid_names = [n for n in names if n]
+    if not valid_names:
+        return "unknown"
+    return max(valid_names, key=name_score)
+
+def normalize_addr(addr: str) -> str:
+    """Standardizes hex/decimal address strings to lowercase hex format with '0x' prefix."""
+    if not addr:
+        return ""
+    addr_str = str(addr).strip()
+    try:
+        if addr_str.lower().startswith("0x"):
+            return hex(int(addr_str, 16))
+        try:
+            return hex(int(addr_str, 16))
+        except ValueError:
+            return hex(int(addr_str, 10))
+    except ValueError:
+        return addr_str.lower()
+
 class IRAssembler:
     """
     Assembles multiple raw static/dynamic extraction dictionaries into
@@ -29,14 +80,8 @@ class IRAssembler:
         Merges disassembler lists and dynamic traces. Resolves duplicates,
         computes confidence coefficients, tracks provenance source attributes.
         """
-        meta = {
-            "path": self.binary_path,
-            "sha256": self.sha256,
-            "architecture": "x86_64" if "64" in self.binary_path.lower() else "x86"
-        }
-        
-        # Instantiate empty Unified IR
-        ir = UnifiedIR(meta)
+        import logging
+        self.logger = logging.getLogger("reconstruct.ir.assembler")
 
         # Extraction payload maps
         # Extract underlying data maps from envelopes if present
@@ -44,87 +89,217 @@ class IRAssembler:
         r_payload = radare2_data.get("data", {}) if radare2_data and "data" in radare2_data else (radare2_data or {})
         t_payload = trace_data.get("data", {}) if trace_data and "data" in trace_data else (trace_data or {})
 
-        # 1. Merge all functions
-        func_map: Dict[str, Dict[str, Any]] = {}
+        # Resolve architecture
+        architecture = "unknown"
+        
+        # 1. Try Ghidra language ID
+        ghidra_language_id = g_payload.get("provenance", {}).get("language_id", "")
+        if ghidra_language_id:
+            if "AARCH64" in ghidra_language_id or "ARM64" in ghidra_language_id or "arm64" in ghidra_language_id:
+                architecture = "arm64"
+            elif "x86_64" in ghidra_language_id or "x86:LE:64" in ghidra_language_id:
+                architecture = "x86_64"
+            elif "x86" in ghidra_language_id:
+                architecture = "x86"
 
-        # Parse Ghidra static functions
-        for func in g_payload.get("functions", []):
-            entry = func.get("entry_point")
-            if not entry:
-                continue
-            func_map[entry] = {
-                "name": func.get("name", f"sub_{entry[2:]}"),
-                "entry_point": entry,
-                "size_bytes": func.get("size_bytes", 0),
-                "calling_convention": func.get("calling_convention", "unknown"),
-                "signature": f"{func.get('calling_convention', 'void')} {func.get('name', 'func')}()",
-                "provenance": ["ghidra"],
-                "local_variables": list(func.get("local_variables", [])),
-                "basic_blocks": func.get("cfg", {}).get("nodes", []),
-                "edges": func.get("cfg", {}).get("edges", [])
-            }
+        # 2. Try Radare2 arch and bits info
+        if architecture == "unknown":
+            r2_prov = r_payload.get("provenance", {})
+            r2_arch = r2_prov.get("arch", "")
+            r2_bits = r2_prov.get("bits", 0)
+            if r2_arch:
+                if r2_arch == "arm" and r2_bits == 64:
+                    architecture = "arm64"
+                elif r2_arch == "arm" and r2_bits == 32:
+                    architecture = "arm"
+                elif r2_arch in ["x86", "x86_64"]:
+                    if r2_bits == 64:
+                        architecture = "x86_64"
+                    else:
+                        architecture = "x86"
+                else:
+                    architecture = f"{r2_arch}{r2_bits}" if r2_bits else r2_arch
 
-        # Parse Radare2 static functions & deconflict
-        for func in r_payload.get("functions", []):
-            entry = func.get("entry_point")
-            if not entry:
-                continue
-            if entry in func_map:
-                # Merge logic
-                func_map[entry]["provenance"].append("radare2")
-                # Prefer Radare2 function size/name if larger
-                if func.get("size_bytes", 0) > func_map[entry]["size_bytes"]:
-                    func_map[entry]["size_bytes"] = func.get("size_bytes", 0)
-                # Union of local variables
-                for var in func.get("local_variables", []):
-                    if var not in func_map[entry]["local_variables"]:
-                        func_map[entry]["local_variables"].append(var)
-                # Merge basic blocks if Radare2 returns more refined lists
-                if len(func.get("cfg", {}).get("nodes", [])) > len(func_map[entry]["basic_blocks"]):
-                    func_map[entry]["basic_blocks"] = func.get("cfg", {}).get("nodes", [])
-                    func_map[entry]["edges"] = func.get("cfg", {}).get("edges", [])
+        # 3. Fallback to name-based logic
+        if architecture == "unknown":
+            if "64" in self.binary_path.lower():
+                architecture = "x86_64"
             else:
-                func_map[entry] = {
-                    "name": func.get("name", f"sub_{entry[2:]}"),
-                    "entry_point": entry,
-                    "size_bytes": func.get("size_bytes", 0),
-                    "calling_convention": func.get("calling_convention", "unknown"),
-                    "signature": f"{func.get('calling_convention', 'void')} {func.get('name', 'func')}()",
-                    "provenance": ["radare2"],
-                    "local_variables": list(func.get("local_variables", [])),
-                    "basic_blocks": func.get("cfg", {}).get("nodes", []),
-                    "edges": func.get("cfg", {}).get("edges", [])
-                }
+                architecture = "x86"
+
+        # Reference Validation Guard
+        if architecture == "x86" and "AARCH64" in ghidra_language_id:
+            raise ValueError("Architecture mismatch: extractor says ARM64 but IR says x86")
+
+        incoming_functions = []
+        for func in g_payload.get("functions", []):
+            entry = normalize_addr(func.get("entry_point"))
+            if entry:
+                func_copy = dict(func)
+                func_copy["entry_point"] = entry
+                func_copy["source_tool"] = "ghidra"
+                incoming_functions.append(func_copy)
+
+        for func in r_payload.get("functions", []):
+            entry = normalize_addr(func.get("entry_point"))
+            if entry:
+                func_copy = dict(func)
+                func_copy["entry_point"] = entry
+                func_copy["source_tool"] = "radare2"
+                incoming_functions.append(func_copy)
 
         # Flow in Trace-based functions if we saw dynamic executions
         run_tr_instructions = t_payload.get("instructions_executed", [])
         if run_tr_instructions:
-            # Detect functions that ran dynamically
             for inst in run_tr_instructions:
                 eip = inst.get("eip")
-                # If eip ends with 000 (usually alignment entry)
                 if eip and eip.endswith("000"):
-                    if eip not in func_map:
-                        func_map[eip] = {
-                            "name": f"dyn_func_{eip[2:]}",
-                            "entry_point": eip,
-                            "size_bytes": 64,
-                            "calling_convention": "unknown",
-                            "signature": f"void dyn_func_{eip[2:]}()",
-                            "provenance": ["dynamic_trace"],
-                            "local_variables": [],
-                            "basic_blocks": [{"id": eip, "size": 32, "instructions_count": 4}],
-                            "edges": []
-                        }
-                    elif "dynamic_trace" not in func_map[eip]["provenance"]:
-                        func_map[eip]["provenance"].append("dynamic_trace")
+                    entry = normalize_addr(eip)
+                    incoming_functions.append({
+                        "name": f"dyn_func_{entry[2:]}" if entry.startswith("0x") else f"dyn_func_{entry}",
+                        "entry_point": entry,
+                        "size_bytes": 64,
+                        "calling_convention": "unknown",
+                        "signature": f"void dyn_func_{entry}()",
+                        "source_tool": "dynamic_trace",
+                        "provenance": ["dynamic_trace"],
+                        "local_variables": [],
+                        "basic_blocks": [{"id": entry, "size": 32, "instructions_count": 4}],
+                        "cfg": {"nodes": [{"id": entry, "size": 32, "instructions_count": 4}], "edges": []}
+                    })
 
-        # Now register functions inside the UnifiedIR
-        for entry, fdata in func_map.items():
-            # Confidence heuristics:
-            # - Found by both static tools (Ghidra, IDA): 1.0 confidence
-            # - Found by only one static tool: 0.8 confidence
-            # - Found only dynamically: 0.5 confidence
+        # Merge by entry point
+        functions_by_addr = {}
+        for fn in incoming_functions:
+            addr = fn["entry_point"]
+            functions_by_addr.setdefault(addr, []).append(fn)
+
+        merged_functions = {}
+        alias_to_canonical = {}
+
+        for addr, grouped_fns in functions_by_addr.items():
+            names = [fn.get("name", "") for fn in grouped_fns]
+            canonical_name = choose_canonical_name(names)
+            
+            # Map aliases to canonical name
+            for fn in grouped_fns:
+                raw_name = fn.get("name")
+                if raw_name:
+                    alias_to_canonical[raw_name] = canonical_name
+                    alias_to_canonical[clean_tool_prefix(raw_name)] = canonical_name
+
+            self.logger.info(f"Resolved canonical name '{canonical_name}' for entry point {addr}")
+
+            # Merge size_bytes (maximum)
+            size_bytes = max((fn.get("size_bytes", 0) for fn in grouped_fns), default=0)
+
+            # Merge calling_convention (pick first non-unknown)
+            calling_convention = next(
+                (fn.get("calling_convention") for fn in grouped_fns if fn.get("calling_convention") not in ["unknown", None]),
+                "unknown"
+            )
+
+            # Preserve provenance
+            provenance = sorted(set(
+                src
+                for fn in grouped_fns
+                for src in fn.get("provenance", [fn.get("source_tool")])
+            ))
+
+            # Merge local variable names conservatively
+            local_vars_seen = set()
+            local_variables = []
+            for fn in grouped_fns:
+                for var in fn.get("local_variables", []):
+                    if var not in local_vars_seen:
+                        local_vars_seen.add(var)
+                        local_variables.append(var)
+
+            # Retain the most detailed CFG using deterministic tie-breaking rules:
+            # 1. highest basic block count
+            # 2. if tied, highest edge count
+            # 3. if still tied, prefer Ghidra over Radare2
+            # 4. if still tied, prefer a stable sorted source order
+            def cfg_sort_key(fn):
+                cfg = fn.get("cfg", {})
+                bbs = cfg.get("nodes", []) or fn.get("basic_blocks", [])
+                edges = cfg.get("edges", []) or fn.get("edges", [])
+                tool = fn.get("source_tool", "")
+                tool_priority = 2 if tool == "ghidra" else (1 if tool == "radare2" else 0)
+                return (len(bbs), len(edges), tool_priority)
+
+            scored_fns = []
+            for idx, fn in enumerate(grouped_fns):
+                scored_fns.append((cfg_sort_key(fn) + (idx,), fn))
+            
+            scored_fns.sort(key=lambda item: item[0], reverse=True)
+            cfg_src_fn = scored_fns[0][1]
+
+            cfg = cfg_src_fn.get("cfg", {})
+            bbs = cfg.get("nodes", []) or cfg_src_fn.get("basic_blocks", [])
+            edges = cfg.get("edges", []) or cfg_src_fn.get("edges", [])
+
+            # Normalize basic block IDs and edges
+            normalized_blocks = []
+            normalized_edges = []
+            for e in edges:
+                normalized_edges.append({
+                    "source": normalize_addr(e.get("source")),
+                    "target": normalize_addr(e.get("target")),
+                    "type": e.get("type", "unconditional")
+                })
+
+            for bb in bbs:
+                bb_id = normalize_addr(bb.get("id"))
+                bb_size = bb.get("size", 16)
+                bb_instructions = bb.get("instructions", [])
+                bb_mem_accesses = bb.get("memory_accesses", [])
+
+                # Filter outgoing edges for this block
+                bb_edges = [e for e in normalized_edges if e["source"] == bb_id]
+
+                # Suspicious x86 instruction warning guard
+                for ins in bb_instructions:
+                    if "eax" in ins or "esp" in ins:
+                        self.logger.warning(
+                            "Suspicious x86 instruction detected in non-x86 target; investigate placeholder leakage."
+                        )
+
+                normalized_blocks.append({
+                    "id": bb_id,
+                    "size": bb_size,
+                    "instructions": bb_instructions,
+                    "memory_accesses": bb_mem_accesses,
+                    "edges": bb_edges
+                })
+
+            merged_functions[addr] = {
+                "name": canonical_name,
+                "entry_point": addr,
+                "size_bytes": size_bytes,
+                "calling_convention": calling_convention,
+                "signature": f"{calling_convention} {canonical_name}()",
+                "provenance": provenance,
+                "local_variables": local_variables,
+                "basic_blocks": normalized_blocks
+            }
+        
+        self.logger.info(f"Merged {len(incoming_functions)} raw function records into {len(merged_functions)} canonical functions")
+
+        meta = {
+            "path": self.binary_path,
+            "sha256": self.sha256,
+            "architecture": architecture
+        }
+        
+        # Instantiate empty Unified IR
+        ir = UnifiedIR(meta)
+
+        # Register functions in UnifiedIR
+        canonical_name_by_addr = {}
+        for addr, fdata in merged_functions.items():
+            canonical_name_by_addr[addr] = fdata["name"]
+
             prov_set = set(fdata["provenance"])
             if "ghidra" in prov_set and "radare2" in prov_set:
                 conf = 1.0
@@ -133,7 +308,6 @@ class IRAssembler:
             else:
                 conf = 0.5
 
-            # Instantiate function frame
             ir_func = ir.add_function(
                 name=fdata["name"],
                 entry_point=fdata["entry_point"],
@@ -142,11 +316,9 @@ class IRAssembler:
                 signature=fdata["signature"],
                 confidence=conf
             )
-            
-            # Save provenance array directly in function payload for auditing
             ir_func["provenance"] = fdata["provenance"]
 
-            # Emulate stack variables for demonstration
+            # Emulate stack variables
             for idx, var_name in enumerate(fdata["local_variables"]):
                 ir_func["stack_variables"].append({
                     "name": var_name,
@@ -154,88 +326,137 @@ class IRAssembler:
                     "size_bytes": 4
                 })
 
-            # Fill basic blocks
-            for node in fdata["basic_blocks"]:
-                node_id = node.get("id")
-                node_size = node.get("size", 16)
-                
-                # Mock memory accesses and execution properties
-                mem_accesses = [
-                    {"address": "0x0045e0c0", "type": "read" if "main" in fdata["name"] else "write", "size_bytes": 4}
-                ]
-                
-                # Filter outgoing edges for this block
-                bb_edges = []
-                for edge in fdata["edges"]:
-                    if edge.get("source") == node_id:
-                        bb_edges.append({
-                            "source": edge.get("source"),
-                            "target": edge.get("target"),
-                            "type": edge.get("type", "unconditional")
-                        })
-
-                # Mock instruction streams
-                instructions = [
-                    "mov eax, [esp+4]",
-                    "cmp eax, 0",
-                    "je exit_block"
-                ]
-
+            # Add basic blocks
+            for bb in fdata["basic_blocks"]:
                 ir.add_basic_block(
-                    func_entry=entry,
-                    block_id=node_id,
-                    size=node_size,
-                    instructions=instructions,
-                    memory_accesses=mem_accesses,
-                    edges=bb_edges
+                    func_entry=addr,
+                    block_id=bb["id"],
+                    size=bb["size"],
+                    instructions=bb["instructions"],
+                    memory_accesses=bb["memory_accesses"],
+                    edges=bb["edges"]
                 )
 
-        # 2. Add Call Graph
+        # Collect raw call graph elements
         cg_nodes = set()
         cg_edges = []
 
-        # Ghidra Call Graph
         g_cg = g_payload.get("call_graph", {})
         for n in g_cg.get("nodes", []):
-            cg_nodes.add(n)
+            cg_nodes.add(clean_tool_prefix(n))
         for e in g_cg.get("edges", []):
-            cg_edges.append({"caller": e.get("caller"), "callee": e.get("callee")})
+            cg_edges.append({"caller": clean_tool_prefix(e.get("caller")), "callee": clean_tool_prefix(e.get("callee"))})
 
-        # Radare2 Call Graph
         r_cg = r_payload.get("call_graph", {})
         for n in r_cg.get("nodes", []):
-            cg_nodes.add(n)
+            cg_nodes.add(clean_tool_prefix(n))
         for e in r_cg.get("edges", []):
-            edge_struct = {"caller": e.get("caller"), "callee": e.get("callee")}
-            if edge_struct not in cg_edges:
-                cg_edges.append(edge_struct)
+            cg_edges.append({"caller": clean_tool_prefix(e.get("caller")), "callee": clean_tool_prefix(e.get("callee"))})
 
-        ir.call_graph["nodes"] = list(cg_nodes)
-        ir.call_graph["edges"] = cg_edges
+        # Rewrite call graph nodes and edges only after alias-to-canonical-name mapping is fully built.
+        rewritten_nodes = set()
+        rewritten_edges = []
+        seen_edges = set()
 
-        # 3. Add Symbols
-        sym_added = set()
+        for node in cg_nodes:
+            canonical_node = alias_to_canonical.get(node, node)
+            rewritten_nodes.add(canonical_node)
+
+        for edge in cg_edges:
+            caller = alias_to_canonical.get(edge["caller"], edge["caller"])
+            callee = alias_to_canonical.get(edge["callee"], edge["callee"])
+            
+            key = (caller, callee)
+            if key not in seen_edges:
+                seen_edges.add(key)
+                rewritten_edges.append({
+                    "caller": caller,
+                    "callee": callee
+                })
+
+        ir.call_graph["nodes"] = list(rewritten_nodes)
+        ir.call_graph["edges"] = rewritten_edges
+
+        self.logger.info(f"Final canonical call graph: {len(rewritten_nodes)} nodes, {len(rewritten_edges)} edges")
+
+        # Group symbols by normalized address
+        symbols_by_addr = {}
         for sym in g_payload.get("symbols", []):
-            addr = sym.get("address")
-            if addr and addr not in sym_added:
-                ir.add_symbol(addr, sym.get("name"), sym.get("type"), sym.get("visibility", "global"))
-                sym_added.add(addr)
+            addr = normalize_addr(sym.get("address"))
+            if addr:
+                symbols_by_addr.setdefault(addr, []).append(sym)
 
         for sym in r_payload.get("symbols", []):
-            addr = sym.get("address")
-            if addr and addr not in sym_added:
-                ir.add_symbol(addr, sym.get("name"), sym.get("type"), sym.get("visibility", "global"))
-                sym_added.add(addr)
+            addr = normalize_addr(sym.get("address"))
+            if addr:
+                symbols_by_addr.setdefault(addr, []).append(sym)
 
-        # 4. Standard Imports / Exports
-        ir.add_import("LoadLibraryA", "kernel32.dll", "0x00405020")
-        ir.add_import("GetProcAddress", "kernel32.dll", "0x00405024")
-        ir.add_export("main", "0x00401000")
+        duplicate_symbol_count = 0
+        symbols = []
+        for addr, sym_list in symbols_by_addr.items():
+            # When merging symbols by address, only collapse a symbol into a canonical function identity
+            # if that symbol resolves to a known function entry point.
+            canonical_func_name = canonical_name_by_addr.get(addr)
+            if canonical_func_name:
+                name = canonical_func_name
+                if len(sym_list) > 1:
+                    duplicate_symbol_count += len(sym_list) - 1
+                
+                sym_type = "function"
+                sym_visibility = "global" if any(s.get("visibility", "").lower() == "global" for s in sym_list) else "static"
+                
+                symbols.append({
+                    "address": addr,
+                    "name": name,
+                    "type": sym_type,
+                    "visibility": sym_visibility
+                })
+            else:
+                # Unrelated data labels, string labels, and non-function symbols preserved separately
+                names = [s.get("name") for s in sym_list]
+                name = choose_canonical_name(names)
+                
+                sym_type = sym_list[0].get("type", "data")
+                sym_visibility = sym_list[0].get("visibility", "global")
+                
+                symbols.append({
+                    "address": addr,
+                    "name": name,
+                    "type": sym_type,
+                    "visibility": sym_visibility
+                })
 
-        # 5. Populate Strings & Constants
-        ir.add_string("0x004410a0", "Starting Extraction Engine...", 29)
-        ir.add_string("0x004410f0", "Error: Process Out-Of-Bounds", 28)
-        ir.add_constant(0xdeadbeef, 32, "0x004010a2")
+        # Register symbols
+        for sym in symbols:
+            ir.add_symbol(sym["address"], sym["name"], sym["type"], sym["visibility"])
+
+        self.logger.info(f"Collapsed {duplicate_symbol_count} duplicate symbol aliases")
+
+        # 4. Standard Imports / Exports - CLEANED
+        extracted_imports = []
+        extracted_exports = []
+        imports = extracted_imports
+        exports = extracted_exports
+
+        # 5. Populate Strings & Constants - CLEANED
+        extracted_strings = []
+        extracted_constants = []
+        strings = extracted_strings
+        constants = extracted_constants
+
+        # Debug Logging and Warnings
+        self.logger.info(f"IR architecture resolved to: {architecture}")
+        self.logger.info(f"IR imports count: {len(imports)}")
+        self.logger.info(f"IR exports count: {len(exports)}")
+        self.logger.info(f"IR strings count: {len(strings)}")
+        self.logger.info(f"IR constants count: {len(constants)}")
+
+        self.logger.warning("No real instructions recovered; emitting empty list.")
+        self.logger.warning("No real memory accesses recovered; emitting empty list.")
+        self.logger.warning("No real imports recovered; emitting empty list.")
+        self.logger.warning("No real exports recovered; emitting empty list.")
+        self.logger.warning("No real strings recovered; emitting empty list.")
+        self.logger.warning("No real constants recovered; emitting empty list.")
 
         # 6. Transform trace logs into dynamic observations
         if t_payload:
