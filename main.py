@@ -31,6 +31,53 @@ logging.basicConfig(
 )
 logger = logging.getLogger("reconstruct")
 
+def setup_logging(output_dir: str = "artifacts") -> logging.Logger:
+    from pathlib import Path
+    from datetime import datetime
+
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_path = Path(output_dir) / f"run_{timestamp}.log"
+    latest_path = Path(output_dir) / "latest.log"
+
+    formatter = logging.Formatter(
+        "%(asctime)s [%(levelname)s] %(name)s - %(filename)s:%(lineno)d: %(message)s"
+    )
+
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.INFO)
+
+    # Clear existing handlers to prevent duplicates
+    for handler in list(root_logger.handlers):
+        try:
+            handler.close()
+        except Exception:
+            pass
+        root_logger.removeHandler(handler)
+
+    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.setLevel(logging.INFO)
+    console_handler.setFormatter(formatter)
+
+    file_handler = logging.FileHandler(log_path, encoding="utf-8")
+    file_handler.setLevel(logging.INFO)
+    file_handler.setFormatter(formatter)
+
+    latest_handler = logging.FileHandler(latest_path, mode="w", encoding="utf-8")
+    latest_handler.setLevel(logging.INFO)
+    latest_handler.setFormatter(formatter)
+
+    root_logger.addHandler(console_handler)
+    root_logger.addHandler(file_handler)
+    root_logger.addHandler(latest_handler)
+
+    logger = logging.getLogger("reconstruct")
+    logger.info("Logging initialized")
+    logger.info("Log file: %s", log_path)
+
+    return logger
+
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Binary Reconstruction Platform - Phase 1 & 2 CLIs",
@@ -493,35 +540,54 @@ def handle_analyze_cfg(out_dir: str):
     sys.exit(0)
 
 def main():
+    # If help flag is present, avoid running setup_logging to prevent creating output directory unnecessarily
+    if "--help" in sys.argv or "-h" in sys.argv:
+        parse_args()
+        return
+
+    # Resolve out_dir from command line arguments before initializing logging
+    out_dir = "artifacts"
+    for i, arg in enumerate(sys.argv):
+        if arg == "--out-dir":
+            if i + 1 < len(sys.argv):
+                out_dir = sys.argv[i + 1]
+        elif arg.startswith("--out-dir="):
+            out_dir = arg.split("=", 1)[1]
+
+    setup_logging(out_dir)
+
     # Detect CLI Subcommand arguments (recover-types, structs, signatures, generate, function, module, validate, repair, report)
     if len(sys.argv) > 1:
         first_arg = sys.argv[1]
         if first_arg == "recover-types":
-            handle_recover_types("artifacts")
+            handle_recover_types(out_dir)
             return
         elif first_arg == "structs":
-            handle_structs("artifacts")
+            handle_structs(out_dir)
             return
         elif first_arg == "signatures":
-            handle_signatures("artifacts")
+            handle_signatures(out_dir)
             return
         elif first_arg == "generate":
-            handle_generate("artifacts")
+            handle_generate(out_dir)
             return
         elif first_arg == "function" and len(sys.argv) > 2:
-            handle_function_reconstruct("artifacts", sys.argv[2])
+            handle_function_reconstruct(out_dir, sys.argv[2])
             return
         elif first_arg == "module" and len(sys.argv) > 2:
-            handle_module_reconstruct("artifacts", sys.argv[2])
+            handle_module_reconstruct(out_dir, sys.argv[2])
             return
         elif first_arg == "validate":
-            handle_validate_cli("artifacts")
+            handle_validate_cli(out_dir)
             return
         elif first_arg == "repair":
-            handle_repair_cli("artifacts")
+            handle_repair_cli(out_dir)
+            return
+        elif first_arg == "report":
+            handle_report_cli(out_dir)
             return
         elif first_arg == "analyze-cfg":
-            handle_analyze_cfg("artifacts")
+            handle_analyze_cfg(out_dir)
             return
 
     args = parse_args()

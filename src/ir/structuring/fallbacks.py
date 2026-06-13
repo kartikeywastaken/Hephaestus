@@ -116,6 +116,44 @@ def detect_switch_fanout(
     return None
 
 
+def detect_switch_like_region(graph: ReductionGraph, logger: logging.Logger) -> bool:
+    """
+    Heuristically detect if the final residual graph is a switch-like comparison ladder/tree.
+    A switch-like region typically consists of:
+    - No back-edges (acyclic)
+    - At least 3 branch nodes (nodes with out-degree >= 2)
+    - At least 3 leaf nodes (nodes with out-degree <= 1 that either are sinks or point to sinks)
+    """
+    if _remaining_back_edges(graph):
+        return False
+
+    sinks = {nid for nid in graph.nodes if len(graph.successors.get(nid, [])) == 0}
+    
+    branch_nodes = []
+    for nid in graph.nodes:
+        if len(graph.successors.get(nid, [])) >= 2:
+            branch_nodes.append(nid)
+
+    leaf_nodes = []
+    for nid in graph.nodes:
+        if nid in branch_nodes or nid in sinks:
+            continue
+        succs = graph.successors.get(nid, [])
+        if len(succs) == 0:
+            leaf_nodes.append(nid)
+        elif len(succs) == 1 and succs[0] in sinks:
+            leaf_nodes.append(nid)
+
+    if len(branch_nodes) >= 3 and len(leaf_nodes) >= 3:
+        logger.info(
+            f"Detected switch-like residual region in function; preserving as switch_candidate fallback. "
+            f"Branch nodes: {len(branch_nodes)}, leaf nodes: {len(leaf_nodes)}."
+        )
+        return True
+
+    return False
+
+
 def detect_multi_exit_loop(
     graph: ReductionGraph, logger: logging.Logger
 ) -> Optional[Tuple[str, str]]:
@@ -209,16 +247,21 @@ def classify_unstructured_region(
 
     Detection order (decreasing specificity):
       1. switch fan-out
-      2. multi-exit loop
-      3. generic cyclic hard region
-      4. fragmented acyclic
-      5. partial_reduction catch-all
+      2. switch ladder/tree
+      3. multi-exit loop
+      4. generic cyclic hard region
+      5. fragmented acyclic
+      6. partial_reduction catch-all
 
     Returns (reason, region_kind) — both are string constants from models.py.
     """
     result = detect_switch_fanout(graph, logger)
     if result:
         return result
+
+    if detect_switch_like_region(graph, logger):
+        logger.info("Classified remaining acyclic region as switch_candidate due to decision ladder/tree")
+        return (REASON_SWITCH_CANDIDATE, REGION_KIND_SWITCH_CANDIDATE)
 
     result = detect_multi_exit_loop(graph, logger)
     if result:

@@ -2111,6 +2111,147 @@ class TestPhase3StressTests(unittest.TestCase):
         self.assertEqual(root.children[1].header_block, "0x20")
         self.assertEqual(root.children[2].node_id, "0x40")
 
+    def test_switchy_preserved_as_switch_candidate(self):
+        """
+        CFG isomorphic to _switchy (binary comparison ladder).
+        Expected: Not a generic SequenceNode, but UnstructuredRegionNode with
+        reason "switch_candidate" and region_kind "switch_candidate".
+        """
+        func_data = {
+            "name": "switchy_style",
+            "entry_point": "0x10",
+            "basic_blocks": [
+                {"id": "0x10", "edges": [{"source": "0x10", "target": "0x20"}, {"source": "0x10", "target": "0x15"}]},
+                {"id": "0x15", "edges": [{"source": "0x15", "target": "0x90"}]},
+                {"id": "0x20", "edges": [{"source": "0x20", "target": "0x30"}]},
+                {"id": "0x30", "edges": [{"source": "0x30", "target": "0x40"}, {"source": "0x30", "target": "0x35"}]},
+                {"id": "0x35", "edges": [{"source": "0x35", "target": "0x90"}]},
+                {"id": "0x40", "edges": [{"source": "0x40", "target": "0x50"}]},
+                {"id": "0x50", "edges": [{"source": "0x50", "target": "0x60"}, {"source": "0x50", "target": "0x55"}]},
+                {"id": "0x55", "edges": [{"source": "0x55", "target": "0x90"}]},
+                {"id": "0x60", "edges": [{"source": "0x60", "target": "0x70"}]},
+                {"id": "0x70", "edges": [{"source": "0x70", "target": "0x80"}, {"source": "0x70", "target": "0x75"}]},
+                {"id": "0x75", "edges": [{"source": "0x75", "target": "0x90"}]},
+                {"id": "0x80", "edges": [{"source": "0x80", "target": "0x85"}]},
+                {"id": "0x85", "edges": [{"source": "0x85", "target": "0x90"}]},
+                {"id": "0x90", "edges": []}
+            ]
+        }
+        root = structure_function(func_data, self.logger)
+
+        self.assertIsInstance(root, UnstructuredRegionNode)
+        self.assertEqual(root.reason, "switch_candidate")
+        self.assertEqual(root.region_kind, "switch_candidate")
+
+    def test_switch_like_dispatch_tree_not_flattened(self):
+        """
+        Acyclic dispatch tree with several short case-like leaves.
+        Expected: switch-like fallback classification.
+        """
+        func_data = {
+            "name": "switch_tree_style",
+            "entry_point": "0x10",
+            "basic_blocks": [
+                # Entry block 10 goes to split block 12, which is sequence-collapsed with 10
+                {"id": "0x10", "edges": [{"source": "0x10", "target": "0x12"}]},
+                {"id": "0x12", "edges": [{"source": "0x12", "target": "0x20"}, {"source": "0x12", "target": "0x30"}]},
+                
+                # Left branch block 20 goes to split block 22, which is sequence-collapsed with 20
+                {"id": "0x20", "edges": [{"source": "0x20", "target": "0x22"}]},
+                {"id": "0x22", "edges": [{"source": "0x22", "target": "0x40"}, {"source": "0x22", "target": "0x50"}]},
+                
+                # Right branch block 30 goes to split block 32, which is sequence-collapsed with 30
+                {"id": "0x30", "edges": [{"source": "0x30", "target": "0x32"}]},
+                {"id": "0x32", "edges": [{"source": "0x32", "target": "0x60"}, {"source": "0x32", "target": "0x70"}]},
+                
+                {"id": "0x40", "edges": [{"source": "0x40", "target": "0x90"}]},
+                {"id": "0x50", "edges": [{"source": "0x50", "target": "0x90"}]},
+                {"id": "0x60", "edges": [{"source": "0x60", "target": "0x90"}]},
+                {"id": "0x70", "edges": [{"source": "0x70", "target": "0x90"}]},
+                {"id": "0x90", "edges": []}
+            ]
+        }
+        root = structure_function(func_data, self.logger)
+
+        self.assertIsInstance(root, UnstructuredRegionNode)
+        self.assertEqual(root.reason, "switch_candidate")
+        self.assertEqual(root.region_kind, "switch_candidate")
+
+    def test_regression_classify_pair_still_assembles_cleanly(self):
+        """
+        Ensure classify_pair style graph (a long nested conditional chain) still
+        collapses cleanly into nested IfElseNode structures inside SequenceNode.
+        """
+        func_data = {
+            "name": "regression_classify_pair",
+            "entry_point": "0x10",
+            "basic_blocks": [
+                {"id": "0x10", "edges": [{"source": "0x10", "target": "0x20"}, {"source": "0x10", "target": "0x50"}]},
+                {"id": "0x20", "edges": [{"source": "0x20", "target": "0x30"}, {"source": "0x20", "target": "0x50"}]},
+                {"id": "0x30", "edges": [{"source": "0x30", "target": "0x40"}]},
+                {"id": "0x40", "edges": [{"source": "0x40", "target": "0x90"}]},
+                {"id": "0x50", "edges": [{"source": "0x50", "target": "0x60"}, {"source": "0x50", "target": "0x70"}]},
+                {"id": "0x60", "edges": [{"source": "0x60", "target": "0x90"}]},
+                {"id": "0x70", "edges": [{"source": "0x70", "target": "0x80"}, {"source": "0x70", "target": "0x85"}]},
+                {"id": "0x80", "edges": [{"source": "0x80", "target": "0x90"}]},
+                {"id": "0x85", "edges": [{"source": "0x85", "target": "0x90"}]},
+                {"id": "0x90", "edges": []}
+            ]
+        }
+        root = structure_function(func_data, self.logger)
+
+        self.assertIsInstance(root, SequenceNode)
+        self.assertEqual(self._find_nodes(root, UnstructuredRegionNode), [])
+        
+        ifelse_nodes = self._find_nodes(root, IfElseNode)
+        self.assertEqual(len(ifelse_nodes), 2)
+
+    def test_regression_simple_acyclic_sequence_still_assembles(self):
+        """
+        Ensure ordinary acyclic regions (straight-line sequences) still assemble cleanly.
+        """
+        func_data = {
+            "name": "regression_straight_sequence",
+            "entry_point": "0x10",
+            "basic_blocks": [
+                {"id": "0x10", "edges": [{"source": "0x10", "target": "0x20"}]},
+                {"id": "0x20", "edges": [{"source": "0x20", "target": "0x30"}]},
+                {"id": "0x30", "edges": [{"source": "0x30", "target": "0x40"}]},
+                {"id": "0x40", "edges": []}
+            ]
+        }
+        root = structure_function(func_data, self.logger)
+
+        self.assertIsInstance(root, SequenceNode)
+        self.assertEqual(len(root.children), 4)
+
+    def test_regression_helper_rec_still_stays_fixed(self):
+        """
+        Preserve Phase 1 recursion loop rejection.
+        """
+        func_data = {
+            "name": "regression_helper_rec",
+            "entry_point": "0x460",
+            "basic_blocks": [
+                {"id": "0x460", "edges": [{"source": "0x460", "target": "0x470"}, {"source": "0x460", "target": "0x480"}]},
+                {"id": "0x470", "edges": [{"source": "0x470", "target": "0x548"}]},
+                {"id": "0x480", "edges": [{"source": "0x480", "target": "0x490"}, {"source": "0x480", "target": "0x4a0"}]},
+                {"id": "0x490", "edges": [{"source": "0x490", "target": "0x548"}]},
+                {"id": "0x4a0", "edges": [{"source": "0x4a0", "target": "0x4c0"}, {"source": "0x4a0", "target": "0x4e0"}]},
+                {"id": "0x4c0", "edges": [{"source": "0x4c0", "target": "0x460"}]},
+                {"id": "0x4e0", "edges": [{"source": "0x4e0", "target": "0x500"}, {"source": "0x4e0", "target": "0x510"}]},
+                {"id": "0x500", "edges": [{"source": "0x500", "target": "0x460"}]},
+                {"id": "0x510", "edges": [{"source": "0x510", "target": "0x524"}, {"source": "0x510", "target": "0x530"}]},
+                {"id": "0x524", "edges": [{"source": "0x524", "target": "0x460"}]},
+                {"id": "0x530", "edges": [{"source": "0x530", "target": "0x548"}]},
+                {"id": "0x548", "edges": []}
+            ]
+        }
+        root = structure_function(func_data, self.logger)
+
+        self.assertEqual(self._find_nodes(root, LoopNode), [])
+        self.assertIsInstance(root, UnstructuredRegionNode)
+
 
 if __name__ == "__main__":
     unittest.main()

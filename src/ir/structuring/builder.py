@@ -140,7 +140,20 @@ def structure_function(function_data: Dict[str, Any], logger: logging.Logger) ->
     if len(graph.nodes) == 1:
         root_node = graph.nodes[remaining_ids[0]]
     else:
-        root_node = try_final_acyclic_assembly(graph, graph.entry_node_id, logger, func_name)
+        from src.ir.structuring.fallbacks import detect_switch_like_region
+        if detect_switch_like_region(graph, logger):
+            logger.info(
+                "Detected switch-like residual region in function %s; preserving as switch_candidate fallback",
+                func_name,
+            )
+            logger.info(
+                "Skipping final acyclic assembly for function %s because residual graph is switch-like",
+                func_name,
+            )
+            root_node = None
+        else:
+            root_node = try_final_acyclic_assembly(graph, graph.entry_node_id, logger, func_name)
+            
         if root_node is None:
             # Perform a stable entry-rooted DFS ordering on remaining nodes
             visited = set()
@@ -167,8 +180,10 @@ def structure_function(function_data: Dict[str, Any], logger: logging.Logger) ->
             # Phase 3D: classify why the graph remained unstructured, then wrap
             reason, region_kind = classify_unstructured_region(graph, logger)
             logger.info(
-                f"Wrapping remaining reduced graph in "
-                f"UnstructuredRegionNode(reason='{reason}', region_kind='{region_kind}')"
+                "Wrapping function %s in UnstructuredRegionNode(reason='%s', region_kind='%s')",
+                func_name,
+                reason,
+                region_kind,
             )
             for nid, node in sorted(graph.nodes.items()):
                 if not isinstance(node, BlockNode):
