@@ -1,0 +1,218 @@
+{
+  "schema_version": "1.0.0",
+  "provenance": {
+    "tool_name": "Ghidra Headless Analyzer",
+    "timestamp": "2026-06-13T13:10:10-07:00",
+    "binary_path": "./test_case_bin",
+    "config": {}
+  },
+  "data": {
+    "schema_version": "1.0.0",
+    "provenance": {
+      "tool_name": "Ghidra Headless Analyzer (Java API)",
+      "format": "Mac OS X Mach-O",
+      "language_id": "AARCH64:LE:64:AppleSilicon",
+      "compiler": "unknown",
+      "timestamp": "Sat Jun 13 13:10:09 IST 2026"
+    },
+    "functions": [
+      {
+        "size_bytes": 88,
+        "calling_convention": "unknown",
+        "cfg": {
+          "nodes": [
+            {
+              "size": 36,
+              "instructions_count": 10,
+              "id": "100000460"
+            },
+            {
+              "size": 4,
+              "instructions_count": 2,
+              "id": "100000484"
+            },
+            {
+              "size": 12,
+              "instructions_count": 4,
+              "id": "100000488"
+            },
+            {
+              "size": 4,
+              "instructions_count": 2,
+              "id": "100000494"
+            },
+            {
+              "size": 12,
+              "instructions_count": 4,
+              "id": "100000498"
+            },
+            {
+              "size": 4,
+              "instructions_count": 2,
+              "id": "1000004a4"
+            },
+            {
+              "size": 16,
+              "instructions_count": 5,
+              "id": "1000004a8"
+            }
+          ],
+          "edges": [
+            {
+              "source": "100000460",
+              "type": "conditional_taken",
+              "target": "100000498"
+            },
+            {
+              "source": "100000460",
+              "type": "unconditional",
+              "target": "100000484"
+            },
+            {
+              "source": "100000484",
+              "type": "unconditional",
+              "target": "100000488"
+            },
+            {
+              "source": "100000488",
+              "type": "unconditional",
+              "target": "100000494"
+            },
+            {
+              "source": "100000494",
+              "type": "unconditional",
+              "target": "1000004a8"
+            },
+            {
+              "source": "100000498",
+              "type": "unconditional",
+              "target": "1000004a4"
+            },
+            {
+              "source": "1000004a4",
+              "type": "unconditional",
+              "target": "1000004a8"
+            }
+          ]
+        },
+        "name": "entry",
+        "local_variables": [
+          "local_10",
+          "local_14",
+          "local_18"
+        ],
+        "entry_point": "100000460"
+      }
+    ],
+    "symbols": [
+      {
+        "address": "EXTERNAL:00000001",
+        "visibility": "IMPORTED",
+        "name": "_printf",
+        "type": "Function"
+      },
+      {
+        "address": "fffeff00",
+        "visibility": "IMPORTED",
+        "name": "_objc_msgSend_rtp",
+        "type": "Label"
+      },
+      {
+        "address": "100000000",
+        "visibility": "IMPORTED",
+        "name": "__mh_execute_header",
+        "type": "Label"
+      },
+      {
+        "address": "100000000",
+        "visibility": "IMPORTED",
+        "name": "MACH_HEADER",
+        "type": "Label"
+      },
+      {
+        "address": "100000460",
+        "visibility": "IMPORTED",
+        "name": "entry",
+        "type": "Function"
+      },
+      {
+        "address": "100000460",
+        "visibility": "IMPORTED",
+        "name": "_main",
+        "type": "Label"
+      },
+      {
+        "address": "100000488",
+        "visibility": "DEFAULT",
+        "name": "LAB_100000488",
+        "type": "Label"
+      },
+      {
+        "address": "100000498",
+        "visibility": "DEFAULT",
+        "name": "LAB_100000498",
+        "type": "Label"
+      },
+      {
+        "address": "1000004a8",
+        "visibility": "DEFAULT",
+        "name": "LAB_1000004a8",
+        "type": "Label"
+      },
+      {
+        "address": "1000004b8",
+        "visibility": "IMPORTED",
+        "name": "_printf",
+        "type": "Function"
+      },
+      {
+        "address": "1000004c4",
+        "visibility": "DEFAULT",
+        "name": "s_large_1000004c4",
+        "type": "Label"
+      },
+      {
+        "address": "1000004cb",
+        "visibility": "DEFAULT",
+        "name": "s_small_1000004cb",
+        "type": "Label"
+      },
+      {
+        "address": "100004000",
+        "visibility": "DEFAULT",
+        "name": "PTR__printf_100004000",
+        "type": "Label"
+      },
+      {
+        "address": "100008055",
+        "visibility": "DEFAULT",
+        "name": "s__printf_100008055",
+        "type": "Label"
+      },
+      {
+        "address": "1000080b8",
+        "visibility": "DEFAULT",
+        "name": "nlist_1000080b8",
+        "type": "Label"
+      },
+      {
+        "address": "1000080d2",
+        "visibility": "DEFAULT",
+        "name": "s___mh_execute_header_1000080d2",
+        "type": "Label"
+      },
+      {
+        "address": "1000080e6",
+        "visibility": "DEFAULT",
+        "name": "s__main_1000080e6",
+        "type": "Label"
+      },
+      {
+        "address": "1000080ec",
+        "visibility": "DEFAULT",
+        "name": "s__printf_1000080ec",
+        "type": "Label"
+      }
+    ]
+  }
+}

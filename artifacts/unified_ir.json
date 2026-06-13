@@ -1,277 +1,16 @@
 {
   "schema_version": "2.0.0",
   "provenance": {
-    "binary_path": "./1",
-    "sha256": "e213e6d459d715cf465fd512ce257052b322bfc1b1a3e48d76ab2c2e5a78e0c3",
+    "binary_path": "./test_case_bin",
+    "sha256": "a40ab8a4cf20934f9dbe88302731f35ed775065bd7fcf7421ef923d4ce5d2e90",
     "architecture": "arm64",
     "schema_version": "2.0.0"
   },
   "data": {
     "functions": [
       {
-        "name": "_fact",
-        "entry_point": "0x100000460",
-        "size_bytes": 96,
-        "calling_convention": 2,
-        "signature": "2 _fact()",
-        "confidence": 1.0,
-        "local_variables": [],
-        "stack_variables": [
-          {
-            "name": "local_10",
-            "offset_bytes": -4,
-            "size_bytes": 4
-          },
-          {
-            "name": "local_14",
-            "offset_bytes": -8,
-            "size_bytes": 4
-          },
-          {
-            "name": "local_18",
-            "offset_bytes": -12,
-            "size_bytes": 4
-          },
-          {
-            "name": "local_1c",
-            "offset_bytes": -16,
-            "size_bytes": 4
-          },
-          {
-            "name": "arg1",
-            "offset_bytes": -20,
-            "size_bytes": 4
-          },
-          {
-            "name": "arg_20h",
-            "offset_bytes": -24,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_4h",
-            "offset_bytes": -28,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_8h",
-            "offset_bytes": -32,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_0h",
-            "offset_bytes": -36,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_10h",
-            "offset_bytes": -40,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_10h_2",
-            "offset_bytes": -44,
-            "size_bytes": 4
-          }
-        ],
-        "heap_variables": [],
-        "basic_blocks": [
-          {
-            "id": "0x100000460",
-            "size": 28,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000460",
-                "target": "0x10000048c",
-                "type": "conditional_taken"
-              },
-              {
-                "source": "0x100000460",
-                "target": "0x10000047c",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x10000047c",
-            "size": 4,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x10000047c",
-                "target": "0x100000480",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x100000480",
-            "size": 12,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x100000480",
-                "target": "0x1000004b0",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x10000048c",
-            "size": 20,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x10000048c",
-                "target": "0x100000460",
-                "type": "unconditional"
-              },
-              {
-                "source": "0x10000048c",
-                "target": "0x1000004a0",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000004a0",
-            "size": 16,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000004a0",
-                "target": "0x1000004b0",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000004b0",
-            "size": 16,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": []
-          }
-        ],
-        "provenance": [
-          "ghidra",
-          "radare2"
-        ]
-      },
-      {
-        "name": "_main",
-        "entry_point": "0x1000004c0",
-        "size_bytes": 72,
-        "calling_convention": 1,
-        "signature": "1 _main()",
-        "confidence": 1.0,
-        "local_variables": [],
-        "stack_variables": [
-          {
-            "name": "local_10",
-            "offset_bytes": -4,
-            "size_bytes": 4
-          },
-          {
-            "name": "local_14",
-            "offset_bytes": -8,
-            "size_bytes": 4
-          },
-          {
-            "name": "local_18",
-            "offset_bytes": -12,
-            "size_bytes": 4
-          },
-          {
-            "name": "local_20",
-            "offset_bytes": -16,
-            "size_bytes": 4
-          },
-          {
-            "name": "argc",
-            "offset_bytes": -20,
-            "size_bytes": 4
-          },
-          {
-            "name": "argv",
-            "offset_bytes": -24,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_0h_2",
-            "offset_bytes": -28,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_8h",
-            "offset_bytes": -32,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_0h",
-            "offset_bytes": -36,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_10h",
-            "offset_bytes": -40,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_10h_2",
-            "offset_bytes": -44,
-            "size_bytes": 4
-          }
-        ],
-        "heap_variables": [],
-        "basic_blocks": [
-          {
-            "id": "0x1000004c0",
-            "size": 32,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000004c0",
-                "target": "0x1000004e0",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000004e0",
-            "size": 24,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": [
-              {
-                "source": "0x1000004e0",
-                "target": "0x1000004f8",
-                "type": "unconditional"
-              }
-            ]
-          },
-          {
-            "id": "0x1000004f8",
-            "size": 16,
-            "instructions": [],
-            "memory_accesses": [],
-            "edges": []
-          }
-        ],
-        "provenance": [
-          "ghidra",
-          "radare2"
-        ]
-      },
-      {
         "name": "printf",
-        "entry_point": "0x100000508",
+        "entry_point": "0x1000004b8",
         "size_bytes": 16,
         "calling_convention": 1,
         "signature": "1 printf()",
@@ -281,7 +20,118 @@
         "heap_variables": [],
         "basic_blocks": [
           {
-            "id": "0x100000508",
+            "id": "0x1000004b8",
+            "size": 16,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": []
+          }
+        ],
+        "provenance": [
+          "radare2"
+        ]
+      },
+      {
+        "name": "_main",
+        "entry_point": "0x100000460",
+        "size_bytes": 88,
+        "calling_convention": 2,
+        "signature": "2 _main()",
+        "confidence": 0.8,
+        "local_variables": [],
+        "stack_variables": [
+          {
+            "name": "argc",
+            "offset_bytes": -4,
+            "size_bytes": 4
+          },
+          {
+            "name": "argv",
+            "offset_bytes": -8,
+            "size_bytes": 4
+          },
+          {
+            "name": "var_8h",
+            "offset_bytes": -12,
+            "size_bytes": 4
+          },
+          {
+            "name": "var_0h",
+            "offset_bytes": -16,
+            "size_bytes": 4
+          },
+          {
+            "name": "var_10h",
+            "offset_bytes": -20,
+            "size_bytes": 4
+          },
+          {
+            "name": "var_10h_2",
+            "offset_bytes": -24,
+            "size_bytes": 4
+          }
+        ],
+        "heap_variables": [],
+        "basic_blocks": [
+          {
+            "id": "0x100000460",
+            "size": 36,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x100000460",
+                "target": "0x100000498",
+                "type": "conditional"
+              },
+              {
+                "source": "0x100000460",
+                "target": "0x100000484",
+                "type": "conditional"
+              }
+            ]
+          },
+          {
+            "id": "0x100000484",
+            "size": 4,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x100000484",
+                "target": "0x100000488",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x100000488",
+            "size": 16,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x100000488",
+                "target": "0x1000004a8",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x100000498",
+            "size": 16,
+            "instructions": [],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x100000498",
+                "target": "0x1000004a8",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x1000004a8",
             "size": 16,
             "instructions": [],
             "memory_accesses": [],
@@ -295,127 +145,34 @@
     ],
     "call_graph": {
       "nodes": [
-        "_fact",
         "printf",
         "_main"
       ],
       "edges": [
         {
           "caller": "_main",
-          "callee": "_fact"
-        },
-        {
-          "caller": "_main",
           "callee": "printf"
-        },
-        {
-          "caller": "_fact",
-          "callee": "_fact"
         }
       ]
     },
     "symbols": [
       {
-        "address": "external:00000001",
-        "name": "_printf",
-        "type": "Function",
-        "visibility": "IMPORTED"
-      },
-      {
-        "address": "0xfffeff00",
-        "name": "_objc_msgSend_rtp",
-        "type": "Label",
-        "visibility": "IMPORTED"
-      },
-      {
         "address": "0x100000000",
         "name": "__mh_execute_header",
-        "type": "Label",
-        "visibility": "IMPORTED"
-      },
-      {
-        "address": "0x100000460",
-        "name": "_fact",
         "type": "function",
         "visibility": "global"
       },
       {
-        "address": "0x100000480",
-        "name": "LAB_100000480",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x10000048c",
-        "name": "LAB_10000048c",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x1000004b0",
-        "name": "LAB_1000004b0",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x1000004c0",
+        "address": "0x100000460",
         "name": "_main",
         "type": "function",
         "visibility": "global"
       },
       {
-        "address": "0x100000508",
+        "address": "0x1000004b8",
         "name": "printf",
         "type": "function",
         "visibility": "static"
-      },
-      {
-        "address": "0x100000514",
-        "name": "s_%d_100000514",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x100004000",
-        "name": "PTR__printf_100004000",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x100008055",
-        "name": "s__printf_100008055",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x1000080d8",
-        "name": "nlist_1000080d8",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x1000080f2",
-        "name": "s___mh_execute_header_1000080f2",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x100008106",
-        "name": "s__fact_100008106",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x10000810c",
-        "name": "s__main_10000810c",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x100008112",
-        "name": "s__printf_100008112",
-        "type": "Label",
-        "visibility": "DEFAULT"
       }
     ],
     "imports": [],

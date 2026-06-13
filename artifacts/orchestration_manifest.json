@@ -1,276 +1,13 @@
 {
-  "orchestrated_at": "2026-06-13T12:13:05-07:00",
-  "binary_profiled": "./1",
+  "orchestrated_at": "2026-06-13T13:06:57-07:00",
+  "binary_profiled": "./test_case_bin",
   "jobs": {
-    "ghidra": {
-      "schema_version": "1.0.0",
-      "provenance": {
-        "tool_name": "Ghidra Headless Analyzer",
-        "timestamp": "2026-06-13T12:13:05-07:00",
-        "binary_path": "./1",
-        "config": {}
-      },
-      "data": {
-        "schema_version": "1.0.0",
-        "provenance": {
-          "tool_name": "Ghidra Headless Analyzer (Java API)",
-          "format": "Mac OS X Mach-O",
-          "language_id": "AARCH64:LE:64:AppleSilicon",
-          "compiler": "unknown",
-          "timestamp": "Sat Jun 13 12:13:04 IST 2026"
-        },
-        "functions": [
-          {
-            "size_bytes": 96,
-            "calling_convention": "unknown",
-            "cfg": {
-              "nodes": [
-                {
-                  "size": 28,
-                  "instructions_count": 8,
-                  "id": "100000460"
-                },
-                {
-                  "size": 4,
-                  "instructions_count": 2,
-                  "id": "10000047c"
-                },
-                {
-                  "size": 12,
-                  "instructions_count": 4,
-                  "id": "100000480"
-                },
-                {
-                  "size": 20,
-                  "instructions_count": 6,
-                  "id": "10000048c"
-                },
-                {
-                  "size": 16,
-                  "instructions_count": 5,
-                  "id": "1000004a0"
-                },
-                {
-                  "size": 16,
-                  "instructions_count": 5,
-                  "id": "1000004b0"
-                }
-              ],
-              "edges": [
-                {
-                  "source": "100000460",
-                  "type": "conditional_taken",
-                  "target": "10000048c"
-                },
-                {
-                  "source": "100000460",
-                  "type": "unconditional",
-                  "target": "10000047c"
-                },
-                {
-                  "source": "10000047c",
-                  "type": "unconditional",
-                  "target": "100000480"
-                },
-                {
-                  "source": "100000480",
-                  "type": "unconditional",
-                  "target": "1000004b0"
-                },
-                {
-                  "source": "10000048c",
-                  "type": "unconditional",
-                  "target": "100000460"
-                },
-                {
-                  "source": "10000048c",
-                  "type": "unconditional",
-                  "target": "1000004a0"
-                },
-                {
-                  "source": "1000004a0",
-                  "type": "unconditional",
-                  "target": "1000004b0"
-                }
-              ]
-            },
-            "name": "_fact",
-            "local_variables": [
-              "local_10",
-              "local_14",
-              "local_18",
-              "local_1c"
-            ],
-            "entry_point": "100000460"
-          },
-          {
-            "size_bytes": 72,
-            "calling_convention": "unknown",
-            "cfg": {
-              "nodes": [
-                {
-                  "size": 32,
-                  "instructions_count": 9,
-                  "id": "1000004c0"
-                },
-                {
-                  "size": 24,
-                  "instructions_count": 7,
-                  "id": "1000004e0"
-                },
-                {
-                  "size": 16,
-                  "instructions_count": 5,
-                  "id": "1000004f8"
-                }
-              ],
-              "edges": [
-                {
-                  "source": "1000004c0",
-                  "type": "unconditional",
-                  "target": "1000004e0"
-                },
-                {
-                  "source": "1000004e0",
-                  "type": "unconditional",
-                  "target": "1000004f8"
-                }
-              ]
-            },
-            "name": "entry",
-            "local_variables": [
-              "local_10",
-              "local_14",
-              "local_18",
-              "local_20"
-            ],
-            "entry_point": "1000004c0"
-          }
-        ],
-        "symbols": [
-          {
-            "address": "EXTERNAL:00000001",
-            "visibility": "IMPORTED",
-            "name": "_printf",
-            "type": "Function"
-          },
-          {
-            "address": "fffeff00",
-            "visibility": "IMPORTED",
-            "name": "_objc_msgSend_rtp",
-            "type": "Label"
-          },
-          {
-            "address": "100000000",
-            "visibility": "IMPORTED",
-            "name": "__mh_execute_header",
-            "type": "Label"
-          },
-          {
-            "address": "100000000",
-            "visibility": "IMPORTED",
-            "name": "MACH_HEADER",
-            "type": "Label"
-          },
-          {
-            "address": "100000460",
-            "visibility": "IMPORTED",
-            "name": "_fact",
-            "type": "Function"
-          },
-          {
-            "address": "100000480",
-            "visibility": "DEFAULT",
-            "name": "LAB_100000480",
-            "type": "Label"
-          },
-          {
-            "address": "10000048c",
-            "visibility": "DEFAULT",
-            "name": "LAB_10000048c",
-            "type": "Label"
-          },
-          {
-            "address": "1000004b0",
-            "visibility": "DEFAULT",
-            "name": "LAB_1000004b0",
-            "type": "Label"
-          },
-          {
-            "address": "1000004c0",
-            "visibility": "IMPORTED",
-            "name": "entry",
-            "type": "Function"
-          },
-          {
-            "address": "1000004c0",
-            "visibility": "IMPORTED",
-            "name": "_main",
-            "type": "Label"
-          },
-          {
-            "address": "100000508",
-            "visibility": "IMPORTED",
-            "name": "_printf",
-            "type": "Function"
-          },
-          {
-            "address": "100000514",
-            "visibility": "DEFAULT",
-            "name": "s_%d_100000514",
-            "type": "Label"
-          },
-          {
-            "address": "100004000",
-            "visibility": "DEFAULT",
-            "name": "PTR__printf_100004000",
-            "type": "Label"
-          },
-          {
-            "address": "100008055",
-            "visibility": "DEFAULT",
-            "name": "s__printf_100008055",
-            "type": "Label"
-          },
-          {
-            "address": "1000080d8",
-            "visibility": "DEFAULT",
-            "name": "nlist_1000080d8",
-            "type": "Label"
-          },
-          {
-            "address": "1000080f2",
-            "visibility": "DEFAULT",
-            "name": "s___mh_execute_header_1000080f2",
-            "type": "Label"
-          },
-          {
-            "address": "100008106",
-            "visibility": "DEFAULT",
-            "name": "s__fact_100008106",
-            "type": "Label"
-          },
-          {
-            "address": "10000810c",
-            "visibility": "DEFAULT",
-            "name": "s__main_10000810c",
-            "type": "Label"
-          },
-          {
-            "address": "100008112",
-            "visibility": "DEFAULT",
-            "name": "s__printf_100008112",
-            "type": "Label"
-          }
-        ]
-      }
-    },
     "radare2": {
       "schema_version": "1.0.0",
       "provenance": {
         "tool_name": "Radare2 Headless Analyser",
-        "timestamp": "2026-06-13T12:13:05-07:00",
-        "binary_path": "./1",
+        "timestamp": "2026-06-13T13:06:57-07:00",
+        "binary_path": "./test_case_bin",
         "config": {}
       },
       "data": {
@@ -282,14 +19,14 @@
         "functions": [
           {
             "name": "printf",
-            "entry_point": "0x100000508",
+            "entry_point": "0x1000004b8",
             "size_bytes": 16,
             "calling_convention": 1,
             "local_variables": [],
             "cfg": {
               "nodes": [
                 {
-                  "id": "0x100000508",
+                  "id": "0x1000004b8",
                   "size": 16,
                   "instructions_count": 4
                 }
@@ -299,38 +36,12 @@
           },
           {
             "name": "_main",
-            "entry_point": "0x1000004c0",
-            "size_bytes": 72,
-            "calling_convention": 1,
+            "entry_point": "0x100000460",
+            "size_bytes": 88,
+            "calling_convention": 2,
             "local_variables": [
               "argc",
               "argv",
-              "var_0h_2",
-              "var_8h",
-              "var_0h",
-              "var_10h",
-              "var_10h_2"
-            ],
-            "cfg": {
-              "nodes": [
-                {
-                  "id": "0x1000004c0",
-                  "size": 72,
-                  "instructions_count": 18
-                }
-              ],
-              "edges": []
-            }
-          },
-          {
-            "name": "_fact",
-            "entry_point": "0x100000460",
-            "size_bytes": 96,
-            "calling_convention": 2,
-            "local_variables": [
-              "arg1",
-              "arg_20h",
-              "var_4h",
               "var_8h",
               "var_0h",
               "var_10h",
@@ -340,26 +51,26 @@
               "nodes": [
                 {
                   "id": "0x100000460",
-                  "size": 28,
-                  "instructions_count": 7
-                },
-                {
-                  "id": "0x10000047c",
-                  "size": 4,
-                  "instructions_count": 1
-                },
-                {
-                  "id": "0x100000480",
-                  "size": 12,
-                  "instructions_count": 3
-                },
-                {
-                  "id": "0x10000048c",
                   "size": 36,
                   "instructions_count": 9
                 },
                 {
-                  "id": "0x1000004b0",
+                  "id": "0x100000484",
+                  "size": 4,
+                  "instructions_count": 1
+                },
+                {
+                  "id": "0x100000488",
+                  "size": 16,
+                  "instructions_count": 4
+                },
+                {
+                  "id": "0x100000498",
+                  "size": 16,
+                  "instructions_count": 4
+                },
+                {
+                  "id": "0x1000004a8",
                   "size": 16,
                   "instructions_count": 4
                 }
@@ -367,27 +78,27 @@
               "edges": [
                 {
                   "source": "0x100000460",
-                  "target": "0x10000048c",
+                  "target": "0x100000498",
                   "type": "conditional"
                 },
                 {
                   "source": "0x100000460",
-                  "target": "0x10000047c",
+                  "target": "0x100000484",
                   "type": "conditional"
                 },
                 {
-                  "source": "0x10000047c",
-                  "target": "0x100000480",
+                  "source": "0x100000484",
+                  "target": "0x100000488",
                   "type": "unconditional"
                 },
                 {
-                  "source": "0x100000480",
-                  "target": "0x1000004b0",
+                  "source": "0x100000488",
+                  "target": "0x1000004a8",
                   "type": "unconditional"
                 },
                 {
-                  "source": "0x10000048c",
-                  "target": "0x1000004b0",
+                  "source": "0x100000498",
+                  "target": "0x1000004a8",
                   "type": "unconditional"
                 }
               ]
@@ -403,18 +114,12 @@
           },
           {
             "address": "0x100000460",
-            "name": "_fact",
-            "type": "function",
-            "visibility": "global"
-          },
-          {
-            "address": "0x1000004c0",
             "name": "_main",
             "type": "function",
             "visibility": "global"
           },
           {
-            "address": "0x100000508",
+            "address": "0x1000004b8",
             "name": "printf",
             "type": "function",
             "visibility": "static"
@@ -424,32 +129,21 @@
             "name": "func.100000460",
             "type": "function",
             "visibility": "static"
-          },
-          {
-            "address": "0x1000004c0",
-            "name": "func.1000004c0",
-            "type": "function",
-            "visibility": "static"
           }
         ],
         "call_graph": {
           "nodes": [
-            "_fact",
             "printf",
             "_main"
           ],
           "edges": [
             {
               "caller": "_main",
-              "callee": "_fact"
+              "callee": "printf"
             },
             {
               "caller": "_main",
               "callee": "printf"
-            },
-            {
-              "caller": "_fact",
-              "callee": "_fact"
             }
           ]
         }
@@ -457,6 +151,6 @@
     }
   },
   "errors": [],
-  "total_jobs_run": 2,
+  "total_jobs_run": 1,
   "status": "success"
 }

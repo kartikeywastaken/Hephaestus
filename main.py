@@ -80,6 +80,11 @@ def parse_args():
         help="Inspect a Unified Evidence IR file and print structured statistics & summary diagnostics."
     )
     parser.add_argument(
+        "--analyze-cfg",
+        action="store_true",
+        help="Execute Phase 3A CFG structuring and control flow analysis on the Unified IR."
+    )
+    parser.add_argument(
         "--config",
         help="JSON string or file path containing runner configurations."
     )
@@ -430,6 +435,45 @@ def handle_inspection(ir_file_path: str):
     print("============================================================")
     sys.exit(0)
 
+def handle_analyze_cfg(out_dir: str):
+    logger.info("Executing Phase 3A CFG Analysis Backbone on canonical IR...")
+    ir_payload = load_unified_ir_data(out_dir)
+    
+    # Import the structuring functions
+    from src.ir.structuring.analysis import analyze_function
+    
+    funcs = ir_payload.get("data", {}).get("functions", [])
+    reports = []
+    
+    for func in funcs:
+        report = analyze_function(func, logger)
+        reports.append(report)
+        
+    # Save the output
+    structuring_path = os.path.join(out_dir, "structuring_analysis.json")
+    os.makedirs(out_dir, exist_ok=True)
+    with open(structuring_path, 'w', encoding='utf-8') as f:
+        json.dump(reports, f, indent=2, ensure_ascii=False)
+        
+    logger.info(f"[+] Output CFG structuring analysis reports committed: {structuring_path}")
+    
+    # Print a summary
+    print("\n============================================================")
+    print("                 PHASE 3A: CFG ANALYSIS SUMMARY")
+    print("============================================================")
+    print(f"Total analyzed functions: {len(reports)}")
+    print("------------------------------------------------------------")
+    for r in reports:
+        print(f"Function: {r['function_name']} (Entry: {r['entry_node']})")
+        print(f"  Nodes: {len(r['nodes'])} | Edges: {len(r['edges'])}")
+        print(f"  Exits: {', '.join(r['exit_nodes'])}")
+        back_edges = r["detected_back_edges"]
+        print(f"  Back-edges: {len(back_edges)}")
+        for be in back_edges:
+            print(f"    - {be['source']} -> {be['destination']} (Header: {be['candidate_loop_header']}, Latch: {be['candidate_latch']})")
+    print("============================================================")
+    sys.exit(0)
+
 def main():
     # Detect CLI Subcommand arguments (recover-types, structs, signatures, generate, function, module, validate, repair, report)
     if len(sys.argv) > 1:
@@ -458,11 +502,15 @@ def main():
         elif first_arg == "repair":
             handle_repair_cli("artifacts")
             return
-        elif first_arg == "report":
-            handle_report_cli("artifacts")
+        elif first_arg == "analyze-cfg":
+            handle_analyze_cfg("artifacts")
             return
 
     args = parse_args()
+    
+    if args.analyze_cfg:
+        handle_analyze_cfg(args.out_dir)
+        return
     
     # Check if we are doing validation/inspection commands
     if args.validate_ir:
