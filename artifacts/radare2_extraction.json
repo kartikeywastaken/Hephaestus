@@ -2,8 +2,8 @@
   "schema_version": "1.0.0",
   "provenance": {
     "tool_name": "Radare2 Headless Analyser",
-    "timestamp": "2026-06-13T13:06:57-07:00",
-    "binary_path": "./test_case_bin",
+    "timestamp": "2026-06-13T13:49:06-07:00",
+    "binary_path": "./ts",
     "config": {}
   },
   "data": {
@@ -15,16 +15,18 @@
     "functions": [
       {
         "name": "printf",
-        "entry_point": "0x1000004b8",
-        "size_bytes": 16,
+        "entry_point": "0x1000005d8",
+        "size_bytes": 24,
         "calling_convention": 1,
-        "local_variables": [],
+        "local_variables": [
+          "arg1"
+        ],
         "cfg": {
           "nodes": [
             {
-              "id": "0x1000004b8",
-              "size": 16,
-              "instructions_count": 4
+              "id": "0x1000005d8",
+              "size": 24,
+              "instructions_count": 6
             }
           ],
           "edges": []
@@ -32,12 +34,264 @@
       },
       {
         "name": "_main",
-        "entry_point": "0x100000460",
-        "size_bytes": 88,
-        "calling_convention": 2,
+        "entry_point": "0x1000004c0",
+        "size_bytes": 280,
+        "calling_convention": 6,
         "local_variables": [
           "argc",
           "argv",
+          "var_0h_2",
+          "var_8h",
+          "var_0h",
+          "var_10h",
+          "var_10h_2"
+        ],
+        "cfg": {
+          "nodes": [
+            {
+              "id": "0x1000004c0",
+              "size": 24,
+              "instructions_count": 6
+            },
+            {
+              "id": "0x1000004d8",
+              "size": 12,
+              "instructions_count": 3
+            },
+            {
+              "id": "0x1000004e4",
+              "size": 4,
+              "instructions_count": 1
+            },
+            {
+              "id": "0x1000004e8",
+              "size": 12,
+              "instructions_count": 3
+            },
+            {
+              "id": "0x1000004f4",
+              "size": 4,
+              "instructions_count": 1
+            },
+            {
+              "id": "0x1000004f8",
+              "size": 16,
+              "instructions_count": 4
+            },
+            {
+              "id": "0x100000508",
+              "size": 12,
+              "instructions_count": 3
+            },
+            {
+              "id": "0x100000514",
+              "size": 4,
+              "instructions_count": 1
+            },
+            {
+              "id": "0x100000518",
+              "size": 4,
+              "instructions_count": 1
+            },
+            {
+              "id": "0x10000051c",
+              "size": 24,
+              "instructions_count": 6
+            },
+            {
+              "id": "0x100000534",
+              "size": 4,
+              "instructions_count": 1
+            },
+            {
+              "id": "0x100000538",
+              "size": 36,
+              "instructions_count": 9
+            },
+            {
+              "id": "0x10000055c",
+              "size": 36,
+              "instructions_count": 9
+            },
+            {
+              "id": "0x100000580",
+              "size": 4,
+              "instructions_count": 1
+            },
+            {
+              "id": "0x100000584",
+              "size": 4,
+              "instructions_count": 1
+            },
+            {
+              "id": "0x100000588",
+              "size": 16,
+              "instructions_count": 4
+            },
+            {
+              "id": "0x100000598",
+              "size": 12,
+              "instructions_count": 3
+            },
+            {
+              "id": "0x1000005a4",
+              "size": 4,
+              "instructions_count": 1
+            },
+            {
+              "id": "0x1000005a8",
+              "size": 16,
+              "instructions_count": 4
+            },
+            {
+              "id": "0x1000005b8",
+              "size": 16,
+              "instructions_count": 4
+            },
+            {
+              "id": "0x1000005c8",
+              "size": 16,
+              "instructions_count": 4
+            }
+          ],
+          "edges": [
+            {
+              "source": "0x1000004c0",
+              "target": "0x1000004d8",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x1000004d8",
+              "target": "0x100000598",
+              "type": "conditional"
+            },
+            {
+              "source": "0x1000004d8",
+              "target": "0x1000004e4",
+              "type": "conditional"
+            },
+            {
+              "source": "0x1000004e4",
+              "target": "0x1000004e8",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x1000004e8",
+              "target": "0x100000508",
+              "type": "conditional"
+            },
+            {
+              "source": "0x1000004e8",
+              "target": "0x1000004f4",
+              "type": "conditional"
+            },
+            {
+              "source": "0x1000004f4",
+              "target": "0x1000004f8",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x1000004f8",
+              "target": "0x1000004d8",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x100000508",
+              "target": "0x10000051c",
+              "type": "conditional"
+            },
+            {
+              "source": "0x100000508",
+              "target": "0x100000514",
+              "type": "conditional"
+            },
+            {
+              "source": "0x100000514",
+              "target": "0x100000518",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x100000518",
+              "target": "0x100000598",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x10000051c",
+              "target": "0x10000055c",
+              "type": "conditional"
+            },
+            {
+              "source": "0x10000051c",
+              "target": "0x100000534",
+              "type": "conditional"
+            },
+            {
+              "source": "0x100000534",
+              "target": "0x100000538",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x100000538",
+              "target": "0x100000580",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x10000055c",
+              "target": "0x100000580",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x100000580",
+              "target": "0x100000584",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x100000584",
+              "target": "0x100000588",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x100000588",
+              "target": "0x1000004d8",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x100000598",
+              "target": "0x1000005b8",
+              "type": "conditional"
+            },
+            {
+              "source": "0x100000598",
+              "target": "0x1000005a4",
+              "type": "conditional"
+            },
+            {
+              "source": "0x1000005a4",
+              "target": "0x1000005a8",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x1000005a8",
+              "target": "0x1000005c8",
+              "type": "unconditional"
+            },
+            {
+              "source": "0x1000005b8",
+              "target": "0x1000005c8",
+              "type": "unconditional"
+            }
+          ]
+        }
+      },
+      {
+        "name": "_helper",
+        "entry_point": "0x100000460",
+        "size_bytes": 96,
+        "calling_convention": 2,
+        "local_variables": [
+          "arg1",
+          "arg_20h",
+          "var_4h",
           "var_8h",
           "var_0h",
           "var_10h",
@@ -47,26 +301,26 @@
           "nodes": [
             {
               "id": "0x100000460",
-              "size": 36,
-              "instructions_count": 9
+              "size": 28,
+              "instructions_count": 7
             },
             {
-              "id": "0x100000484",
+              "id": "0x10000047c",
               "size": 4,
               "instructions_count": 1
             },
             {
-              "id": "0x100000488",
-              "size": 16,
-              "instructions_count": 4
+              "id": "0x100000480",
+              "size": 12,
+              "instructions_count": 3
             },
             {
-              "id": "0x100000498",
-              "size": 16,
-              "instructions_count": 4
+              "id": "0x10000048c",
+              "size": 36,
+              "instructions_count": 9
             },
             {
-              "id": "0x1000004a8",
+              "id": "0x1000004b0",
               "size": 16,
               "instructions_count": 4
             }
@@ -74,27 +328,27 @@
           "edges": [
             {
               "source": "0x100000460",
-              "target": "0x100000498",
+              "target": "0x10000048c",
               "type": "conditional"
             },
             {
               "source": "0x100000460",
-              "target": "0x100000484",
+              "target": "0x10000047c",
               "type": "conditional"
             },
             {
-              "source": "0x100000484",
-              "target": "0x100000488",
+              "source": "0x10000047c",
+              "target": "0x100000480",
               "type": "unconditional"
             },
             {
-              "source": "0x100000488",
-              "target": "0x1000004a8",
+              "source": "0x100000480",
+              "target": "0x1000004b0",
               "type": "unconditional"
             },
             {
-              "source": "0x100000498",
-              "target": "0x1000004a8",
+              "source": "0x10000048c",
+              "target": "0x1000004b0",
               "type": "unconditional"
             }
           ]
@@ -110,12 +364,18 @@
       },
       {
         "address": "0x100000460",
+        "name": "_helper",
+        "type": "function",
+        "visibility": "global"
+      },
+      {
+        "address": "0x1000004c0",
         "name": "_main",
         "type": "function",
         "visibility": "global"
       },
       {
-        "address": "0x1000004b8",
+        "address": "0x1000005d8",
         "name": "printf",
         "type": "function",
         "visibility": "static"
@@ -125,14 +385,33 @@
         "name": "func.100000460",
         "type": "function",
         "visibility": "static"
+      },
+      {
+        "address": "0x1000004c0",
+        "name": "func.1000004c0",
+        "type": "function",
+        "visibility": "static"
       }
     ],
     "call_graph": {
       "nodes": [
         "printf",
+        "_helper",
         "_main"
       ],
       "edges": [
+        {
+          "caller": "_main",
+          "callee": "_helper"
+        },
+        {
+          "caller": "_main",
+          "callee": "printf"
+        },
+        {
+          "caller": "_main",
+          "callee": "_helper"
+        },
         {
           "caller": "_main",
           "callee": "printf"
@@ -140,6 +419,14 @@
         {
           "caller": "_main",
           "callee": "printf"
+        },
+        {
+          "caller": "_main",
+          "callee": "printf"
+        },
+        {
+          "caller": "_helper",
+          "callee": "_helper"
         }
       ]
     }

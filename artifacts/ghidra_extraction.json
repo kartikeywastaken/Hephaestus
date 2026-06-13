@@ -2,8 +2,8 @@
   "schema_version": "1.0.0",
   "provenance": {
     "tool_name": "Ghidra Headless Analyzer",
-    "timestamp": "2026-06-13T12:13:05-07:00",
-    "binary_path": "./1",
+    "timestamp": "2026-06-13T13:49:06-07:00",
+    "binary_path": "./ts",
     "config": {}
   },
   "data": {
@@ -13,7 +13,7 @@
       "format": "Mac OS X Mach-O",
       "language_id": "AARCH64:LE:64:AppleSilicon",
       "compiler": "unknown",
-      "timestamp": "Sat Jun 13 12:13:04 IST 2026"
+      "timestamp": "Sat Jun 13 13:49:06 IST 2026"
     },
     "functions": [
       {
@@ -90,7 +90,7 @@
             }
           ]
         },
-        "name": "_fact",
+        "name": "_helper",
         "local_variables": [
           "local_10",
           "local_14",
@@ -100,36 +100,301 @@
         "entry_point": "100000460"
       },
       {
-        "size_bytes": 72,
+        "size_bytes": 280,
         "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
-              "size": 32,
-              "instructions_count": 9,
+              "size": 24,
+              "instructions_count": 7,
               "id": "1000004c0"
             },
             {
-              "size": 24,
-              "instructions_count": 7,
-              "id": "1000004e0"
+              "size": 12,
+              "instructions_count": 4,
+              "id": "1000004d8"
+            },
+            {
+              "size": 4,
+              "instructions_count": 2,
+              "id": "1000004e4"
+            },
+            {
+              "size": 12,
+              "instructions_count": 4,
+              "id": "1000004e8"
+            },
+            {
+              "size": 4,
+              "instructions_count": 2,
+              "id": "1000004f4"
             },
             {
               "size": 16,
               "instructions_count": 5,
               "id": "1000004f8"
+            },
+            {
+              "size": 12,
+              "instructions_count": 4,
+              "id": "100000508"
+            },
+            {
+              "size": 4,
+              "instructions_count": 2,
+              "id": "100000514"
+            },
+            {
+              "size": 4,
+              "instructions_count": 2,
+              "id": "100000518"
+            },
+            {
+              "size": 24,
+              "instructions_count": 7,
+              "id": "10000051c"
+            },
+            {
+              "size": 4,
+              "instructions_count": 2,
+              "id": "100000534"
+            },
+            {
+              "size": 8,
+              "instructions_count": 3,
+              "id": "100000538"
+            },
+            {
+              "size": 24,
+              "instructions_count": 7,
+              "id": "100000540"
+            },
+            {
+              "size": 4,
+              "instructions_count": 2,
+              "id": "100000558"
+            },
+            {
+              "size": 8,
+              "instructions_count": 3,
+              "id": "10000055c"
+            },
+            {
+              "size": 24,
+              "instructions_count": 7,
+              "id": "100000564"
+            },
+            {
+              "size": 4,
+              "instructions_count": 2,
+              "id": "10000057c"
+            },
+            {
+              "size": 4,
+              "instructions_count": 2,
+              "id": "100000580"
+            },
+            {
+              "size": 4,
+              "instructions_count": 2,
+              "id": "100000584"
+            },
+            {
+              "size": 16,
+              "instructions_count": 5,
+              "id": "100000588"
+            },
+            {
+              "size": 12,
+              "instructions_count": 4,
+              "id": "100000598"
+            },
+            {
+              "size": 4,
+              "instructions_count": 2,
+              "id": "1000005a4"
+            },
+            {
+              "size": 12,
+              "instructions_count": 4,
+              "id": "1000005a8"
+            },
+            {
+              "size": 4,
+              "instructions_count": 2,
+              "id": "1000005b4"
+            },
+            {
+              "size": 12,
+              "instructions_count": 4,
+              "id": "1000005b8"
+            },
+            {
+              "size": 4,
+              "instructions_count": 2,
+              "id": "1000005c4"
+            },
+            {
+              "size": 16,
+              "instructions_count": 5,
+              "id": "1000005c8"
             }
           ],
           "edges": [
             {
               "source": "1000004c0",
               "type": "unconditional",
-              "target": "1000004e0"
+              "target": "1000004d8"
             },
             {
-              "source": "1000004e0",
+              "source": "1000004d8",
+              "type": "conditional_taken",
+              "target": "100000598"
+            },
+            {
+              "source": "1000004d8",
+              "type": "unconditional",
+              "target": "1000004e4"
+            },
+            {
+              "source": "1000004e4",
+              "type": "unconditional",
+              "target": "1000004e8"
+            },
+            {
+              "source": "1000004e8",
+              "type": "conditional_taken",
+              "target": "100000508"
+            },
+            {
+              "source": "1000004e8",
+              "type": "unconditional",
+              "target": "1000004f4"
+            },
+            {
+              "source": "1000004f4",
               "type": "unconditional",
               "target": "1000004f8"
+            },
+            {
+              "source": "1000004f8",
+              "type": "unconditional",
+              "target": "1000004d8"
+            },
+            {
+              "source": "100000508",
+              "type": "conditional_taken",
+              "target": "10000051c"
+            },
+            {
+              "source": "100000508",
+              "type": "unconditional",
+              "target": "100000514"
+            },
+            {
+              "source": "100000514",
+              "type": "unconditional",
+              "target": "100000518"
+            },
+            {
+              "source": "100000518",
+              "type": "unconditional",
+              "target": "100000598"
+            },
+            {
+              "source": "10000051c",
+              "type": "conditional_taken",
+              "target": "10000055c"
+            },
+            {
+              "source": "10000051c",
+              "type": "unconditional",
+              "target": "100000534"
+            },
+            {
+              "source": "100000534",
+              "type": "unconditional",
+              "target": "100000538"
+            },
+            {
+              "source": "100000538",
+              "type": "unconditional",
+              "target": "100000540"
+            },
+            {
+              "source": "100000540",
+              "type": "unconditional",
+              "target": "100000558"
+            },
+            {
+              "source": "100000558",
+              "type": "unconditional",
+              "target": "100000580"
+            },
+            {
+              "source": "10000055c",
+              "type": "unconditional",
+              "target": "100000564"
+            },
+            {
+              "source": "100000564",
+              "type": "unconditional",
+              "target": "10000057c"
+            },
+            {
+              "source": "10000057c",
+              "type": "unconditional",
+              "target": "100000580"
+            },
+            {
+              "source": "100000580",
+              "type": "unconditional",
+              "target": "100000584"
+            },
+            {
+              "source": "100000584",
+              "type": "unconditional",
+              "target": "100000588"
+            },
+            {
+              "source": "100000588",
+              "type": "unconditional",
+              "target": "1000004d8"
+            },
+            {
+              "source": "100000598",
+              "type": "conditional_taken",
+              "target": "1000005b8"
+            },
+            {
+              "source": "100000598",
+              "type": "unconditional",
+              "target": "1000005a4"
+            },
+            {
+              "source": "1000005a4",
+              "type": "unconditional",
+              "target": "1000005a8"
+            },
+            {
+              "source": "1000005a8",
+              "type": "unconditional",
+              "target": "1000005b4"
+            },
+            {
+              "source": "1000005b4",
+              "type": "unconditional",
+              "target": "1000005c8"
+            },
+            {
+              "source": "1000005b8",
+              "type": "unconditional",
+              "target": "1000005c4"
+            },
+            {
+              "source": "1000005c4",
+              "type": "unconditional",
+              "target": "1000005c8"
             }
           ]
         },
@@ -171,7 +436,7 @@
       {
         "address": "100000460",
         "visibility": "IMPORTED",
-        "name": "_fact",
+        "name": "_helper",
         "type": "Function"
       },
       {
@@ -205,15 +470,123 @@
         "type": "Label"
       },
       {
+        "address": "1000004d8",
+        "visibility": "DEFAULT",
+        "name": "LAB_1000004d8",
+        "type": "Label"
+      },
+      {
+        "address": "1000004e8",
+        "visibility": "DEFAULT",
+        "name": "LAB_1000004e8",
+        "type": "Label"
+      },
+      {
+        "address": "1000004f8",
+        "visibility": "DEFAULT",
+        "name": "LAB_1000004f8",
+        "type": "Label"
+      },
+      {
         "address": "100000508",
+        "visibility": "DEFAULT",
+        "name": "LAB_100000508",
+        "type": "Label"
+      },
+      {
+        "address": "100000518",
+        "visibility": "DEFAULT",
+        "name": "LAB_100000518",
+        "type": "Label"
+      },
+      {
+        "address": "10000051c",
+        "visibility": "DEFAULT",
+        "name": "LAB_10000051c",
+        "type": "Label"
+      },
+      {
+        "address": "100000538",
+        "visibility": "DEFAULT",
+        "name": "LAB_100000538",
+        "type": "Label"
+      },
+      {
+        "address": "10000055c",
+        "visibility": "DEFAULT",
+        "name": "LAB_10000055c",
+        "type": "Label"
+      },
+      {
+        "address": "100000580",
+        "visibility": "DEFAULT",
+        "name": "LAB_100000580",
+        "type": "Label"
+      },
+      {
+        "address": "100000584",
+        "visibility": "DEFAULT",
+        "name": "LAB_100000584",
+        "type": "Label"
+      },
+      {
+        "address": "100000588",
+        "visibility": "DEFAULT",
+        "name": "LAB_100000588",
+        "type": "Label"
+      },
+      {
+        "address": "100000598",
+        "visibility": "DEFAULT",
+        "name": "LAB_100000598",
+        "type": "Label"
+      },
+      {
+        "address": "1000005a8",
+        "visibility": "DEFAULT",
+        "name": "LAB_1000005a8",
+        "type": "Label"
+      },
+      {
+        "address": "1000005b8",
+        "visibility": "DEFAULT",
+        "name": "LAB_1000005b8",
+        "type": "Label"
+      },
+      {
+        "address": "1000005c8",
+        "visibility": "DEFAULT",
+        "name": "LAB_1000005c8",
+        "type": "Label"
+      },
+      {
+        "address": "1000005d8",
         "visibility": "IMPORTED",
         "name": "_printf",
         "type": "Function"
       },
       {
-        "address": "100000514",
+        "address": "1000005e4",
         "visibility": "DEFAULT",
-        "name": "s_%d_100000514",
+        "name": "s_even_%d_1000005e4",
+        "type": "Label"
+      },
+      {
+        "address": "1000005ed",
+        "visibility": "DEFAULT",
+        "name": "s_odd_%d_1000005ed",
+        "type": "Label"
+      },
+      {
+        "address": "1000005f5",
+        "visibility": "DEFAULT",
+        "name": "s_stopped_1000005f5",
+        "type": "Label"
+      },
+      {
+        "address": "1000005fe",
+        "visibility": "DEFAULT",
+        "name": "s_done_1000005fe",
         "type": "Label"
       },
       {
@@ -243,19 +616,19 @@
       {
         "address": "100008106",
         "visibility": "DEFAULT",
-        "name": "s__fact_100008106",
+        "name": "s__helper_100008106",
         "type": "Label"
       },
       {
-        "address": "10000810c",
+        "address": "10000810e",
         "visibility": "DEFAULT",
-        "name": "s__main_10000810c",
+        "name": "s__main_10000810e",
         "type": "Label"
       },
       {
-        "address": "100008112",
+        "address": "100008114",
         "visibility": "DEFAULT",
-        "name": "s__printf_100008112",
+        "name": "s__printf_100008114",
         "type": "Label"
       }
     ]
