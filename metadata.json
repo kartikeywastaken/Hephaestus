@@ -1,6 +1,6 @@
 {
   "name": "Hephaestus",
-  "description": "Deterministic extraction engine and visualization suite for binary reconstruction: Ghidra, IDA, call graphs, CFGs, and x64dbg dynamic traces.",
+  "description": "Probablistic decompiler [coming soon!]",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
