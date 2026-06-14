@@ -6,7 +6,136 @@
     "source_ir": "unified_ir.json"
   },
   "data": {
-    "layout_candidates": [],
+    "layout_candidates": [
+      {
+        "function_entry": "0x1000004b0",
+        "function_name": "_inspect",
+        "base_id": "sp",
+        "layout_kind": "array_like",
+        "observed_offsets": [
+          0,
+          8
+        ],
+        "min_offset": 0,
+        "max_offset": 8,
+        "observed_sizes": [
+          4
+        ],
+        "access_count": 12,
+        "evidence_notes": [
+          "12 memory access(es) observed at base 'sp' in function '_inspect'; offsets=[0, 8]; sizes=[4]; classification=array_like"
+        ],
+        "source_instrs": [
+          "0x100000464",
+          "0x100000468",
+          "0x10000046c",
+          "0x100000474",
+          "0x10000047c",
+          "0x100000480",
+          "0x100000488",
+          "0x100000490",
+          "0x100000494",
+          "0x10000049c",
+          "0x1000004a4",
+          "0x1000004a8"
+        ]
+      },
+      {
+        "function_entry": "0x1000004b0",
+        "function_name": "_inspect",
+        "base_id": "x8",
+        "layout_kind": "array_like",
+        "observed_offsets": [
+          0,
+          8,
+          16
+        ],
+        "min_offset": 0,
+        "max_offset": 16,
+        "observed_sizes": [
+          4
+        ],
+        "access_count": 3,
+        "evidence_notes": [
+          "3 memory access(es) observed at base 'x8' in function '_inspect'; offsets=[0, 8, 16]; sizes=[4]; classification=array_like"
+        ],
+        "source_instrs": [
+          "0x100000470",
+          "0x100000484",
+          "0x100000498"
+        ]
+      },
+      {
+        "function_entry": "0x10000050c",
+        "function_name": "_main",
+        "base_id": "sp",
+        "layout_kind": "record_like",
+        "observed_offsets": [
+          12,
+          16,
+          24,
+          32
+        ],
+        "min_offset": 12,
+        "max_offset": 32,
+        "observed_sizes": [
+          4
+        ],
+        "access_count": 5,
+        "evidence_notes": [
+          "5 memory access(es) observed at base 'sp' in function '_main'; offsets=[12, 16, 24, 32]; sizes=[4]; classification=record_like"
+        ],
+        "source_instrs": [
+          "0x1000004c4",
+          "0x1000004d4",
+          "0x1000004dc",
+          "0x1000004e4",
+          "0x100000500"
+        ]
+      },
+      {
+        "function_entry": "0x10000050c",
+        "function_name": "_main",
+        "base_id": "x8",
+        "layout_kind": "scalar",
+        "observed_offsets": [
+          0
+        ],
+        "min_offset": 0,
+        "max_offset": 0,
+        "observed_sizes": [
+          4
+        ],
+        "access_count": 1,
+        "evidence_notes": [
+          "1 memory access(es) observed at base 'x8' in function '_main'; offsets=[0]; sizes=[4]; classification=scalar"
+        ],
+        "source_instrs": [
+          "0x1000004f0"
+        ]
+      },
+      {
+        "function_entry": "0x100000520",
+        "function_name": "printf",
+        "base_id": "x16",
+        "layout_kind": "scalar",
+        "observed_offsets": [
+          0
+        ],
+        "min_offset": 0,
+        "max_offset": 0,
+        "observed_sizes": [
+          4
+        ],
+        "access_count": 1,
+        "evidence_notes": [
+          "1 memory access(es) observed at base 'x16' in function 'printf'; offsets=[0]; sizes=[4]; classification=scalar"
+        ],
+        "source_instrs": [
+          "0x100000514"
+        ]
+      }
+    ],
     "unbound_memory_accesses": []
   }
 }

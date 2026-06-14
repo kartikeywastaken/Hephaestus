@@ -10,7 +10,7 @@
     "functions": [
       {
         "name": "_inspect",
-        "entry_point": "0x100000460",
+        "entry_point": "0x1000004b0",
         "function_kind": "user",
         "signature": {
           "return_type": {
@@ -138,7 +138,7 @@
       },
       {
         "name": "_main",
-        "entry_point": "0x1000004b4",
+        "entry_point": "0x10000050c",
         "function_kind": "entrypoint",
         "signature": {
           "return_type": {
@@ -370,7 +370,7 @@
       },
       {
         "name": "printf",
-        "entry_point": "0x100000510",
+        "entry_point": "0x100000520",
         "function_kind": "library",
         "signature": {
           "return_type": {

@@ -11,7 +11,7 @@
     "functions": [
       {
         "name": "_inspect",
-        "entry_point": "0x100000460",
+        "entry_point": "0x1000004b0",
         "function_kind": "user",
         "recovered_signature": {
           "return_type": {
@@ -69,15 +69,17 @@
               "name": "arg_10h",
               "index": 0,
               "type": {
-                "type": "unknown",
-                "confidence": 0.45,
-                "source": "argument_name_heuristic",
-                "notes": []
+                "type": "int32",
+                "confidence": 0.6,
+                "source": "constraint_refinement(priority=60)",
+                "notes": [
+                  "refined by constraint (priority=60): arg_10h arg_10h bound from stack slot [sp + 0x8], stored by str at 0x100000464 with size_bytes=4"
+                ]
               },
               "source": "unified_ir",
-              "confidence": 0.45,
+              "confidence": 0.6,
               "notes": [
-                "classified via argument_name_heuristic"
+                "refined by constraint (priority=60): arg_10h arg_10h bound from stack slot [sp + 0x8], stored by str at 0x100000464 with size_bytes=4"
               ]
             },
             {
@@ -91,13 +93,11 @@
               },
               "source": "unified_ir",
               "confidence": 0.45,
-              "notes": [
-                "classified via argument_name_heuristic"
-              ]
+              "notes": []
             }
           ],
           "variadic": false,
-          "confidence": 0.45,
+          "confidence": 0.6,
           "source": "user_function_parameter_recovery",
           "notes": []
         },
@@ -222,12 +222,14 @@
           {
             "name": "arg_10h",
             "refined_type": {
-              "type": "unknown",
-              "confidence": 0.45,
-              "source": "argument_name_heuristic",
-              "notes": []
+              "type": "int32",
+              "confidence": 0.6,
+              "source": "constraint_refinement(priority=60)",
+              "notes": [
+                "refined by constraint (priority=60): arg_10h arg_10h bound from stack slot [sp + 0x8], stored by str at 0x100000464 with size_bytes=4"
+              ]
             },
-            "constraints_applied": 0,
+            "constraints_applied": 1,
             "phase4a_type": "unknown"
           },
           {
@@ -265,46 +267,108 @@
             },
             "source": "unified_ir",
             "confidence": 0.45,
-            "notes": [
-              "classified via argument_name_heuristic"
-            ]
+            "notes": []
           },
           {
             "name": "arg_10h",
             "index": 0,
             "type": {
-              "type": "unknown",
-              "confidence": 0.45,
-              "source": "argument_name_heuristic",
-              "notes": []
+              "type": "int32",
+              "confidence": 0.6,
+              "source": "constraint_refinement(priority=60)",
+              "notes": [
+                "refined by constraint (priority=60): arg_10h arg_10h bound from stack slot [sp + 0x8], stored by str at 0x100000464 with size_bytes=4"
+              ]
             },
             "source": "unified_ir",
-            "confidence": 0.45,
+            "confidence": 0.6,
             "notes": [
-              "classified via argument_name_heuristic"
+              "refined by constraint (priority=60): arg_10h arg_10h bound from stack slot [sp + 0x8], stored by str at 0x100000464 with size_bytes=4"
             ]
           }
         ],
         "constraints_summary": {
-          "total_constraints_applied": 0,
-          "variables_with_constraints": 0,
+          "total_constraints_applied": 2,
+          "variables_with_constraints": 1,
           "parameters_with_constraints": 2
         },
-        "layout_candidates": [],
+        "layout_candidates": [
+          {
+            "function_entry": "0x1000004b0",
+            "function_name": "_inspect",
+            "base_id": "sp",
+            "layout_kind": "array_like",
+            "observed_offsets": [
+              0,
+              8
+            ],
+            "min_offset": 0,
+            "max_offset": 8,
+            "observed_sizes": [
+              4
+            ],
+            "access_count": 12,
+            "evidence_notes": [
+              "12 memory access(es) observed at base 'sp' in function '_inspect'; offsets=[0, 8]; sizes=[4]; classification=array_like"
+            ],
+            "source_instrs": [
+              "0x100000464",
+              "0x100000468",
+              "0x10000046c",
+              "0x100000474",
+              "0x10000047c",
+              "0x100000480",
+              "0x100000488",
+              "0x100000490",
+              "0x100000494",
+              "0x10000049c",
+              "0x1000004a4",
+              "0x1000004a8"
+            ]
+          },
+          {
+            "function_entry": "0x1000004b0",
+            "function_name": "_inspect",
+            "base_id": "x8",
+            "layout_kind": "array_like",
+            "observed_offsets": [
+              0,
+              8,
+              16
+            ],
+            "min_offset": 0,
+            "max_offset": 16,
+            "observed_sizes": [
+              4
+            ],
+            "access_count": 3,
+            "evidence_notes": [
+              "3 memory access(es) observed at base 'x8' in function '_inspect'; offsets=[0, 8, 16]; sizes=[4]; classification=array_like"
+            ],
+            "source_instrs": [
+              "0x100000470",
+              "0x100000484",
+              "0x100000498"
+            ]
+          }
+        ],
         "unbound_memory_accesses": [],
         "known_facts": [
           "Function has 4 recovered variable(s).",
           "Function has 2 recovered parameter(s).",
-          "2 parameter(s) received instruction-backed refinement."
+          "1 variable(s) received instruction-backed refinement.",
+          "2 type constraint(s) were applied.",
+          "2 parameter(s) received instruction-backed refinement.",
+          "2 layout candidate(s) were observed."
         ],
         "uncertainties": [
-          "No instruction-backed constraints were applied.",
-          "8 variable(s) remain unknown after refinement."
+          "7 variable(s) remain unknown after refinement.",
+          "Layout candidates are evidence-only and are not final structs."
         ]
       },
       {
         "name": "_main",
-        "entry_point": "0x1000004b4",
+        "entry_point": "0x10000050c",
         "function_kind": "entrypoint",
         "recovered_signature": {
           "return_type": {
@@ -622,23 +686,27 @@
           {
             "name": "var_0h",
             "refined_type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
+              "type": "int32",
+              "confidence": 0.6,
+              "source": "constraint_refinement(priority=60)",
+              "notes": [
+                "refined by constraint (priority=60): var_0h var_0h bound from stack slot [sp + 0x20], stored by strb at 0x1000004e4 with size_bytes=4"
+              ]
             },
-            "constraints_applied": 0,
+            "constraints_applied": 1,
             "phase4a_type": "unknown"
           },
           {
             "name": "var_0h_2",
             "refined_type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
+              "type": "int32",
+              "confidence": 0.6,
+              "source": "constraint_refinement(priority=60)",
+              "notes": [
+                "refined by constraint (priority=60): var_0h_2 var_0h_2 bound from stack slot [sp + 0xc], stored by str at 0x1000004c4 with size_bytes=4"
+              ]
             },
-            "constraints_applied": 0,
+            "constraints_applied": 1,
             "phase4a_type": "unknown"
           },
           {
@@ -655,12 +723,14 @@
           {
             "name": "var_18h",
             "refined_type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
+              "type": "int32",
+              "confidence": 0.6,
+              "source": "constraint_refinement(priority=60)",
+              "notes": [
+                "refined by constraint (priority=60): var_18h var_18h bound from stack slot [sp + 0x18], stored by str at 0x1000004dc with size_bytes=4"
+              ]
             },
-            "constraints_applied": 0,
+            "constraints_applied": 1,
             "phase4a_type": "unknown"
           },
           {
@@ -699,12 +769,14 @@
           {
             "name": "var_ch",
             "refined_type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
+              "type": "int32",
+              "confidence": 0.6,
+              "source": "constraint_refinement(priority=60)",
+              "notes": [
+                "refined by constraint (priority=60): var_ch var_ch bound from stack slot [sp + 0x10], stored by str at 0x1000004d4 with size_bytes=4"
+              ]
             },
-            "constraints_applied": 0,
+            "constraints_applied": 1,
             "phase4a_type": "unknown"
           }
         ],
@@ -737,25 +809,78 @@
           }
         ],
         "constraints_summary": {
-          "total_constraints_applied": 0,
-          "variables_with_constraints": 0,
+          "total_constraints_applied": 4,
+          "variables_with_constraints": 4,
           "parameters_with_constraints": 2
         },
-        "layout_candidates": [],
+        "layout_candidates": [
+          {
+            "function_entry": "0x10000050c",
+            "function_name": "_main",
+            "base_id": "sp",
+            "layout_kind": "record_like",
+            "observed_offsets": [
+              12,
+              16,
+              24,
+              32
+            ],
+            "min_offset": 12,
+            "max_offset": 32,
+            "observed_sizes": [
+              4
+            ],
+            "access_count": 5,
+            "evidence_notes": [
+              "5 memory access(es) observed at base 'sp' in function '_main'; offsets=[12, 16, 24, 32]; sizes=[4]; classification=record_like"
+            ],
+            "source_instrs": [
+              "0x1000004c4",
+              "0x1000004d4",
+              "0x1000004dc",
+              "0x1000004e4",
+              "0x100000500"
+            ]
+          },
+          {
+            "function_entry": "0x10000050c",
+            "function_name": "_main",
+            "base_id": "x8",
+            "layout_kind": "scalar",
+            "observed_offsets": [
+              0
+            ],
+            "min_offset": 0,
+            "max_offset": 0,
+            "observed_sizes": [
+              4
+            ],
+            "access_count": 1,
+            "evidence_notes": [
+              "1 memory access(es) observed at base 'x8' in function '_main'; offsets=[0]; sizes=[4]; classification=scalar"
+            ],
+            "source_instrs": [
+              "0x1000004f0"
+            ]
+          }
+        ],
         "unbound_memory_accesses": [],
         "known_facts": [
           "Function has 10 recovered variable(s).",
           "Function has 2 recovered parameter(s).",
-          "2 parameter(s) received instruction-backed refinement."
+          "4 variable(s) received instruction-backed refinement.",
+          "4 type constraint(s) were applied.",
+          "2 parameter(s) received instruction-backed refinement.",
+          "2 layout candidate(s) were observed."
         ],
         "uncertainties": [
-          "No instruction-backed constraints were applied.",
-          "16 variable(s) remain unknown after refinement."
+          "12 variable(s) remain unknown after refinement.",
+          "Layout candidates are evidence-only and are not final structs."
         ]
       },
       {
         "name": "printf",
-        "entry_point": "0x100000510",
+        "entry_point": "0x100000520",
         "function_kind": "library",
         "recovered_signature": {
           "return_type": {
@@ -908,26 +1033,50 @@
           "variables_with_constraints": 0,
           "parameters_with_constraints": 1
         },
-        "layout_candidates": [],
+        "layout_candidates": [
+          {
+            "function_entry": "0x100000520",
+            "function_name": "printf",
+            "base_id": "x16",
+            "layout_kind": "scalar",
+            "observed_offsets": [
+              0
+            ],
+            "min_offset": 0,
+            "max_offset": 0,
+            "observed_sizes": [
+              4
+            ],
+            "access_count": 1,
+            "evidence_notes": [
+              "1 memory access(es) observed at base 'x16' in function 'printf'; offsets=[0]; sizes=[4]; classification=scalar"
+            ],
+            "source_instrs": [
+              "0x100000514"
+            ]
+          }
+        ],
         "unbound_memory_accesses": [],
         "known_facts": [
           "Function has 2 recovered variable(s).",
           "Function has 1 recovered parameter(s).",
-          "1 parameter(s) received instruction-backed refinement."
+          "1 parameter(s) received instruction-backed refinement.",
+          "1 layout candidate(s) were observed."
         ],
         "uncertainties": [
           "No instruction-backed constraints were applied.",
-          "4 variable(s) remain unknown after refinement."
+          "4 variable(s) remain unknown after refinement.",
+          "Layout candidates are evidence-only and are not final structs."
         ]
       }
     ],
     "summary": {
       "functions_total": 3,
-      "functions_with_refinement": 0,
-      "functions_with_layout_candidates": 0,
-      "total_layout_candidates": 0,
+      "functions_with_refinement": 2,
+      "functions_with_layout_candidates": 3,
+      "total_layout_candidates": 5,
       "total_unbound_memory_accesses": 0,
-      "total_constraints_applied": 0
+      "total_constraints_applied": 6
     }
   }
 }
