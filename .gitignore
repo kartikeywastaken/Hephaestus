@@ -11,3 +11,7 @@ __pycache__/
 .vscode/    
 assets/     
 assets/.aistudio/   
+
+# Stale root-level scratch files
+/check_addresses.py
+/prompt.txt

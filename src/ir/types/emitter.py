@@ -7,32 +7,15 @@ Writes the type_recovery.json artifact in a deterministic, stable schema.
 
 from __future__ import annotations
 
-import json
 import os
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from src.ir.types.models import RecoveredFunctionSemantics
+from src.utils.artifact_io import normalize_provenance_path, write_json_artifact
 
 
 SCHEMA_VERSION = "4A.0.0"
-
-
-def normalize_provenance_path(path: Optional[str], output_dir: Path) -> Optional[str]:
-    """
-    Normalize path to be relative to output_dir if it's inside,
-    otherwise absolute. Returns a POSIX path format using `.as_posix()`.
-    """
-    if not path:
-        return None
-    abs_path = Path(path).resolve()
-    abs_out_dir = output_dir.resolve()
-    try:
-        relative_path = abs_path.relative_to(abs_out_dir)
-        return relative_path.as_posix()
-    except ValueError:
-        return abs_path.as_posix()
 
 
 def write_type_recovery_artifact(
@@ -84,6 +67,4 @@ def write_type_recovery_artifact(
         },
     }
 
-    os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
-    with open(output_path, "w", encoding="utf-8") as fh:
-        json.dump(payload, fh, indent=2, ensure_ascii=False)
+    write_json_artifact(output_path, payload)

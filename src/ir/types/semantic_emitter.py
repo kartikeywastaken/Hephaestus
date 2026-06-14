@@ -16,49 +16,15 @@ Provenance paths:
 
 from __future__ import annotations
 
-import json
 import os
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from src.ir.types.models import RefinedFunctionRecord
+from src.utils.artifact_io import normalize_provenance_path, write_json_artifact
 
 
 SCHEMA_VERSION = "4B.0.0"
-
-
-# ---------------------------------------------------------------------------
-# Provenance path normalization (same policy as Phase 4A emitter.py)
-# ---------------------------------------------------------------------------
-
-def normalize_provenance_path(
-    path: Optional[str],
-    output_dir: Path,
-) -> Optional[str]:
-    """
-    Normalize a provenance path to be relative to output_dir when inside it,
-    or absolute otherwise.  Always returns a POSIX path string or None.
-
-    Parameters
-    ----------
-    path       : Raw file path string, or None.
-    output_dir : The resolved output directory (parent of the artifact file).
-
-    Returns
-    -------
-    str or None
-        POSIX path string, or None if input is None/empty.
-    """
-    if not path:
-        return None
-    abs_path = Path(path).resolve()
-    abs_out_dir = output_dir.resolve()
-    try:
-        relative = abs_path.relative_to(abs_out_dir)
-        return relative.as_posix()
-    except ValueError:
-        return abs_path.as_posix()
 
 
 # ---------------------------------------------------------------------------
@@ -115,6 +81,5 @@ def write_semantic_recovery_artifact(
         },
     }
 
-    os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
-    with open(output_path, "w", encoding="utf-8") as fh:
-        json.dump(payload, fh, indent=2, ensure_ascii=False)
+    write_json_artifact(output_path, payload)
+

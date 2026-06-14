@@ -14,35 +14,11 @@ Forbidden output keys (Phase 4D-created levels):
 
 from __future__ import annotations
 
-import json
-import os
 from pathlib import Path
 from typing import Any, Dict, Optional
 
 from src.ir.types.phase4_semantics import Phase4SemanticsArtifact
-
-
-# ---------------------------------------------------------------------------
-# Provenance path normalization (consistent with Phase 4A/4B/4C policy)
-# ---------------------------------------------------------------------------
-
-def normalize_provenance_path(
-    path: Optional[str],
-    output_dir: Path,
-) -> Optional[str]:
-    """
-    Normalize a provenance path to be relative to output_dir when inside it,
-    or absolute otherwise.  Always returns a POSIX path string or None.
-    """
-    if not path:
-        return None
-    abs_path = Path(path).resolve()
-    abs_out_dir = output_dir.resolve()
-    try:
-        relative = abs_path.relative_to(abs_out_dir)
-        return relative.as_posix()
-    except ValueError:
-        return abs_path.as_posix()
+from src.utils.artifact_io import normalize_provenance_path, write_json_artifact
 
 
 # ---------------------------------------------------------------------------
@@ -85,6 +61,5 @@ def write_phase4_semantics_artifact(
             normalize_provenance_path(source_layout_recovery, out_dir_path)
         )
 
-    os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
-    with open(output_path, "w", encoding="utf-8") as fh:
-        json.dump(payload, fh, indent=2, ensure_ascii=False)
+    write_json_artifact(output_path, payload)
+
