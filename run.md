@@ -62,7 +62,23 @@ python3 main.py --analyze-cfg --out-dir artifact_23
 
 ---
 
-## 4. Output Artifacts Generated
+## 4. Semantic & Signature Recovery (Phase 4A)
+
+Recover conservative function signatures, parameter models, and variable layouts from the Canonical Unified IR:
+
+### Run semantic type recovery on the default folder (`artifacts/`):
+```bash
+python3 main.py recover-semantics
+```
+
+### Run semantic type recovery on a custom folder (e.g., `artifact_23/`):
+```bash
+python3 main.py recover-semantics --out-dir artifact_23
+```
+
+---
+
+## 5. Output Artifacts Generated
 
 After running the commands above, the output folder will contain:
 - `radare2_extraction.json` — Raw Radare2 analysis output.
@@ -70,3 +86,4 @@ After running the commands above, the output folder will contain:
 - `unified_ir.json` — Merged, canonical Unified IR representation (Phase 2).
 - `structuring_analysis.json` — Dominator, post-dominator, and back-edge report (Phase 3A).
 - `structuring_regions.json` — Structured control-flow region tree serialization (Phase 3B).
+- `type_recovery.json` — Phase 4A recovered function signatures and variables mapping.

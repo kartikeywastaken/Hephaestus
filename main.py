@@ -539,6 +539,75 @@ def handle_analyze_cfg(out_dir: str):
     print("============================================================")
     sys.exit(0)
 
+def handle_recover_semantics(out_dir: str):
+    """
+    Phase 4A: Signature and Variable Recovery Backbone
+    Reads unified_ir.json (and optionally structuring_regions.json) and writes
+    type_recovery.json to the output directory.
+    """
+    from src.ir.types.inference import recover_types
+    from src.ir.types.emitter import write_type_recovery_artifact
+
+    logger.info("Executing Phase 4A Signature & Variable Recovery on canonical IR...")
+
+    # Load Unified IR
+    ir_path = os.path.join(out_dir, "unified_ir.json")
+    if not os.path.exists(ir_path):
+        logger.error("[-] unified_ir.json not found at %s. Please run extraction first.", ir_path)
+        sys.exit(1)
+
+    try:
+        with open(ir_path, 'r', encoding='utf-8') as f:
+            ir_payload = json.load(f)
+    except Exception as e:
+        logger.error("[-] Failed to read unified_ir.json at %s: %s", ir_path, e)
+        sys.exit(1)
+
+    # Load structuring regions if available (optional)
+    structuring_regions = None
+    regions_path = os.path.join(out_dir, "structuring_regions.json")
+    if os.path.exists(regions_path):
+        try:
+            with open(regions_path, 'r', encoding='utf-8') as f:
+                structuring_regions = json.load(f)
+            if not isinstance(structuring_regions, dict):
+                logger.warning("structuring_regions.json exists but is not a dictionary. Continuing with None.")
+                structuring_regions = None
+            else:
+                logger.info("[+] Loaded structuring regions from: %s", regions_path)
+        except Exception as e:
+            logger.warning("Could not load structuring_regions.json: %s. Continuing with None.", e)
+            structuring_regions = None
+
+    # Run Phase 4A recovery
+    functions = recover_types(ir_payload, structuring_regions)
+
+    # Write artifact
+    output_path = os.path.join(out_dir, "type_recovery.json")
+    source_ir = os.path.join(out_dir, "unified_ir.json")
+    source_structuring = regions_path if structuring_regions is not None else None
+    write_type_recovery_artifact(functions, output_path, source_ir, source_structuring)
+    logger.info("[+] Phase 4A type recovery artifact committed: %s", output_path)
+
+    # Print summary
+    print("\n============================================================")
+    print("            PHASE 4A: SIGNATURE & VARIABLE RECOVERY")
+    print("============================================================")
+    print(f"Total functions processed:   {len(functions)}")
+    print("------------------------------------------------------------")
+    for fn in functions:
+        sig = fn.signature
+        param_str = ", ".join(p.name for p in sig.parameters) or "void"
+        variadic_str = ", ..." if sig.variadic else ""
+        print(f"  {fn.name}  [{fn.function_kind}]  (entry: {fn.entry_point})")
+        print(f"    return:  {sig.return_type.type_name}  (conf: {sig.return_type.confidence:.2f})")
+        print(f"    params:  {param_str}{variadic_str}")
+        print(f"    vars:    {len(fn.variables)}  |  sig conf: {sig.confidence:.2f}  |  fn conf: {fn.confidence:.2f}")
+    print("============================================================")
+    print(f"Output: {output_path}")
+    print("============================================================")
+    sys.exit(0)
+
 def main():
     # If help flag is present, avoid running setup_logging to prevent creating output directory unnecessarily
     if "--help" in sys.argv or "-h" in sys.argv:
@@ -588,6 +657,9 @@ def main():
             return
         elif first_arg == "analyze-cfg":
             handle_analyze_cfg(out_dir)
+            return
+        elif first_arg == "recover-semantics":
+            handle_recover_semantics(out_dir)
             return
 
     args = parse_args()

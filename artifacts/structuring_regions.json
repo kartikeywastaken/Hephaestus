@@ -1,0 +1,323 @@
+[
+  {
+    "function_name": "atoi",
+    "structured_body": {
+      "type": "block",
+      "id": "0x10000075c"
+    }
+  },
+  {
+    "function_name": "printf",
+    "structured_body": {
+      "type": "block",
+      "id": "0x100000768"
+    }
+  },
+  {
+    "function_name": "_main",
+    "structured_body": {
+      "type": "sequence",
+      "children": [
+        {
+          "type": "if_else",
+          "condition_block": "0x100000460",
+          "then_branch": {
+            "type": "sequence",
+            "children": [
+              {
+                "type": "block",
+                "id": "0x100000484"
+              },
+              {
+                "type": "block",
+                "id": "0x100000488"
+              }
+            ]
+          },
+          "else_branch": {
+            "type": "block",
+            "id": "0x10000049c"
+          },
+          "merge_block": "0x1000004a8"
+        },
+        {
+          "type": "block",
+          "id": "0x1000004a8"
+        }
+      ]
+    }
+  },
+  {
+    "function_name": "__helper_rec",
+    "structured_body": {
+      "type": "sequence",
+      "children": [
+        {
+          "type": "if_else",
+          "condition_block": "0x100000518",
+          "then_branch": {
+            "type": "sequence",
+            "children": [
+              {
+                "type": "block",
+                "id": "0x100000534"
+              },
+              {
+                "type": "block",
+                "id": "0x100000538"
+              }
+            ]
+          },
+          "else_branch": {
+            "type": "if_else",
+            "condition_block": "0x100000540",
+            "then_branch": {
+              "type": "sequence",
+              "children": [
+                {
+                  "type": "block",
+                  "id": "0x10000054c"
+                },
+                {
+                  "type": "block",
+                  "id": "0x100000550"
+                }
+              ]
+            },
+            "else_branch": {
+              "type": "if_else",
+              "condition_block": "0x10000055c",
+              "then_branch": {
+                "type": "sequence",
+                "children": [
+                  {
+                    "type": "block",
+                    "id": "0x100000574"
+                  },
+                  {
+                    "type": "block",
+                    "id": "0x100000578"
+                  }
+                ]
+              },
+              "else_branch": {
+                "type": "block",
+                "id": "0x1000005b8"
+              },
+              "merge_block": "0x1000005e8"
+            },
+            "merge_block": "0x1000005e8"
+          },
+          "merge_block": "0x1000005e8"
+        },
+        {
+          "type": "block",
+          "id": "0x1000005e8"
+        }
+      ]
+    }
+  },
+  {
+    "function_name": "__classify_pair",
+    "structured_body": {
+      "type": "sequence",
+      "children": [
+        {
+          "type": "if_else",
+          "condition_block": "0x1000005f8",
+          "then_branch": {
+            "type": "sequence",
+            "children": [
+              {
+                "type": "block",
+                "id": "0x100000614"
+              },
+              {
+                "type": "block",
+                "id": "0x100000618"
+              }
+            ]
+          },
+          "else_branch": {
+            "type": "if_else",
+            "condition_block": "0x100000628",
+            "then_branch": {
+              "type": "sequence",
+              "children": [
+                {
+                  "type": "block",
+                  "id": "0x100000638"
+                },
+                {
+                  "type": "block",
+                  "id": "0x10000063c"
+                }
+              ]
+            },
+            "else_branch": {
+              "type": "if_else",
+              "condition_block": "0x10000064c",
+              "then_branch": {
+                "type": "sequence",
+                "children": [
+                  {
+                    "type": "block",
+                    "id": "0x100000654"
+                  },
+                  {
+                    "type": "block",
+                    "id": "0x100000658"
+                  }
+                ]
+              },
+              "else_branch": {
+                "type": "if_else",
+                "condition_block": "0x100000668",
+                "then_branch": {
+                  "type": "sequence",
+                  "children": [
+                    {
+                      "type": "block",
+                      "id": "0x100000674"
+                    },
+                    {
+                      "type": "block",
+                      "id": "0x100000678"
+                    }
+                  ]
+                },
+                "else_branch": {
+                  "type": "block",
+                  "id": "0x100000688"
+                },
+                "merge_block": "0x100000698"
+              },
+              "merge_block": "0x100000698"
+            },
+            "merge_block": "0x100000698"
+          },
+          "merge_block": "0x100000698"
+        },
+        {
+          "type": "block",
+          "id": "0x100000698"
+        }
+      ]
+    }
+  },
+  {
+    "function_name": "__switchy",
+    "structured_body": {
+      "type": "sequence",
+      "children": [
+        {
+          "type": "if_else",
+          "condition_block": "0x1000006a4",
+          "then_branch": {
+            "type": "sequence",
+            "children": [
+              {
+                "type": "block",
+                "id": "0x1000006c0"
+              },
+              {
+                "type": "block",
+                "id": "0x1000006c4"
+              }
+            ]
+          },
+          "else_branch": {
+            "type": "sequence",
+            "children": [
+              {
+                "type": "if_else",
+                "condition_block": "0x1000006d4",
+                "then_branch": {
+                  "type": "sequence",
+                  "children": [
+                    {
+                      "type": "block",
+                      "id": "0x1000006e0"
+                    },
+                    {
+                      "type": "block",
+                      "id": "0x1000006e4"
+                    }
+                  ]
+                },
+                "else_branch": {
+                  "type": "sequence",
+                  "children": [
+                    {
+                      "type": "if_else",
+                      "condition_block": "0x1000006f4",
+                      "then_branch": {
+                        "type": "sequence",
+                        "children": [
+                          {
+                            "type": "block",
+                            "id": "0x100000700"
+                          },
+                          {
+                            "type": "block",
+                            "id": "0x100000704"
+                          }
+                        ]
+                      },
+                      "else_branch": {
+                        "type": "sequence",
+                        "children": [
+                          {
+                            "type": "if_else",
+                            "condition_block": "0x100000714",
+                            "then_branch": {
+                              "type": "sequence",
+                              "children": [
+                                {
+                                  "type": "block",
+                                  "id": "0x100000720"
+                                },
+                                {
+                                  "type": "block",
+                                  "id": "0x100000724"
+                                }
+                              ]
+                            },
+                            "else_branch": {
+                              "type": "block",
+                              "id": "0x100000734"
+                            },
+                            "merge_block": "0x100000744"
+                          },
+                          {
+                            "type": "block",
+                            "id": "0x100000744"
+                          }
+                        ]
+                      },
+                      "merge_block": "0x100000748"
+                    },
+                    {
+                      "type": "block",
+                      "id": "0x100000748"
+                    }
+                  ]
+                },
+                "merge_block": "0x10000074c"
+              },
+              {
+                "type": "block",
+                "id": "0x10000074c"
+              }
+            ]
+          },
+          "merge_block": "0x100000750"
+        },
+        {
+          "type": "block",
+          "id": "0x100000750"
+        }
+      ]
+    }
+  }
+]
