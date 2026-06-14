@@ -350,3 +350,137 @@ class TestPhase4BSemanticRefinement(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ---------------------------------------------------------------------------
+# Phase 4B.1 — End-to-end binding integration test
+# ---------------------------------------------------------------------------
+
+class TestPhase4B1EndToEnd(unittest.TestCase):
+    """
+    End-to-end test for Phase 4B.1 binding pipeline.
+
+    Uses a synthetic Unified IR that contains real-looking instructions
+    with verified stack offsets, so the BindingContext can establish
+    concrete bindings and emit constraints.
+    """
+
+    def _make_var_with_offset(self, name, offset_bytes, size_bytes=4):
+        return RecoveredVariable(
+            name=name,
+            storage=STORAGE_STACK,
+            category=CATEGORY_LOCAL,
+            recovered_type=RecoveredType(
+                type_name=TYPE_UNKNOWN, confidence=0.2, source="test"
+            ),
+            offset_bytes=offset_bytes,
+            size_bytes=size_bytes,
+            source="test",
+            confidence=0.2,
+        )
+
+    def _make_instr(self, address, opcode, operands, size_bytes=4):
+        return {
+            "address": address,
+            "opcode": opcode,
+            "mnemonic": opcode,
+            "operands": operands,
+            "size_bytes": size_bytes,
+            "raw": opcode,
+            "source": "test",
+        }
+
+    def test_end_to_end_with_binding_applies_constraints(self):
+        """
+        Synthetic IR:
+          ldr w8, [sp, #16]    (sp+16 → local_10, size 4)
+          add w8, w8, #2
+
+        Expected: total_constraints_applied >= 1, output deterministic.
+        """
+        var = self._make_var_with_offset("local_10", offset_bytes=16, size_bytes=4)
+        phase4a = _make_phase4a_record(variables=[var])
+        type_recovery = _make_type_recovery_dict([phase4a])
+
+        ir_func = {
+            "name": "test_func",
+            "entry_point": "0x1000",
+            "basic_blocks": [
+                {
+                    "id": "0x1000",
+                    "instructions": [
+                        self._make_instr(
+                            "0x1000", "ldr",
+                            [
+                                {"kind": "register", "value": "w8"},
+                                {"kind": "memory", "base": "sp", "offset": 16, "size_bytes": 4},
+                            ],
+                            size_bytes=4,
+                        ),
+                        self._make_instr(
+                            "0x1004", "add",
+                            [
+                                {"kind": "register", "value": "w8"},
+                                {"kind": "register", "value": "w8"},
+                                {"kind": "immediate", "value": 2},
+                            ],
+                            size_bytes=4,
+                        ),
+                    ],
+                }
+            ],
+        }
+        unified_ir = _make_unified_ir([ir_func])
+
+        engine = TypeRefinementEngine()
+        results = engine.refine(unified_ir, type_recovery)
+
+        self.assertEqual(len(results), 1)
+        r = results[0]
+        # The ldr produces a SIZE constraint; the add produces a SIGN constraint.
+        # At least one should change the type from 'unknown' → something more specific.
+        self.assertGreaterEqual(r.total_constraints_applied, 1)
+        self.assertEqual(len(r.variables), 1)
+        refined_type = r.variables[0].refined_type.type_name
+        # Should no longer be 'unknown' after SIZE/SIGN refinement
+        self.assertNotEqual(refined_type, TYPE_UNKNOWN)
+
+    def test_end_to_end_with_binding_is_deterministic(self):
+        """Two runs with binding-derived constraints produce identical JSON."""
+        var = self._make_var_with_offset("local_10", offset_bytes=16, size_bytes=4)
+        phase4a = _make_phase4a_record(variables=[var])
+        type_recovery = _make_type_recovery_dict([phase4a])
+
+        ir_func = {
+            "name": "test_func",
+            "entry_point": "0x1000",
+            "basic_blocks": [{
+                "id": "0x1000",
+                "instructions": [
+                    self._make_instr(
+                        "0x1000", "ldr",
+                        [
+                            {"kind": "register", "value": "w8"},
+                            {"kind": "memory", "base": "sp", "offset": 16, "size_bytes": 4},
+                        ],
+                        size_bytes=4,
+                    ),
+                ],
+            }],
+        }
+        unified_ir = _make_unified_ir([ir_func])
+
+        engine = TypeRefinementEngine()
+        run1 = engine.refine(unified_ir, type_recovery)
+        run2 = engine.refine(unified_ir, type_recovery)
+
+        with tempfile.TemporaryDirectory() as td:
+            out1 = os.path.join(td, "run1.json")
+            out2 = os.path.join(td, "run2.json")
+            write_semantic_recovery_artifact(run1, out1)
+            write_semantic_recovery_artifact(run2, out2)
+            with open(out1) as f1, open(out2) as f2:
+                j1 = json.load(f1)
+                j2 = json.load(f2)
+
+        self.assertEqual(j1, j2)
