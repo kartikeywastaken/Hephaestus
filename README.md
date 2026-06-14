@@ -1,20 +1,30 @@
 # Hephaestus
 
-A CLI-based binary reconstruction platform for extracting low-level analysis data, building a canonical intermediate representation, and recovering structured control flow from raw binary CFGs.
+A CLI-based binary reconstruction platform for extracting low-level binary analysis evidence, building a canonical intermediate representation, recovering structured control flow, and performing conservative type-semantic recovery without fabricating unsupported information.
 
 ## Overview
 
-Hephaestus is an incremental binary reconstruction pipeline designed to turn noisy analysis output into something structured, testable, and useful for later high-level source reconstruction.
+Hephaestus is an incremental binary reconstruction pipeline designed to turn noisy reverse-engineering tool output into structured, testable, evidence-backed artifacts.
 
 Instead of jumping directly from a binary to fake decompiled source, Hephaestus works in phases:
 
 * collect evidence from multiple analysis backends
 * merge and normalize that evidence into a canonical IR
 * recover structured control flow from raw CFGs
-* preserve hard cases conservatively rather than guessing
-* prepare the pipeline for later type recovery and source emission
+* extract real instruction-level evidence
+* perform conservative type and semantic recovery
+* preserve hard cases explicitly instead of guessing
+* prepare the pipeline for later data-layout recovery and source reconstruction
 
-The current implementation focuses on **evidence-driven extraction**, **IR normalization**, **canonicalization**, **CFG analysis**, **control-flow structuring**, and **safe fallback handling** for difficult graphs.
+The current implementation focuses on **evidence-driven extraction**, **IR normalization**, **canonicalization**, **CFG analysis**, **control-flow structuring**, **real instruction extraction**, **initial type recovery**, **type-constraint refinement**, **operand-to-variable binding**, and **safe fallback behavior** for difficult or ambiguous cases.
+
+---
+
+## Core Rule
+
+> **Missing evidence is acceptable. Fabricated evidence is not.**
+
+Hephaestus does not insert mock instructions, fake variables, fake types, fake structs, or fake source code. If a phase lacks enough evidence, the correct behavior is to preserve uncertainty explicitly.
 
 ---
 
@@ -27,11 +37,24 @@ The current implementation focuses on **evidence-driven extraction**, **IR norma
 * Phase 3A: CFG normalization and graph analysis
 * Phase 3B: Sequence and conditional structuring
 * Phase 3C: Loop structuring
-* Phase 3D: Conservative fallback handling for hard cases
+* Phase 3D: Conservative fallback handling for hard CFG cases
+* Phase 4A: Initial type recovery and signature inference
+* Phase 4B: Real instruction extraction and type-constraint refinement
+* Phase 4B.1: Conservative operand-to-variable binding
+
+### Current Test Status
+
+```text
+193 passed
+1 xfailed
+0 failures
+```
+
+The adversarial test suite includes hard cases for instruction validation, assembler stability, CFG structuring, operand binding, type constraints, semantic refinement, integration behavior, and regression invariants.
 
 ### Next
 
-* Phase 4: Type recovery and signature inference
+* Phase 4C: Conservative data-layout recovery
 * Phase 5: Source reconstruction / AST emission
 * Phase 6: Validation, compilation, and repair loop
 
@@ -39,11 +62,31 @@ The current implementation focuses on **evidence-driven extraction**, **IR norma
 
 ## Architecture
 
-The pipeline is organized into staged phases so that each layer can be tested and improved independently.
+The pipeline is organized into staged phases so each layer can be tested and improved independently.
 
-### Phase 1 — Extraction
+```text
+Binary
+  ↓
+Phase 1: Extraction
+  ↓
+Phase 2: Unified IR
+  ↓
+Phase 3: CFG Analysis + Structuring
+  ↓
+Phase 4A: Initial Type Recovery
+  ↓
+Phase 4B: Instruction Evidence + Type Refinement
+  ↓
+Phase 4B.1: Operand Binding
+  ↓
+Phase 4C+: Data Layout / Source Reconstruction / Validation
+```
 
-Collects structural evidence from analysis backends.
+---
+
+## Phase 1 — Extraction
+
+Phase 1 collects structural and instruction-level evidence from analysis backends.
 
 Current backends:
 
@@ -51,31 +94,71 @@ Current backends:
 * **Radare2**
 * optional future dynamic trace sources
 
-Artifacts produced here include:
+Evidence collected includes:
 
 * functions
 * symbols
 * CFG nodes and edges
 * call graph evidence
 * architecture / binary metadata
+* real per-basic-block instructions where available
 
-### Phase 2 — Unified IR
+Instruction extraction is conservative. If a backend cannot recover real instructions for a block, Hephaestus emits an empty instruction list rather than inventing instructions.
 
-Builds a canonical intermediate representation from extractor output.
+---
+
+## Phase 2 — Unified IR
+
+Phase 2 builds a canonical intermediate representation from extractor output.
 
 Responsibilities:
 
 * merge duplicate function identities
-* canonicalize names
+* canonicalize function names
 * normalize addresses
 * deduplicate aliases
 * preserve provenance
+* preserve real instruction evidence
+* validate instruction schema
 * reject fabricated placeholder data
 * emit evidence-backed IR only
 
-### Phase 3 — CFG Structuring
+The Unified IR stores instructions inside basic blocks:
 
-Recovers higher-level control-flow structure from flat CFGs.
+```json
+{
+  "id": "0x100000540",
+  "size": 24,
+  "instructions": [
+    {
+      "address": "0x100000540",
+      "mnemonic": "add",
+      "opcode": "add",
+      "operands": [
+        { "kind": "register", "value": "w8" },
+        { "kind": "register", "value": "w8" },
+        { "kind": "immediate", "value": 1 }
+      ],
+      "size_bytes": 4,
+      "raw": "add w8, w8, #0x1",
+      "source": "radare2"
+    }
+  ],
+  "edges": []
+}
+```
+
+If instructions are missing, the IR remains valid:
+
+```json
+"instructions": []
+```
+
+---
+
+## Phase 3 — CFG Structuring
+
+Phase 3 recovers higher-level control-flow structure from flat CFGs.
 
 Implemented sub-phases:
 
@@ -84,7 +167,181 @@ Implemented sub-phases:
 * **3C**: reducible natural loop recovery
 * **3D**: conservative fallback for irreducible, fragmented, multi-exit, and switch-like regions
 
-The structuring layer currently emits a structured control-flow tree, not source code.
+The structuring layer emits a structured control-flow tree, not C/C++ source code.
+
+### Structured Region Nodes
+
+Current region model includes:
+
+* `BlockNode`
+* `SequenceNode`
+* `IfNode`
+* `IfElseNode`
+* `LoopNode`
+* `UnstructuredRegionNode`
+
+### Hard CFG Cases
+
+Hephaestus intentionally preserves difficult cases instead of pretending they are cleanly structured.
+
+Examples:
+
+* recursion-shaped entry/header cycles
+* irreducible cyclic regions
+* fragmented acyclic leftovers
+* multi-exit loop bodies
+* switch-like decision ladders / dispatch trees
+* ambiguous loop regions
+* hard break/continue-heavy regions
+
+---
+
+## Phase 4A — Initial Type Recovery
+
+Phase 4A performs initial type and signature recovery from canonical IR evidence.
+
+Responsibilities:
+
+* classify functions
+* identify known library signatures
+* recover initial function signatures
+* classify variables and parameters
+* preserve unknowns when evidence is weak
+* emit `type_recovery.json`
+
+Phase 4A is conservative. It does not infer structs, emit source code, or pretend unknown variables have precise types.
+
+---
+
+## Phase 4B — Instruction Evidence + Type Constraint Refinement
+
+Phase 4B adds real instruction evidence and a conservative type-constraint system.
+
+Major capabilities:
+
+* real instruction extraction from Ghidra and Radare2
+* instruction schema validation
+* fabricated-placeholder rejection
+* instruction deduplication and sorting
+* type constraint collection
+* constraint priority resolution
+* confidence refinement without lowering Phase 4A confidence
+* semantic artifact emission via `semantic_recovery.json`
+
+### Constraint Sources
+
+Current constraint priorities:
+
+| Source           | Priority |
+| ---------------- | -------: |
+| Known signature  |      100 |
+| IR call site     |       80 |
+| IR arithmetic    |       60 |
+| IR memory access |       60 |
+| IR comparison    |       50 |
+| Name heuristic   |       20 |
+
+### Conservative Behavior
+
+If no real instruction evidence exists, Phase 4B still succeeds:
+
+```text
+constraints_applied = 0
+Phase 4A types preserved
+semantic_recovery.json emitted
+```
+
+This is a valid outcome, not a failure.
+
+---
+
+## Phase 4B.1 — Conservative Operand-to-Variable Binding
+
+Phase 4B.1 bridges low-level instruction operands to Phase 4A variables.
+
+Problem solved:
+
+```text
+instruction operand
+    ↓
+stack slot / register temporary / ABI argument register
+    ↓
+Phase 4A variable
+    ↓
+type constraint
+```
+
+Supported binding kinds:
+
+* explicit variable operand
+* verified stack-slot binding
+* basic-block-local register temporary binding
+* ABI argument register binding
+
+### Binding Rules
+
+Hephaestus only binds operands when the link is concrete.
+
+Examples of allowed binding:
+
+```text
+kind=variable + name exists in Phase 4A index
+```
+
+```text
+memory operand + stack base + verified unique Phase 4A offset
+```
+
+```text
+register previously loaded from a verified variable inside the same basic block
+```
+
+Examples of rejected binding:
+
+* unknown raw stack-like text
+* immediate operands
+* non-stack memory bases
+* ambiguous stack offsets
+* size mismatches
+* registers with no prior binding
+* register bindings across basic blocks
+* printf varargs
+
+### ABI Call Binding
+
+For ARM64, argument registers `x0`–`x7` are used conservatively.
+
+For variadic functions such as `printf`, only the fixed first argument is constrained. Varargs are not inferred.
+
+---
+
+## Instruction Validation
+
+Hephaestus rejects known fabricated placeholder evidence, including old mock values such as:
+
+```text
+mov eax
+cmp eax
+je exit_block
+0xDEADBEEF
+LoadLibraryA
+GetProcAddress
+kernel32.dll
+0x0045e0c0
+0x00401000
+```
+
+The validator scans:
+
+* `raw`
+* `opcode`
+* `mnemonic`
+* operand `value`
+* operand `name`
+* operand `raw`
+* operand `base`
+
+Malformed but non-fabricated instructions are skipped safely.
 
 ---
 
@@ -92,49 +349,50 @@ The structuring layer currently emits a structured control-flow tree, not source
 
 ### 1. Evidence first
 
-Hephaestus only keeps information that can be traced back to extractor evidence. If data is not implemented yet, the correct output is an empty field, not mock content.
+Hephaestus only keeps information that can be traced back to extractor evidence. If data is not implemented or not recoverable, the correct output is an empty field or explicit uncertainty, not mock content.
 
 ### 2. Conservative over clever
 
-Hard control-flow cases fall back explicitly instead of being misrepresented as clean structure.
+Hard or ambiguous cases fall back explicitly instead of being misrepresented as clean structure or precise types.
 
 ### 3. Incremental structuring
 
-The pipeline prefers staged graph reduction over monolithic decompilation-style guessing.
+The pipeline prefers staged graph and semantic reduction over monolithic decompiler-style guessing.
 
 ### 4. Deterministic output
 
 The same input should produce stable serialization and reproducible artifacts.
 
-### 5. Test-driven iteration
+### 5. No fake precision
 
-Each stage is stress-tested with synthetic CFGs and real compiled binaries before being considered stable.
+Types, variables, instructions, fields, and control-flow regions are not invented to make output look complete.
+
+### 6. Test-driven iteration
+
+Each stage is stress-tested with synthetic fixtures, adversarial cases, and compiled binaries before being considered stable.
 
 ---
 
 ## Key Features
 
 * Headless multi-backend extraction
+* Ghidra and Radare2 support
+* Real instruction extraction per basic block
+* Instruction validation and fabricated-evidence rejection
 * Canonical IR generation
 * Address normalization and function canonicalization
 * CFG analysis with dominators and post-dominators
-* Structured region models:
-
-  * `BlockNode`
-  * `SequenceNode`
-  * `IfNode`
-  * `IfElseNode`
-  * `LoopNode`
-  * `UnstructuredRegionNode`
+* Structured region recovery
 * Loop candidate validation and false-positive rejection
-* Conservative hard-case classification:
-
-  * irreducible regions
-  * fragmented acyclic regions
-  * multi-exit loop regions
-  * switch-like dispatch regions
-* Automatic artifact generation for debugging and validation
+* Conservative hard-case classification
+* Initial type recovery
+* Known signature handling
+* Type constraint refinement
+* Operand-to-variable binding
+* ABI call argument binding
+* Deterministic artifact generation
 * Persisted pipeline logs in `artifacts/`
+* Adversarial regression test suite
 
 ---
 
@@ -149,21 +407,48 @@ Each stage is stress-tested with synthetic CFGs and real compiled binaries befor
 │   │   └── radare2.py
 │   ├── ir/
 │   │   ├── assembler.py
-│   │   └── structuring/
-│   │       ├── analysis.py
-│   │       ├── builder.py
-│   │       ├── conditionals.py
-│   │       ├── dominators.py
-│   │       ├── fallbacks.py
-│   │       ├── graph.py
-│   │       ├── loops.py
+│   │   ├── instructions/
+│   │   │   ├── __init__.py
+│   │   │   └── validation.py
+│   │   ├── structuring/
+│   │   │   ├── analysis.py
+│   │   │   ├── builder.py
+│   │   │   ├── conditionals.py
+│   │   │   ├── dominators.py
+│   │   │   ├── fallbacks.py
+│   │   │   ├── graph.py
+│   │   │   ├── loops.py
+│   │   │   ├── models.py
+│   │   │   ├── postdominators.py
+│   │   │   └── reducers.py
+│   │   └── types/
+│   │       ├── bindings.py
+│   │       ├── constraints.py
+│   │       ├── emitter.py
 │   │       ├── models.py
-│   │       ├── postdominators.py
-│   │       └── reducers.py
+│   │       ├── propagation.py
+│   │       ├── refinement_engine.py
+│   │       ├── resolver.py
+│   │       ├── semantic_emitter.py
+│   │       └── signatures.py
 │   └── scripts/
+│       └── GhidraExtractorScript.java
 ├── test/
 │   └── simulate/
-│       └── test_structuring.py
+│       ├── test_adversarial_binding.py
+│       ├── test_adversarial_cfg_structuring.py
+│       ├── test_adversarial_constraints.py
+│       ├── test_adversarial_full_pipeline.py
+│       ├── test_adversarial_instruction_validation.py
+│       ├── test_adversarial_integration.py
+│       ├── test_engine.py
+│       ├── test_instruction_extraction.py
+│       ├── test_ir.py
+│       ├── test_operand_binding.py
+│       ├── test_regression_invariants.py
+│       ├── test_semantic_refinement.py
+│       ├── test_structuring.py
+│       └── test_type_recovery.py
 └── artifacts/
 ```
 
@@ -177,13 +462,25 @@ Each stage is stress-tested with synthetic CFGs and real compiled binaries befor
 python3 main.py ./target_binary --ghidra --radare2 --export-ir
 ```
 
-### 2. Run CFG analysis / structuring
+### 2. Run CFG analysis and structuring
 
 ```bash
-python3 main.py analyze-cfg
+python3 main.py analyze-cfg --out-dir artifacts
 ```
 
-### 3. Inspect generated artifacts
+### 3. Run Phase 4A type recovery
+
+```bash
+python3 main.py recover-semantics --out-dir artifacts
+```
+
+### 4. Run Phase 4B semantic refinement
+
+```bash
+python3 main.py refine-semantics --out-dir artifacts
+```
+
+### 5. Inspect generated artifacts
 
 Typical outputs in `artifacts/`:
 
@@ -192,6 +489,8 @@ Typical outputs in `artifacts/`:
 * `unified_ir.json`
 * `structuring_analysis.json`
 * `structuring_regions.json`
+* `type_recovery.json`
+* `semantic_recovery.json`
 * `orchestration_manifest.json`
 * `run_<timestamp>.log`
 * `latest.log`
@@ -202,7 +501,7 @@ Typical outputs in `artifacts/`:
 
 The current structuring phase emits a control-flow tree rather than source code.
 
-Examples of output node types:
+Output node types include:
 
 * `block`
 * `sequence`
@@ -215,34 +514,85 @@ This allows Hephaestus to:
 
 * preserve structured regions when possible
 * isolate unresolved regions without guessing
-* prepare the data for later AST and source generation
+* prepare data for later AST and source generation
+
+---
+
+## Semantic Recovery Output Model
+
+Phase 4B emits `semantic_recovery.json`.
+
+Example shape:
+
+```json
+{
+  "schema_version": "4B.0.0",
+  "provenance": {
+    "phase": "4B",
+    "description": "Type constraint refinement engine",
+    "source_ir": "unified_ir.json",
+    "source_type_recovery": "type_recovery.json",
+    "source_structuring": "structuring_regions.json"
+  },
+  "data": {
+    "functions": [
+      {
+        "name": "_main",
+        "entry_point": "0x1000004c0",
+        "function_kind": "user",
+        "refined_signature": {},
+        "variables": [],
+        "total_constraints_applied": 0,
+        "confidence": 0.2,
+        "evidence": [
+          "No instruction-level evidence available; Phase 4A types preserved"
+        ]
+      }
+    ]
+  }
+}
+```
+
+`total_constraints_applied = 0` is valid when evidence is insufficient.
 
 ---
 
 ## Hard Cases Currently Handled Conservatively
 
-Hephaestus does **not** pretend every CFG can be perfectly structured.
+Hephaestus does **not** pretend every binary can be perfectly reconstructed.
 
 Examples of cases intentionally handled conservatively:
 
-* recursion-shaped entry-header cycles
+* recursion-shaped entry/header cycles
 * irreducible cyclic regions
 * fragmented acyclic leftovers
 * multi-exit loop bodies
 * switch-like decision ladders / dispatch trees
+* ambiguous stack offsets
+* conflicting type constraints
+* unknown call targets
+* unknown raw operands
+* unbound register arithmetic
+* pointer-like use without layout evidence
 
-These are preserved as explicit fallback regions instead of being flattened into misleading source-like structure.
+These are preserved as uncertainty instead of being flattened into misleading source-like output.
 
 ---
 
 ## Validation Strategy
 
-Phase 3 was validated using both:
+The test suite includes:
 
 * synthetic CFG-based unit tests
-* compiled C stress binaries
+* synthetic IR and type-recovery fixtures
+* adversarial instruction validation tests
+* adversarial operand-binding tests
+* adversarial type-constraint tests
+* full synthetic pipeline stress tests
+* optional compiled C integration tests
+* regression invariant tests
 
-Coverage includes:
+Current coverage includes:
 
 * nested loops
 * sibling loops
@@ -253,61 +603,100 @@ Coverage includes:
 * recursion-shaped false positives
 * switch-like fan-out / decision ladders
 * deterministic ordering under shuffled graph inputs
-
----
-
-## What Hephaestus Is Not
-
-At its current stage, Hephaestus is **not yet**:
-
-* a full decompiler
-* a finished source-code emitter
-* a perfect solution for every possible CFG
-* a substitute for mature reverse engineering suites
-
-Its current role is to provide a **reliable, staged reconstruction backbone** that later phases can build on.
-
----
-
-## Roadmap
-
-### Phase 4 — Type Recovery
-
-* stack / argument / heap interpretation
-* type propagation
-* signature inference
-* struct / class layout hints
-
-### Phase 5 — Source Reconstruction
-
-* AST construction
-* structured code emission
-* uncertainty annotations where needed
-
-### Phase 6 — Validation & Repair
-
-* compile generated code
-* detect structural mismatches
-* feed corrections back into the pipeline
+* fabricated instruction rejection
+* instruction deduplication
+* malformed instruction tolerance
+* stack-slot ambiguity
+* register alias handling
+* register clobbering
+* call clobbering
+* printf vararg safety
+* constraint conflict handling
+* confidence monotonicity
 
 ---
 
 ## Running Tests
 
-Example:
+Run the full suite:
+
+```bash
+python3 -m pytest -v
+```
+
+Run targeted suites:
 
 ```bash
 python3 -m pytest test/simulate/test_structuring.py -v
+python3 -m pytest test/simulate/test_type_recovery.py -v
+python3 -m pytest test/simulate/test_semantic_refinement.py -v
+python3 -m pytest test/simulate/test_operand_binding.py -v
+python3 -m pytest test/simulate/test_regression_invariants.py -v
 ```
 
-Or, depending on the test layout:
+Current full-suite result:
 
-```bash
-python3 -m unittest discover -s test/simulate/
+```text
+193 passed, 1 xfailed, 0 failures
 ```
+
+If using integration markers, register them in `pytest.ini`:
+
+```ini
+[pytest]
+markers =
+    integration: tests that require external tools like clang, radare2, or ghidra
+```
+
+---
+
+## Roadmap
+
+### Phase 4C — Conservative Data Layout Recovery
+
+Planned focus:
+
+* observed memory-access grouping
+* base-object candidates
+* offset and size facts
+* array/pointer layout hints
+* conservative layout candidates
+
+Phase 4C should emit layout facts and candidates, not final C structs.
+
+### Phase 5 — Source Reconstruction
+
+Planned focus:
+
+* AST construction
+* structured code emission
+* uncertainty annotations
+* source-level placeholder comments where evidence is incomplete
+
+### Phase 6 — Validation & Repair
+
+Planned focus:
+
+* compile generated code
+* detect structural mismatches
+* compare recovered behavior against evidence
+* feed corrections back into the pipeline
 
 ---
 
 ## Notes
 
-Hephaestus is under active development. The current milestone is a stable Phase 3 control-flow structuring pipeline with conservative fallback handling and evidence-backed IR generation.
+Hephaestus is under active development.
+
+The current milestone is a stable staged reconstruction backbone through Phase 4B.1:
+
+```text
+Extraction
+→ Canonical IR
+→ CFG structuring
+→ Initial type recovery
+→ Instruction-backed semantic refinement
+→ Conservative operand binding
+```
+
+The next major milestone is Phase 4C: conservative data-layout recovery.
