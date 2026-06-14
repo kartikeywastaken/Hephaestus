@@ -702,6 +702,71 @@ def handle_refine_semantics(out_dir: str):
     print("============================================================")
     sys.exit(0)
 
+
+def handle_recover_layouts(out_dir: str):
+    """
+    Phase 4C: Conservative Data Layout Recovery
+    Reads unified_ir.json, recovers conservative memory layout candidates,
+    and writes layout_recovery.json to the output directory.
+    """
+    from src.ir.types.layout_recovery import LayoutRecoveryEngine
+    from src.ir.types.layout_emitter import write_layout_recovery_artifact
+
+    logger.info("Executing Phase 4C Conservative Data Layout Recovery...")
+
+    # Load Unified IR (required)
+    ir_path = os.path.join(out_dir, "unified_ir.json")
+    if not os.path.exists(ir_path):
+        logger.error(
+            "[-] unified_ir.json not found at %s. Please run extraction first.", ir_path
+        )
+        sys.exit(1)
+    try:
+        with open(ir_path, "r", encoding="utf-8") as f:
+            unified_ir = json.load(f)
+    except Exception as e:
+        logger.error("[-] Failed to read unified_ir.json at %s: %s", ir_path, e)
+        sys.exit(1)
+
+    # Run layout recovery
+    engine = LayoutRecoveryEngine()
+    candidates, unbound = engine.recover(unified_ir)
+
+    # Write artifact
+    output_path = os.path.join(out_dir, "layout_recovery.json")
+    write_layout_recovery_artifact(
+        candidates, unbound, output_path, source_ir=ir_path
+    )
+    logger.info("[+] Phase 4C layout recovery artifact committed: %s", output_path)
+
+    # Compute kind distribution for summary
+    kind_counts: dict = {}
+    for c in candidates:
+        kind_counts[c.layout_kind] = kind_counts.get(c.layout_kind, 0) + 1
+
+    print("\n============================================================")
+    print("         PHASE 4C: CONSERVATIVE DATA LAYOUT RECOVERY")
+    print("============================================================")
+    print(f"Layout candidates identified: {len(candidates)}")
+    print(f"Unbound memory accesses:      {len(unbound)}")
+    print("------------------------------------------------------------")
+    print("Layout kind distribution:")
+    for kind, count in sorted(kind_counts.items()):
+        print(f"  {kind:<16} : {count}")
+    print("------------------------------------------------------------")
+    for c in candidates:
+        print(
+            f"  [{c.layout_kind:<14}] fn={c.function_name!r:30s} "
+            f"base={c.base_id!r:8s} "
+            f"offsets={c.observed_offsets} "
+            f"sizes={c.observed_sizes}"
+        )
+    print("============================================================")
+    print(f"Output: {output_path}")
+    print("============================================================")
+    sys.exit(0)
+
+
 def main():
     # If help flag is present, avoid running setup_logging to prevent creating output directory unnecessarily
     if "--help" in sys.argv or "-h" in sys.argv:
@@ -758,10 +823,14 @@ def main():
         elif first_arg == "refine-semantics":
             handle_refine_semantics(out_dir)
             return
+        elif first_arg == "recover-layouts":
+            handle_recover_layouts(out_dir)
+            return
 
     args = parse_args()
     
     if args.analyze_cfg:
+
         handle_analyze_cfg(args.out_dir)
         return
     
