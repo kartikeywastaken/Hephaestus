@@ -150,14 +150,15 @@ def collect_memory_access_facts(unified_ir: Dict[str, Any]) -> List[MemoryAccess
         if not isinstance(fn, dict):
             continue
 
-        fn_entry = str(fn.get("entry_point", "unknown"))
+        from src.ir.utils.addressing import normalize_address
+        fn_entry = normalize_address(fn.get("entry_point")) or "unknown"
         fn_name = str(fn.get("name", "unknown_function"))
 
         for block in fn.get("basic_blocks", []):
             if not isinstance(block, dict):
                 continue
 
-            block_id = str(block.get("id", block.get("start", "unknown_block")))
+            block_id = normalize_address(block.get("id") or block.get("start")) or "unknown_block"
 
             for instr in block.get("instructions", []):
                 if not isinstance(instr, dict):
@@ -171,7 +172,7 @@ def collect_memory_access_facts(unified_ir: Dict[str, Any]) -> List[MemoryAccess
                 if access_kind is None:
                     continue  # Not a memory instruction we care about
 
-                instr_addr = str(instr.get("address", "?"))
+                instr_addr = normalize_address(instr.get("address")) or "?"
                 size_bytes = _safe_int(instr.get("size_bytes"))
 
                 operands = instr.get("operands", [])

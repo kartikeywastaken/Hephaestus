@@ -48,7 +48,7 @@ public class GhidraExtractorScript extends GhidraScript {
         while (symbolIter.hasNext() && !monitor.isCancelled()) {
             Symbol sym = symbolIter.next();
             Map<String, Object> sMap = new HashMap<>();
-            sMap.put("address", sym.getAddress().toString());
+            sMap.put("address", addrToHex(sym.getAddress()));
             sMap.put("name", sym.getName());
             sMap.put("type", sym.getSymbolType().toString());
             sMap.put("visibility", sym.getSource().toString());
@@ -69,7 +69,7 @@ public class GhidraExtractorScript extends GhidraScript {
 
             Map<String, Object> fMap = new HashMap<>();
             fMap.put("name", func.getName());
-            fMap.put("entry_point", func.getEntryPoint().toString());
+            fMap.put("entry_point", addrToHex(func.getEntryPoint()));
             fMap.put("size_bytes", func.getBody().getNumAddresses());
             fMap.put("calling_convention", func.getCallingConventionName());
 
@@ -89,7 +89,7 @@ public class GhidraExtractorScript extends GhidraScript {
             while (blockIter.hasNext()) {
                 CodeBlock block = blockIter.next();
                 Map<String, Object> node = new HashMap<>();
-                node.put("id", block.getMinAddress().toString());
+                node.put("id", addrToHex(block.getMinAddress()));
                 node.put("size", block.getNumAddresses());
 
                 // Extract real instructions for this block
@@ -106,8 +106,8 @@ public class GhidraExtractorScript extends GhidraScript {
                     CodeBlock destBlock = ref.getDestinationBlock();
                     if (func.getBody().contains(destBlock.getMinAddress())) {
                         Map<String, Object> edge = new HashMap<>();
-                        edge.put("source", block.getMinAddress().toString());
-                        edge.put("target", destBlock.getMinAddress().toString());
+                        edge.put("source", addrToHex(block.getMinAddress()));
+                        edge.put("target", addrToHex(destBlock.getMinAddress()));
                         edge.put("type", ref.getFlowType().isConditional() ? "conditional_taken" : "unconditional");
                         cfgEdges.add(edge);
                     }
@@ -191,7 +191,7 @@ public class GhidraExtractorScript extends GhidraScript {
     private Map<String, Object> buildInstructionMap(Instruction instr) {
         try {
             Map<String, Object> instrMap = new HashMap<>();
-            instrMap.put("address", instr.getAddress().toString());
+            instrMap.put("address", addrToHex(instr.getAddress()));
             String mnemonic = instr.getMnemonicString();
             instrMap.put("mnemonic", mnemonic);
             instrMap.put("opcode", mnemonic.toLowerCase());
@@ -338,7 +338,7 @@ public class GhidraExtractorScript extends GhidraScript {
         } else if (obj instanceof Address) {
             Address addr = (Address) obj;
             op.put("kind", "symbol");
-            op.put("name", addr.toString());
+            op.put("name", addrToHex(addr));
         } else {
             String raw = obj.toString();
             if (raw == null || raw.trim().isEmpty()) return null;
@@ -396,5 +396,10 @@ public class GhidraExtractorScript extends GhidraScript {
             return sb.toString();
         }
         return "\"" + val.toString() + "\"";
+    }
+
+    private String addrToHex(Address addr) {
+        if (addr == null) return null;
+        return "0x" + addr.toString(false).toLowerCase();
     }
 }

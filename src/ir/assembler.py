@@ -4,10 +4,11 @@ Phase 2: Unified Evidence IR Assembler
 Converts static tool inputs (Ghidra, IDA) and trace outputs into canonical UnifiedIR objects.
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Set
 import hashlib
 from src.ir.models import UnifiedIR
 from src.ir.instructions.validation import validate_instruction, is_fabricated_placeholder
+from src.ir.utils.addressing import normalize_address, address_to_int
 
 def clean_tool_prefix(name: str) -> str:
     """Removes common tool-specific prefixes from symbol and function names."""
@@ -47,18 +48,49 @@ def choose_canonical_name(names: List[str]) -> str:
 
 def normalize_addr(addr: str) -> str:
     """Standardizes hex/decimal address strings to lowercase hex format with '0x' prefix."""
-    if not addr:
-        return ""
-    addr_str = str(addr).strip()
-    try:
-        if addr_str.lower().startswith("0x"):
-            return hex(int(addr_str, 16))
-        try:
-            return hex(int(addr_str, 16))
-        except ValueError:
-            return hex(int(addr_str, 10))
-    except ValueError:
-        return addr_str.lower()
+    norm = normalize_address(addr)
+    return norm if norm is not None else ""
+
+def get_invalid_entries_for_fn(fn: Dict[str, Any]) -> Set[str]:
+    from typing import Set
+    invalid_addrs = set()
+    all_instrs = []
+    cfg = fn.get("cfg", {})
+    nodes = cfg.get("nodes", []) or fn.get("basic_blocks", [])
+    for node in nodes:
+        for instr in node.get("instructions", []):
+            all_instrs.append(instr)
+    if all_instrs:
+        all_instrs.sort(key=lambda i: address_to_int(i.get("address")) or 0)
+        # Last instruction address
+        last_addr = normalize_addr(all_instrs[-1].get("address"))
+        if last_addr:
+            invalid_addrs.add(last_addr)
+        # Return instructions
+        for instr in all_instrs:
+            opcode = (instr.get("opcode") or instr.get("mnemonic") or "").lower().strip()
+            if opcode == "ret" or opcode.startswith("ret"):
+                iaddr = normalize_addr(instr.get("address"))
+                if iaddr:
+                    invalid_addrs.add(iaddr)
+    return invalid_addrs
+
+def score_instruction_for_merge(ins: Dict[str, Any]) -> tuple:
+    """
+    Returns a scoring key for merging instructions. Higher is better.
+    1. Prefer instruction with structured memory operands (has at least one kind == "memory").
+    2. If both have structured memory operands, prefer more operands.
+    3. If still tied, prefer Ghidra for operand richness.
+    4. If still tied, prefer Radare2 for normalized symbol/call naming.
+    5. Fallback deterministically by source name.
+    """
+    ops = ins.get("operands", [])
+    has_mem = any(isinstance(op, dict) and op.get("kind") == "memory" for op in ops)
+    mem_score = 1 if has_mem else 0
+    num_ops = len(ops)
+    source = ins.get("source", "")
+    source_priority = 2 if source == "ghidra" else (1 if source == "radare2" else 0)
+    return (mem_score, num_ops, source_priority, source)
 
 class IRAssembler:
     """
@@ -169,6 +201,80 @@ class IRAssembler:
                         "cfg": {"nodes": [{"id": entry, "size": 32, "instructions_count": 4}], "edges": []}
                     })
 
+        # Collect symbols and map names/addresses
+        all_symbols = []
+        for sym in g_payload.get("symbols", []):
+            all_symbols.append(sym)
+        for sym in r_payload.get("symbols", []):
+            all_symbols.append(sym)
+            
+        symbol_name_to_addr = {}
+        for sym in all_symbols:
+            sname = sym.get("name")
+            saddr = normalize_addr(sym.get("address"))
+            if sname and saddr and not saddr.startswith("0x5f5e"):
+                symbol_name_to_addr[sname] = saddr
+                symbol_name_to_addr[clean_tool_prefix(sname)] = saddr
+
+        # Resolve entry points for all incoming functions before grouping them by entry point
+        fns_by_clean_name = {}
+        for fn in incoming_functions:
+            cname = clean_tool_prefix(fn.get("name", ""))
+            fns_by_clean_name.setdefault(cname, []).append(fn)
+
+        resolved_entries_by_name = {}
+        for cname, grouped_fns in fns_by_clean_name.items():
+            entries = []
+            for fn in grouped_fns:
+                ep = normalize_addr(fn.get("entry_point"))
+                if ep and not ep.startswith("0x5f5e"):
+                    entries.append(ep)
+            
+            agreed_entry = None
+            if len(set(entries)) == 1:
+                agreed_entry = entries[0]
+            
+            symbol_entry = symbol_name_to_addr.get(cname)
+            
+            best_entry = None
+            if agreed_entry:
+                best_entry = agreed_entry
+            elif symbol_entry:
+                best_entry = symbol_entry
+            else:
+                bb_addrs = []
+                for fn in grouped_fns:
+                    invalid_addrs = get_invalid_entries_for_fn(fn)
+                    cfg = fn.get("cfg", {})
+                    nodes = cfg.get("nodes", []) or fn.get("basic_blocks", [])
+                    for bb in nodes:
+                        bb_id = normalize_addr(bb.get("id"))
+                        if bb_id and not bb_id.startswith("0x5f5e") and bb_id not in invalid_addrs:
+                            bb_addrs.append(bb_id)
+                if bb_addrs:
+                    bb_addrs.sort(key=lambda a: address_to_int(a) or 0)
+                    best_entry = bb_addrs[0]
+            
+            if not best_entry:
+                non_corr = [e for e in entries if not e.startswith("0x5f5e")]
+                if non_corr:
+                    best_entry = non_corr[0]
+                elif entries:
+                    best_entry = entries[0]
+                else:
+                    best_entry = "unknown"
+                self.logger.warning(
+                    f"Ambiguous entry point for function {cname}. Using fallback: {best_entry}"
+                )
+            
+            resolved_entries_by_name[cname] = best_entry
+
+        # Update incoming function entry points
+        for fn in incoming_functions:
+            cname = clean_tool_prefix(fn.get("name", ""))
+            if cname in resolved_entries_by_name:
+                fn["entry_point"] = resolved_entries_by_name[cname]
+
         # Merge by entry point
         functions_by_addr = {}
         for fn in incoming_functions:
@@ -277,16 +383,22 @@ class IRAssembler:
                             "Invalid instruction in block %s skipped: %s", bb_id, ins
                         )
 
-                # Deduplicate by address, preserving first occurrence, then sort
-                seen_addrs: Dict[str, Dict[str, Any]] = {}
+                # Deduplicate by address, merging Ghidra and Radare2 records at the same address
+                instructions_by_addr: Dict[str, List[Dict[str, Any]]] = {}
                 for ins in validated_instructions:
-                    addr = ins.get("address", "")
-                    if addr and addr not in seen_addrs:
-                        seen_addrs[addr] = ins
-                deduped_instructions: List[Dict[str, Any]] = sorted(
-                    seen_addrs.values(),
-                    key=lambda i: int(i["address"], 16)
-                    if i.get("address", "").startswith("0x") else 0
+                    addr = normalize_addr(ins.get("address"))
+                    if addr:
+                        ins_copy = dict(ins)
+                        ins_copy["address"] = addr
+                        instructions_by_addr.setdefault(addr, []).append(ins_copy)
+
+                deduped_instructions = []
+                for addr, ins_list in instructions_by_addr.items():
+                    best_ins = max(ins_list, key=score_instruction_for_merge)
+                    deduped_instructions.append(best_ins)
+
+                deduped_instructions.sort(
+                    key=lambda i: address_to_int(i["address"]) or 0
                 )
 
                 normalized_blocks.append({

@@ -354,7 +354,8 @@ class Radare2Extractor(BaseExtractor):
             from src.utils.run_logging import append_run_log
             append_run_log(os.path.dirname(self.output_path), "RADARE2", "\n".join(self.radare2_log_messages))
 
-            return data
+            from src.ir.utils.addressing import normalize_extractor_payload
+            return normalize_extractor_payload(data)
 
         except Exception as e:
             # Append Radare2 execution error to run.log
@@ -440,14 +441,13 @@ class Radare2Extractor(BaseExtractor):
             addr_val = ri.get("offset") or ri.get("addr") or ri.get("address")
             if addr_val is None:
                 continue
-            try:
-                # Convert to int for range filtering
-                offset_int = int(addr_val)
-            except (TypeError, ValueError):
+            from src.ir.utils.addressing import address_to_int, normalize_address
+            offset_int = address_to_int(addr_val)
+            if offset_int is None:
                 continue
 
             # Normalize address to lowercase hex string '0x...'
-            norm_addr = hex(offset_int).lower()
+            norm_addr = normalize_address(addr_val)
             raw_addresses.append(norm_addr)
 
             # Tweak 6: Range filtering
@@ -535,8 +535,8 @@ class Radare2Extractor(BaseExtractor):
             )
 
         # Sort by normalized address
-        validated.sort(key=lambda i: int(i["address"], 16)
-                        if i.get("address", "").startswith("0x") else 0)
+        from src.ir.utils.addressing import address_to_int
+        validated.sort(key=lambda i: address_to_int(i.get("address")) or 0)
         return validated
 
     def _parse_r2_operands(self, ri: Dict[str, Any], disasm: str) -> List[Dict[str, Any]]:

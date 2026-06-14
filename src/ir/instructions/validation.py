@@ -58,17 +58,9 @@ _KNOWN_SOURCES = frozenset({"ghidra", "radare2", "r2", "dynamic_trace", "test"})
 
 def _normalize_addr(addr: str) -> str:
     """Attempt to normalize an address string to 0x-prefixed hex."""
-    s = str(addr).strip().lower()
-    if s.startswith("0x"):
-        try:
-            return hex(int(s, 16))
-        except ValueError:
-            return s
-    # Try plain integer
-    try:
-        return hex(int(s, 10))
-    except ValueError:
-        return s
+    from src.ir.utils.addressing import normalize_address
+    norm = normalize_address(addr)
+    return norm if norm is not None else str(addr).strip().lower()
 
 
 def _contains_fabricated(text: str) -> bool:

@@ -1,16 +1,1177 @@
 [
   {
-    "function_name": "_inspect",
+    "function_name": "_basic_score",
+    "structured_body": {
+      "type": "unstructured",
+      "children": [
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x100000460"
+            },
+            {
+              "type": "loop",
+              "kind": "while_like",
+              "header_block": "0x1000004f0",
+              "body": {
+                "type": "sequence",
+                "children": [
+                  {
+                    "type": "block",
+                    "id": "0x1000004f0"
+                  },
+                  {
+                    "type": "sequence",
+                    "children": [
+                      {
+                        "type": "block",
+                        "id": "0x1000004fc"
+                      },
+                      {
+                        "type": "block",
+                        "id": "0x100000500"
+                      },
+                      {
+                        "type": "block",
+                        "id": "0x100000520"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "exit_blocks": [
+                "0x100000530"
+              ]
+            },
+            {
+              "type": "block",
+              "id": "0x100000530"
+            }
+          ]
+        },
+        {
+          "type": "block",
+          "id": "0x5f5e31c"
+        }
+      ],
+      "reason": "fragmented_loop_body",
+      "region_kind": "acyclic"
+    }
+  },
+  {
+    "function_name": "_weird_score",
+    "structured_body": {
+      "type": "unstructured",
+      "children": [
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x100000544"
+            },
+            {
+              "type": "loop",
+              "kind": "while_like",
+              "header_block": "0x100000564",
+              "body": {
+                "type": "sequence",
+                "children": [
+                  {
+                    "type": "if_else",
+                    "condition_block": "0x100000564",
+                    "then_branch": {
+                      "type": "sequence",
+                      "children": [
+                        {
+                          "type": "block",
+                          "id": "0x100000584"
+                        },
+                        {
+                          "type": "block",
+                          "id": "0x100000588"
+                        }
+                      ]
+                    },
+                    "else_branch": {
+                      "type": "sequence",
+                      "children": [
+                        {
+                          "type": "if_else",
+                          "condition_block": "0x10000058c",
+                          "then_branch": {
+                            "type": "sequence",
+                            "children": [
+                              {
+                                "type": "block",
+                                "id": "0x1000005a0"
+                              },
+                              {
+                                "type": "block",
+                                "id": "0x1000005a4"
+                              }
+                            ]
+                          },
+                          "else_branch": {
+                            "type": "block",
+                            "id": "0x1000005c4"
+                          },
+                          "merge_block": "0x1000005f0"
+                        },
+                        {
+                          "type": "block",
+                          "id": "0x1000005f0"
+                        }
+                      ]
+                    },
+                    "merge_block": "0x1000005f4"
+                  },
+                  {
+                    "type": "block",
+                    "id": "0x1000005f4"
+                  }
+                ]
+              },
+              "exit_blocks": [
+                "0x100000604"
+              ]
+            },
+            {
+              "type": "sequence",
+              "children": [
+                {
+                  "type": "if_else",
+                  "condition_block": "0x100000604",
+                  "then_branch": {
+                    "type": "sequence",
+                    "children": [
+                      {
+                        "type": "block",
+                        "id": "0x100000610"
+                      },
+                      {
+                        "type": "block",
+                        "id": "0x100000614"
+                      }
+                    ]
+                  },
+                  "else_branch": {
+                    "type": "block",
+                    "id": "0x10000062c"
+                  },
+                  "merge_block": "0x100000644"
+                },
+                {
+                  "type": "block",
+                  "id": "0x100000644"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "block",
+          "id": "0x5f5e398"
+        }
+      ],
+      "reason": "fragmented_loop_body",
+      "region_kind": "acyclic"
+    }
+  },
+  {
+    "function_name": "_recursive_mix",
+    "structured_body": {
+      "type": "unstructured",
+      "children": [
+        {
+          "type": "loop",
+          "kind": "while_like",
+          "header_block": "0x100000694",
+          "body": {
+            "type": "sequence",
+            "children": [
+              {
+                "type": "if_else",
+                "condition_block": "0x100000694",
+                "then_branch": {
+                  "type": "sequence",
+                  "children": [
+                    {
+                      "type": "block",
+                      "id": "0x1000006c8"
+                    },
+                    {
+                      "type": "block",
+                      "id": "0x1000006cc"
+                    }
+                  ]
+                },
+                "else_branch": {
+                  "type": "block",
+                  "id": "0x1000006f0"
+                },
+                "merge_block": "0x100000668"
+              },
+              {
+                "type": "block",
+                "id": "0x100000668"
+              }
+            ]
+          },
+          "exit_blocks": [
+            "0x100000684",
+            "0x1000006a0",
+            "0x1000006e0",
+            "0x100000704"
+          ]
+        },
+        {
+          "type": "block",
+          "id": "0x100000704"
+        },
+        {
+          "type": "block",
+          "id": "0x1000006e0"
+        },
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x1000006a0"
+            },
+            {
+              "type": "block",
+              "id": "0x1000006a4"
+            }
+          ]
+        },
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x100000684"
+            },
+            {
+              "type": "block",
+              "id": "0x100000688"
+            }
+          ]
+        },
+        {
+          "type": "block",
+          "id": "0x100000714"
+        },
+        {
+          "type": "block",
+          "id": "0x5f5e3d0"
+        }
+      ],
+      "reason": "fragmented_loop_body",
+      "region_kind": "acyclic"
+    }
+  },
+  {
+    "function_name": "_init_item",
+    "structured_body": {
+      "type": "unstructured",
+      "children": [
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x100000724"
+            },
+            {
+              "type": "loop",
+              "kind": "while_like",
+              "header_block": "0x100000798",
+              "body": {
+                "type": "sequence",
+                "children": [
+                  {
+                    "type": "block",
+                    "id": "0x100000798"
+                  },
+                  {
+                    "type": "sequence",
+                    "children": [
+                      {
+                        "type": "block",
+                        "id": "0x1000007a4"
+                      },
+                      {
+                        "type": "block",
+                        "id": "0x1000007a8"
+                      },
+                      {
+                        "type": "block",
+                        "id": "0x1000007c8"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "exit_blocks": [
+                "0x1000007d8"
+              ]
+            },
+            {
+              "type": "sequence",
+              "children": [
+                {
+                  "type": "if",
+                  "condition_block": "0x1000007d8",
+                  "then_branch": {
+                    "type": "sequence",
+                    "children": [
+                      {
+                        "type": "block",
+                        "id": "0x1000007f0"
+                      },
+                      {
+                        "type": "block",
+                        "id": "0x1000007f4"
+                      }
+                    ]
+                  },
+                  "merge_block": "0x10000080c"
+                },
+                {
+                  "type": "block",
+                  "id": "0x10000080c"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x100000818"
+            },
+            {
+              "type": "block",
+              "id": "0x10000081c"
+            }
+          ]
+        },
+        {
+          "type": "block",
+          "id": "0x10000082c"
+        },
+        {
+          "type": "block",
+          "id": "0x5f5e43e"
+        }
+      ],
+      "reason": "fragmented_loop_body",
+      "region_kind": "acyclic"
+    }
+  },
+  {
+    "function_name": "_init_container",
+    "structured_body": {
+      "type": "unstructured",
+      "children": [
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x100000834"
+            },
+            {
+              "type": "loop",
+              "kind": "while_like",
+              "header_block": "0x10000086c",
+              "body": {
+                "type": "sequence",
+                "children": [
+                  {
+                    "type": "block",
+                    "id": "0x10000086c"
+                  },
+                  {
+                    "type": "sequence",
+                    "children": [
+                      {
+                        "type": "block",
+                        "id": "0x100000878"
+                      },
+                      {
+                        "type": "block",
+                        "id": "0x10000087c"
+                      },
+                      {
+                        "type": "block",
+                        "id": "0x10000089c"
+                      },
+                      {
+                        "type": "block",
+                        "id": "0x1000008a0"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "exit_blocks": [
+                "0x1000008b0"
+              ]
+            },
+            {
+              "type": "block",
+              "id": "0x1000008b0"
+            }
+          ]
+        },
+        {
+          "type": "block",
+          "id": "0x1000008b8"
+        }
+      ],
+      "reason": "fragmented_loop_body",
+      "region_kind": "acyclic"
+    }
+  },
+  {
+    "function_name": "_update_checksum",
+    "structured_body": {
+      "type": "unstructured",
+      "children": [
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x1000008bc"
+            },
+            {
+              "type": "loop",
+              "kind": "while_like",
+              "header_block": "0x1000008d0",
+              "body": {
+                "type": "sequence",
+                "children": [
+                  {
+                    "type": "block",
+                    "id": "0x1000008d0"
+                  },
+                  {
+                    "type": "sequence",
+                    "children": [
+                      {
+                        "type": "block",
+                        "id": "0x1000008e4"
+                      },
+                      {
+                        "type": "block",
+                        "id": "0x1000008e8"
+                      },
+                      {
+                        "type": "loop",
+                        "kind": "while_like",
+                        "header_block": "0x10000096c",
+                        "body": {
+                          "type": "sequence",
+                          "children": [
+                            {
+                              "type": "block",
+                              "id": "0x10000096c"
+                            },
+                            {
+                              "type": "sequence",
+                              "children": [
+                                {
+                                  "type": "block",
+                                  "id": "0x100000978"
+                                },
+                                {
+                                  "type": "block",
+                                  "id": "0x10000097c"
+                                },
+                                {
+                                  "type": "block",
+                                  "id": "0x10000099c"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "exit_blocks": [
+                          "0x1000009ac"
+                        ]
+                      },
+                      {
+                        "type": "sequence",
+                        "children": [
+                          {
+                            "type": "block",
+                            "id": "0x1000009ac"
+                          },
+                          {
+                            "type": "block",
+                            "id": "0x1000009b0"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "exit_blocks": [
+                "0x1000009c0"
+              ]
+            },
+            {
+              "type": "block",
+              "id": "0x1000009c0"
+            }
+          ]
+        },
+        {
+          "type": "block",
+          "id": "0x1000009d4"
+        }
+      ],
+      "reason": "fragmented_loop_body",
+      "region_kind": "acyclic"
+    }
+  },
+  {
+    "function_name": "_classify_item",
     "structured_body": {
       "type": "unstructured",
       "children": [
         {
           "type": "block",
-          "id": "0x100000460"
+          "id": "0x1000009d8"
         },
         {
           "type": "block",
-          "id": "0x1000004b0"
+          "id": "0x100000a38"
+        },
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x1000009f4"
+            },
+            {
+              "type": "block",
+              "id": "0x1000009f8"
+            }
+          ]
+        },
+        {
+          "type": "block",
+          "id": "0x100000a4c"
+        },
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x100000a04"
+            },
+            {
+              "type": "block",
+              "id": "0x100000a08"
+            }
+          ]
+        },
+        {
+          "type": "block",
+          "id": "0x100000a60"
+        },
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x100000a14"
+            },
+            {
+              "type": "block",
+              "id": "0x100000a18"
+            }
+          ]
+        },
+        {
+          "type": "block",
+          "id": "0x100000a74"
+        },
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x100000a24"
+            },
+            {
+              "type": "block",
+              "id": "0x100000a28"
+            }
+          ]
+        },
+        {
+          "type": "block",
+          "id": "0x100000a88"
+        },
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x100000a34"
+            },
+            {
+              "type": "block",
+              "id": "0x100000a9c"
+            }
+          ]
+        },
+        {
+          "type": "block",
+          "id": "0x100000abc"
+        },
+        {
+          "type": "block",
+          "id": "0x100000ac4"
+        }
+      ],
+      "reason": "switch_candidate",
+      "region_kind": "switch_candidate"
+    }
+  },
+  {
+    "function_name": "_process_item",
+    "structured_body": {
+      "type": "unstructured",
+      "children": [
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x100000ac8"
+            },
+            {
+              "type": "block",
+              "id": "0x100000af0"
+            },
+            {
+              "type": "block",
+              "id": "0x100000afc"
+            }
+          ]
+        },
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "if_else",
+              "condition_block": "0x100000b2c",
+              "then_branch": {
+                "type": "sequence",
+                "children": [
+                  {
+                    "type": "block",
+                    "id": "0x100000b38"
+                  },
+                  {
+                    "type": "block",
+                    "id": "0x100000b3c"
+                  },
+                  {
+                    "type": "block",
+                    "id": "0x100000b48"
+                  }
+                ]
+              },
+              "else_branch": {
+                "type": "block",
+                "id": "0x100000b58"
+              },
+              "merge_block": "0x100000b6c"
+            },
+            {
+              "type": "block",
+              "id": "0x100000b6c"
+            }
+          ]
+        },
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x100000b0c"
+            },
+            {
+              "type": "block",
+              "id": "0x100000b10"
+            },
+            {
+              "type": "block",
+              "id": "0x100000b1c"
+            }
+          ]
+        },
+        {
+          "type": "block",
+          "id": "0x100000b70"
+        },
+        {
+          "type": "block",
+          "id": "0x100000b7c"
+        }
+      ],
+      "reason": "fragmented_loop_body",
+      "region_kind": "acyclic"
+    }
+  },
+  {
+    "function_name": "_scan_container",
+    "structured_body": {
+      "type": "unstructured",
+      "children": [
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x100000b80"
+            },
+            {
+              "type": "loop",
+              "kind": "while_like",
+              "header_block": "0x100000ba0",
+              "body": {
+                "type": "sequence",
+                "children": [
+                  {
+                    "type": "if_else",
+                    "condition_block": "0x100000ba0",
+                    "then_branch": {
+                      "type": "sequence",
+                      "children": [
+                        {
+                          "type": "block",
+                          "id": "0x100000be0"
+                        },
+                        {
+                          "type": "block",
+                          "id": "0x100000be4"
+                        }
+                      ]
+                    },
+                    "else_branch": {
+                      "type": "sequence",
+                      "children": [
+                        {
+                          "type": "if",
+                          "condition_block": "0x100000be8",
+                          "then_branch": {
+                            "type": "sequence",
+                            "children": [
+                              {
+                                "type": "block",
+                                "id": "0x100000c64"
+                              },
+                              {
+                                "type": "block",
+                                "id": "0x100000c68"
+                              },
+                              {
+                                "type": "block",
+                                "id": "0x100000c70"
+                              }
+                            ]
+                          },
+                          "merge_block": "0x100000c80"
+                        },
+                        {
+                          "type": "block",
+                          "id": "0x100000c80"
+                        }
+                      ]
+                    },
+                    "merge_block": "0x100000c84"
+                  },
+                  {
+                    "type": "block",
+                    "id": "0x100000c84"
+                  }
+                ]
+              },
+              "exit_blocks": [
+                "0x100000bfc",
+                "0x100000c94"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x100000bfc"
+            },
+            {
+              "type": "block",
+              "id": "0x100000c00"
+            }
+          ]
+        },
+        {
+          "type": "block",
+          "id": "0x100000c94"
+        },
+        {
+          "type": "block",
+          "id": "0x100000ca0"
+        }
+      ],
+      "reason": "fragmented_loop_body",
+      "region_kind": "acyclic"
+    }
+  },
+  {
+    "function_name": "_mutate_alias",
+    "structured_body": {
+      "type": "unstructured",
+      "children": [
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "if_else",
+              "condition_block": "0x100000ca4",
+              "then_branch": {
+                "type": "sequence",
+                "children": [
+                  {
+                    "type": "block",
+                    "id": "0x100000ce0"
+                  },
+                  {
+                    "type": "block",
+                    "id": "0x100000ce4"
+                  }
+                ]
+              },
+              "else_branch": {
+                "type": "if_else",
+                "condition_block": "0x100000cf8",
+                "then_branch": {
+                  "type": "sequence",
+                  "children": [
+                    {
+                      "type": "block",
+                      "id": "0x100000d10"
+                    },
+                    {
+                      "type": "block",
+                      "id": "0x100000d14"
+                    }
+                  ]
+                },
+                "else_branch": {
+                  "type": "block",
+                  "id": "0x100000d48"
+                },
+                "merge_block": "0x100000d7c"
+              },
+              "merge_block": "0x100000d7c"
+            },
+            {
+              "type": "block",
+              "id": "0x100000d7c"
+            }
+          ]
+        },
+        {
+          "type": "block",
+          "id": "0x100000d80"
+        }
+      ],
+      "reason": "fragmented_loop_body",
+      "region_kind": "acyclic"
+    }
+  },
+  {
+    "function_name": "_pointer_walk",
+    "structured_body": {
+      "type": "unstructured",
+      "children": [
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x100000d84"
+            },
+            {
+              "type": "loop",
+              "kind": "while_like",
+              "header_block": "0x100000dc0",
+              "body": {
+                "type": "sequence",
+                "children": [
+                  {
+                    "type": "if",
+                    "condition_block": "0x100000dc0",
+                    "then_branch": {
+                      "type": "sequence",
+                      "children": [
+                        {
+                          "type": "block",
+                          "id": "0x100000e0c"
+                        },
+                        {
+                          "type": "block",
+                          "id": "0x100000e10"
+                        }
+                      ]
+                    },
+                    "merge_block": "0x100000e28"
+                  },
+                  {
+                    "type": "sequence",
+                    "children": [
+                      {
+                        "type": "block",
+                        "id": "0x100000e28"
+                      },
+                      {
+                        "type": "block",
+                        "id": "0x100000e2c"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "exit_blocks": [
+                "0x100000e3c"
+              ]
+            },
+            {
+              "type": "block",
+              "id": "0x100000e3c"
+            }
+          ]
+        },
+        {
+          "type": "block",
+          "id": "0x100000e44"
+        }
+      ],
+      "reason": "fragmented_loop_body",
+      "region_kind": "acyclic"
+    }
+  },
+  {
+    "function_name": "_nested_branches",
+    "structured_body": {
+      "type": "unstructured",
+      "children": [
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x100000e48"
+            },
+            {
+              "type": "loop",
+              "kind": "while_like",
+              "header_block": "0x100000e64",
+              "body": {
+                "type": "sequence",
+                "children": [
+                  {
+                    "type": "if_else",
+                    "condition_block": "0x100000e64",
+                    "then_branch": {
+                      "type": "sequence",
+                      "children": [
+                        {
+                          "type": "block",
+                          "id": "0x100000ea0"
+                        },
+                        {
+                          "type": "block",
+                          "id": "0x100000ea4"
+                        }
+                      ]
+                    },
+                    "else_branch": {
+                      "type": "sequence",
+                      "children": [
+                        {
+                          "type": "if_else",
+                          "condition_block": "0x100000ebc",
+                          "then_branch": {
+                            "type": "sequence",
+                            "children": [
+                              {
+                                "type": "if_else",
+                                "condition_block": "0x100000ecc",
+                                "then_branch": {
+                                  "type": "sequence",
+                                  "children": [
+                                    {
+                                      "type": "block",
+                                      "id": "0x100000ee0"
+                                    },
+                                    {
+                                      "type": "block",
+                                      "id": "0x100000ee4"
+                                    }
+                                  ]
+                                },
+                                "else_branch": {
+                                  "type": "block",
+                                  "id": "0x100000efc"
+                                },
+                                "merge_block": "0x100000f14"
+                              },
+                              {
+                                "type": "block",
+                                "id": "0x100000f14"
+                              }
+                            ]
+                          },
+                          "else_branch": {
+                            "type": "sequence",
+                            "children": [
+                              {
+                                "type": "if_else",
+                                "condition_block": "0x100000f18",
+                                "then_branch": {
+                                  "type": "sequence",
+                                  "children": [
+                                    {
+                                      "type": "block",
+                                      "id": "0x100000f28"
+                                    },
+                                    {
+                                      "type": "block",
+                                      "id": "0x100000f2c"
+                                    },
+                                    {
+                                      "type": "loop",
+                                      "kind": "while_like",
+                                      "header_block": "0x100000f34",
+                                      "body": {
+                                        "type": "sequence",
+                                        "children": [
+                                          {
+                                            "type": "if_else",
+                                            "condition_block": "0x100000f34",
+                                            "then_branch": {
+                                              "type": "sequence",
+                                              "children": [
+                                                {
+                                                  "type": "block",
+                                                  "id": "0x100000f50"
+                                                },
+                                                {
+                                                  "type": "block",
+                                                  "id": "0x100000f54"
+                                                }
+                                              ]
+                                            },
+                                            "else_branch": {
+                                              "type": "block",
+                                              "id": "0x100000f58"
+                                            },
+                                            "merge_block": "0x100000f78"
+                                          },
+                                          {
+                                            "type": "block",
+                                            "id": "0x100000f78"
+                                          }
+                                        ]
+                                      },
+                                      "exit_blocks": [
+                                        "0x100000f88"
+                                      ]
+                                    },
+                                    {
+                                      "type": "block",
+                                      "id": "0x100000f88"
+                                    }
+                                  ]
+                                },
+                                "else_branch": {
+                                  "type": "sequence",
+                                  "children": [
+                                    {
+                                      "type": "block",
+                                      "id": "0x100000f8c"
+                                    },
+                                    {
+                                      "type": "block",
+                                      "id": "0x100000f94"
+                                    }
+                                  ]
+                                },
+                                "merge_block": "0x100000fa4"
+                              },
+                              {
+                                "type": "block",
+                                "id": "0x100000fa4"
+                              }
+                            ]
+                          },
+                          "merge_block": "0x100000fa8"
+                        },
+                        {
+                          "type": "block",
+                          "id": "0x100000fa8"
+                        }
+                      ]
+                    },
+                    "merge_block": "0x100000fac"
+                  },
+                  {
+                    "type": "sequence",
+                    "children": [
+                      {
+                        "type": "block",
+                        "id": "0x100000fac"
+                      },
+                      {
+                        "type": "block",
+                        "id": "0x100000fb0"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "exit_blocks": [
+                "0x100000fc0"
+              ]
+            },
+            {
+              "type": "block",
+              "id": "0x100000fc0"
+            }
+          ]
+        },
+        {
+          "type": "block",
+          "id": "0x100000fcc"
         }
       ],
       "reason": "fragmented_loop_body",
@@ -27,21 +1188,91 @@
           "children": [
             {
               "type": "block",
-              "id": "0x1000004b4"
+              "id": "0x100000fd0"
             },
             {
               "type": "block",
-              "id": "0x1000004ec"
+              "id": "0x100000ff0"
             },
             {
               "type": "block",
-              "id": "0x100000500"
+              "id": "0x100001000"
+            },
+            {
+              "type": "block",
+              "id": "0x100001010"
+            },
+            {
+              "type": "block",
+              "id": "0x100001018"
+            },
+            {
+              "type": "block",
+              "id": "0x10000102c"
+            },
+            {
+              "type": "block",
+              "id": "0x10000103c"
+            },
+            {
+              "type": "block",
+              "id": "0x10000104c"
+            },
+            {
+              "type": "block",
+              "id": "0x100001068"
+            },
+            {
+              "type": "block",
+              "id": "0x100001080"
+            },
+            {
+              "type": "block",
+              "id": "0x100001098"
+            },
+            {
+              "type": "block",
+              "id": "0x1000010b0"
+            }
+          ]
+        },
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x1000010ec"
+            },
+            {
+              "type": "block",
+              "id": "0x100001110"
+            }
+          ]
+        },
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x1000010c0"
+            },
+            {
+              "type": "block",
+              "id": "0x1000010c4"
+            },
+            {
+              "type": "block",
+              "id": "0x1000010e8"
             }
           ]
         },
         {
           "type": "block",
-          "id": "0x10000050c"
+          "id": "0x100001114"
+        },
+        {
+          "type": "block",
+          "id": "0x5f5e564"
         }
       ],
       "reason": "fragmented_loop_body",
@@ -55,11 +1286,11 @@
       "children": [
         {
           "type": "block",
-          "id": "0x100000510"
+          "id": "0x100001128"
         },
         {
           "type": "block",
-          "id": "0x100000520"
+          "id": "0x100001134"
         }
       ],
       "reason": "fragmented_loop_body",

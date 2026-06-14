@@ -136,10 +136,13 @@ class GhidraExtractor(BaseExtractor):
             with open(temp_json_path, "r", encoding="utf-8") as f:
                 raw_data = json.load(f)
 
+            from src.ir.utils.addressing import normalize_extractor_payload
             # Extract internal data structure if present
             if "data" in raw_data:
-                return raw_data["data"]
-            return raw_data
+                payload = raw_data["data"]
+            else:
+                payload = raw_data
+            return normalize_extractor_payload(payload)
 
         finally:
             # Clean up the temporary project directory and JSON file

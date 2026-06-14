@@ -282,24 +282,39 @@ def _attach_layouts(
 
     Match by function_entry (preferred), then function_name (fallback).
     """
+    from src.ir.utils.addressing import normalize_address
+    fn_entry_norm = normalize_address(fn_entry) or fn_entry
+
     matched_candidates: List[Dict[str, Any]] = []
     matched_unbound: List[Dict[str, Any]] = []
 
     for c in all_candidates:
         if not isinstance(c, dict):
             continue
-        c_entry = _safe_str(c, "function_entry")
+        c_entry_norm = normalize_address(c.get("function_entry")) or _safe_str(c, "function_entry")
         c_name = _safe_str(c, "function_name")
-        if (c_entry and c_entry == fn_entry) or (c_name and c_name == fn_name):
-            matched_candidates.append(c)
+        if (c_entry_norm and c_entry_norm == fn_entry_norm) or (c_name and c_name == fn_name):
+            c_copy = dict(c)
+            c_copy["function_entry"] = c_entry_norm
+            if "source_instrs" in c_copy and isinstance(c_copy["source_instrs"], list):
+                c_copy["source_instrs"] = [normalize_address(addr) or addr for addr in c_copy["source_instrs"]]
+            matched_candidates.append(c_copy)
 
     for u in all_unbound:
         if not isinstance(u, dict):
             continue
-        u_entry = _safe_str(u, "function_entry")
+        u_entry_norm = normalize_address(u.get("function_entry")) or _safe_str(u, "function_entry")
         u_name = _safe_str(u, "function_name")
-        if (u_entry and u_entry == fn_entry) or (u_name and u_name == fn_name):
-            matched_unbound.append(u)
+        if (u_entry_norm and u_entry_norm == fn_entry_norm) or (u_name and u_name == fn_name):
+            u_copy = dict(u)
+            u_copy["function_entry"] = u_entry_norm
+            if "block_id" in u_copy:
+                u_copy["block_id"] = normalize_address(u_copy["block_id"]) or u_copy["block_id"]
+            if "instruction_address" in u_copy:
+                u_copy["instruction_address"] = normalize_address(u_copy["instruction_address"]) or u_copy["instruction_address"]
+            if "instr_address" in u_copy:
+                u_copy["instr_address"] = normalize_address(u_copy["instr_address"]) or u_copy["instr_address"]
+            matched_unbound.append(u_copy)
 
     # Sort deterministically
     matched_candidates.sort(
@@ -497,7 +512,8 @@ def build_phase4_semantics(
             continue
 
         fn_name = _safe_str(tr_fn, "name", "unknown_function")
-        fn_entry = _safe_str(tr_fn, "entry_point", "unknown")
+        from src.ir.utils.addressing import normalize_address
+        fn_entry = normalize_address(tr_fn.get("entry_point")) or "unknown"
         fn_kind = _safe_str(tr_fn, "function_kind", "unknown")
 
         # --- Phase 4A data ---
