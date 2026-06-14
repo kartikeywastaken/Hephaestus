@@ -1,23 +1,69 @@
 [
   {
-    "function_name": "printf",
+    "function_name": "_inspect",
     "structured_body": {
-      "type": "block",
-      "id": "0x100000510"
+      "type": "unstructured",
+      "children": [
+        {
+          "type": "block",
+          "id": "0x100000460"
+        },
+        {
+          "type": "block",
+          "id": "0x1000004b0"
+        }
+      ],
+      "reason": "fragmented_loop_body",
+      "region_kind": "acyclic"
     }
   },
   {
     "function_name": "_main",
     "structured_body": {
-      "type": "block",
-      "id": "0x1000004b4"
+      "type": "unstructured",
+      "children": [
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x1000004b4"
+            },
+            {
+              "type": "block",
+              "id": "0x1000004ec"
+            },
+            {
+              "type": "block",
+              "id": "0x100000500"
+            }
+          ]
+        },
+        {
+          "type": "block",
+          "id": "0x10000050c"
+        }
+      ],
+      "reason": "fragmented_loop_body",
+      "region_kind": "acyclic"
     }
   },
   {
-    "function_name": "_inspect",
+    "function_name": "printf",
     "structured_body": {
-      "type": "block",
-      "id": "0x100000460"
+      "type": "unstructured",
+      "children": [
+        {
+          "type": "block",
+          "id": "0x100000510"
+        },
+        {
+          "type": "block",
+          "id": "0x100000520"
+        }
+      ],
+      "reason": "fragmented_loop_body",
+      "region_kind": "acyclic"
     }
   }
 ]

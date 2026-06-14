@@ -10,875 +10,6 @@
   "data": {
     "functions": [
       {
-        "name": "_inspect",
-        "entry_point": "0x1000004b0",
-        "function_kind": "user",
-        "recovered_signature": {
-          "return_type": {
-            "type": "unknown",
-            "confidence": 0.2,
-            "source": "fallback_unknown_return",
-            "notes": []
-          },
-          "parameters": [
-            {
-              "name": "arg_10h",
-              "index": 0,
-              "type": {
-                "type": "unknown",
-                "confidence": 0.45,
-                "source": "argument_name_heuristic",
-                "notes": []
-              },
-              "source": "unified_ir",
-              "confidence": 0.45,
-              "notes": [
-                "classified via argument_name_heuristic"
-              ]
-            },
-            {
-              "name": "arg1",
-              "index": 1,
-              "type": {
-                "type": "unknown",
-                "confidence": 0.45,
-                "source": "argument_name_heuristic",
-                "notes": []
-              },
-              "source": "unified_ir",
-              "confidence": 0.45,
-              "notes": [
-                "classified via argument_name_heuristic"
-              ]
-            }
-          ],
-          "variadic": false,
-          "confidence": 0.45,
-          "source": "user_function_parameter_recovery",
-          "notes": []
-        },
-        "refined_signature": {
-          "return_type": {
-            "type": "unknown",
-            "confidence": 0.2,
-            "source": "fallback_unknown_return",
-            "notes": []
-          },
-          "parameters": [
-            {
-              "name": "arg_10h",
-              "index": 0,
-              "type": {
-                "type": "int32",
-                "confidence": 0.6,
-                "source": "constraint_refinement(priority=60)",
-                "notes": [
-                  "refined by constraint (priority=60): arg_10h arg_10h bound from stack slot [sp + 0x8], stored by str at 0x100000464 with size_bytes=4"
-                ]
-              },
-              "source": "unified_ir",
-              "confidence": 0.6,
-              "notes": [
-                "refined by constraint (priority=60): arg_10h arg_10h bound from stack slot [sp + 0x8], stored by str at 0x100000464 with size_bytes=4"
-              ]
-            },
-            {
-              "name": "arg1",
-              "index": 1,
-              "type": {
-                "type": "unknown",
-                "confidence": 0.45,
-                "source": "argument_name_heuristic",
-                "notes": []
-              },
-              "source": "unified_ir",
-              "confidence": 0.45,
-              "notes": []
-            }
-          ],
-          "variadic": false,
-          "confidence": 0.6,
-          "source": "user_function_parameter_recovery",
-          "notes": []
-        },
-        "variables": [
-          {
-            "name": "arg1",
-            "storage": "stack",
-            "category": "parameter",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.45,
-              "source": "argument_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -4,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.45,
-            "notes": [
-              "classified via argument_name_heuristic"
-            ]
-          },
-          {
-            "name": "arg_10h",
-            "storage": "stack",
-            "category": "parameter",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.45,
-              "source": "argument_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -8,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.45,
-            "notes": [
-              "classified via argument_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_0h",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -12,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_8h",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -16,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "arg1",
-            "index": 1,
-            "type": {
-              "type": "unknown",
-              "confidence": 0.45,
-              "source": "argument_name_heuristic",
-              "notes": []
-            },
-            "source": "unified_ir",
-            "confidence": 0.45,
-            "notes": [
-              "classified via argument_name_heuristic"
-            ]
-          },
-          {
-            "name": "arg_10h",
-            "index": 0,
-            "type": {
-              "type": "unknown",
-              "confidence": 0.45,
-              "source": "argument_name_heuristic",
-              "notes": []
-            },
-            "source": "unified_ir",
-            "confidence": 0.45,
-            "notes": [
-              "classified via argument_name_heuristic"
-            ]
-          }
-        ],
-        "refined_variables": [
-          {
-            "name": "arg1",
-            "refined_type": {
-              "type": "unknown",
-              "confidence": 0.45,
-              "source": "argument_name_heuristic",
-              "notes": []
-            },
-            "constraints_applied": 0,
-            "phase4a_type": "unknown"
-          },
-          {
-            "name": "arg_10h",
-            "refined_type": {
-              "type": "int32",
-              "confidence": 0.6,
-              "source": "constraint_refinement(priority=60)",
-              "notes": [
-                "refined by constraint (priority=60): arg_10h arg_10h bound from stack slot [sp + 0x8], stored by str at 0x100000464 with size_bytes=4"
-              ]
-            },
-            "constraints_applied": 1,
-            "phase4a_type": "unknown"
-          },
-          {
-            "name": "var_0h",
-            "refined_type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "constraints_applied": 0,
-            "phase4a_type": "unknown"
-          },
-          {
-            "name": "var_8h",
-            "refined_type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "constraints_applied": 0,
-            "phase4a_type": "unknown"
-          }
-        ],
-        "refined_parameters": [
-          {
-            "name": "arg1",
-            "index": 1,
-            "type": {
-              "type": "unknown",
-              "confidence": 0.45,
-              "source": "argument_name_heuristic",
-              "notes": []
-            },
-            "source": "unified_ir",
-            "confidence": 0.45,
-            "notes": []
-          },
-          {
-            "name": "arg_10h",
-            "index": 0,
-            "type": {
-              "type": "int32",
-              "confidence": 0.6,
-              "source": "constraint_refinement(priority=60)",
-              "notes": [
-                "refined by constraint (priority=60): arg_10h arg_10h bound from stack slot [sp + 0x8], stored by str at 0x100000464 with size_bytes=4"
-              ]
-            },
-            "source": "unified_ir",
-            "confidence": 0.6,
-            "notes": [
-              "refined by constraint (priority=60): arg_10h arg_10h bound from stack slot [sp + 0x8], stored by str at 0x100000464 with size_bytes=4"
-            ]
-          }
-        ],
-        "constraints_summary": {
-          "total_constraints_applied": 2,
-          "variables_with_constraints": 1,
-          "parameters_with_constraints": 2
-        },
-        "layout_candidates": [
-          {
-            "function_entry": "0x1000004b0",
-            "function_name": "_inspect",
-            "base_id": "sp",
-            "layout_kind": "array_like",
-            "observed_offsets": [
-              0,
-              8
-            ],
-            "min_offset": 0,
-            "max_offset": 8,
-            "observed_sizes": [
-              4
-            ],
-            "access_count": 12,
-            "evidence_notes": [
-              "12 memory access(es) observed at base 'sp' in function '_inspect'; offsets=[0, 8]; sizes=[4]; classification=array_like"
-            ],
-            "source_instrs": [
-              "0x100000464",
-              "0x100000468",
-              "0x10000046c",
-              "0x100000474",
-              "0x10000047c",
-              "0x100000480",
-              "0x100000488",
-              "0x100000490",
-              "0x100000494",
-              "0x10000049c",
-              "0x1000004a4",
-              "0x1000004a8"
-            ]
-          },
-          {
-            "function_entry": "0x1000004b0",
-            "function_name": "_inspect",
-            "base_id": "x8",
-            "layout_kind": "array_like",
-            "observed_offsets": [
-              0,
-              8,
-              16
-            ],
-            "min_offset": 0,
-            "max_offset": 16,
-            "observed_sizes": [
-              4
-            ],
-            "access_count": 3,
-            "evidence_notes": [
-              "3 memory access(es) observed at base 'x8' in function '_inspect'; offsets=[0, 8, 16]; sizes=[4]; classification=array_like"
-            ],
-            "source_instrs": [
-              "0x100000470",
-              "0x100000484",
-              "0x100000498"
-            ]
-          }
-        ],
-        "unbound_memory_accesses": [],
-        "known_facts": [
-          "Function has 4 recovered variable(s).",
-          "Function has 2 recovered parameter(s).",
-          "1 variable(s) received instruction-backed refinement.",
-          "2 type constraint(s) were applied.",
-          "2 parameter(s) received instruction-backed refinement.",
-          "2 layout candidate(s) were observed."
-        ],
-        "uncertainties": [
-          "7 variable(s) remain unknown after refinement.",
-          "Layout candidates are evidence-only and are not final structs."
-        ]
-      },
-      {
-        "name": "_main",
-        "entry_point": "0x10000050c",
-        "function_kind": "entrypoint",
-        "recovered_signature": {
-          "return_type": {
-            "type": "int32",
-            "confidence": 0.9,
-            "source": "main_function_heuristic",
-            "notes": []
-          },
-          "parameters": [
-            {
-              "name": "argc",
-              "index": 0,
-              "type": {
-                "type": "int32",
-                "confidence": 0.9,
-                "source": "main_argc_heuristic",
-                "notes": []
-              },
-              "source": "main_argc_heuristic",
-              "confidence": 0.9,
-              "notes": []
-            },
-            {
-              "name": "argv",
-              "index": 1,
-              "type": {
-                "type": "pointer",
-                "confidence": 0.9,
-                "source": "main_argv_heuristic",
-                "notes": []
-              },
-              "source": "main_argv_heuristic",
-              "confidence": 0.9,
-              "notes": []
-            }
-          ],
-          "variadic": false,
-          "confidence": 0.9,
-          "source": "main_function_heuristic",
-          "notes": []
-        },
-        "refined_signature": {
-          "return_type": {
-            "type": "int32",
-            "confidence": 0.9,
-            "source": "main_function_heuristic",
-            "notes": []
-          },
-          "parameters": [
-            {
-              "name": "argc",
-              "index": 0,
-              "type": {
-                "type": "int32",
-                "confidence": 0.9,
-                "source": "main_argc_heuristic",
-                "notes": []
-              },
-              "source": "main_argc_heuristic",
-              "confidence": 0.9,
-              "notes": []
-            },
-            {
-              "name": "argv",
-              "index": 1,
-              "type": {
-                "type": "pointer",
-                "confidence": 0.9,
-                "source": "main_argv_heuristic",
-                "notes": []
-              },
-              "source": "main_argv_heuristic",
-              "confidence": 0.9,
-              "notes": []
-            }
-          ],
-          "variadic": false,
-          "confidence": 0.9,
-          "source": "main_function_heuristic",
-          "notes": []
-        },
-        "variables": [
-          {
-            "name": "argc",
-            "storage": "stack",
-            "category": "parameter",
-            "type": {
-              "type": "int32",
-              "confidence": 0.9,
-              "source": "argc_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -4,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.9,
-            "notes": [
-              "classified via argc_name_heuristic"
-            ]
-          },
-          {
-            "name": "argv",
-            "storage": "stack",
-            "category": "parameter",
-            "type": {
-              "type": "pointer",
-              "confidence": 0.85,
-              "source": "argv_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -8,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.85,
-            "notes": [
-              "classified via argv_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_0h",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -32,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_0h_2",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -12,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_10h",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -20,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_18h",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -24,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_20h",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -28,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_30h",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -36,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_30h_2",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -40,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_ch",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -16,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "argc",
-            "index": 0,
-            "type": {
-              "type": "int32",
-              "confidence": 0.9,
-              "source": "main_argc_heuristic",
-              "notes": []
-            },
-            "source": "main_argc_heuristic",
-            "confidence": 0.9,
-            "notes": []
-          },
-          {
-            "name": "argv",
-            "index": 1,
-            "type": {
-              "type": "pointer",
-              "confidence": 0.9,
-              "source": "main_argv_heuristic",
-              "notes": []
-            },
-            "source": "main_argv_heuristic",
-            "confidence": 0.9,
-            "notes": []
-          }
-        ],
-        "refined_variables": [
-          {
-            "name": "argc",
-            "refined_type": {
-              "type": "int32",
-              "confidence": 0.9,
-              "source": "argc_name_heuristic",
-              "notes": []
-            },
-            "constraints_applied": 0,
-            "phase4a_type": "int32"
-          },
-          {
-            "name": "argv",
-            "refined_type": {
-              "type": "pointer",
-              "confidence": 0.85,
-              "source": "argv_name_heuristic",
-              "notes": []
-            },
-            "constraints_applied": 0,
-            "phase4a_type": "pointer"
-          },
-          {
-            "name": "var_0h",
-            "refined_type": {
-              "type": "int32",
-              "confidence": 0.6,
-              "source": "constraint_refinement(priority=60)",
-              "notes": [
-                "refined by constraint (priority=60): var_0h var_0h bound from stack slot [sp + 0x20], stored by strb at 0x1000004e4 with size_bytes=4"
-              ]
-            },
-            "constraints_applied": 1,
-            "phase4a_type": "unknown"
-          },
-          {
-            "name": "var_0h_2",
-            "refined_type": {
-              "type": "int32",
-              "confidence": 0.6,
-              "source": "constraint_refinement(priority=60)",
-              "notes": [
-                "refined by constraint (priority=60): var_0h_2 var_0h_2 bound from stack slot [sp + 0xc], stored by str at 0x1000004c4 with size_bytes=4"
-              ]
-            },
-            "constraints_applied": 1,
-            "phase4a_type": "unknown"
-          },
-          {
-            "name": "var_10h",
-            "refined_type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "constraints_applied": 0,
-            "phase4a_type": "unknown"
-          },
-          {
-            "name": "var_18h",
-            "refined_type": {
-              "type": "int32",
-              "confidence": 0.6,
-              "source": "constraint_refinement(priority=60)",
-              "notes": [
-                "refined by constraint (priority=60): var_18h var_18h bound from stack slot [sp + 0x18], stored by str at 0x1000004dc with size_bytes=4"
-              ]
-            },
-            "constraints_applied": 1,
-            "phase4a_type": "unknown"
-          },
-          {
-            "name": "var_20h",
-            "refined_type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "constraints_applied": 0,
-            "phase4a_type": "unknown"
-          },
-          {
-            "name": "var_30h",
-            "refined_type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "constraints_applied": 0,
-            "phase4a_type": "unknown"
-          },
-          {
-            "name": "var_30h_2",
-            "refined_type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "constraints_applied": 0,
-            "phase4a_type": "unknown"
-          },
-          {
-            "name": "var_ch",
-            "refined_type": {
-              "type": "int32",
-              "confidence": 0.6,
-              "source": "constraint_refinement(priority=60)",
-              "notes": [
-                "refined by constraint (priority=60): var_ch var_ch bound from stack slot [sp + 0x10], stored by str at 0x1000004d4 with size_bytes=4"
-              ]
-            },
-            "constraints_applied": 1,
-            "phase4a_type": "unknown"
-          }
-        ],
-        "refined_parameters": [
-          {
-            "name": "argc",
-            "index": 0,
-            "type": {
-              "type": "int32",
-              "confidence": 0.9,
-              "source": "main_argc_heuristic",
-              "notes": []
-            },
-            "source": "main_argc_heuristic",
-            "confidence": 0.9,
-            "notes": []
-          },
-          {
-            "name": "argv",
-            "index": 1,
-            "type": {
-              "type": "pointer",
-              "confidence": 0.9,
-              "source": "main_argv_heuristic",
-              "notes": []
-            },
-            "source": "main_argv_heuristic",
-            "confidence": 0.9,
-            "notes": []
-          }
-        ],
-        "constraints_summary": {
-          "total_constraints_applied": 4,
-          "variables_with_constraints": 4,
-          "parameters_with_constraints": 2
-        },
-        "layout_candidates": [
-          {
-            "function_entry": "0x10000050c",
-            "function_name": "_main",
-            "base_id": "sp",
-            "layout_kind": "record_like",
-            "observed_offsets": [
-              12,
-              16,
-              24,
-              32
-            ],
-            "min_offset": 12,
-            "max_offset": 32,
-            "observed_sizes": [
-              4
-            ],
-            "access_count": 5,
-            "evidence_notes": [
-              "5 memory access(es) observed at base 'sp' in function '_main'; offsets=[12, 16, 24, 32]; sizes=[4]; classification=record_like"
-            ],
-            "source_instrs": [
-              "0x1000004c4",
-              "0x1000004d4",
-              "0x1000004dc",
-              "0x1000004e4",
-              "0x100000500"
-            ]
-          },
-          {
-            "function_entry": "0x10000050c",
-            "function_name": "_main",
-            "base_id": "x8",
-            "layout_kind": "scalar",
-            "observed_offsets": [
-              0
-            ],
-            "min_offset": 0,
-            "max_offset": 0,
-            "observed_sizes": [
-              4
-            ],
-            "access_count": 1,
-            "evidence_notes": [
-              "1 memory access(es) observed at base 'x8' in function '_main'; offsets=[0]; sizes=[4]; classification=scalar"
-            ],
-            "source_instrs": [
-              "0x1000004f0"
-            ]
-          }
-        ],
-        "unbound_memory_accesses": [],
-        "known_facts": [
-          "Function has 10 recovered variable(s).",
-          "Function has 2 recovered parameter(s).",
-          "4 variable(s) received instruction-backed refinement.",
-          "4 type constraint(s) were applied.",
-          "2 parameter(s) received instruction-backed refinement.",
-          "2 layout candidate(s) were observed."
-        ],
-        "uncertainties": [
-          "12 variable(s) remain unknown after refinement.",
-          "Layout candidates are evidence-only and are not final structs."
-        ]
-      },
-      {
         "name": "printf",
         "entry_point": "0x100000520",
         "function_kind": "library",
@@ -1068,15 +199,1142 @@
           "4 variable(s) remain unknown after refinement.",
           "Layout candidates are evidence-only and are not final structs."
         ]
+      },
+      {
+        "name": "_inspect",
+        "entry_point": "1000004b0",
+        "function_kind": "user",
+        "recovered_signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [
+            {
+              "name": "arg_10h",
+              "index": 0,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg1",
+              "index": 1,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            }
+          ],
+          "variadic": false,
+          "confidence": 0.45,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "refined_signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [
+            {
+              "name": "arg_10h",
+              "index": 0,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg1",
+              "index": 1,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            }
+          ],
+          "variadic": false,
+          "confidence": 0.45,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [
+          {
+            "name": "arg1",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -12,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg_10h",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -16,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_10",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -8,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_8",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -4,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_0h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -20,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_8h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -24,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "arg1",
+            "index": 1,
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg_10h",
+            "index": 0,
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          }
+        ],
+        "refined_variables": [
+          {
+            "name": "arg1",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "arg_10h",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "local_10",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "local_8",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "var_0h",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "var_8h",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          }
+        ],
+        "refined_parameters": [
+          {
+            "name": "arg1",
+            "index": 1,
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg_10h",
+            "index": 0,
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          }
+        ],
+        "constraints_summary": {
+          "total_constraints_applied": 0,
+          "variables_with_constraints": 0,
+          "parameters_with_constraints": 2
+        },
+        "layout_candidates": [
+          {
+            "function_entry": "1000004b0",
+            "function_name": "_inspect",
+            "base_id": "sp",
+            "layout_kind": "array_like",
+            "observed_offsets": [
+              0,
+              8
+            ],
+            "min_offset": 0,
+            "max_offset": 8,
+            "observed_sizes": [
+              8
+            ],
+            "access_count": 12,
+            "evidence_notes": [
+              "12 memory access(es) observed at base 'sp' in function '_inspect'; offsets=[0, 8]; sizes=[8]; classification=array_like"
+            ],
+            "source_instrs": [
+              "0x5f5e2d0",
+              "0x5f5e2d4",
+              "0x5f5e2da",
+              "0x5f5e2e0",
+              "0x5f5e2e8",
+              "0x5f5e2ea",
+              "0x5f5e2ee",
+              "10000046c",
+              "10000047c",
+              "10000049c",
+              "1000004a4",
+              "1000004a8"
+            ]
+          },
+          {
+            "function_entry": "1000004b0",
+            "function_name": "_inspect",
+            "base_id": "x8",
+            "layout_kind": "record_like",
+            "observed_offsets": [
+              0,
+              8,
+              16
+            ],
+            "min_offset": 0,
+            "max_offset": 16,
+            "observed_sizes": [
+              1,
+              4,
+              8
+            ],
+            "access_count": 3,
+            "evidence_notes": [
+              "3 memory access(es) observed at base 'x8' in function '_inspect'; offsets=[0, 8, 16]; sizes=[1, 4, 8]; classification=record_like"
+            ],
+            "source_instrs": [
+              "0x5f5e2d6",
+              "0x5f5e2e4",
+              "0x5f5e2f2"
+            ]
+          }
+        ],
+        "unbound_memory_accesses": [],
+        "known_facts": [
+          "Function has 6 recovered variable(s).",
+          "Function has 2 recovered parameter(s).",
+          "2 parameter(s) received instruction-backed refinement.",
+          "2 layout candidate(s) were observed."
+        ],
+        "uncertainties": [
+          "No instruction-backed constraints were applied.",
+          "12 variable(s) remain unknown after refinement.",
+          "Layout candidates are evidence-only and are not final structs."
+        ]
+      },
+      {
+        "name": "_main",
+        "entry_point": "10000050c",
+        "function_kind": "entrypoint",
+        "recovered_signature": {
+          "return_type": {
+            "type": "int32",
+            "confidence": 0.9,
+            "source": "main_function_heuristic",
+            "notes": []
+          },
+          "parameters": [
+            {
+              "name": "argc",
+              "index": 0,
+              "type": {
+                "type": "int32",
+                "confidence": 0.9,
+                "source": "main_argc_heuristic",
+                "notes": []
+              },
+              "source": "main_argc_heuristic",
+              "confidence": 0.9,
+              "notes": []
+            },
+            {
+              "name": "argv",
+              "index": 1,
+              "type": {
+                "type": "pointer",
+                "confidence": 0.9,
+                "source": "main_argv_heuristic",
+                "notes": []
+              },
+              "source": "main_argv_heuristic",
+              "confidence": 0.9,
+              "notes": []
+            }
+          ],
+          "variadic": false,
+          "confidence": 0.9,
+          "source": "main_function_heuristic",
+          "notes": []
+        },
+        "refined_signature": {
+          "return_type": {
+            "type": "int32",
+            "confidence": 0.9,
+            "source": "main_function_heuristic",
+            "notes": []
+          },
+          "parameters": [
+            {
+              "name": "argc",
+              "index": 0,
+              "type": {
+                "type": "int32",
+                "confidence": 0.9,
+                "source": "main_argc_heuristic",
+                "notes": []
+              },
+              "source": "main_argc_heuristic",
+              "confidence": 0.9,
+              "notes": []
+            },
+            {
+              "name": "argv",
+              "index": 1,
+              "type": {
+                "type": "pointer",
+                "confidence": 0.9,
+                "source": "main_argv_heuristic",
+                "notes": []
+              },
+              "source": "main_argv_heuristic",
+              "confidence": 0.9,
+              "notes": []
+            }
+          ],
+          "variadic": false,
+          "confidence": 0.9,
+          "source": "main_function_heuristic",
+          "notes": []
+        },
+        "variables": [
+          {
+            "name": "argc",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "int32",
+              "confidence": 0.9,
+              "source": "argc_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -32,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.9,
+            "notes": [
+              "classified via argc_name_heuristic"
+            ]
+          },
+          {
+            "name": "argv",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "pointer",
+              "confidence": 0.85,
+              "source": "argv_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -36,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.85,
+            "notes": [
+              "classified via argv_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_10",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -4,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_14",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -8,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_20",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -12,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_28",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -16,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_30",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -20,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_34",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -24,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_40",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -28,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_0h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -60,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_0h_2",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -40,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_10h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -48,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_18h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -52,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_20h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -56,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_30h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -64,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_30h_2",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -68,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_ch",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -44,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "argc",
+            "index": 0,
+            "type": {
+              "type": "int32",
+              "confidence": 0.9,
+              "source": "main_argc_heuristic",
+              "notes": []
+            },
+            "source": "main_argc_heuristic",
+            "confidence": 0.9,
+            "notes": []
+          },
+          {
+            "name": "argv",
+            "index": 1,
+            "type": {
+              "type": "pointer",
+              "confidence": 0.9,
+              "source": "main_argv_heuristic",
+              "notes": []
+            },
+            "source": "main_argv_heuristic",
+            "confidence": 0.9,
+            "notes": []
+          }
+        ],
+        "refined_variables": [
+          {
+            "name": "argc",
+            "refined_type": {
+              "type": "int32",
+              "confidence": 0.9,
+              "source": "argc_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "int32"
+          },
+          {
+            "name": "argv",
+            "refined_type": {
+              "type": "pointer",
+              "confidence": 0.85,
+              "source": "argv_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "pointer"
+          },
+          {
+            "name": "local_10",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "local_14",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "local_20",
+            "refined_type": {
+              "type": "int32",
+              "confidence": 0.6,
+              "source": "constraint_refinement(priority=60)",
+              "notes": [
+                "refined by constraint (priority=60): local_20 local_20 bound from stack slot [sp + 0xc], stored by str at 1000004c4 with size_bytes=4"
+              ]
+            },
+            "constraints_applied": 1,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "local_28",
+            "refined_type": {
+              "type": "int32",
+              "confidence": 0.6,
+              "source": "constraint_refinement(priority=60)",
+              "notes": [
+                "refined by constraint (priority=60): local_28 local_28 bound from stack slot [sp + 0x10], stored by str at 1000004d4 with size_bytes=4"
+              ]
+            },
+            "constraints_applied": 1,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "local_30",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "local_34",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "local_40",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "var_0h",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "var_0h_2",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "var_10h",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "var_18h",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "var_20h",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "var_30h",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "var_30h_2",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "var_ch",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          }
+        ],
+        "refined_parameters": [
+          {
+            "name": "argc",
+            "index": 0,
+            "type": {
+              "type": "int32",
+              "confidence": 0.9,
+              "source": "main_argc_heuristic",
+              "notes": []
+            },
+            "source": "main_argc_heuristic",
+            "confidence": 0.9,
+            "notes": []
+          },
+          {
+            "name": "argv",
+            "index": 1,
+            "type": {
+              "type": "pointer",
+              "confidence": 0.9,
+              "source": "main_argv_heuristic",
+              "notes": []
+            },
+            "source": "main_argv_heuristic",
+            "confidence": 0.9,
+            "notes": []
+          }
+        ],
+        "constraints_summary": {
+          "total_constraints_applied": 2,
+          "variables_with_constraints": 2,
+          "parameters_with_constraints": 2
+        },
+        "layout_candidates": [
+          {
+            "function_entry": "10000050c",
+            "function_name": "_main",
+            "base_id": "sp",
+            "layout_kind": "record_like",
+            "observed_offsets": [
+              12,
+              16,
+              24,
+              32
+            ],
+            "min_offset": 12,
+            "max_offset": 32,
+            "observed_sizes": [
+              1,
+              4,
+              8
+            ],
+            "access_count": 5,
+            "evidence_notes": [
+              "5 memory access(es) observed at base 'sp' in function '_main'; offsets=[12, 16, 24, 32]; sizes=[1, 4, 8]; classification=record_like"
+            ],
+            "source_instrs": [
+              "0x5f5e2f4",
+              "1000004c4",
+              "1000004d4",
+              "1000004dc",
+              "1000004e4"
+            ]
+          },
+          {
+            "function_entry": "10000050c",
+            "function_name": "_main",
+            "base_id": "x8",
+            "layout_kind": "pointer_like",
+            "observed_offsets": [
+              0
+            ],
+            "min_offset": 0,
+            "max_offset": 0,
+            "observed_sizes": [
+              8
+            ],
+            "access_count": 1,
+            "evidence_notes": [
+              "1 memory access(es) observed at base 'x8' in function '_main'; offsets=[0]; sizes=[8]; classification=pointer_like"
+            ],
+            "source_instrs": [
+              "1000004f0"
+            ]
+          }
+        ],
+        "unbound_memory_accesses": [],
+        "known_facts": [
+          "Function has 17 recovered variable(s).",
+          "Function has 2 recovered parameter(s).",
+          "2 variable(s) received instruction-backed refinement.",
+          "2 type constraint(s) were applied.",
+          "2 parameter(s) received instruction-backed refinement.",
+          "2 layout candidate(s) were observed."
+        ],
+        "uncertainties": [
+          "28 variable(s) remain unknown after refinement.",
+          "Layout candidates are evidence-only and are not final structs."
+        ]
       }
     ],
     "summary": {
       "functions_total": 3,
-      "functions_with_refinement": 2,
+      "functions_with_refinement": 1,
       "functions_with_layout_candidates": 3,
       "total_layout_candidates": 5,
       "total_unbound_memory_accesses": 0,
-      "total_constraints_applied": 6
+      "total_constraints_applied": 2
     }
   }
 }

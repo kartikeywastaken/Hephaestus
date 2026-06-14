@@ -1,13 +1,1114 @@
 {
   "schema_version": "2.0.0",
   "provenance": {
-    "binary_path": "./eh",
-    "sha256": "b56e8c815b2e7199999dae35ee7b2613aeffdeffb93cb342e580e5d7c4495de6",
+    "binary_path": "./ts",
+    "sha256": "9a56ef578e44ae63c95f3d197fbf89b543d1c773072f8b12934638f1bd767afc",
     "architecture": "arm64",
     "schema_version": "2.0.0"
   },
   "data": {
     "functions": [
+      {
+        "name": "_inspect",
+        "entry_point": "1000004b0",
+        "size_bytes": 84,
+        "calling_convention": 1,
+        "signature": "1 _inspect()",
+        "confidence": 1.0,
+        "local_variables": [],
+        "stack_variables": [
+          {
+            "name": "local_8",
+            "offset_bytes": -4,
+            "size_bytes": 4
+          },
+          {
+            "name": "local_10",
+            "offset_bytes": -8,
+            "size_bytes": 4
+          },
+          {
+            "name": "arg1",
+            "offset_bytes": -12,
+            "size_bytes": 4
+          },
+          {
+            "name": "arg_10h",
+            "offset_bytes": -16,
+            "size_bytes": 4
+          },
+          {
+            "name": "var_0h",
+            "offset_bytes": -20,
+            "size_bytes": 4
+          },
+          {
+            "name": "var_8h",
+            "offset_bytes": -24,
+            "size_bytes": 4
+          }
+        ],
+        "heap_variables": [],
+        "basic_blocks": [
+          {
+            "id": "0x100000460",
+            "size": 84,
+            "instructions": [
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x8"
+                  },
+                  {
+                    "size_bytes": 8,
+                    "offset": 8,
+                    "kind": "memory",
+                    "base": "sp"
+                  }
+                ],
+                "address": "10000046c",
+                "size_bytes": 4,
+                "mnemonic": "ldr",
+                "raw": "ldr x8,[sp, #0x8]",
+                "source": "ghidra",
+                "opcode": "ldr"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x8"
+                  },
+                  {
+                    "size_bytes": 8,
+                    "offset": 0,
+                    "kind": "memory",
+                    "base": "sp"
+                  }
+                ],
+                "address": "10000047c",
+                "size_bytes": 4,
+                "mnemonic": "str",
+                "raw": "str x8,[sp]",
+                "source": "ghidra",
+                "opcode": "str"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x8"
+                  },
+                  {
+                    "kind": "register",
+                    "value": "x8"
+                  },
+                  {
+                    "kind": "register",
+                    "value": "x9"
+                  }
+                ],
+                "address": "10000048c",
+                "size_bytes": 4,
+                "mnemonic": "add",
+                "raw": "add x8,x8,x9",
+                "source": "ghidra",
+                "opcode": "add"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x8"
+                  },
+                  {
+                    "size_bytes": 8,
+                    "offset": 0,
+                    "kind": "memory",
+                    "base": "sp"
+                  }
+                ],
+                "address": "10000049c",
+                "size_bytes": 4,
+                "mnemonic": "ldr",
+                "raw": "ldr x8,[sp]",
+                "source": "ghidra",
+                "opcode": "ldr"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x8"
+                  },
+                  {
+                    "kind": "register",
+                    "value": "x8"
+                  },
+                  {
+                    "kind": "register",
+                    "value": "x9"
+                  }
+                ],
+                "address": "1000004a0",
+                "size_bytes": 4,
+                "mnemonic": "add",
+                "raw": "add x8,x8,x9",
+                "source": "ghidra",
+                "opcode": "add"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x8"
+                  },
+                  {
+                    "size_bytes": 8,
+                    "offset": 0,
+                    "kind": "memory",
+                    "base": "sp"
+                  }
+                ],
+                "address": "1000004a4",
+                "size_bytes": 4,
+                "mnemonic": "str",
+                "raw": "str x8,[sp]",
+                "source": "ghidra",
+                "opcode": "str"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x0"
+                  },
+                  {
+                    "size_bytes": 8,
+                    "offset": 0,
+                    "kind": "memory",
+                    "base": "sp"
+                  }
+                ],
+                "address": "1000004a8",
+                "size_bytes": 4,
+                "mnemonic": "ldr",
+                "raw": "ldr x0,[sp]",
+                "source": "ghidra",
+                "opcode": "ldr"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "sp"
+                  },
+                  {
+                    "kind": "register",
+                    "value": "sp"
+                  },
+                  {
+                    "kind": "unknown",
+                    "raw": "#"
+                  },
+                  {
+                    "kind": "immediate",
+                    "value": 16
+                  }
+                ],
+                "address": "1000004ac",
+                "size_bytes": 4,
+                "mnemonic": "add",
+                "raw": "add sp,sp,#0x10",
+                "source": "ghidra",
+                "opcode": "add"
+              },
+              {
+                "operands": [],
+                "address": "1000004b0",
+                "size_bytes": 4,
+                "mnemonic": "ret",
+                "raw": "ret",
+                "source": "ghidra",
+                "opcode": "ret"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "sp"
+                  },
+                  {
+                    "kind": "register",
+                    "value": "sp"
+                  },
+                  {
+                    "kind": "unknown",
+                    "raw": "#"
+                  },
+                  {
+                    "kind": "immediate",
+                    "value": 16
+                  }
+                ],
+                "address": "0x5f5e2cc",
+                "size_bytes": 4,
+                "mnemonic": "sub",
+                "raw": "sub sp,sp,#0x10",
+                "source": "ghidra",
+                "opcode": "sub"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x0"
+                  },
+                  {
+                    "size_bytes": 8,
+                    "offset": 8,
+                    "kind": "memory",
+                    "base": "sp"
+                  }
+                ],
+                "address": "0x5f5e2d0",
+                "size_bytes": 4,
+                "mnemonic": "str",
+                "raw": "str x0,[sp, #0x8]",
+                "source": "ghidra",
+                "opcode": "str"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "xzr"
+                  },
+                  {
+                    "size_bytes": 8,
+                    "offset": 0,
+                    "kind": "memory",
+                    "base": "sp"
+                  }
+                ],
+                "address": "0x5f5e2d4",
+                "size_bytes": 4,
+                "mnemonic": "str",
+                "raw": "str xzr,[sp]",
+                "source": "ghidra",
+                "opcode": "str"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x9"
+                  },
+                  {
+                    "size_bytes": 4,
+                    "offset": 0,
+                    "kind": "memory",
+                    "base": "x8"
+                  }
+                ],
+                "address": "0x5f5e2d6",
+                "size_bytes": 4,
+                "mnemonic": "ldrsw",
+                "raw": "ldrsw x9,[x8]",
+                "source": "ghidra",
+                "opcode": "ldrsw"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x8"
+                  },
+                  {
+                    "size_bytes": 8,
+                    "offset": 0,
+                    "kind": "memory",
+                    "base": "sp"
+                  }
+                ],
+                "address": "0x5f5e2da",
+                "size_bytes": 4,
+                "mnemonic": "ldr",
+                "raw": "ldr x8,[sp]",
+                "source": "ghidra",
+                "opcode": "ldr"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x8"
+                  },
+                  {
+                    "kind": "register",
+                    "value": "x8"
+                  },
+                  {
+                    "kind": "register",
+                    "value": "x9"
+                  }
+                ],
+                "address": "0x5f5e2de",
+                "size_bytes": 4,
+                "mnemonic": "add",
+                "raw": "add x8,x8,x9",
+                "source": "ghidra",
+                "opcode": "add"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x8"
+                  },
+                  {
+                    "size_bytes": 8,
+                    "offset": 8,
+                    "kind": "memory",
+                    "base": "sp"
+                  }
+                ],
+                "address": "0x5f5e2e0",
+                "size_bytes": 4,
+                "mnemonic": "ldr",
+                "raw": "ldr x8,[sp, #0x8]",
+                "source": "ghidra",
+                "opcode": "ldr"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x9"
+                  },
+                  {
+                    "size_bytes": 8,
+                    "offset": 8,
+                    "kind": "memory",
+                    "base": "x8"
+                  }
+                ],
+                "address": "0x5f5e2e4",
+                "size_bytes": 4,
+                "mnemonic": "ldr",
+                "raw": "ldr x9,[x8, #0x8]",
+                "source": "ghidra",
+                "opcode": "ldr"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x8"
+                  },
+                  {
+                    "size_bytes": 8,
+                    "offset": 0,
+                    "kind": "memory",
+                    "base": "sp"
+                  }
+                ],
+                "address": "0x5f5e2e8",
+                "size_bytes": 4,
+                "mnemonic": "ldr",
+                "raw": "ldr x8,[sp]",
+                "source": "ghidra",
+                "opcode": "ldr"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x8"
+                  },
+                  {
+                    "size_bytes": 8,
+                    "offset": 0,
+                    "kind": "memory",
+                    "base": "sp"
+                  }
+                ],
+                "address": "0x5f5e2ea",
+                "size_bytes": 4,
+                "mnemonic": "str",
+                "raw": "str x8,[sp]",
+                "source": "ghidra",
+                "opcode": "str"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x8"
+                  },
+                  {
+                    "size_bytes": 8,
+                    "offset": 8,
+                    "kind": "memory",
+                    "base": "sp"
+                  }
+                ],
+                "address": "0x5f5e2ee",
+                "size_bytes": 4,
+                "mnemonic": "ldr",
+                "raw": "ldr x8,[sp, #0x8]",
+                "source": "ghidra",
+                "opcode": "ldr"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x9"
+                  },
+                  {
+                    "size_bytes": 1,
+                    "offset": 16,
+                    "kind": "memory",
+                    "base": "x8"
+                  }
+                ],
+                "address": "0x5f5e2f2",
+                "size_bytes": 4,
+                "mnemonic": "ldrsb",
+                "raw": "ldrsb x9,[x8, #0x10]",
+                "source": "ghidra",
+                "opcode": "ldrsb"
+              }
+            ],
+            "memory_accesses": [],
+            "edges": []
+          }
+        ],
+        "provenance": [
+          "ghidra",
+          "radare2"
+        ]
+      },
+      {
+        "name": "_main",
+        "entry_point": "10000050c",
+        "size_bytes": 92,
+        "calling_convention": 1,
+        "signature": "1 _main()",
+        "confidence": 1.0,
+        "local_variables": [],
+        "stack_variables": [
+          {
+            "name": "local_10",
+            "offset_bytes": -4,
+            "size_bytes": 4
+          },
+          {
+            "name": "local_14",
+            "offset_bytes": -8,
+            "size_bytes": 4
+          },
+          {
+            "name": "local_20",
+            "offset_bytes": -12,
+            "size_bytes": 4
+          },
+          {
+            "name": "local_28",
+            "offset_bytes": -16,
+            "size_bytes": 4
+          },
+          {
+            "name": "local_30",
+            "offset_bytes": -20,
+            "size_bytes": 4
+          },
+          {
+            "name": "local_34",
+            "offset_bytes": -24,
+            "size_bytes": 4
+          },
+          {
+            "name": "local_40",
+            "offset_bytes": -28,
+            "size_bytes": 4
+          },
+          {
+            "name": "argc",
+            "offset_bytes": -32,
+            "size_bytes": 4
+          },
+          {
+            "name": "argv",
+            "offset_bytes": -36,
+            "size_bytes": 4
+          },
+          {
+            "name": "var_0h_2",
+            "offset_bytes": -40,
+            "size_bytes": 4
+          },
+          {
+            "name": "var_ch",
+            "offset_bytes": -44,
+            "size_bytes": 4
+          },
+          {
+            "name": "var_10h",
+            "offset_bytes": -48,
+            "size_bytes": 4
+          },
+          {
+            "name": "var_18h",
+            "offset_bytes": -52,
+            "size_bytes": 4
+          },
+          {
+            "name": "var_20h",
+            "offset_bytes": -56,
+            "size_bytes": 4
+          },
+          {
+            "name": "var_0h",
+            "offset_bytes": -60,
+            "size_bytes": 4
+          },
+          {
+            "name": "var_30h",
+            "offset_bytes": -64,
+            "size_bytes": 4
+          },
+          {
+            "name": "var_30h_2",
+            "offset_bytes": -68,
+            "size_bytes": 4
+          }
+        ],
+        "heap_variables": [],
+        "basic_blocks": [
+          {
+            "id": "0x1000004b4",
+            "size": 56,
+            "instructions": [
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "sp"
+                  },
+                  {
+                    "kind": "register",
+                    "value": "sp"
+                  },
+                  {
+                    "kind": "unknown",
+                    "raw": "#"
+                  },
+                  {
+                    "kind": "immediate",
+                    "value": 64
+                  }
+                ],
+                "address": "1000004b4",
+                "size_bytes": 4,
+                "mnemonic": "sub",
+                "raw": "sub sp,sp,#0x40",
+                "source": "ghidra",
+                "opcode": "sub"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x29"
+                  },
+                  {
+                    "kind": "register",
+                    "value": "x30"
+                  },
+                  {
+                    "size_bytes": null,
+                    "offset": 48,
+                    "kind": "memory",
+                    "base": "sp"
+                  }
+                ],
+                "address": "1000004b8",
+                "size_bytes": 4,
+                "mnemonic": "stp",
+                "raw": "stp x29,x30,[sp, #0x30]",
+                "source": "ghidra",
+                "opcode": "stp"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x29"
+                  },
+                  {
+                    "kind": "register",
+                    "value": "sp"
+                  },
+                  {
+                    "kind": "unknown",
+                    "raw": "#"
+                  },
+                  {
+                    "kind": "immediate",
+                    "value": 48
+                  }
+                ],
+                "address": "1000004bc",
+                "size_bytes": 4,
+                "mnemonic": "add",
+                "raw": "add x29,sp,#0x30",
+                "source": "ghidra",
+                "opcode": "add"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "w8"
+                  },
+                  {
+                    "kind": "unknown",
+                    "raw": "#"
+                  },
+                  {
+                    "kind": "immediate",
+                    "value": 0
+                  }
+                ],
+                "address": "1000004c0",
+                "size_bytes": 4,
+                "mnemonic": "mov",
+                "raw": "mov w8,#0x0",
+                "source": "ghidra",
+                "opcode": "mov"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "w8"
+                  },
+                  {
+                    "size_bytes": 4,
+                    "offset": 12,
+                    "kind": "memory",
+                    "base": "sp"
+                  }
+                ],
+                "address": "1000004c4",
+                "size_bytes": 4,
+                "mnemonic": "str",
+                "raw": "str w8,[sp, #0xc]",
+                "source": "ghidra",
+                "opcode": "str"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "wzr"
+                  },
+                  {
+                    "size_bytes": null,
+                    "offset": -4,
+                    "kind": "memory",
+                    "base": "x29"
+                  }
+                ],
+                "address": "1000004c8",
+                "size_bytes": 4,
+                "mnemonic": "stur",
+                "raw": "stur wzr,[x29, #-0x4]",
+                "source": "ghidra",
+                "opcode": "stur"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x0"
+                  },
+                  {
+                    "kind": "register",
+                    "value": "sp"
+                  },
+                  {
+                    "kind": "unknown",
+                    "raw": "#"
+                  },
+                  {
+                    "kind": "immediate",
+                    "value": 16
+                  }
+                ],
+                "address": "1000004cc",
+                "size_bytes": 4,
+                "mnemonic": "add",
+                "raw": "add x0,sp,#0x10",
+                "source": "ghidra",
+                "opcode": "add"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "w8"
+                  },
+                  {
+                    "kind": "unknown",
+                    "raw": "#"
+                  },
+                  {
+                    "kind": "immediate",
+                    "value": 7
+                  }
+                ],
+                "address": "1000004d0",
+                "size_bytes": 4,
+                "mnemonic": "mov",
+                "raw": "mov w8,#0x7",
+                "source": "ghidra",
+                "opcode": "mov"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "w8"
+                  },
+                  {
+                    "size_bytes": 4,
+                    "offset": 16,
+                    "kind": "memory",
+                    "base": "sp"
+                  }
+                ],
+                "address": "1000004d4",
+                "size_bytes": 4,
+                "mnemonic": "str",
+                "raw": "str w8,[sp, #0x10]",
+                "source": "ghidra",
+                "opcode": "str"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x8"
+                  },
+                  {
+                    "kind": "unknown",
+                    "raw": "#"
+                  },
+                  {
+                    "kind": "immediate",
+                    "value": 100
+                  }
+                ],
+                "address": "1000004d8",
+                "size_bytes": 4,
+                "mnemonic": "mov",
+                "raw": "mov x8,#0x64",
+                "source": "ghidra",
+                "opcode": "mov"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x8"
+                  },
+                  {
+                    "size_bytes": 8,
+                    "offset": 24,
+                    "kind": "memory",
+                    "base": "sp"
+                  }
+                ],
+                "address": "1000004dc",
+                "size_bytes": 4,
+                "mnemonic": "str",
+                "raw": "str x8,[sp, #0x18]",
+                "source": "ghidra",
+                "opcode": "str"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "w8"
+                  },
+                  {
+                    "kind": "unknown",
+                    "raw": "#"
+                  },
+                  {
+                    "kind": "immediate",
+                    "value": 3
+                  }
+                ],
+                "address": "1000004e0",
+                "size_bytes": 4,
+                "mnemonic": "mov",
+                "raw": "mov w8,#0x3",
+                "source": "ghidra",
+                "opcode": "mov"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "w8"
+                  },
+                  {
+                    "size_bytes": 1,
+                    "offset": 32,
+                    "kind": "memory",
+                    "base": "sp"
+                  }
+                ],
+                "address": "1000004e4",
+                "size_bytes": 4,
+                "mnemonic": "strb",
+                "raw": "strb w8,[sp, #0x20]",
+                "source": "ghidra",
+                "opcode": "strb"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "symbol",
+                    "name": "100000460"
+                  }
+                ],
+                "address": "1000004e8",
+                "size_bytes": 4,
+                "mnemonic": "bl",
+                "raw": "bl 0x100000460",
+                "source": "ghidra",
+                "opcode": "bl"
+              }
+            ],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x1000004b4",
+                "target": "0x1000004ec",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x1000004ec",
+            "size": 20,
+            "instructions": [
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x8"
+                  },
+                  {
+                    "kind": "register",
+                    "value": "sp"
+                  }
+                ],
+                "address": "1000004ec",
+                "size_bytes": 4,
+                "mnemonic": "mov",
+                "raw": "mov x8,sp",
+                "source": "ghidra",
+                "opcode": "mov"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x0"
+                  },
+                  {
+                    "size_bytes": 8,
+                    "offset": 0,
+                    "kind": "memory",
+                    "base": "x8"
+                  }
+                ],
+                "address": "1000004f0",
+                "size_bytes": 4,
+                "mnemonic": "str",
+                "raw": "str x0,[x8]",
+                "source": "ghidra",
+                "opcode": "str"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x0"
+                  },
+                  {
+                    "kind": "immediate",
+                    "value": 4294967296
+                  }
+                ],
+                "address": "1000004f4",
+                "size_bytes": 4,
+                "mnemonic": "adrp",
+                "raw": "adrp x0,0x100000000",
+                "source": "ghidra",
+                "opcode": "adrp"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x0"
+                  },
+                  {
+                    "kind": "register",
+                    "value": "x0"
+                  },
+                  {
+                    "kind": "unknown",
+                    "raw": "#"
+                  },
+                  {
+                    "kind": "immediate",
+                    "value": 1308
+                  }
+                ],
+                "address": "1000004f8",
+                "size_bytes": 4,
+                "mnemonic": "add",
+                "raw": "add x0,x0,#0x51c",
+                "source": "ghidra",
+                "opcode": "add"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "symbol",
+                    "name": "100000510"
+                  }
+                ],
+                "address": "1000004fc",
+                "size_bytes": 4,
+                "mnemonic": "bl",
+                "raw": "bl 0x100000510",
+                "source": "ghidra",
+                "opcode": "bl"
+              }
+            ],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x1000004ec",
+                "target": "0x100000500",
+                "type": "unconditional"
+              }
+            ]
+          },
+          {
+            "id": "0x100000500",
+            "size": 16,
+            "instructions": [
+              {
+                "operands": [],
+                "address": "10000050c",
+                "size_bytes": 4,
+                "mnemonic": "ret",
+                "raw": "ret",
+                "source": "ghidra",
+                "opcode": "ret"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "w0"
+                  },
+                  {
+                    "size_bytes": 4,
+                    "offset": 12,
+                    "kind": "memory",
+                    "base": "sp"
+                  }
+                ],
+                "address": "0x5f5e2f4",
+                "size_bytes": 4,
+                "mnemonic": "ldr",
+                "raw": "ldr w0,[sp, #0xc]",
+                "source": "ghidra",
+                "opcode": "ldr"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x29"
+                  },
+                  {
+                    "kind": "register",
+                    "value": "x30"
+                  },
+                  {
+                    "size_bytes": null,
+                    "offset": 48,
+                    "kind": "memory",
+                    "base": "sp"
+                  }
+                ],
+                "address": "0x5f5e2f8",
+                "size_bytes": 4,
+                "mnemonic": "ldp",
+                "raw": "ldp x29,x30,[sp, #0x30]",
+                "source": "ghidra",
+                "opcode": "ldp"
+              },
+              {
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "sp"
+                  },
+                  {
+                    "kind": "register",
+                    "value": "sp"
+                  },
+                  {
+                    "kind": "unknown",
+                    "raw": "#"
+                  },
+                  {
+                    "kind": "immediate",
+                    "value": 64
+                  }
+                ],
+                "address": "0x5f5e2fc",
+                "size_bytes": 4,
+                "mnemonic": "add",
+                "raw": "add sp,sp,#0x40",
+                "source": "ghidra",
+                "opcode": "add"
+              }
+            ],
+            "memory_accesses": [],
+            "edges": []
+          }
+        ],
+        "provenance": [
+          "ghidra",
+          "radare2"
+        ]
+      },
       {
         "name": "printf",
         "entry_point": "0x100000520",
@@ -125,995 +1226,13 @@
         "provenance": [
           "radare2"
         ]
-      },
-      {
-        "name": "_main",
-        "entry_point": "0x10000050c",
-        "size_bytes": 92,
-        "calling_convention": 1,
-        "signature": "1 _main()",
-        "confidence": 0.8,
-        "local_variables": [],
-        "stack_variables": [
-          {
-            "name": "argc",
-            "offset_bytes": -4,
-            "size_bytes": 4
-          },
-          {
-            "name": "argv",
-            "offset_bytes": -8,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_0h_2",
-            "offset_bytes": -12,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_ch",
-            "offset_bytes": -16,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_10h",
-            "offset_bytes": -20,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_18h",
-            "offset_bytes": -24,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_20h",
-            "offset_bytes": -28,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_0h",
-            "offset_bytes": -32,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_30h",
-            "offset_bytes": -36,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_30h_2",
-            "offset_bytes": -40,
-            "size_bytes": 4
-          }
-        ],
-        "heap_variables": [],
-        "basic_blocks": [
-          {
-            "id": "0x1000004b4",
-            "size": 92,
-            "instructions": [
-              {
-                "address": "0x1000004b4",
-                "mnemonic": "sub",
-                "opcode": "sub",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "sp"
-                  },
-                  {
-                    "kind": "register",
-                    "value": "sp"
-                  },
-                  {
-                    "kind": "immediate",
-                    "value": 64
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "sub sp, sp, 0x40",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004b8",
-                "mnemonic": "stp",
-                "opcode": "stp",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "fp"
-                  },
-                  {
-                    "kind": "register",
-                    "value": "lr"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "sp",
-                    "offset": 48,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "stp x29, x30, [sp + var_30h]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004bc",
-                "mnemonic": "add",
-                "opcode": "add",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "fp"
-                  },
-                  {
-                    "kind": "register",
-                    "value": "sp"
-                  },
-                  {
-                    "kind": "immediate",
-                    "value": 48
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "add x29, sp, 0x30",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004c0",
-                "mnemonic": "mov",
-                "opcode": "mov",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "w8"
-                  },
-                  {
-                    "kind": "immediate",
-                    "value": 0
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "mov w8, 0",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004c4",
-                "mnemonic": "str",
-                "opcode": "str",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "w8"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "sp",
-                    "offset": 12,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "str w8, [sp + var_ch]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004c8",
-                "mnemonic": "stur",
-                "opcode": "stur",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "wzr"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "fp",
-                    "offset": -4,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "stur wzr, [x29, -4]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004cc",
-                "mnemonic": "add",
-                "opcode": "add",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x0"
-                  },
-                  {
-                    "kind": "register",
-                    "value": "sp"
-                  },
-                  {
-                    "kind": "immediate",
-                    "value": 16
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "add x0, sp, 0x10",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004d0",
-                "mnemonic": "mov",
-                "opcode": "mov",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "w8"
-                  },
-                  {
-                    "kind": "immediate",
-                    "value": 7
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "mov w8, 7",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004d4",
-                "mnemonic": "str",
-                "opcode": "str",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "w8"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "sp",
-                    "offset": 16,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "str w8, [sp + var_10h]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004d8",
-                "mnemonic": "mov",
-                "opcode": "mov",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x8"
-                  },
-                  {
-                    "kind": "immediate",
-                    "value": 100
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "mov x8, 0x64",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004dc",
-                "mnemonic": "str",
-                "opcode": "str",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x8"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "sp",
-                    "offset": 24,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "str x8, [sp + var_18h]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004e0",
-                "mnemonic": "mov",
-                "opcode": "mov",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "w8"
-                  },
-                  {
-                    "kind": "immediate",
-                    "value": 3
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "mov w8, 3",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004e4",
-                "mnemonic": "strb",
-                "opcode": "strb",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "w8"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "sp",
-                    "offset": 32,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "strb w8, [sp + var_20h]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004e8",
-                "mnemonic": "bl",
-                "opcode": "bl",
-                "operands": [
-                  {
-                    "kind": "immediate",
-                    "value": 4294968416
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "bl sym._inspect",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004ec",
-                "mnemonic": "mov",
-                "opcode": "mov",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x8"
-                  },
-                  {
-                    "kind": "register",
-                    "value": "sp"
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "mov x8, sp",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004f0",
-                "mnemonic": "str",
-                "opcode": "str",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x0"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "x8",
-                    "offset": 0,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "str x0, [x8]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004f4",
-                "mnemonic": "adrp",
-                "opcode": "adrp",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x0"
-                  },
-                  {
-                    "kind": "immediate",
-                    "value": 4294967296
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "adrp x0, 0x100000000",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004f8",
-                "mnemonic": "add",
-                "opcode": "add",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x0"
-                  },
-                  {
-                    "kind": "register",
-                    "value": "x0"
-                  },
-                  {
-                    "kind": "immediate",
-                    "value": 1308
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "add x0, x0, 0x51c",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004fc",
-                "mnemonic": "bl",
-                "opcode": "bl",
-                "operands": [
-                  {
-                    "kind": "immediate",
-                    "value": 4294968592
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "bl sym.imp.printf",
-                "source": "radare2"
-              },
-              {
-                "address": "0x100000500",
-                "mnemonic": "ldr",
-                "opcode": "ldr",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "w0"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "sp",
-                    "offset": 12,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "ldr w0, [sp + var_ch]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x100000504",
-                "mnemonic": "ldp",
-                "opcode": "ldp",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "fp"
-                  },
-                  {
-                    "kind": "register",
-                    "value": "lr"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "sp",
-                    "offset": 48,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "ldp x29, x30, [sp + var_30h]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x100000508",
-                "mnemonic": "add",
-                "opcode": "add",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "sp"
-                  },
-                  {
-                    "kind": "register",
-                    "value": "sp"
-                  },
-                  {
-                    "kind": "immediate",
-                    "value": 64
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "add sp, sp, 0x40",
-                "source": "radare2"
-              },
-              {
-                "address": "0x10000050c",
-                "mnemonic": "ret",
-                "opcode": "ret",
-                "operands": [],
-                "size_bytes": 4,
-                "raw": "ret",
-                "source": "radare2"
-              }
-            ],
-            "memory_accesses": [],
-            "edges": []
-          }
-        ],
-        "provenance": [
-          "radare2"
-        ]
-      },
-      {
-        "name": "_inspect",
-        "entry_point": "0x1000004b0",
-        "size_bytes": 84,
-        "calling_convention": 1,
-        "signature": "1 _inspect()",
-        "confidence": 0.8,
-        "local_variables": [],
-        "stack_variables": [
-          {
-            "name": "arg1",
-            "offset_bytes": -4,
-            "size_bytes": 4
-          },
-          {
-            "name": "arg_10h",
-            "offset_bytes": -8,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_0h",
-            "offset_bytes": -12,
-            "size_bytes": 4
-          },
-          {
-            "name": "var_8h",
-            "offset_bytes": -16,
-            "size_bytes": 4
-          }
-        ],
-        "heap_variables": [],
-        "basic_blocks": [
-          {
-            "id": "0x100000460",
-            "size": 84,
-            "instructions": [
-              {
-                "address": "0x100000460",
-                "mnemonic": "sub",
-                "opcode": "sub",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "sp"
-                  },
-                  {
-                    "kind": "register",
-                    "value": "sp"
-                  },
-                  {
-                    "kind": "immediate",
-                    "value": 16
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "sub sp, sp, 0x10",
-                "source": "radare2"
-              },
-              {
-                "address": "0x100000464",
-                "mnemonic": "str",
-                "opcode": "str",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x0"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "sp",
-                    "offset": 8,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "str x0, [sp + var_8h]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x100000468",
-                "mnemonic": "str",
-                "opcode": "str",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "xzr"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "sp",
-                    "offset": 0,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "str xzr, [sp]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x10000046c",
-                "mnemonic": "ldr",
-                "opcode": "ldr",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x8"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "sp",
-                    "offset": 8,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "ldr x8, [sp + var_8h]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x100000470",
-                "mnemonic": "ldrsw",
-                "opcode": "ldrsw",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x9"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "x8",
-                    "offset": 0,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "ldrsw x9, [x8]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x100000474",
-                "mnemonic": "ldr",
-                "opcode": "ldr",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x8"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "sp",
-                    "offset": 0,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "ldr x8, [sp]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x100000478",
-                "mnemonic": "add",
-                "opcode": "add",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x8"
-                  },
-                  {
-                    "kind": "register",
-                    "value": "x8"
-                  },
-                  {
-                    "kind": "register",
-                    "value": "x9"
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "add x8, x8, x9",
-                "source": "radare2"
-              },
-              {
-                "address": "0x10000047c",
-                "mnemonic": "str",
-                "opcode": "str",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x8"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "sp",
-                    "offset": 0,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "str x8, [sp]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x100000480",
-                "mnemonic": "ldr",
-                "opcode": "ldr",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x8"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "sp",
-                    "offset": 8,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "ldr x8, [sp + var_8h]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x100000484",
-                "mnemonic": "ldr",
-                "opcode": "ldr",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x9"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "x8",
-                    "offset": 8,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "ldr x9, [x8, 8]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x100000488",
-                "mnemonic": "ldr",
-                "opcode": "ldr",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x8"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "sp",
-                    "offset": 0,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "ldr x8, [sp]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x10000048c",
-                "mnemonic": "add",
-                "opcode": "add",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x8"
-                  },
-                  {
-                    "kind": "register",
-                    "value": "x8"
-                  },
-                  {
-                    "kind": "register",
-                    "value": "x9"
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "add x8, x8, x9",
-                "source": "radare2"
-              },
-              {
-                "address": "0x100000490",
-                "mnemonic": "str",
-                "opcode": "str",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x8"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "sp",
-                    "offset": 0,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "str x8, [sp]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x100000494",
-                "mnemonic": "ldr",
-                "opcode": "ldr",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x8"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "sp",
-                    "offset": 8,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "ldr x8, [sp + var_8h]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x100000498",
-                "mnemonic": "ldrsb",
-                "opcode": "ldrsb",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x9"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "x8",
-                    "offset": 16,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "ldrsb x9, [x8, 0x10]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x10000049c",
-                "mnemonic": "ldr",
-                "opcode": "ldr",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x8"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "sp",
-                    "offset": 0,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "ldr x8, [sp]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004a0",
-                "mnemonic": "add",
-                "opcode": "add",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x8"
-                  },
-                  {
-                    "kind": "register",
-                    "value": "x8"
-                  },
-                  {
-                    "kind": "register",
-                    "value": "x9"
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "add x8, x8, x9",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004a4",
-                "mnemonic": "str",
-                "opcode": "str",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x8"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "sp",
-                    "offset": 0,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "str x8, [sp]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004a8",
-                "mnemonic": "ldr",
-                "opcode": "ldr",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x0"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "sp",
-                    "offset": 0,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "ldr x0, [sp]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004ac",
-                "mnemonic": "add",
-                "opcode": "add",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "sp"
-                  },
-                  {
-                    "kind": "register",
-                    "value": "sp"
-                  },
-                  {
-                    "kind": "immediate",
-                    "value": 16
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "add sp, sp, 0x10",
-                "source": "radare2"
-              },
-              {
-                "address": "0x1000004b0",
-                "mnemonic": "ret",
-                "opcode": "ret",
-                "operands": [],
-                "size_bytes": 4,
-                "raw": "ret",
-                "source": "radare2"
-              }
-            ],
-            "memory_accesses": [],
-            "edges": []
-          }
-        ],
-        "provenance": [
-          "radare2"
-        ]
       }
     ],
     "call_graph": {
       "nodes": [
-        "printf",
         "_inspect",
-        "_main"
+        "_main",
+        "printf"
       ],
       "edges": [
         {
@@ -1128,28 +1247,88 @@
     },
     "symbols": [
       {
+        "address": "external:00000001",
+        "name": "_printf",
+        "type": "Function",
+        "visibility": "IMPORTED"
+      },
+      {
+        "address": "0xfffeff00",
+        "name": "_objc_msgSend_rtp",
+        "type": "Label",
+        "visibility": "IMPORTED"
+      },
+      {
         "address": "0x100000000",
         "name": "__mh_execute_header",
-        "type": "function",
-        "visibility": "global"
+        "type": "Label",
+        "visibility": "IMPORTED"
       },
       {
         "address": "0x100000460",
         "name": "_inspect",
-        "type": "function",
-        "visibility": "global"
+        "type": "Function",
+        "visibility": "IMPORTED"
       },
       {
         "address": "0x1000004b4",
         "name": "_main",
-        "type": "function",
-        "visibility": "global"
+        "type": "Function",
+        "visibility": "IMPORTED"
       },
       {
         "address": "0x100000510",
-        "name": "printf",
-        "type": "function",
-        "visibility": "static"
+        "name": "_printf",
+        "type": "Function",
+        "visibility": "IMPORTED"
+      },
+      {
+        "address": "0x10000051c",
+        "name": "s_%ld_10000051c",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "0x100004000",
+        "name": "PTR__printf_100004000",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "0x100008055",
+        "name": "s__printf_100008055",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "0x1000080d8",
+        "name": "nlist_1000080d8",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "0x1000080f2",
+        "name": "s___mh_execute_header_1000080f2",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "0x100008106",
+        "name": "s__inspect_100008106",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "0x10000810f",
+        "name": "s__main_10000810f",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "0x100008115",
+        "name": "s__printf_100008115",
+        "type": "Label",
+        "visibility": "DEFAULT"
       }
     ],
     "imports": [],
