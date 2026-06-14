@@ -224,10 +224,14 @@ class IRAssembler:
 
         resolved_entries_by_name = {}
         for cname, grouped_fns in fns_by_clean_name.items():
+            all_invalid = set()
+            for fn in grouped_fns:
+                all_invalid.update(get_invalid_entries_for_fn(fn))
+
             entries = []
             for fn in grouped_fns:
                 ep = normalize_addr(fn.get("entry_point"))
-                if ep and not ep.startswith("0x5f5e"):
+                if ep and not ep.startswith("0x5f5e") and ep not in all_invalid:
                     entries.append(ep)
             
             agreed_entry = None
@@ -235,6 +239,8 @@ class IRAssembler:
                 agreed_entry = entries[0]
             
             symbol_entry = symbol_name_to_addr.get(cname)
+            if symbol_entry in all_invalid:
+                symbol_entry = None
             
             best_entry = None
             if agreed_entry:
@@ -244,12 +250,11 @@ class IRAssembler:
             else:
                 bb_addrs = []
                 for fn in grouped_fns:
-                    invalid_addrs = get_invalid_entries_for_fn(fn)
                     cfg = fn.get("cfg", {})
                     nodes = cfg.get("nodes", []) or fn.get("basic_blocks", [])
                     for bb in nodes:
                         bb_id = normalize_addr(bb.get("id"))
-                        if bb_id and not bb_id.startswith("0x5f5e") and bb_id not in invalid_addrs:
+                        if bb_id and not bb_id.startswith("0x5f5e") and bb_id not in all_invalid:
                             bb_addrs.append(bb_id)
                 if bb_addrs:
                     bb_addrs.sort(key=lambda a: address_to_int(a) or 0)
@@ -384,16 +389,21 @@ class IRAssembler:
                         )
 
                 # Deduplicate by address, merging Ghidra and Radare2 records at the same address
+                deduped_instructions = []
                 instructions_by_addr: Dict[str, List[Dict[str, Any]]] = {}
                 for ins in validated_instructions:
-                    addr = normalize_addr(ins.get("address"))
-                    if addr:
+                    raw_addr = ins.get("address")
+                    ins_addr = normalize_addr(raw_addr)
+                    if ins_addr and ins_addr.startswith("0x"):
                         ins_copy = dict(ins)
-                        ins_copy["address"] = addr
-                        instructions_by_addr.setdefault(addr, []).append(ins_copy)
+                        ins_copy["address"] = ins_addr
+                        instructions_by_addr.setdefault(ins_addr, []).append(ins_copy)
+                    else:
+                        ins_copy = dict(ins)
+                        ins_copy["address"] = ins_addr if ins_addr else (raw_addr or "")
+                        deduped_instructions.append(ins_copy)
 
-                deduped_instructions = []
-                for addr, ins_list in instructions_by_addr.items():
+                for ins_addr, ins_list in instructions_by_addr.items():
                     best_ins = max(ins_list, key=score_instruction_for_merge)
                     deduped_instructions.append(best_ins)
 

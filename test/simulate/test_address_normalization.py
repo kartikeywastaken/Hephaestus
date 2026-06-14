@@ -80,10 +80,10 @@ class TestAddressNormalization(unittest.TestCase):
         ir = assembler.assemble(ghidra_data=ghidra_data, radare2_data=radare2_data)
 
         # Confirm function was merged and has only 1 instruction
-        func = ir.functions["0x100000460"]
+        func = next(f for f in ir.functions if f["entry_point"] == "0x100000460")
         self.assertEqual(func["name"], "_basic_score")
         
-        bb = ir.basic_blocks["0x100000460"]
+        bb = next(b for b in func["basic_blocks"] if b["id"] == "0x100000460")
         self.assertEqual(len(bb["instructions"]), 1)
         # Kept the Ghidra one due to memory operands scoring policy
         self.assertEqual(bb["instructions"][0]["address"], "0x100000470")
@@ -123,8 +123,8 @@ class TestAddressNormalization(unittest.TestCase):
         ir = assembler.assemble(ghidra_data=ghidra_data)
 
         # Expected entry point should be resolved using symbol table to 0x100000460, not the ret instruction block at 0x100000530.
-        self.assertIn("0x100000460", ir.functions)
-        self.assertNotIn("0x100000530", ir.functions)
+        self.assertTrue(any(f["entry_point"] == "0x100000460" for f in ir.functions))
+        self.assertFalse(any(f["entry_point"] == "0x100000530" for f in ir.functions))
 
     # Test 8 — Layout source addresses normalized
     def test_layout_source_addresses_normalized(self):
@@ -181,6 +181,52 @@ class TestAddressNormalization(unittest.TestCase):
         self.assertEqual(matched_unbound[0]["function_entry"], "0x100000460")
         self.assertEqual(matched_unbound[0]["block_id"], "0x100000460")
         self.assertEqual(matched_unbound[0]["instr_address"], "0x100000470")
+
+    # Test 10 — Artifact scan for bare long hex and 0x5f5e corrupted addresses
+    def test_artifact_scan(self):
+        import os
+        import json
+        import re
+        
+        artifacts_dir = "artifacts"
+        if not os.path.exists(artifacts_dir):
+            return
+            
+        address_keys = {
+            "entry_point", "address", "id", "source", "target", "caller", "callee", 
+            "function_entry", "block_id", "instr_address", "base_id", "source_instrs"
+        }
+        hex_pattern = re.compile(r'^[0-9a-fA-F]+$')
+        
+        def scan_value(val, key, path):
+            issues = []
+            if isinstance(val, str):
+                if "0x5f5e" in val:
+                    issues.append(f"Corrupted address 0x5f5e found at {path} ({key}: {val})")
+                is_address_key = any(k in key for k in address_keys) if key else False
+                if is_address_key:
+                    if hex_pattern.match(val) and len(val) >= 6:
+                        issues.append(f"Bare long hex-like address found at {path} ({key}: {val})")
+            elif isinstance(val, dict):
+                for k, v in val.items():
+                    issues.extend(scan_value(v, k, f"{path}.{k}"))
+            elif isinstance(val, list):
+                for idx, item in enumerate(val):
+                    issues.extend(scan_value(item, key, f"{path}[{idx}]"))
+            return issues
+            
+        all_issues = []
+        for filename in os.listdir(artifacts_dir):
+            if filename.endswith(".json"):
+                filepath = os.path.join(artifacts_dir, filename)
+                try:
+                    with open(filepath, "r", encoding="utf-8") as f:
+                        data = json.load(f)
+                    all_issues.extend(scan_value(data, None, filename))
+                except Exception:
+                    pass
+                    
+        self.assertEqual(all_issues, [], f"Address scan issues found: {all_issues}")
 
 if __name__ == "__main__":
     unittest.main()

@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "provenance": {
     "tool_name": "Radare2 Headless Analyser",
-    "timestamp": "2026-06-14T16:48:47-07:00",
+    "timestamp": "2026-06-14T17:13:28-07:00",
     "binary_path": "./t",
     "config": {}
   },
@@ -18240,6 +18240,12 @@
         "visibility": "global"
       },
       {
+        "address": "0x6a2e9394",
+        "name": "/var/folders/sn/l1bzbbzd14l2xthhyt7fm2r80000gp/T/t-e45ee3.o",
+        "type": "function",
+        "visibility": "static"
+      },
+      {
         "address": "0x100001128",
         "name": "printf",
         "type": "function",
@@ -18326,20 +18332,20 @@
     ],
     "call_graph": {
       "nodes": [
-        "_nested_branches",
-        "_weird_score",
-        "_classify_item",
         "_mutate_alias",
-        "_update_checksum",
+        "_basic_score",
         "_init_item",
         "_scan_container",
-        "_process_item",
-        "_init_container",
-        "_pointer_walk",
-        "_recursive_mix",
+        "_weird_score",
         "_main",
+        "_recursive_mix",
+        "_pointer_walk",
+        "_update_checksum",
+        "_process_item",
         "printf",
-        "_basic_score"
+        "_nested_branches",
+        "_classify_item",
+        "_init_container"
       ],
       "edges": [
         {
