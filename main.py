@@ -13,6 +13,7 @@ import dotenv
 dotenv.load_dotenv()
 import logging
 from typing import Dict, Any
+from src.utils.artifact_io import load_json_artifact, write_json_artifact
 from src.engine.orchestrator import PipelineOrchestrator
 from src.engine.base import BaseExtractor, ExtractorError
 from src.ir.assembler import IRAssembler
@@ -153,12 +154,9 @@ def load_unified_ir_data(out_dir: str) -> Dict[str, Any]:
             manifest["jobs"].get("trace")
         )
         ir_payload = unified_ir.to_dict()
-        os.makedirs(out_dir, exist_ok=True)
-        with open(ir_path, 'w', encoding='utf-8') as f:
-            json.dump(ir_payload, f, indent=2, ensure_ascii=False)
+        write_json_artifact(ir_path, ir_payload)
     
-    with open(ir_path, 'r', encoding='utf-8') as f:
-        return json.load(f)
+    return load_json_artifact(ir_path)
 
 def run_type_recovery(out_dir: str) -> TypeRecoveryEngine:
     ir_payload = load_unified_ir_data(out_dir)
@@ -167,9 +165,7 @@ def run_type_recovery(out_dir: str) -> TypeRecoveryEngine:
     
     # Save the output
     recovered_path = os.path.join(out_dir, "recovered_types.json")
-    os.makedirs(out_dir, exist_ok=True)
-    with open(recovered_path, 'w', encoding='utf-8') as f:
-        json.dump(engine.get_recovered_payload(), f, indent=2, ensure_ascii=False)
+    write_json_artifact(recovered_path, engine.get_recovered_payload())
     logger.info(f"[+] Output recovered type schemas committed: {recovered_path}")
     return engine
 
@@ -416,8 +412,7 @@ def handle_validation(ir_file_path: str):
         sys.exit(1)
     
     try:
-        with open(ir_file_path, 'r', encoding='utf-8') as f:
-            payload = json.load(f)
+        payload = load_json_artifact(ir_file_path)
     except Exception as e:
         logger.error(f"[-] Failed to read and decode JSON: {e}")
         sys.exit(1)
@@ -437,8 +432,7 @@ def handle_inspection(ir_file_path: str):
         sys.exit(1)
     
     try:
-        with open(ir_file_path, 'r', encoding='utf-8') as f:
-            payload = json.load(f)
+        payload = load_json_artifact(ir_file_path)
     except Exception as e:
         logger.error(f"[-] Failed to read and decode JSON: {e}")
         sys.exit(1)
@@ -507,16 +501,13 @@ def handle_analyze_cfg(out_dir: str):
         
     # Save Phase 3A output
     structuring_path = os.path.join(out_dir, "structuring_analysis.json")
-    os.makedirs(out_dir, exist_ok=True)
-    with open(structuring_path, 'w', encoding='utf-8') as f:
-        json.dump(analysis_reports, f, indent=2, ensure_ascii=False)
+    write_json_artifact(structuring_path, analysis_reports)
         
     logger.info(f"[+] Output CFG structuring analysis reports committed: {structuring_path}")
     
     # Save Phase 3B output
     regions_path = os.path.join(out_dir, "structuring_regions.json")
-    with open(regions_path, 'w', encoding='utf-8') as f:
-        json.dump(structuring_reports, f, indent=2, ensure_ascii=False)
+    write_json_artifact(regions_path, structuring_reports)
         
     logger.info(f"[+] Output structured regions tree committed: {regions_path}")
     append_run_log(out_dir, "ORCHESTRATION", f"Pipeline stage completed: CFG Structuring & Analysis\nArtifacts written: {structuring_path}, {regions_path}")
@@ -559,8 +550,7 @@ def handle_recover_semantics(out_dir: str):
         sys.exit(1)
 
     try:
-        with open(ir_path, 'r', encoding='utf-8') as f:
-            ir_payload = json.load(f)
+        ir_payload = load_json_artifact(ir_path)
     except Exception as e:
         logger.error("[-] Failed to read unified_ir.json at %s: %s", ir_path, e)
         sys.exit(1)
@@ -570,8 +560,7 @@ def handle_recover_semantics(out_dir: str):
     regions_path = os.path.join(out_dir, "structuring_regions.json")
     if os.path.exists(regions_path):
         try:
-            with open(regions_path, 'r', encoding='utf-8') as f:
-                structuring_regions = json.load(f)
+            structuring_regions = load_json_artifact(regions_path)
             if not isinstance(structuring_regions, dict):
                 logger.warning("structuring_regions.json exists but is not a dictionary. Continuing with None.")
                 structuring_regions = None
@@ -633,8 +622,7 @@ def handle_refine_semantics(out_dir: str):
         )
         sys.exit(1)
     try:
-        with open(ir_path, "r", encoding="utf-8") as f:
-            unified_ir = json.load(f)
+        unified_ir = load_json_artifact(ir_path)
     except Exception as e:
         logger.error("[-] Failed to read unified_ir.json at %s: %s", ir_path, e)
         sys.exit(1)
@@ -648,8 +636,7 @@ def handle_refine_semantics(out_dir: str):
         )
         sys.exit(1)
     try:
-        with open(tr_path, "r", encoding="utf-8") as f:
-            type_recovery = json.load(f)
+        type_recovery = load_json_artifact(tr_path)
     except Exception as e:
         logger.error("[-] Failed to read type_recovery.json at %s: %s", tr_path, e)
         sys.exit(1)
@@ -659,8 +646,7 @@ def handle_refine_semantics(out_dir: str):
     regions_path = os.path.join(out_dir, "structuring_regions.json")
     if os.path.exists(regions_path):
         try:
-            with open(regions_path, "r", encoding="utf-8") as f:
-                structuring_regions = json.load(f)
+            structuring_regions = load_json_artifact(regions_path)
             if not isinstance(structuring_regions, dict):
                 logger.warning(
                     "structuring_regions.json is not a dict; continuing with None."
@@ -730,8 +716,7 @@ def handle_recover_layouts(out_dir: str):
         )
         sys.exit(1)
     try:
-        with open(ir_path, "r", encoding="utf-8") as f:
-            unified_ir = json.load(f)
+        unified_ir = load_json_artifact(ir_path)
     except Exception as e:
         logger.error("[-] Failed to read unified_ir.json at %s: %s", ir_path, e)
         sys.exit(1)
@@ -799,8 +784,7 @@ def handle_finalize_semantics(out_dir: str):
         )
         sys.exit(1)
     try:
-        with open(tr_path, "r", encoding="utf-8") as f:
-            type_recovery = json.load(f)
+        type_recovery = load_json_artifact(tr_path)
     except Exception as e:
         logger.error("[-] Failed to read type_recovery.json at %s: %s", tr_path, e)
         sys.exit(1)
@@ -810,8 +794,7 @@ def handle_finalize_semantics(out_dir: str):
     sr_path = os.path.join(out_dir, "semantic_recovery.json")
     if os.path.exists(sr_path):
         try:
-            with open(sr_path, "r", encoding="utf-8") as f:
-                semantic_recovery = json.load(f)
+            semantic_recovery = load_json_artifact(sr_path)
             logger.info("[+] Loaded semantic recovery from: %s", sr_path)
         except Exception as e:
             logger.warning(
@@ -826,8 +809,7 @@ def handle_finalize_semantics(out_dir: str):
     lr_path = os.path.join(out_dir, "layout_recovery.json")
     if os.path.exists(lr_path):
         try:
-            with open(lr_path, "r", encoding="utf-8") as f:
-                layout_recovery = json.load(f)
+            layout_recovery = load_json_artifact(lr_path)
             logger.info("[+] Loaded layout recovery from: %s", lr_path)
         except Exception as e:
             logger.warning(
@@ -1033,8 +1015,7 @@ def main():
                 append_run_log(args.out_dir, "ORCHESTRATION", f"Warning: Generated IR failed schema validation: {val_msg}")
 
             ir_path = os.path.join(args.out_dir, "unified_ir.json")
-            with open(ir_path, 'w', encoding='utf-8') as f:
-                json.dump(ir_payload, f, indent=2, ensure_ascii=False)
+            write_json_artifact(ir_path, ir_payload)
             logger.info(f"[+] Canonical Phase 2 Unified IR exported to: {ir_path}")
             append_run_log(args.out_dir, "ORCHESTRATION", f"Pipeline stage completed: Phase 2 Unified IR Assembly\nArtifact written: {ir_path}")
 

@@ -4,7 +4,6 @@ Unified IR Schema Validation Module.
 Performs precise model checks to confirm standard structure matches Phase 2 specifications.
 """
 
-import json
 from typing import Dict, Any, Tuple
 
 class IRValidator:
@@ -20,7 +19,7 @@ class IRValidator:
         """
         # 1. Root structure
         if not isinstance(payload, dict):
-            return False, "IR paylaod must be a root dict JSON object"
+            return False, "IR payload must be a root dict JSON object"
             
         required_root_keys = ["schema_version", "provenance", "data"]
         for key in required_root_keys:

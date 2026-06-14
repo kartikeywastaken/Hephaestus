@@ -76,12 +76,12 @@ class PipelineOrchestrator:
 
         manifest_path = os.path.join(self.output_directory, "orchestration_manifest.json")
         try:
-            import json
-            with open(manifest_path, 'w', encoding='utf-8') as f:
-                json.dump(manifest, f, indent=2, ensure_ascii=False)
+            from src.utils.artifact_io import write_json_artifact
+            write_json_artifact(manifest_path, manifest)
             append_run_log(self.output_directory, "ORCHESTRATION", f"Artifact written: {manifest_path}")
         except Exception as e:
             errors.append(f"Orchestration manifest failed to commit: {e}")
             append_run_log(self.output_directory, "ORCHESTRATION", f"Warning: Orchestration manifest failed to commit: {e}")
 
         return manifest
+
