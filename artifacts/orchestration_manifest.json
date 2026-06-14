@@ -1,12 +1,12 @@
 {
-  "orchestrated_at": "2026-06-14T18:32:35-07:00",
+  "orchestrated_at": "2026-06-14T17:26:09-07:00",
   "binary_profiled": "./t",
   "jobs": {
     "ghidra": {
       "schema_version": "1.0.0",
       "provenance": {
         "tool_name": "Ghidra Headless Analyzer",
-        "timestamp": "2026-06-14T18:32:35-07:00",
+        "timestamp": "2026-06-14T17:26:08-07:00",
         "binary_path": "./t",
         "config": {}
       },
@@ -17,7 +17,7 @@
           "format": "Mac OS X Mach-O",
           "language_id": "AARCH64:LE:64:AppleSilicon",
           "compiler": "unknown",
-          "timestamp": "Sun Jun 14 18:32:34 IST 2026"
+          "timestamp": "Sun Jun 14 17:26:08 IST 2026"
         },
         "functions": [
           {
@@ -1065,7 +1065,7 @@
                 }
               ]
             },
-            "name": "recursive_fold",
+            "name": "basic_score",
             "local_variables": [
               "local_10",
               "local_14",
@@ -1076,8 +1076,8 @@
             "entry_point": "0x100000460"
           },
           {
-            "size_bytes": 324,
-            "calling_convention": "__cdecl",
+            "size_bytes": 56,
+            "calling_convention": "unknown",
             "cfg": {
               "nodes": [
                 {
@@ -1379,7 +1379,30 @@
                       "raw": "mov w10,#0x6",
                       "source": "ghidra",
                       "opcode": "mov"
-                    },
+                    }
+                  ],
+                  "size": 56,
+                  "estimated_instructions_count": 15,
+                  "instructions_count": 14,
+                  "id": "0x10000050c"
+                }
+              ],
+              "edges": []
+            },
+            "name": "_init_item",
+            "local_variables": [
+              "local_8",
+              "local_c"
+            ],
+            "entry_point": "0x10000050c"
+          },
+          {
+            "size_bytes": 268,
+            "calling_convention": "__cdecl",
+            "cfg": {
+              "nodes": [
+                {
+                  "instructions": [
                     {
                       "operands": [
                         {
@@ -2031,10 +2054,10 @@
                       "opcode": "b"
                     }
                   ],
-                  "size": 180,
-                  "estimated_instructions_count": 46,
-                  "instructions_count": 45,
-                  "id": "0x10000050c"
+                  "size": 124,
+                  "estimated_instructions_count": 32,
+                  "instructions_count": 31,
+                  "id": "0x100000544"
                 },
                 {
                   "instructions": [
@@ -2818,7 +2841,7 @@
               ],
               "edges": [
                 {
-                  "source": "0x10000050c",
+                  "source": "0x100000544",
                   "type": "unconditional",
                   "target": "0x1000005c0"
                 },
@@ -2889,17 +2912,13 @@
                 }
               ]
             },
-            "name": "init_item",
-            "local_variables": [
-              "local_8",
-              "local_c",
-              "local_10"
-            ],
-            "entry_point": "0x10000050c"
+            "name": "weird_score",
+            "local_variables": [],
+            "entry_point": "0x100000544"
           },
           {
-            "size_bytes": 200,
-            "calling_convention": "__cdecl",
+            "size_bytes": 24,
+            "calling_convention": "unknown",
             "cfg": {
               "nodes": [
                 {
@@ -3041,7 +3060,30 @@
                       "raw": "mov w8,#0x7",
                       "source": "ghidra",
                       "opcode": "mov"
-                    },
+                    }
+                  ],
+                  "size": 24,
+                  "estimated_instructions_count": 7,
+                  "instructions_count": 6,
+                  "id": "0x100000650"
+                }
+              ],
+              "edges": []
+            },
+            "name": "_init_store",
+            "local_variables": [
+              "local_10",
+              "local_18"
+            ],
+            "entry_point": "0x100000650"
+          },
+          {
+            "size_bytes": 176,
+            "calling_convention": "__cdecl",
+            "cfg": {
+              "nodes": [
+                {
+                  "instructions": [
                     {
                       "operands": [
                         {
@@ -3199,10 +3241,10 @@
                       "opcode": "b"
                     }
                   ],
-                  "size": 56,
-                  "estimated_instructions_count": 15,
-                  "instructions_count": 14,
-                  "id": "0x100000650"
+                  "size": 32,
+                  "estimated_instructions_count": 9,
+                  "instructions_count": 8,
+                  "id": "0x100000668"
                 },
                 {
                   "instructions": [
@@ -4018,7 +4060,7 @@
               ],
               "edges": [
                 {
-                  "source": "0x100000650",
+                  "source": "0x100000668",
                   "type": "unconditional",
                   "target": "0x100000688"
                 },
@@ -4084,18 +4126,13 @@
                 }
               ]
             },
-            "name": "init_store",
-            "local_variables": [
-              "local_10",
-              "local_18",
-              "local_1c",
-              "local_20"
-            ],
-            "entry_point": "0x100000650"
+            "name": "recursive_mix",
+            "local_variables": [],
+            "entry_point": "0x100000668"
           },
           {
-            "size_bytes": 304,
-            "calling_convention": "__cdecl",
+            "size_bytes": 12,
+            "calling_convention": "unknown",
             "cfg": {
               "nodes": [
                 {
@@ -4165,7 +4202,30 @@
                       "raw": "str w1,[sp, #0x14]",
                       "source": "ghidra",
                       "opcode": "str"
-                    },
+                    }
+                  ],
+                  "size": 12,
+                  "estimated_instructions_count": 4,
+                  "instructions_count": 3,
+                  "id": "0x100000718"
+                }
+              ],
+              "edges": []
+            },
+            "name": "_score_basic",
+            "local_variables": [
+              "local_8",
+              "local_c"
+            ],
+            "entry_point": "0x100000718"
+          },
+          {
+            "size_bytes": 216,
+            "calling_convention": "__cdecl",
+            "cfg": {
+              "nodes": [
+                {
+                  "instructions": [
                     {
                       "operands": [
                         {
@@ -5269,11 +5329,23 @@
                       "opcode": "b"
                     }
                   ],
-                  "size": 228,
-                  "estimated_instructions_count": 58,
-                  "instructions_count": 57,
-                  "id": "0x100000718"
-                },
+                  "size": 216,
+                  "estimated_instructions_count": 55,
+                  "instructions_count": 54,
+                  "id": "0x100000724"
+                }
+              ],
+              "edges": []
+            },
+            "name": "init_item",
+            "local_variables": [],
+            "entry_point": "0x100000724"
+          },
+          {
+            "size_bytes": 56,
+            "calling_convention": "unknown",
+            "cfg": {
+              "nodes": [
                 {
                   "instructions": [
                     {
@@ -5579,7 +5651,43 @@
                       "raw": "add w8,w8,#0x1",
                       "source": "ghidra",
                       "opcode": "add"
-                    },
+                    }
+                  ],
+                  "size": 8,
+                  "estimated_instructions_count": 3,
+                  "instructions_count": 2,
+                  "id": "0x10000082c"
+                }
+              ],
+              "edges": [
+                {
+                  "source": "0x1000007fc",
+                  "type": "unconditional",
+                  "target": "0x100000808"
+                },
+                {
+                  "source": "0x100000808",
+                  "type": "unconditional",
+                  "target": "0x10000080c"
+                },
+                {
+                  "source": "0x10000080c",
+                  "type": "unconditional",
+                  "target": "0x10000082c"
+                }
+              ]
+            },
+            "name": "FUN_1000007fc",
+            "local_variables": [],
+            "entry_point": "0x1000007fc"
+          },
+          {
+            "size_bytes": 20,
+            "calling_convention": "__cdecl",
+            "cfg": {
+              "nodes": [
+                {
+                  "instructions": [
                     {
                       "operands": [
                         {
@@ -5615,10 +5723,10 @@
                       "opcode": "b"
                     }
                   ],
-                  "size": 16,
-                  "estimated_instructions_count": 5,
-                  "instructions_count": 4,
-                  "id": "0x10000082c"
+                  "size": 8,
+                  "estimated_instructions_count": 3,
+                  "instructions_count": 2,
+                  "id": "0x100000834"
                 },
                 {
                   "instructions": [
@@ -5684,51 +5792,15 @@
                   "id": "0x10000083c"
                 }
               ],
-              "edges": [
-                {
-                  "source": "0x100000718",
-                  "type": "unconditional",
-                  "target": "0x1000007fc"
-                },
-                {
-                  "source": "0x1000007fc",
-                  "type": "conditional_taken",
-                  "target": "0x10000083c"
-                },
-                {
-                  "source": "0x1000007fc",
-                  "type": "unconditional",
-                  "target": "0x100000808"
-                },
-                {
-                  "source": "0x100000808",
-                  "type": "unconditional",
-                  "target": "0x10000080c"
-                },
-                {
-                  "source": "0x10000080c",
-                  "type": "unconditional",
-                  "target": "0x10000082c"
-                },
-                {
-                  "source": "0x10000082c",
-                  "type": "unconditional",
-                  "target": "0x1000007fc"
-                }
-              ]
+              "edges": []
             },
-            "name": "score_basic",
-            "local_variables": [
-              "local_8",
-              "local_c",
-              "local_10",
-              "local_14"
-            ],
-            "entry_point": "0x100000718"
+            "name": "init_container",
+            "local_variables": [],
+            "entry_point": "0x100000834"
           },
           {
-            "size_bytes": 316,
-            "calling_convention": "__cdecl",
+            "size_bytes": 40,
+            "calling_convention": "unknown",
             "cfg": {
               "nodes": [
                 {
@@ -5950,7 +6022,25 @@
                   "estimated_instructions_count": 11,
                   "instructions_count": 10,
                   "id": "0x100000848"
-                },
+                }
+              ],
+              "edges": []
+            },
+            "name": "_score_weird",
+            "local_variables": [
+              "local_10",
+              "local_18",
+              "local_1c",
+              "local_20",
+              "local_24"
+            ],
+            "entry_point": "0x100000848"
+          },
+          {
+            "size_bytes": 76,
+            "calling_convention": "unknown",
+            "cfg": {
+              "nodes": [
                 {
                   "instructions": [
                     {
@@ -6386,7 +6476,68 @@
                       "raw": "add w8,w8,#0x1",
                       "source": "ghidra",
                       "opcode": "add"
-                    },
+                    }
+                  ],
+                  "size": 8,
+                  "estimated_instructions_count": 3,
+                  "instructions_count": 2,
+                  "id": "0x1000008b4"
+                }
+              ],
+              "edges": [
+                {
+                  "source": "0x100000870",
+                  "type": "unconditional",
+                  "target": "0x100000878"
+                },
+                {
+                  "source": "0x100000878",
+                  "type": "unconditional",
+                  "target": "0x10000087c"
+                },
+                {
+                  "source": "0x10000087c",
+                  "type": "conditional_taken",
+                  "target": "0x1000008a0"
+                },
+                {
+                  "source": "0x10000087c",
+                  "type": "unconditional",
+                  "target": "0x100000898"
+                },
+                {
+                  "source": "0x100000898",
+                  "type": "unconditional",
+                  "target": "0x10000089c"
+                },
+                {
+                  "source": "0x1000008a0",
+                  "type": "unconditional",
+                  "target": "0x1000008a8"
+                },
+                {
+                  "source": "0x1000008a8",
+                  "type": "unconditional",
+                  "target": "0x1000008ac"
+                },
+                {
+                  "source": "0x1000008ac",
+                  "type": "unconditional",
+                  "target": "0x1000008b4"
+                }
+              ]
+            },
+            "name": "FUN_100000870",
+            "local_variables": [],
+            "entry_point": "0x100000870"
+          },
+          {
+            "size_bytes": 184,
+            "calling_convention": "__cdecl",
+            "cfg": {
+              "nodes": [
+                {
+                  "instructions": [
                     {
                       "operands": [
                         {
@@ -6486,10 +6637,10 @@
                       "opcode": "b"
                     }
                   ],
-                  "size": 28,
-                  "estimated_instructions_count": 8,
-                  "instructions_count": 7,
-                  "id": "0x1000008b4"
+                  "size": 20,
+                  "estimated_instructions_count": 6,
+                  "instructions_count": 5,
+                  "id": "0x1000008bc"
                 },
                 {
                   "instructions": [
@@ -6658,94 +6809,6 @@
                   "estimated_instructions_count": 2,
                   "instructions_count": 1,
                   "id": "0x1000008ec"
-                },
-                {
-                  "instructions": [
-                    {
-                      "operands": [
-                        {
-                          "kind": "register",
-                          "value": "w8"
-                        },
-                        {
-                          "size_bytes": 4,
-                          "offset": 12,
-                          "kind": "memory",
-                          "base": "sp"
-                        }
-                      ],
-                      "address": "0x1000008f0",
-                      "size_bytes": 4,
-                      "mnemonic": "ldr",
-                      "raw": "ldr w8,[sp, #0xc]",
-                      "source": "ghidra",
-                      "opcode": "ldr"
-                    },
-                    {
-                      "operands": [
-                        {
-                          "kind": "register",
-                          "value": "w8"
-                        },
-                        {
-                          "kind": "register",
-                          "value": "w8"
-                        },
-                        {
-                          "kind": "unknown",
-                          "raw": "#"
-                        },
-                        {
-                          "kind": "immediate",
-                          "value": 1
-                        }
-                      ],
-                      "address": "0x1000008f4",
-                      "size_bytes": 4,
-                      "mnemonic": "subs",
-                      "raw": "subs w8,w8,#0x1",
-                      "source": "ghidra",
-                      "opcode": "subs"
-                    },
-                    {
-                      "operands": [
-                        {
-                          "kind": "register",
-                          "value": "w8"
-                        },
-                        {
-                          "size_bytes": 4,
-                          "offset": 12,
-                          "kind": "memory",
-                          "base": "sp"
-                        }
-                      ],
-                      "address": "0x1000008f8",
-                      "size_bytes": 4,
-                      "mnemonic": "str",
-                      "raw": "str w8,[sp, #0xc]",
-                      "source": "ghidra",
-                      "opcode": "str"
-                    },
-                    {
-                      "operands": [
-                        {
-                          "kind": "symbol",
-                          "name": "0x100000870"
-                        }
-                      ],
-                      "address": "0x1000008fc",
-                      "size_bytes": 4,
-                      "mnemonic": "b",
-                      "raw": "b 0x100000870",
-                      "source": "ghidra",
-                      "opcode": "b"
-                    }
-                  ],
-                  "size": 16,
-                  "estimated_instructions_count": 5,
-                  "instructions_count": 4,
-                  "id": "0x1000008f0"
                 },
                 {
                   "instructions": [
@@ -7447,67 +7510,7 @@
               ],
               "edges": [
                 {
-                  "source": "0x100000848",
-                  "type": "unconditional",
-                  "target": "0x100000870"
-                },
-                {
-                  "source": "0x100000870",
-                  "type": "conditional_taken",
-                  "target": "0x100000900"
-                },
-                {
-                  "source": "0x100000870",
-                  "type": "unconditional",
-                  "target": "0x100000878"
-                },
-                {
-                  "source": "0x100000878",
-                  "type": "unconditional",
-                  "target": "0x10000087c"
-                },
-                {
-                  "source": "0x10000087c",
-                  "type": "conditional_taken",
-                  "target": "0x1000008a0"
-                },
-                {
-                  "source": "0x10000087c",
-                  "type": "unconditional",
-                  "target": "0x100000898"
-                },
-                {
-                  "source": "0x100000898",
-                  "type": "unconditional",
-                  "target": "0x10000089c"
-                },
-                {
-                  "source": "0x10000089c",
-                  "type": "unconditional",
-                  "target": "0x1000008f0"
-                },
-                {
-                  "source": "0x1000008a0",
-                  "type": "conditional_taken",
-                  "target": "0x1000008d0"
-                },
-                {
-                  "source": "0x1000008a0",
-                  "type": "unconditional",
-                  "target": "0x1000008a8"
-                },
-                {
-                  "source": "0x1000008a8",
-                  "type": "unconditional",
-                  "target": "0x1000008ac"
-                },
-                {
-                  "source": "0x1000008ac",
-                  "type": "unconditional",
-                  "target": "0x1000008b4"
-                },
-                {
-                  "source": "0x1000008b4",
+                  "source": "0x1000008bc",
                   "type": "unconditional",
                   "target": "0x1000008ec"
                 },
@@ -7515,16 +7518,6 @@
                   "source": "0x1000008d0",
                   "type": "unconditional",
                   "target": "0x1000008ec"
-                },
-                {
-                  "source": "0x1000008ec",
-                  "type": "unconditional",
-                  "target": "0x1000008f0"
-                },
-                {
-                  "source": "0x1000008f0",
-                  "type": "unconditional",
-                  "target": "0x100000870"
                 },
                 {
                   "source": "0x100000900",
@@ -7553,20 +7546,113 @@
                 }
               ]
             },
-            "name": "score_weird",
-            "local_variables": [
-              "local_10",
-              "local_18",
-              "local_1c",
-              "local_20",
-              "local_24",
-              "local_28"
-            ],
-            "entry_point": "0x100000848"
+            "name": "update_checksum",
+            "local_variables": [],
+            "entry_point": "0x1000008bc"
+          },
+          {
+            "size_bytes": 16,
+            "calling_convention": "unknown",
+            "cfg": {
+              "nodes": [
+                {
+                  "instructions": [
+                    {
+                      "operands": [
+                        {
+                          "kind": "register",
+                          "value": "w8"
+                        },
+                        {
+                          "size_bytes": 4,
+                          "offset": 12,
+                          "kind": "memory",
+                          "base": "sp"
+                        }
+                      ],
+                      "address": "0x1000008f0",
+                      "size_bytes": 4,
+                      "mnemonic": "ldr",
+                      "raw": "ldr w8,[sp, #0xc]",
+                      "source": "ghidra",
+                      "opcode": "ldr"
+                    },
+                    {
+                      "operands": [
+                        {
+                          "kind": "register",
+                          "value": "w8"
+                        },
+                        {
+                          "kind": "register",
+                          "value": "w8"
+                        },
+                        {
+                          "kind": "unknown",
+                          "raw": "#"
+                        },
+                        {
+                          "kind": "immediate",
+                          "value": 1
+                        }
+                      ],
+                      "address": "0x1000008f4",
+                      "size_bytes": 4,
+                      "mnemonic": "subs",
+                      "raw": "subs w8,w8,#0x1",
+                      "source": "ghidra",
+                      "opcode": "subs"
+                    },
+                    {
+                      "operands": [
+                        {
+                          "kind": "register",
+                          "value": "w8"
+                        },
+                        {
+                          "size_bytes": 4,
+                          "offset": 12,
+                          "kind": "memory",
+                          "base": "sp"
+                        }
+                      ],
+                      "address": "0x1000008f8",
+                      "size_bytes": 4,
+                      "mnemonic": "str",
+                      "raw": "str w8,[sp, #0xc]",
+                      "source": "ghidra",
+                      "opcode": "str"
+                    },
+                    {
+                      "operands": [
+                        {
+                          "kind": "symbol",
+                          "name": "0x100000870"
+                        }
+                      ],
+                      "address": "0x1000008fc",
+                      "size_bytes": 4,
+                      "mnemonic": "b",
+                      "raw": "b 0x100000870",
+                      "source": "ghidra",
+                      "opcode": "b"
+                    }
+                  ],
+                  "size": 16,
+                  "estimated_instructions_count": 5,
+                  "instructions_count": 4,
+                  "id": "0x1000008f0"
+                }
+              ],
+              "edges": []
+            },
+            "name": "FUN_1000008f0",
+            "local_variables": [],
+            "entry_point": "0x1000008f0"
           },
           {
             "size_bytes": 64,
-            "calling_convention": "__cdecl",
+            "calling_convention": "unknown",
             "cfg": {
               "nodes": [
                 {
@@ -7951,7 +8037,7 @@
                 }
               ]
             },
-            "name": "abs_i",
+            "name": "_abs_i",
             "local_variables": [
               "local_4",
               "local_8"
@@ -7959,8 +8045,8 @@
             "entry_point": "0x100000984"
           },
           {
-            "size_bytes": 276,
-            "calling_convention": "__cdecl",
+            "size_bytes": 20,
+            "calling_convention": "unknown",
             "cfg": {
               "nodes": [
                 {
@@ -8070,7 +8156,30 @@
                       "raw": "ldrsb w8,[x8, #0x10]",
                       "source": "ghidra",
                       "opcode": "ldrsb"
-                    },
+                    }
+                  ],
+                  "size": 20,
+                  "estimated_instructions_count": 6,
+                  "instructions_count": 5,
+                  "id": "0x1000009c4"
+                }
+              ],
+              "edges": []
+            },
+            "name": "_classify_item",
+            "local_variables": [
+              "local_8",
+              "local_c"
+            ],
+            "entry_point": "0x1000009c4"
+          },
+          {
+            "size_bytes": 240,
+            "calling_convention": "__cdecl",
+            "cfg": {
+              "nodes": [
+                {
+                  "instructions": [
                     {
                       "operands": [
                         {
@@ -8110,10 +8219,10 @@
                       "opcode": "cbz"
                     }
                   ],
-                  "size": 28,
-                  "estimated_instructions_count": 8,
-                  "instructions_count": 7,
-                  "id": "0x1000009c4"
+                  "size": 8,
+                  "estimated_instructions_count": 3,
+                  "instructions_count": 2,
+                  "id": "0x1000009d8"
                 },
                 {
                   "instructions": [
@@ -9384,99 +9493,22 @@
                       "raw": "str w8,[sp, #0x4]",
                       "source": "ghidra",
                       "opcode": "str"
-                    },
-                    {
-                      "operands": [
-                        {
-                          "kind": "symbol",
-                          "name": "0x100000acc"
-                        }
-                      ],
-                      "address": "0x100000ac8",
-                      "size_bytes": 4,
-                      "mnemonic": "b",
-                      "raw": "b 0x100000acc",
-                      "source": "ghidra",
-                      "opcode": "b"
                     }
                   ],
-                  "size": 32,
-                  "estimated_instructions_count": 9,
-                  "instructions_count": 8,
+                  "size": 28,
+                  "estimated_instructions_count": 8,
+                  "instructions_count": 7,
                   "id": "0x100000aac"
-                },
-                {
-                  "instructions": [
-                    {
-                      "operands": [
-                        {
-                          "kind": "register",
-                          "value": "w0"
-                        },
-                        {
-                          "size_bytes": 4,
-                          "offset": 4,
-                          "kind": "memory",
-                          "base": "sp"
-                        }
-                      ],
-                      "address": "0x100000acc",
-                      "size_bytes": 4,
-                      "mnemonic": "ldr",
-                      "raw": "ldr w0,[sp, #0x4]",
-                      "source": "ghidra",
-                      "opcode": "ldr"
-                    },
-                    {
-                      "operands": [
-                        {
-                          "kind": "register",
-                          "value": "sp"
-                        },
-                        {
-                          "kind": "register",
-                          "value": "sp"
-                        },
-                        {
-                          "kind": "unknown",
-                          "raw": "#"
-                        },
-                        {
-                          "kind": "immediate",
-                          "value": 16
-                        }
-                      ],
-                      "address": "0x100000ad0",
-                      "size_bytes": 4,
-                      "mnemonic": "add",
-                      "raw": "add sp,sp,#0x10",
-                      "source": "ghidra",
-                      "opcode": "add"
-                    },
-                    {
-                      "operands": [],
-                      "address": "0x100000ad4",
-                      "size_bytes": 4,
-                      "mnemonic": "ret",
-                      "raw": "ret",
-                      "source": "ghidra",
-                      "opcode": "ret"
-                    }
-                  ],
-                  "size": 12,
-                  "estimated_instructions_count": 4,
-                  "instructions_count": 3,
-                  "id": "0x100000acc"
                 }
               ],
               "edges": [
                 {
-                  "source": "0x1000009c4",
+                  "source": "0x1000009d8",
                   "type": "conditional_taken",
                   "target": "0x100000a34"
                 },
                 {
-                  "source": "0x1000009c4",
+                  "source": "0x1000009d8",
                   "type": "unconditional",
                   "target": "0x1000009e0"
                 },
@@ -9559,55 +9591,125 @@
                   "source": "0x100000a30",
                   "type": "unconditional",
                   "target": "0x100000aac"
-                },
-                {
-                  "source": "0x100000a34",
-                  "type": "unconditional",
-                  "target": "0x100000acc"
-                },
-                {
-                  "source": "0x100000a48",
-                  "type": "unconditional",
-                  "target": "0x100000acc"
-                },
-                {
-                  "source": "0x100000a5c",
-                  "type": "unconditional",
-                  "target": "0x100000acc"
-                },
-                {
-                  "source": "0x100000a70",
-                  "type": "unconditional",
-                  "target": "0x100000acc"
-                },
-                {
-                  "source": "0x100000a84",
-                  "type": "unconditional",
-                  "target": "0x100000acc"
-                },
-                {
-                  "source": "0x100000a98",
-                  "type": "unconditional",
-                  "target": "0x100000acc"
-                },
-                {
-                  "source": "0x100000aac",
-                  "type": "unconditional",
-                  "target": "0x100000acc"
                 }
               ]
             },
             "name": "classify_item",
-            "local_variables": [
-              "local_8",
-              "local_c",
-              "local_10"
-            ],
-            "entry_point": "0x1000009c4"
+            "local_variables": [],
+            "entry_point": "0x1000009d8"
           },
           {
-            "size_bytes": 184,
+            "size_bytes": 4,
             "calling_convention": "__cdecl",
+            "cfg": {
+              "nodes": [
+                {
+                  "instructions": [
+                    {
+                      "operands": [
+                        {
+                          "kind": "symbol",
+                          "name": "0x100000acc"
+                        }
+                      ],
+                      "address": "0x100000ac8",
+                      "size_bytes": 4,
+                      "mnemonic": "b",
+                      "raw": "b 0x100000acc",
+                      "source": "ghidra",
+                      "opcode": "b"
+                    }
+                  ],
+                  "size": 4,
+                  "estimated_instructions_count": 2,
+                  "instructions_count": 1,
+                  "id": "0x100000ac8"
+                }
+              ],
+              "edges": []
+            },
+            "name": "process_item",
+            "local_variables": [],
+            "entry_point": "0x100000ac8"
+          },
+          {
+            "size_bytes": 12,
+            "calling_convention": "unknown",
+            "cfg": {
+              "nodes": [
+                {
+                  "instructions": [
+                    {
+                      "operands": [
+                        {
+                          "kind": "register",
+                          "value": "w0"
+                        },
+                        {
+                          "size_bytes": 4,
+                          "offset": 4,
+                          "kind": "memory",
+                          "base": "sp"
+                        }
+                      ],
+                      "address": "0x100000acc",
+                      "size_bytes": 4,
+                      "mnemonic": "ldr",
+                      "raw": "ldr w0,[sp, #0x4]",
+                      "source": "ghidra",
+                      "opcode": "ldr"
+                    },
+                    {
+                      "operands": [
+                        {
+                          "kind": "register",
+                          "value": "sp"
+                        },
+                        {
+                          "kind": "register",
+                          "value": "sp"
+                        },
+                        {
+                          "kind": "unknown",
+                          "raw": "#"
+                        },
+                        {
+                          "kind": "immediate",
+                          "value": 16
+                        }
+                      ],
+                      "address": "0x100000ad0",
+                      "size_bytes": 4,
+                      "mnemonic": "add",
+                      "raw": "add sp,sp,#0x10",
+                      "source": "ghidra",
+                      "opcode": "add"
+                    },
+                    {
+                      "operands": [],
+                      "address": "0x100000ad4",
+                      "size_bytes": 4,
+                      "mnemonic": "ret",
+                      "raw": "ret",
+                      "source": "ghidra",
+                      "opcode": "ret"
+                    }
+                  ],
+                  "size": 12,
+                  "estimated_instructions_count": 4,
+                  "instructions_count": 3,
+                  "id": "0x100000acc"
+                }
+              ],
+              "edges": []
+            },
+            "name": "FUN_100000acc",
+            "local_variables": [],
+            "entry_point": "0x100000acc"
+          },
+          {
+            "size_bytes": 168,
+            "calling_convention": "unknown",
             "cfg": {
               "nodes": [
                 {
@@ -10507,7 +10609,87 @@
                   "estimated_instructions_count": 2,
                   "instructions_count": 1,
                   "id": "0x100000b7c"
+                }
+              ],
+              "edges": [
+                {
+                  "source": "0x100000ad8",
+                  "type": "unconditional",
+                  "target": "0x100000b00"
                 },
+                {
+                  "source": "0x100000b00",
+                  "type": "unconditional",
+                  "target": "0x100000b0c"
+                },
+                {
+                  "source": "0x100000b0c",
+                  "type": "conditional_taken",
+                  "target": "0x100000b3c"
+                },
+                {
+                  "source": "0x100000b0c",
+                  "type": "unconditional",
+                  "target": "0x100000b1c"
+                },
+                {
+                  "source": "0x100000b1c",
+                  "type": "unconditional",
+                  "target": "0x100000b20"
+                },
+                {
+                  "source": "0x100000b20",
+                  "type": "unconditional",
+                  "target": "0x100000b2c"
+                },
+                {
+                  "source": "0x100000b3c",
+                  "type": "conditional_taken",
+                  "target": "0x100000b68"
+                },
+                {
+                  "source": "0x100000b3c",
+                  "type": "unconditional",
+                  "target": "0x100000b48"
+                },
+                {
+                  "source": "0x100000b48",
+                  "type": "unconditional",
+                  "target": "0x100000b4c"
+                },
+                {
+                  "source": "0x100000b4c",
+                  "type": "unconditional",
+                  "target": "0x100000b58"
+                },
+                {
+                  "source": "0x100000b58",
+                  "type": "unconditional",
+                  "target": "0x100000b7c"
+                },
+                {
+                  "source": "0x100000b68",
+                  "type": "unconditional",
+                  "target": "0x100000b7c"
+                }
+              ]
+            },
+            "name": "_process_one",
+            "local_variables": [
+              "local_10",
+              "local_18",
+              "local_20",
+              "local_24",
+              "local_28",
+              "local_2c"
+            ],
+            "entry_point": "0x100000ad8"
+          },
+          {
+            "size_bytes": 16,
+            "calling_convention": "__cdecl",
+            "cfg": {
+              "nodes": [
                 {
                   "instructions": [
                     {
@@ -10596,93 +10778,15 @@
                   "id": "0x100000b80"
                 }
               ],
-              "edges": [
-                {
-                  "source": "0x100000ad8",
-                  "type": "unconditional",
-                  "target": "0x100000b00"
-                },
-                {
-                  "source": "0x100000b00",
-                  "type": "unconditional",
-                  "target": "0x100000b0c"
-                },
-                {
-                  "source": "0x100000b0c",
-                  "type": "conditional_taken",
-                  "target": "0x100000b3c"
-                },
-                {
-                  "source": "0x100000b0c",
-                  "type": "unconditional",
-                  "target": "0x100000b1c"
-                },
-                {
-                  "source": "0x100000b1c",
-                  "type": "unconditional",
-                  "target": "0x100000b20"
-                },
-                {
-                  "source": "0x100000b20",
-                  "type": "unconditional",
-                  "target": "0x100000b2c"
-                },
-                {
-                  "source": "0x100000b2c",
-                  "type": "unconditional",
-                  "target": "0x100000b80"
-                },
-                {
-                  "source": "0x100000b3c",
-                  "type": "conditional_taken",
-                  "target": "0x100000b68"
-                },
-                {
-                  "source": "0x100000b3c",
-                  "type": "unconditional",
-                  "target": "0x100000b48"
-                },
-                {
-                  "source": "0x100000b48",
-                  "type": "unconditional",
-                  "target": "0x100000b4c"
-                },
-                {
-                  "source": "0x100000b4c",
-                  "type": "unconditional",
-                  "target": "0x100000b58"
-                },
-                {
-                  "source": "0x100000b58",
-                  "type": "unconditional",
-                  "target": "0x100000b7c"
-                },
-                {
-                  "source": "0x100000b68",
-                  "type": "unconditional",
-                  "target": "0x100000b7c"
-                },
-                {
-                  "source": "0x100000b7c",
-                  "type": "unconditional",
-                  "target": "0x100000b80"
-                }
-              ]
+              "edges": []
             },
-            "name": "process_one",
-            "local_variables": [
-              "local_10",
-              "local_18",
-              "local_20",
-              "local_24",
-              "local_28",
-              "local_2c"
-            ],
-            "entry_point": "0x100000ad8"
+            "name": "scan_container",
+            "local_variables": [],
+            "entry_point": "0x100000b80"
           },
           {
-            "size_bytes": 288,
-            "calling_convention": "__cdecl",
+            "size_bytes": 276,
+            "calling_convention": "unknown",
             "cfg": {
               "nodes": [
                 {
@@ -12124,7 +12228,61 @@
                       "raw": "str w8,[x9, #0x34]",
                       "source": "ghidra",
                       "opcode": "str"
-                    },
+                    }
+                  ],
+                  "size": 72,
+                  "estimated_instructions_count": 19,
+                  "instructions_count": 18,
+                  "id": "0x100000c5c"
+                }
+              ],
+              "edges": [
+                {
+                  "source": "0x100000b90",
+                  "type": "conditional_taken",
+                  "target": "0x100000bf4"
+                },
+                {
+                  "source": "0x100000b90",
+                  "type": "unconditional",
+                  "target": "0x100000bcc"
+                },
+                {
+                  "source": "0x100000bcc",
+                  "type": "unconditional",
+                  "target": "0x100000bd0"
+                },
+                {
+                  "source": "0x100000bf4",
+                  "type": "conditional_taken",
+                  "target": "0x100000c5c"
+                },
+                {
+                  "source": "0x100000bf4",
+                  "type": "unconditional",
+                  "target": "0x100000c0c"
+                },
+                {
+                  "source": "0x100000c0c",
+                  "type": "unconditional",
+                  "target": "0x100000c10"
+                }
+              ]
+            },
+            "name": "_mutate_alias",
+            "local_variables": [
+              "local_8",
+              "local_10"
+            ],
+            "entry_point": "0x100000b90"
+          },
+          {
+            "size_bytes": 4,
+            "calling_convention": "__cdecl",
+            "cfg": {
+              "nodes": [
+                {
+                  "instructions": [
                     {
                       "operands": [
                         {
@@ -12140,11 +12298,23 @@
                       "opcode": "b"
                     }
                   ],
-                  "size": 76,
-                  "estimated_instructions_count": 20,
-                  "instructions_count": 19,
-                  "id": "0x100000c5c"
-                },
+                  "size": 4,
+                  "estimated_instructions_count": 2,
+                  "instructions_count": 1,
+                  "id": "0x100000ca4"
+                }
+              ],
+              "edges": []
+            },
+            "name": "mutate_alias",
+            "local_variables": [],
+            "entry_point": "0x100000ca4"
+          },
+          {
+            "size_bytes": 8,
+            "calling_convention": "unknown",
+            "cfg": {
+              "nodes": [
                 {
                   "instructions": [
                     {
@@ -12189,64 +12359,15 @@
                   "id": "0x100000ca8"
                 }
               ],
-              "edges": [
-                {
-                  "source": "0x100000b90",
-                  "type": "conditional_taken",
-                  "target": "0x100000bf4"
-                },
-                {
-                  "source": "0x100000b90",
-                  "type": "unconditional",
-                  "target": "0x100000bcc"
-                },
-                {
-                  "source": "0x100000bcc",
-                  "type": "unconditional",
-                  "target": "0x100000bd0"
-                },
-                {
-                  "source": "0x100000bd0",
-                  "type": "unconditional",
-                  "target": "0x100000ca8"
-                },
-                {
-                  "source": "0x100000bf4",
-                  "type": "conditional_taken",
-                  "target": "0x100000c5c"
-                },
-                {
-                  "source": "0x100000bf4",
-                  "type": "unconditional",
-                  "target": "0x100000c0c"
-                },
-                {
-                  "source": "0x100000c0c",
-                  "type": "unconditional",
-                  "target": "0x100000c10"
-                },
-                {
-                  "source": "0x100000c10",
-                  "type": "unconditional",
-                  "target": "0x100000ca8"
-                },
-                {
-                  "source": "0x100000c5c",
-                  "type": "unconditional",
-                  "target": "0x100000ca8"
-                }
-              ]
+              "edges": []
             },
-            "name": "mutate_alias",
-            "local_variables": [
-              "local_8",
-              "local_10"
-            ],
-            "entry_point": "0x100000b90"
+            "name": "FUN_100000ca8",
+            "local_variables": [],
+            "entry_point": "0x100000ca8"
           },
           {
-            "size_bytes": 412,
-            "calling_convention": "__cdecl",
+            "size_bytes": 212,
+            "calling_convention": "unknown",
             "cfg": {
               "nodes": [
                 {
@@ -13362,7 +13483,48 @@
                       "raw": "ldr x9,[x8, #0x38]",
                       "source": "ghidra",
                       "opcode": "ldr"
-                    },
+                    }
+                  ],
+                  "size": 168,
+                  "estimated_instructions_count": 43,
+                  "instructions_count": 42,
+                  "id": "0x100000cdc"
+                }
+              ],
+              "edges": [
+                {
+                  "source": "0x100000cb0",
+                  "type": "unconditional",
+                  "target": "0x100000cc4"
+                },
+                {
+                  "source": "0x100000cc4",
+                  "type": "unconditional",
+                  "target": "0x100000cd8"
+                },
+                {
+                  "source": "0x100000cd8",
+                  "type": "unconditional",
+                  "target": "0x100000cdc"
+                }
+              ]
+            },
+            "name": "_update_checksum",
+            "local_variables": [
+              "local_8",
+              "local_10",
+              "local_14",
+              "local_20"
+            ],
+            "entry_point": "0x100000cb0"
+          },
+          {
+            "size_bytes": 196,
+            "calling_convention": "__cdecl",
+            "cfg": {
+              "nodes": [
+                {
+                  "instructions": [
                     {
                       "operands": [
                         {
@@ -13460,10 +13622,10 @@
                       "opcode": "b"
                     }
                   ],
-                  "size": 188,
-                  "estimated_instructions_count": 48,
-                  "instructions_count": 47,
-                  "id": "0x100000cdc"
+                  "size": 20,
+                  "estimated_instructions_count": 6,
+                  "instructions_count": 5,
+                  "id": "0x100000d84"
                 },
                 {
                   "instructions": [
@@ -14416,46 +14578,17 @@
                       "raw": "add sp,sp,#0x30",
                       "source": "ghidra",
                       "opcode": "add"
-                    },
-                    {
-                      "operands": [],
-                      "address": "0x100000e48",
-                      "size_bytes": 4,
-                      "mnemonic": "ret",
-                      "raw": "ret",
-                      "source": "ghidra",
-                      "opcode": "ret"
                     }
                   ],
-                  "size": 24,
-                  "estimated_instructions_count": 7,
-                  "instructions_count": 6,
+                  "size": 20,
+                  "estimated_instructions_count": 6,
+                  "instructions_count": 5,
                   "id": "0x100000e34"
                 }
               ],
               "edges": [
                 {
-                  "source": "0x100000cb0",
-                  "type": "unconditional",
-                  "target": "0x100000cc4"
-                },
-                {
-                  "source": "0x100000cc4",
-                  "type": "conditional_taken",
-                  "target": "0x100000dec"
-                },
-                {
-                  "source": "0x100000cc4",
-                  "type": "unconditional",
-                  "target": "0x100000cd8"
-                },
-                {
-                  "source": "0x100000cd8",
-                  "type": "unconditional",
-                  "target": "0x100000cdc"
-                },
-                {
-                  "source": "0x100000cdc",
+                  "source": "0x100000d84",
                   "type": "unconditional",
                   "target": "0x100000d98"
                 },
@@ -14490,11 +14623,6 @@
                   "target": "0x100000ddc"
                 },
                 {
-                  "source": "0x100000ddc",
-                  "type": "unconditional",
-                  "target": "0x100000cc4"
-                },
-                {
                   "source": "0x100000dec",
                   "type": "unconditional",
                   "target": "0x100000df4"
@@ -14526,20 +14654,42 @@
                 }
               ]
             },
-            "name": "update_checksum",
-            "local_variables": [
-              "local_8",
-              "local_10",
-              "local_14",
-              "local_20",
-              "local_24",
-              "local_28"
-            ],
-            "entry_point": "0x100000cb0"
+            "name": "pointer_walk",
+            "local_variables": [],
+            "entry_point": "0x100000d84"
+          },
+          {
+            "size_bytes": 4,
+            "calling_convention": "__cdecl",
+            "cfg": {
+              "nodes": [
+                {
+                  "instructions": [
+                    {
+                      "operands": [],
+                      "address": "0x100000e48",
+                      "size_bytes": 4,
+                      "mnemonic": "ret",
+                      "raw": "ret",
+                      "source": "ghidra",
+                      "opcode": "ret"
+                    }
+                  ],
+                  "size": 4,
+                  "estimated_instructions_count": 2,
+                  "instructions_count": 1,
+                  "id": "0x100000e48"
+                }
+              ],
+              "edges": []
+            },
+            "name": "nested_branches",
+            "local_variables": [],
+            "entry_point": "0x100000e48"
           },
           {
             "size_bytes": 284,
-            "calling_convention": "__cdecl",
+            "calling_convention": "unknown",
             "cfg": {
               "nodes": [
                 {
@@ -16230,7 +16380,7 @@
                 }
               ]
             },
-            "name": "scan_store",
+            "name": "_scan_store",
             "local_variables": [
               "local_10",
               "local_18",
@@ -16243,8 +16393,8 @@
             "entry_point": "0x100000e4c"
           },
           {
-            "size_bytes": 208,
-            "calling_convention": "__cdecl",
+            "size_bytes": 104,
+            "calling_convention": "unknown",
             "cfg": {
               "nodes": [
                 {
@@ -16810,7 +16960,49 @@
                       "raw": "ldr x8,[sp, #0x20]",
                       "source": "ghidra",
                       "opcode": "ldr"
-                    },
+                    }
+                  ],
+                  "size": 32,
+                  "estimated_instructions_count": 9,
+                  "instructions_count": 8,
+                  "id": "0x100000fb0"
+                }
+              ],
+              "edges": [
+                {
+                  "source": "0x100000f68",
+                  "type": "unconditional",
+                  "target": "0x100000f9c"
+                },
+                {
+                  "source": "0x100000f9c",
+                  "type": "unconditional",
+                  "target": "0x100000fac"
+                },
+                {
+                  "source": "0x100000fac",
+                  "type": "unconditional",
+                  "target": "0x100000fb0"
+                }
+              ]
+            },
+            "name": "_pointer_walk",
+            "local_variables": [
+              "local_8",
+              "local_10",
+              "local_18",
+              "local_20",
+              "local_28"
+            ],
+            "entry_point": "0x100000f68"
+          },
+          {
+            "size_bytes": 104,
+            "calling_convention": "unknown",
+            "cfg": {
+              "nodes": [
+                {
+                  "instructions": [
                     {
                       "operands": [
                         {
@@ -17036,10 +17228,10 @@
                       "opcode": "b.ne"
                     }
                   ],
-                  "size": 76,
-                  "estimated_instructions_count": 20,
-                  "instructions_count": 19,
-                  "id": "0x100000fb0"
+                  "size": 44,
+                  "estimated_instructions_count": 12,
+                  "instructions_count": 11,
+                  "id": "0x100000fd0"
                 },
                 {
                   "instructions": [
@@ -17363,32 +17555,12 @@
               ],
               "edges": [
                 {
-                  "source": "0x100000f68",
-                  "type": "unconditional",
-                  "target": "0x100000f9c"
-                },
-                {
-                  "source": "0x100000f9c",
-                  "type": "conditional_taken",
-                  "target": "0x10000102c"
-                },
-                {
-                  "source": "0x100000f9c",
-                  "type": "unconditional",
-                  "target": "0x100000fac"
-                },
-                {
-                  "source": "0x100000fac",
-                  "type": "unconditional",
-                  "target": "0x100000fb0"
-                },
-                {
-                  "source": "0x100000fb0",
+                  "source": "0x100000fd0",
                   "type": "conditional_taken",
                   "target": "0x100001018"
                 },
                 {
-                  "source": "0x100000fb0",
+                  "source": "0x100000fd0",
                   "type": "unconditional",
                   "target": "0x100000ffc"
                 },
@@ -17406,27 +17578,16 @@
                   "source": "0x100001018",
                   "type": "unconditional",
                   "target": "0x10000101c"
-                },
-                {
-                  "source": "0x10000101c",
-                  "type": "unconditional",
-                  "target": "0x100000f9c"
                 }
               ]
             },
-            "name": "pointer_walk",
-            "local_variables": [
-              "local_8",
-              "local_10",
-              "local_18",
-              "local_20",
-              "local_28"
-            ],
-            "entry_point": "0x100000f68"
+            "name": "main",
+            "local_variables": [],
+            "entry_point": "0x100000fd0"
           },
           {
             "size_bytes": 504,
-            "calling_convention": "__cdecl",
+            "calling_convention": "unknown",
             "cfg": {
               "nodes": [
                 {
@@ -20408,7 +20569,7 @@
                 }
               ]
             },
-            "name": "nested_branches",
+            "name": "_nested_branches",
             "local_variables": [
               "local_10",
               "local_18",
@@ -20423,7 +20584,7 @@
           },
           {
             "size_bytes": 212,
-            "calling_convention": "__cdecl",
+            "calling_convention": "unknown",
             "cfg": {
               "nodes": [
                 {
@@ -21589,7 +21750,7 @@
                 }
               ]
             },
-            "name": "mixed_memory_sizes",
+            "name": "_mixed_memory_sizes",
             "local_variables": [
               "local_8",
               "local_c",
@@ -21600,7 +21761,7 @@
           },
           {
             "size_bytes": 204,
-            "calling_convention": "__cdecl",
+            "calling_convention": "unknown",
             "cfg": {
               "nodes": [
                 {
@@ -22828,7 +22989,7 @@
                 }
               ]
             },
-            "name": "dispatch_score",
+            "name": "_dispatch_score",
             "local_variables": [
               "local_10",
               "local_18",
@@ -26200,7 +26361,7 @@
                 }
               ]
             },
-            "name": "main",
+            "name": "entry",
             "local_variables": [
               "local_10",
               "local_20",
@@ -26258,7 +26419,7 @@
           {
             "address": "0x100000460",
             "visibility": "IMPORTED",
-            "name": "recursive_fold",
+            "name": "basic_score",
             "type": "Function"
           },
           {
@@ -26307,12 +26468,12 @@
             "address": "0x10000050c",
             "visibility": "IMPORTED",
             "name": "_init_item",
-            "type": "Label"
+            "type": "Function"
           },
           {
-            "address": "0x10000050c",
+            "address": "0x100000544",
             "visibility": "IMPORTED",
-            "name": "init_item",
+            "name": "weird_score",
             "type": "Function"
           },
           {
@@ -26367,12 +26528,12 @@
             "address": "0x100000650",
             "visibility": "IMPORTED",
             "name": "_init_store",
-            "type": "Label"
+            "type": "Function"
           },
           {
-            "address": "0x100000650",
+            "address": "0x100000668",
             "visibility": "IMPORTED",
-            "name": "init_store",
+            "name": "recursive_mix",
             "type": "Function"
           },
           {
@@ -26427,19 +26588,19 @@
             "address": "0x100000718",
             "visibility": "IMPORTED",
             "name": "_score_basic",
-            "type": "Label"
+            "type": "Function"
           },
           {
-            "address": "0x100000718",
+            "address": "0x100000724",
             "visibility": "IMPORTED",
-            "name": "score_basic",
+            "name": "init_item",
             "type": "Function"
           },
           {
             "address": "0x1000007fc",
             "visibility": "DEFAULT",
-            "name": "LAB_1000007fc",
-            "type": "Label"
+            "name": "FUN_1000007fc",
+            "type": "Function"
           },
           {
             "address": "0x10000080c",
@@ -26454,6 +26615,12 @@
             "type": "Label"
           },
           {
+            "address": "0x100000834",
+            "visibility": "IMPORTED",
+            "name": "init_container",
+            "type": "Function"
+          },
+          {
             "address": "0x10000083c",
             "visibility": "DEFAULT",
             "name": "LAB_10000083c",
@@ -26463,19 +26630,13 @@
             "address": "0x100000848",
             "visibility": "IMPORTED",
             "name": "_score_weird",
-            "type": "Label"
-          },
-          {
-            "address": "0x100000848",
-            "visibility": "IMPORTED",
-            "name": "score_weird",
             "type": "Function"
           },
           {
             "address": "0x100000870",
             "visibility": "DEFAULT",
-            "name": "LAB_100000870",
-            "type": "Label"
+            "name": "FUN_100000870",
+            "type": "Function"
           },
           {
             "address": "0x10000087c",
@@ -26502,6 +26663,12 @@
             "type": "Label"
           },
           {
+            "address": "0x1000008bc",
+            "visibility": "IMPORTED",
+            "name": "update_checksum",
+            "type": "Function"
+          },
+          {
             "address": "0x1000008d0",
             "visibility": "DEFAULT",
             "name": "LAB_1000008d0",
@@ -26516,8 +26683,8 @@
           {
             "address": "0x1000008f0",
             "visibility": "DEFAULT",
-            "name": "LAB_1000008f0",
-            "type": "Label"
+            "name": "FUN_1000008f0",
+            "type": "Function"
           },
           {
             "address": "0x100000900",
@@ -26547,12 +26714,6 @@
             "address": "0x100000984",
             "visibility": "IMPORTED",
             "name": "_abs_i",
-            "type": "Label"
-          },
-          {
-            "address": "0x100000984",
-            "visibility": "IMPORTED",
-            "name": "abs_i",
             "type": "Function"
           },
           {
@@ -26577,10 +26738,10 @@
             "address": "0x1000009c4",
             "visibility": "IMPORTED",
             "name": "_classify_item",
-            "type": "Label"
+            "type": "Function"
           },
           {
-            "address": "0x1000009c4",
+            "address": "0x1000009d8",
             "visibility": "IMPORTED",
             "name": "classify_item",
             "type": "Function"
@@ -26658,21 +26819,21 @@
             "type": "Label"
           },
           {
+            "address": "0x100000ac8",
+            "visibility": "IMPORTED",
+            "name": "process_item",
+            "type": "Function"
+          },
+          {
             "address": "0x100000acc",
             "visibility": "DEFAULT",
-            "name": "LAB_100000acc",
-            "type": "Label"
+            "name": "FUN_100000acc",
+            "type": "Function"
           },
           {
             "address": "0x100000ad8",
             "visibility": "IMPORTED",
             "name": "_process_one",
-            "type": "Label"
-          },
-          {
-            "address": "0x100000ad8",
-            "visibility": "IMPORTED",
-            "name": "process_one",
             "type": "Function"
           },
           {
@@ -26707,20 +26868,14 @@
           },
           {
             "address": "0x100000b80",
-            "visibility": "DEFAULT",
-            "name": "LAB_100000b80",
-            "type": "Label"
+            "visibility": "IMPORTED",
+            "name": "scan_container",
+            "type": "Function"
           },
           {
             "address": "0x100000b90",
             "visibility": "IMPORTED",
             "name": "_mutate_alias",
-            "type": "Label"
-          },
-          {
-            "address": "0x100000b90",
-            "visibility": "IMPORTED",
-            "name": "mutate_alias",
             "type": "Function"
           },
           {
@@ -26748,21 +26903,21 @@
             "type": "Label"
           },
           {
+            "address": "0x100000ca4",
+            "visibility": "IMPORTED",
+            "name": "mutate_alias",
+            "type": "Function"
+          },
+          {
             "address": "0x100000ca8",
             "visibility": "DEFAULT",
-            "name": "LAB_100000ca8",
-            "type": "Label"
+            "name": "FUN_100000ca8",
+            "type": "Function"
           },
           {
             "address": "0x100000cb0",
             "visibility": "IMPORTED",
             "name": "_update_checksum",
-            "type": "Label"
-          },
-          {
-            "address": "0x100000cb0",
-            "visibility": "IMPORTED",
-            "name": "update_checksum",
             "type": "Function"
           },
           {
@@ -26776,6 +26931,12 @@
             "visibility": "DEFAULT",
             "name": "LAB_100000cdc",
             "type": "Label"
+          },
+          {
+            "address": "0x100000d84",
+            "visibility": "IMPORTED",
+            "name": "pointer_walk",
+            "type": "Function"
           },
           {
             "address": "0x100000d98",
@@ -26838,15 +26999,15 @@
             "type": "Label"
           },
           {
-            "address": "0x100000e4c",
+            "address": "0x100000e48",
             "visibility": "IMPORTED",
-            "name": "_scan_store",
-            "type": "Label"
+            "name": "nested_branches",
+            "type": "Function"
           },
           {
             "address": "0x100000e4c",
             "visibility": "IMPORTED",
-            "name": "scan_store",
+            "name": "_scan_store",
             "type": "Function"
           },
           {
@@ -26931,12 +27092,6 @@
             "address": "0x100000f68",
             "visibility": "IMPORTED",
             "name": "_pointer_walk",
-            "type": "Label"
-          },
-          {
-            "address": "0x100000f68",
-            "visibility": "IMPORTED",
-            "name": "pointer_walk",
             "type": "Function"
           },
           {
@@ -26950,6 +27105,12 @@
             "visibility": "DEFAULT",
             "name": "LAB_100000fb0",
             "type": "Label"
+          },
+          {
+            "address": "0x100000fd0",
+            "visibility": "IMPORTED",
+            "name": "main",
+            "type": "Function"
           },
           {
             "address": "0x100001000",
@@ -26979,12 +27140,6 @@
             "address": "0x100001038",
             "visibility": "IMPORTED",
             "name": "_nested_branches",
-            "type": "Label"
-          },
-          {
-            "address": "0x100001038",
-            "visibility": "IMPORTED",
-            "name": "nested_branches",
             "type": "Function"
           },
           {
@@ -27165,12 +27320,6 @@
             "address": "0x100001230",
             "visibility": "IMPORTED",
             "name": "_mixed_memory_sizes",
-            "type": "Label"
-          },
-          {
-            "address": "0x100001230",
-            "visibility": "IMPORTED",
-            "name": "mixed_memory_sizes",
             "type": "Function"
           },
           {
@@ -27201,12 +27350,6 @@
             "address": "0x100001304",
             "visibility": "IMPORTED",
             "name": "_dispatch_score",
-            "type": "Label"
-          },
-          {
-            "address": "0x100001304",
-            "visibility": "IMPORTED",
-            "name": "dispatch_score",
             "type": "Function"
           },
           {
@@ -27266,19 +27409,13 @@
           {
             "address": "0x1000013d0",
             "visibility": "IMPORTED",
-            "name": "main",
+            "name": "entry",
             "type": "Function"
           },
           {
             "address": "0x1000013d0",
             "visibility": "IMPORTED",
             "name": "_main",
-            "type": "Label"
-          },
-          {
-            "address": "0x1000013d0",
-            "visibility": "IMPORTED",
-            "name": "entry",
             "type": "Label"
           },
           {
@@ -27390,147 +27527,117 @@
             "type": "Label"
           },
           {
-            "address": "0x100008730",
+            "address": "0x1000082e0",
             "visibility": "DEFAULT",
-            "name": "nlist_100008730",
+            "name": "nlist_1000082e0",
             "type": "Label"
           },
           {
-            "address": "0x100008749",
+            "address": "0x1000082fa",
             "visibility": "DEFAULT",
-            "name": "s__100008749",
+            "name": "s___mh_execute_header_1000082fa",
             "type": "Label"
           },
           {
-            "address": "0x10000874a",
+            "address": "0x10000830e",
             "visibility": "DEFAULT",
-            "name": "s___mh_execute_header_10000874a",
+            "name": "s__classify_item_10000830e",
             "type": "Label"
           },
           {
-            "address": "0x10000875e",
+            "address": "0x10000831d",
             "visibility": "DEFAULT",
-            "name": "s__classify_item_10000875e",
+            "name": "s__dispatch_score_10000831d",
             "type": "Label"
           },
           {
-            "address": "0x10000876d",
+            "address": "0x10000832d",
             "visibility": "DEFAULT",
-            "name": "s__dispatch_score_10000876d",
+            "name": "s__init_item_10000832d",
             "type": "Label"
           },
           {
-            "address": "0x10000877d",
+            "address": "0x100008338",
             "visibility": "DEFAULT",
-            "name": "s__init_item_10000877d",
+            "name": "s__init_store_100008338",
             "type": "Label"
           },
           {
-            "address": "0x100008788",
+            "address": "0x100008344",
             "visibility": "DEFAULT",
-            "name": "s__init_store_100008788",
+            "name": "s__main_100008344",
             "type": "Label"
           },
           {
-            "address": "0x100008794",
+            "address": "0x10000834a",
             "visibility": "DEFAULT",
-            "name": "s__main_100008794",
+            "name": "s__mixed_memory_sizes_10000834a",
             "type": "Label"
           },
           {
-            "address": "0x10000879a",
+            "address": "0x10000835e",
             "visibility": "DEFAULT",
-            "name": "s__mixed_memory_sizes_10000879a",
+            "name": "s__mutate_alias_10000835e",
             "type": "Label"
           },
           {
-            "address": "0x1000087ae",
+            "address": "0x10000836c",
             "visibility": "DEFAULT",
-            "name": "s__mutate_alias_1000087ae",
+            "name": "s__nested_branches_10000836c",
             "type": "Label"
           },
           {
-            "address": "0x1000087bc",
+            "address": "0x10000837d",
             "visibility": "DEFAULT",
-            "name": "s__nested_branches_1000087bc",
+            "name": "s__pointer_walk_10000837d",
             "type": "Label"
           },
           {
-            "address": "0x1000087cd",
+            "address": "0x10000838b",
             "visibility": "DEFAULT",
-            "name": "s__pointer_walk_1000087cd",
+            "name": "s__process_one_10000838b",
             "type": "Label"
           },
           {
-            "address": "0x1000087db",
+            "address": "0x100008398",
             "visibility": "DEFAULT",
-            "name": "s__process_one_1000087db",
+            "name": "s__recursive_fold_100008398",
             "type": "Label"
           },
           {
-            "address": "0x1000087e8",
+            "address": "0x1000083a8",
             "visibility": "DEFAULT",
-            "name": "s__recursive_fold_1000087e8",
+            "name": "s__scan_store_1000083a8",
             "type": "Label"
           },
           {
-            "address": "0x1000087f8",
+            "address": "0x1000083b4",
             "visibility": "DEFAULT",
-            "name": "s__scan_store_1000087f8",
+            "name": "s__score_basic_1000083b4",
             "type": "Label"
           },
           {
-            "address": "0x100008804",
+            "address": "0x1000083c1",
             "visibility": "DEFAULT",
-            "name": "s__score_basic_100008804",
+            "name": "s__score_weird_1000083c1",
             "type": "Label"
           },
           {
-            "address": "0x100008811",
+            "address": "0x1000083ce",
             "visibility": "DEFAULT",
-            "name": "s__score_weird_100008811",
+            "name": "s__update_checksum_1000083ce",
             "type": "Label"
           },
           {
-            "address": "0x10000881e",
+            "address": "0x1000083df",
             "visibility": "DEFAULT",
-            "name": "s__update_checksum_10000881e",
+            "name": "s__printf_1000083df",
             "type": "Label"
           },
           {
-            "address": "0x10000882f",
+            "address": "0x1000083e7",
             "visibility": "DEFAULT",
-            "name": "s__printf_10000882f",
-            "type": "Label"
-          },
-          {
-            "address": "0x100008837",
-            "visibility": "DEFAULT",
-            "name": "s__abs_i_100008837",
-            "type": "Label"
-          },
-          {
-            "address": "0x10000883e",
-            "visibility": "DEFAULT",
-            "name": "s_/Users/kartik/Downloads/binary-r_10000883e",
-            "type": "Label"
-          },
-          {
-            "address": "0x100008876",
-            "visibility": "DEFAULT",
-            "name": "s_t.c_100008876",
-            "type": "Label"
-          },
-          {
-            "address": "0x10000887a",
-            "visibility": "DEFAULT",
-            "name": "s_/var/folders/sn/l1bzbbzd14l2xthh_10000887a",
-            "type": "Label"
-          },
-          {
-            "address": "0x1000088b6",
-            "visibility": "DEFAULT",
-            "name": "s__abs_i_1000088b6",
+            "name": "s__abs_i_1000083e7",
             "type": "Label"
           }
         ]
@@ -27540,7 +27647,7 @@
       "schema_version": "1.0.0",
       "provenance": {
         "tool_name": "Radare2 Headless Analyser",
-        "timestamp": "2026-06-14T18:32:35-07:00",
+        "timestamp": "2026-06-14T17:26:09-07:00",
         "binary_path": "./t",
         "config": {}
       },
@@ -52721,12 +52828,6 @@
             "visibility": "static"
           },
           {
-            "address": "0x6a2ea592",
-            "name": "/var/folders/sn/l1bzbbzd14l2xthhyt7fm2r80000gp/T/t-2eaf6a.o",
-            "type": "function",
-            "visibility": "static"
-          },
-          {
             "address": "0x100001634",
             "name": "printf",
             "type": "function",
@@ -52825,23 +52926,23 @@
         ],
         "call_graph": {
           "nodes": [
-            "_abs_i",
-            "_main",
-            "_init_item",
-            "_pointer_walk",
-            "_scan_store",
-            "_dispatch_score",
-            "_score_basic",
+            "_mutate_alias",
             "_mixed_memory_sizes",
             "_score_weird",
-            "_update_checksum",
-            "_recursive_fold",
-            "_init_store",
             "_process_one",
-            "_nested_branches",
+            "_pointer_walk",
             "printf",
+            "_dispatch_score",
+            "_nested_branches",
+            "_abs_i",
+            "_init_store",
+            "_main",
+            "_scan_store",
+            "_update_checksum",
             "_classify_item",
-            "_mutate_alias"
+            "_init_item",
+            "_score_basic",
+            "_recursive_fold"
           ],
           "edges": [
             {
