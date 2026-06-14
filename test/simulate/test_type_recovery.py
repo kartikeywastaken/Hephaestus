@@ -614,23 +614,81 @@ class TestPhase4ATypeRecovery(unittest.TestCase):
         good_func_res = next((r for r in res if r.name == "good_func"), None)
         self.assertIsNotNone(good_func_res)
 
-    def test_provenance_paths_respect_out_dir(self):
-        """Output provenance paths must respect custom --out-dir and not hardcode artifacts/."""
+    def test_provenance_paths_are_consistent(self):
+        """If both files are inside custom output directory, they are relative to it."""
         import tempfile
         with tempfile.TemporaryDirectory() as tmpdir:
             output_path = os.path.join(tmpdir, "type_recovery.json")
+            
+            # Create files on disk so possible_structuring detection finds it
+            with open(os.path.join(tmpdir, "unified_ir.json"), "w") as f:
+                f.write("{}")
+            with open(os.path.join(tmpdir, "structuring_regions.json"), "w") as f:
+                f.write("{}")
+                
             write_type_recovery_artifact(
                 [],
                 output_path,
-                source_ir=None,
-                source_structuring=None,
+                source_ir=os.path.join(tmpdir, "unified_ir.json"),
+                source_structuring=os.path.join(tmpdir, "structuring_regions.json"),
             )
             with open(output_path, "r", encoding="utf-8") as fh:
                 payload = json.load(fh)
             
             prov = payload["provenance"]
-            self.assertNotIn("artifacts/", prov["source_ir"])
-            self.assertIn(tmpdir, prov["source_ir"])
+            self.assertEqual(prov["source_ir"], "unified_ir.json")
+            self.assertEqual(prov["source_structuring"], "structuring_regions.json")
+
+    def test_missing_structuring_provenance_is_clean(self):
+        """If structuring regions file is absent, source_ir is relative and source_structuring is null."""
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmpdir:
+            output_path = os.path.join(tmpdir, "type_recovery.json")
+            
+            # unified_ir.json is created on disk
+            with open(os.path.join(tmpdir, "unified_ir.json"), "w") as f:
+                f.write("{}")
+                
+            write_type_recovery_artifact(
+                [],
+                output_path,
+                source_ir=os.path.join(tmpdir, "unified_ir.json"),
+                source_structuring=None, # structuring regions file is absent
+            )
+            with open(output_path, "r", encoding="utf-8") as fh:
+                payload = json.load(fh)
+            
+            prov = payload["provenance"]
+            self.assertEqual(prov["source_ir"], "unified_ir.json")
+            self.assertIsNone(prov["source_structuring"])
+
+    def test_no_absolute_host_paths_in_phase4a_provenance(self):
+        """Ensure provenance doesn't contain mixed absolute local-machine paths when files are inside output dir."""
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmpdir:
+            output_path = os.path.join(tmpdir, "type_recovery.json")
+            
+            # Create files on disk so possible_structuring detection finds it
+            with open(os.path.join(tmpdir, "unified_ir.json"), "w") as f:
+                f.write("{}")
+            with open(os.path.join(tmpdir, "structuring_regions.json"), "w") as f:
+                f.write("{}")
+                
+            write_type_recovery_artifact(
+                [],
+                output_path,
+                source_ir=os.path.abspath(os.path.join(tmpdir, "unified_ir.json")),
+                source_structuring=os.path.abspath(os.path.join(tmpdir, "structuring_regions.json")),
+            )
+            with open(output_path, "r", encoding="utf-8") as fh:
+                payload = json.load(fh)
+            
+            prov = payload["provenance"]
+            # Both should be simple relative POSIX basenames, no absolute paths (which start with '/' on POSIX)
+            self.assertFalse(prov["source_ir"].startswith("/"))
+            self.assertFalse(prov["source_structuring"].startswith("/"))
+            self.assertEqual(prov["source_ir"], "unified_ir.json")
+            self.assertEqual(prov["source_structuring"], "structuring_regions.json")
 
 
 if __name__ == "__main__":

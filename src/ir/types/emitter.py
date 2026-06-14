@@ -10,12 +10,29 @@ from __future__ import annotations
 import json
 import os
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from src.ir.types.models import RecoveredFunctionSemantics
 
 
 SCHEMA_VERSION = "4A.0.0"
+
+
+def normalize_provenance_path(path: Optional[str], output_dir: Path) -> Optional[str]:
+    """
+    Normalize path to be relative to output_dir if it's inside,
+    otherwise absolute. Returns a POSIX path format using `.as_posix()`.
+    """
+    if not path:
+        return None
+    abs_path = Path(path).resolve()
+    abs_out_dir = output_dir.resolve()
+    try:
+        relative_path = abs_path.relative_to(abs_out_dir)
+        return relative_path.as_posix()
+    except ValueError:
+        return abs_path.as_posix()
 
 
 def write_type_recovery_artifact(
@@ -41,7 +58,9 @@ def write_type_recovery_artifact(
     source_ir         : Path of the Unified IR that was consumed (provenance only).
     source_structuring: Path of the structuring regions file consumed, or None.
     """
-    out_dir = os.path.dirname(os.path.abspath(output_path))
+    out_dir_path = Path(output_path).parent.resolve()
+    out_dir = str(out_dir_path)
+
     if source_ir is None:
         source_ir = os.path.join(out_dir, "unified_ir.json")
     if source_structuring is None:
@@ -49,13 +68,16 @@ def write_type_recovery_artifact(
         if os.path.exists(possible_structuring):
             source_structuring = possible_structuring
 
+    norm_source_ir = normalize_provenance_path(source_ir, out_dir_path)
+    norm_source_structuring = normalize_provenance_path(source_structuring, out_dir_path)
+
     payload: Dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
         "provenance": {
             "phase": "4A",
             "description": "Signature and variable recovery backbone",
-            "source_ir": source_ir,
-            "source_structuring": source_structuring,
+            "source_ir": norm_source_ir,
+            "source_structuring": norm_source_structuring,
         },
         "data": {
             "functions": [f.to_dict() for f in functions],
