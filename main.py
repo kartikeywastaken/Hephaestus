@@ -767,6 +767,102 @@ def handle_recover_layouts(out_dir: str):
     sys.exit(0)
 
 
+def handle_finalize_semantics(out_dir: str):
+    """
+    Phase 4D: Final Phase 4 Semantic Artifact Merger
+    Reads type_recovery.json, semantic_recovery.json (optional), and
+    layout_recovery.json (optional), merges them, and writes
+    phase4_semantics.json to the output directory.
+    """
+    from src.ir.types.phase4_semantics import build_phase4_semantics
+    from src.ir.types.phase4_emitter import write_phase4_semantics_artifact
+
+    logger.info("Executing Phase 4D Final Semantic Artifact Merger...")
+
+    # Load type_recovery.json (required)
+    tr_path = os.path.join(out_dir, "type_recovery.json")
+    if not os.path.exists(tr_path):
+        logger.error(
+            "[-] type_recovery.json not found at %s. "
+            "Please run 'recover-semantics' first.", tr_path
+        )
+        sys.exit(1)
+    try:
+        with open(tr_path, "r", encoding="utf-8") as f:
+            type_recovery = json.load(f)
+    except Exception as e:
+        logger.error("[-] Failed to read type_recovery.json at %s: %s", tr_path, e)
+        sys.exit(1)
+
+    # Load semantic_recovery.json (optional)
+    semantic_recovery = None
+    sr_path = os.path.join(out_dir, "semantic_recovery.json")
+    if os.path.exists(sr_path):
+        try:
+            with open(sr_path, "r", encoding="utf-8") as f:
+                semantic_recovery = json.load(f)
+            logger.info("[+] Loaded semantic recovery from: %s", sr_path)
+        except Exception as e:
+            logger.warning(
+                "Could not load semantic_recovery.json: %s. Continuing without it.", e
+            )
+            semantic_recovery = None
+    else:
+        logger.info("semantic_recovery.json not found; continuing with type-only merge.")
+
+    # Load layout_recovery.json (optional)
+    layout_recovery = None
+    lr_path = os.path.join(out_dir, "layout_recovery.json")
+    if os.path.exists(lr_path):
+        try:
+            with open(lr_path, "r", encoding="utf-8") as f:
+                layout_recovery = json.load(f)
+            logger.info("[+] Loaded layout recovery from: %s", lr_path)
+        except Exception as e:
+            logger.warning(
+                "Could not load layout_recovery.json: %s. Continuing without it.", e
+            )
+            layout_recovery = None
+    else:
+        logger.info("layout_recovery.json not found; continuing without layout data.")
+
+    # Build merged artifact
+    artifact = build_phase4_semantics(
+        type_recovery,
+        semantic_recovery=semantic_recovery,
+        layout_recovery=layout_recovery,
+        source_type_recovery=tr_path,
+        source_semantic_recovery=sr_path if semantic_recovery else None,
+        source_layout_recovery=lr_path if layout_recovery else None,
+    )
+
+    # Write artifact
+    output_path = os.path.join(out_dir, "phase4_semantics.json")
+    write_phase4_semantics_artifact(
+        artifact, output_path,
+        source_type_recovery=tr_path,
+        source_semantic_recovery=sr_path if semantic_recovery else None,
+        source_layout_recovery=lr_path if layout_recovery else None,
+    )
+    logger.info("[+] Phase 4D semantic artifact committed: %s", output_path)
+
+    # Print summary
+    s = artifact.summary
+    print("\n============================================================")
+    print("      PHASE 4D: FINAL SEMANTIC ARTIFACT MERGER")
+    print("============================================================")
+    print(f"Phase 4D semantic finalization complete")
+    print(f"Functions finalized:         {s['functions_total']}")
+    print(f"Functions with refinement:   {s['functions_with_refinement']}")
+    print(f"Layout candidates attached:  {s['total_layout_candidates']}")
+    print(f"Unbound memory accesses:     {s['total_unbound_memory_accesses']}")
+    print(f"Constraints applied:         {s['total_constraints_applied']}")
+    print("============================================================")
+    print(f"Output: {output_path}")
+    print("============================================================")
+    sys.exit(0)
+
+
 def main():
     # If help flag is present, avoid running setup_logging to prevent creating output directory unnecessarily
     if "--help" in sys.argv or "-h" in sys.argv:
@@ -825,6 +921,9 @@ def main():
             return
         elif first_arg == "recover-layouts":
             handle_recover_layouts(out_dir)
+            return
+        elif first_arg == "finalize-semantics":
+            handle_finalize_semantics(out_dir)
             return
 
     args = parse_args()

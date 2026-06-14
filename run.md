@@ -115,7 +115,79 @@ Output: artifacts/semantic_recovery.json
 
 ---
 
-## 6. Output Artifacts Generated
+## 6. Conservative Data Layout Recovery (Phase 4C)
+
+Recovers conservative memory access patterns from the Unified IR. Classifies
+accesses by base register into scalar, array-like, record-like, or pointer-like
+layout candidates. Does not emit structs or field names.
+
+**Prerequisite**: `recover-semantics` must be run first (produces `type_recovery.json`).
+
+### Run on the default folder (`artifacts/`):
+```bash
+python3 main.py recover-layouts
+```
+
+### Run on a custom folder (e.g., `artifact_23/`):
+```bash
+python3 main.py recover-layouts --out-dir artifact_23
+```
+
+---
+
+## 7. Final Phase 4 Semantic Artifact Merger (Phase 4D)
+
+Merges `type_recovery.json`, `semantic_recovery.json` (optional), and
+`layout_recovery.json` (optional) into a single `phase4_semantics.json`
+artifact for Phase 5 handoff.
+
+Phase 4D does not infer new types, emit structs, or compute confidence scores.
+It only summarizes and merges evidence that already exists.
+
+**Prerequisite**: `recover-semantics` must be run first.
+
+### Run on the default folder (`artifacts/`):
+```bash
+python3 main.py finalize-semantics
+```
+
+### Run on a custom folder (e.g., `artifact_23/`):
+```bash
+python3 main.py finalize-semantics --out-dir artifact_23
+```
+
+The command prints a summary:
+```
+============================================================
+      PHASE 4D: FINAL SEMANTIC ARTIFACT MERGER
+============================================================
+Phase 4D semantic finalization complete
+Functions finalized:         <N>
+Functions with refinement:   <N>
+Layout candidates attached:  <N>
+Unbound memory accesses:     <N>
+Constraints applied:         <N>
+============================================================
+Output: artifacts/phase4_semantics.json
+============================================================
+```
+
+---
+
+## 8. Full Phase 4 Workflow
+
+```bash
+python3 main.py ./target_binary --ghidra --radare2 --export-ir
+python3 main.py analyze-cfg --out-dir artifacts
+python3 main.py recover-semantics --out-dir artifacts
+python3 main.py refine-semantics --out-dir artifacts
+python3 main.py recover-layouts --out-dir artifacts
+python3 main.py finalize-semantics --out-dir artifacts
+```
+
+---
+
+## 9. Output Artifacts Generated
 
 After running the commands above, the output folder will contain:
 - `radare2_extraction.json` — Raw Radare2 analysis output.
@@ -125,3 +197,5 @@ After running the commands above, the output folder will contain:
 - `structuring_regions.json` — Structured control-flow region tree serialization (Phase 3B).
 - `type_recovery.json` — Phase 4A recovered function signatures and variables mapping.
 - `semantic_recovery.json` — Phase 4B constraint-refined type records per function.
+- `layout_recovery.json` — Phase 4C conservative memory layout candidates.
+- `phase4_semantics.json` — Phase 4D final merged semantic artifact for Phase 5 handoff.

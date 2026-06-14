@@ -41,20 +41,21 @@ Hephaestus does not insert mock instructions, fake variables, fake types, fake s
 * Phase 4A: Initial type recovery and signature inference
 * Phase 4B: Real instruction extraction and type-constraint refinement
 * Phase 4B.1: Conservative operand-to-variable binding
+* Phase 4C: Conservative data-layout recovery
+* Phase 4D: Final Phase 4 semantic artifact merger
 
 ### Current Test Status
 
 ```text
-193 passed
+310 passed
 1 xfailed
 0 failures
 ```
 
-The adversarial test suite includes hard cases for instruction validation, assembler stability, CFG structuring, operand binding, type constraints, semantic refinement, integration behavior, and regression invariants.
+The adversarial test suite includes hard cases for instruction validation, assembler stability, CFG structuring, operand binding, type constraints, semantic refinement, layout recovery, artifact merging, integration behavior, and regression invariants.
 
 ### Next
 
-* Phase 4C: Conservative data-layout recovery
 * Phase 5: Source reconstruction / AST emission
 * Phase 6: Validation, compilation, and repair loop
 
@@ -79,7 +80,11 @@ Phase 4B: Instruction Evidence + Type Refinement
   ↓
 Phase 4B.1: Operand Binding
   ↓
-Phase 4C+: Data Layout / Source Reconstruction / Validation
+Phase 4C: Data Layout Recovery
+  ↓
+Phase 4D: Semantic Artifact Merger
+  ↓
+Phase 5+: Source Reconstruction / Validation
 ```
 
 ---
