@@ -91,7 +91,31 @@ class GhidraExtractor(BaseExtractor):
             self.logger.info(f"Executing Ghidra subprocess: {' '.join(cmd)}")
             result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, env=env)
 
-            # Tweak 8: Include execution logs in errors
+            # Append Ghidra execution info to run.log
+            ghidra_log_msg = (
+                f"Command used: {' '.join(cmd)}\n"
+                f"Project directory: {project_dir}\n"
+                f"Script path: {os.path.join(script_dir, script_name)}\n"
+                f"Output JSON path: {temp_json_path}\n"
+                f"Return code: {result.returncode}\n\n"
+                f"STDOUT:\n{result.stdout}\n"
+                f"STDERR:\n{result.stderr}\n"
+            )
+            from src.utils.run_logging import append_run_log
+            append_run_log(os.path.dirname(self.output_path), "GHIDRA", ghidra_log_msg)
+
+            # Optional Debug Dump Mode
+            if self.config.get("debug_logs", False):
+                try:
+                    out_dir = os.path.dirname(self.output_path)
+                    with open(os.path.join(out_dir, "ghidra_stdout.txt"), "w", encoding="utf-8") as f:
+                        f.write(result.stdout)
+                    with open(os.path.join(out_dir, "ghidra_stderr.txt"), "w", encoding="utf-8") as f:
+                        f.write(result.stderr)
+                except Exception as e:
+                    self.logger.warning(f"Failed to write debug logs: {e}")
+
+            # Include execution logs in errors
             if result.returncode != 0:
                 raise ExtractorError(
                     f"Ghidra execution failed (code {result.returncode}).\n"

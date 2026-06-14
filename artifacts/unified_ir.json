@@ -1230,9 +1230,9 @@
     ],
     "call_graph": {
       "nodes": [
+        "printf",
         "_inspect",
-        "_main",
-        "printf"
+        "_main"
       ],
       "edges": [
         {

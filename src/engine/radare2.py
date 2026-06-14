@@ -30,6 +30,10 @@ class Radare2Extractor(BaseExtractor):
     Converts binary targets to standardized structural JSON schemas.
     """
 
+    def __init__(self, binary_path: str, output_path: str, config: Optional[Dict[str, Any]] = None):
+        super().__init__(binary_path, output_path, config)
+        self.radare2_log_messages = []
+
     def validate_environment(self) -> bool:
         """
         Determines if radare2 is available.
@@ -61,6 +65,9 @@ class Radare2Extractor(BaseExtractor):
         """
         import r2pipe
 
+        self.radare2_log_messages = []
+        self.radare2_log_messages.append(f"Binary path: {os.path.abspath(self.binary_path)}")
+
         radare2_path = self.config.get("RADARE2_PATH") or os.environ.get("RADARE2_PATH")
         if radare2_path:
             # Prepend directory to PATH so r2pipe can find it
@@ -75,36 +82,46 @@ class Radare2Extractor(BaseExtractor):
             
             # Analyze all (equivalent to aaa)
             self.logger.info("Running Radare2 analyzer auto-analysis (aaa)...")
+            self.radare2_log_messages.append("Command executed: aaa")
             r2.cmd("aaa")
 
             # Query binary info
             try:
+                self.radare2_log_messages.append("Command executed: ij")
                 info_raw = r2.cmdj("ij") or {}
                 bin_info = info_raw.get("bin", {})
                 arch = bin_info.get("arch", "")
                 bits = bin_info.get("bits", 0)
                 self.logger.info(f"Radare2 binary info: arch={arch}, bits={bits}")
+                self.radare2_log_messages.append(f"Binary info: arch={arch}, bits={bits}")
             except Exception as e:
                 self.logger.warning(f"Failed to get binary info (ij): {e}")
+                self.radare2_log_messages.append(f"WARNING: Failed to get binary info (ij): {e}")
                 arch, bits = "", 0
 
             # Extract functions
             try:
+                self.radare2_log_messages.append("Command executed: aflj")
                 functions_raw = r2.cmdj("aflj") or []
             except Exception as e:
                 self.logger.warning(f"Failed to get functions list (aflj): {e}")
+                self.radare2_log_messages.append(f"WARNING: Failed to get functions list (aflj): {e}")
                 functions_raw = []
             self.logger.info(f"aflj returned {len(functions_raw)} functions")
+            self.radare2_log_messages.append(f"aflj returned {len(functions_raw)} functions")
             if functions_raw:
                 self.logger.debug(f"First aflj function object: {functions_raw[0]}")
 
             # Extract symbols
             try:
+                self.radare2_log_messages.append("Command executed: isj")
                 symbols_raw = r2.cmdj("isj") or []
             except Exception as e:
                 self.logger.warning(f"Failed to get symbols list (isj): {e}")
+                self.radare2_log_messages.append(f"WARNING: Failed to get symbols list (isj): {e}")
                 symbols_raw = []
             self.logger.info(f"isj returned {len(symbols_raw)} symbols")
+            self.radare2_log_messages.append(f"isj returned {len(symbols_raw)} symbols")
 
             # Parse symbols and build an address-to-name map
             addr_to_symbol: Dict[str, str] = {}
@@ -135,12 +152,14 @@ class Radare2Extractor(BaseExtractor):
                 raw_func_name = func.get("name", "")
                 if not raw_func_name:
                     self.logger.warning("Function object discarded: empty/missing name field")
+                    self.radare2_log_messages.append("WARNING: Function object discarded: empty/missing name field")
                     discarded_missing_name += 1
                     continue
                 
                 offset = func.get("addr") or func.get("offset")
                 if offset is None:
                     self.logger.warning(f"Function {raw_func_name} discarded: missing address/offset")
+                    self.radare2_log_messages.append(f"WARNING: Function {raw_func_name} discarded: missing address/offset")
                     discarded_missing_offset += 1
                     continue
                 
@@ -166,7 +185,9 @@ class Radare2Extractor(BaseExtractor):
                 # If no variables found in aflj, try afvj (Analyze Function Variables JSON)
                 if not local_vars:
                     try:
-                        afv_vars = r2.cmdj(f"afvj @ {func_ea}") or {}
+                        cmd_str = f"afvj @ {func_ea}"
+                        self.radare2_log_messages.append(f"Command executed: {cmd_str}")
+                        afv_vars = r2.cmdj(cmd_str) or {}
                         if isinstance(afv_vars, dict):
                             for var_list in afv_vars.values():
                                 if isinstance(var_list, list):
@@ -179,13 +200,17 @@ class Radare2Extractor(BaseExtractor):
                                     local_vars.append(v["name"])
                     except Exception as e:
                         self.logger.debug(f"Failed to run afvj for {func_name}: {e}")
+                        self.radare2_log_messages.append(f"WARNING: Failed to run afvj for {func_name}: {e}")
 
                 # CFG Nodes & Edges
                 cfg_nodes = []
                 cfg_edges = []
                 try:
-                    blocks = r2.cmdj(f"afbj @ {func_ea}") or []
+                    cmd_str = f"afbj @ {func_ea}"
+                    self.radare2_log_messages.append(f"Command executed: {cmd_str}")
+                    blocks = r2.cmdj(cmd_str) or []
                     self.logger.info(f"Function {func_name} basic blocks (CFG nodes) count: {len(blocks)}")
+                    self.radare2_log_messages.append(f"Function {func_name} basic blocks count: {len(blocks)}")
                     for block in blocks:
                         addr = block.get("addr")
                         if addr is None:
@@ -240,6 +265,7 @@ class Radare2Extractor(BaseExtractor):
                                 })
                 except Exception as e:
                     self.logger.warning(f"Failed to extract CFG for {func_name}: {e}")
+                    self.radare2_log_messages.append(f"WARNING: Failed to extract CFG for {func_name}: {e}")
 
                 functions.append({
                     "name": func_name,
@@ -255,8 +281,11 @@ class Radare2Extractor(BaseExtractor):
 
                 # Extract callees / calls inside this function
                 try:
-                    refs = r2.cmdj(f"axffj @ {func_ea}") or []
+                    cmd_str = f"axffj @ {func_ea}"
+                    self.radare2_log_messages.append(f"Command executed: {cmd_str}")
+                    refs = r2.cmdj(cmd_str) or []
                     self.logger.info(f"axffj for {func_name} at {func_ea} returned {len(refs)} references")
+                    self.radare2_log_messages.append(f"axffj for {func_name} at {func_ea} returned {len(refs)} references")
                     for ref in refs:
                         if ref.get("type") == "CALL":
                             raw_callee_name = ref.get("name")
@@ -269,11 +298,14 @@ class Radare2Extractor(BaseExtractor):
                                 call_nodes.add(callee_name)
                 except Exception as e:
                     self.logger.warning(f"Failed to get callers/callees (axffj) for {func_name}: {e}")
+                    self.radare2_log_messages.append(f"WARNING: Failed to get callers/callees (axffj) for {func_name}: {e}")
 
             if discarded_missing_name > 0:
                 self.logger.info(f"Discarded {discarded_missing_name} functions due to missing name")
+                self.radare2_log_messages.append(f"Discarded {discarded_missing_name} functions due to missing name")
             if discarded_missing_offset > 0:
                 self.logger.info(f"Discarded {discarded_missing_offset} functions due to missing address/offset")
+                self.radare2_log_messages.append(f"Discarded {discarded_missing_offset} functions due to missing address/offset")
 
             # Structure symbols for return
             symbols = []
@@ -297,6 +329,7 @@ class Radare2Extractor(BaseExtractor):
                 })
 
             self.logger.info(f"Recovered {len(call_edges)} call edges")
+            self.radare2_log_messages.append(f"Recovered {len(call_edges)} call edges")
 
             data = {
                 "provenance": {
@@ -317,9 +350,19 @@ class Radare2Extractor(BaseExtractor):
             except Exception:
                 pass
 
+            # Write all Radare2 log messages to run.log
+            from src.utils.run_logging import append_run_log
+            append_run_log(os.path.dirname(self.output_path), "RADARE2", "\n".join(self.radare2_log_messages))
+
             return data
 
         except Exception as e:
+            # Append Radare2 execution error to run.log
+            err_msg = f"Radare2 execution failed: {e}\n"
+            if hasattr(self, "radare2_log_messages"):
+                err_msg = "\n".join(self.radare2_log_messages) + f"\n\nERROR: Radare2 execution failed: {e}\n"
+            from src.utils.run_logging import append_run_log
+            append_run_log(os.path.dirname(self.output_path), "RADARE2", err_msg)
             raise ExtractorError(f"Radare2 execution failed: {e}")
 
     def _extract_block_instructions(
@@ -353,25 +396,33 @@ class Radare2Extractor(BaseExtractor):
         # 1. Try aoj (structured operands)
         try:
             command_used = f"aoj {estimated_ninstr} @ {block_addr_int}"
+            self.radare2_log_messages.append(f"Command executed: {command_used}")
             raw_instrs = r2.cmdj(command_used)
         except Exception as e:
             self.logger.debug("aoj failed for block 0x%x: %s", block_addr_int, e)
+            self.radare2_log_messages.append(f"ERROR: aoj failed for block 0x{block_addr_int:x}: {e}")
 
         # 2. Try pdj (disassembly JSON by instruction count)
         if not raw_instrs or not isinstance(raw_instrs, list):
+            self.radare2_log_messages.append(f"FALLBACK: aoj failed or returned empty for block 0x{block_addr_int:x}. Trying pdj...")
             try:
                 command_used = f"pdj {estimated_ninstr} @ {block_addr_int}"
+                self.radare2_log_messages.append(f"Command executed: {command_used}")
                 raw_instrs = r2.cmdj(command_used)
             except Exception as e:
                 self.logger.debug("pdj failed for block 0x%x: %s", block_addr_int, e)
+                self.radare2_log_messages.append(f"ERROR: pdj failed for block 0x{block_addr_int:x}: {e}")
 
         # 3. Try pDj (disassembly JSON by byte count)
         if not raw_instrs or not isinstance(raw_instrs, list):
+            self.radare2_log_messages.append(f"FALLBACK: pdj failed or returned empty for block 0x{block_addr_int:x}. Trying pDj...")
             try:
                 command_used = f"pDj {block_size} @ {block_addr_int}"
+                self.radare2_log_messages.append(f"Command executed: {command_used}")
                 raw_instrs = r2.cmdj(command_used)
             except Exception as e:
                 self.logger.debug("pDj failed for block 0x%x: %s", block_addr_int, e)
+                self.radare2_log_messages.append(f"ERROR: pDj failed for block 0x{block_addr_int:x}: {e}")
 
         if not raw_instrs or not isinstance(raw_instrs, list):
             return []
@@ -440,6 +491,7 @@ class Radare2Extractor(BaseExtractor):
                     "Fabricated placeholder detected in r2 instruction at %s; rejected.",
                     norm_addr,
                 )
+                self.radare2_log_messages.append(f"ERROR: Fabricated placeholder detected in r2 instruction at {norm_addr}; rejected.")
                 continue
 
             # Validate schema
@@ -449,6 +501,7 @@ class Radare2Extractor(BaseExtractor):
                 self.logger.debug(
                     "Invalid instruction at %s skipped: %r", norm_addr, instr
                 )
+                self.radare2_log_messages.append(f"WARNING: Invalid instruction at {norm_addr} skipped.")
 
         # Tweak 6: range filter logging
         self.logger.info(
@@ -462,11 +515,23 @@ class Radare2Extractor(BaseExtractor):
             before_range_filter_count, len(validated),
             raw_addresses[:5]
         )
+        self.radare2_log_messages.append(
+            f"Instruction Extraction Report for block 0x{block_addr_int:x}:\n"
+            f"  Command used: {command_used}\n"
+            f"  Block range: 0x{block_addr_int:x} - 0x{block_end:x}\n"
+            f"  Instructions before range filter: {before_range_filter_count}\n"
+            f"  Instructions after range filter: {len(validated)}\n"
+            f"  First few instruction addresses: {raw_addresses[:5]}"
+        )
 
         if before_range_filter_count > 0 and not validated:
             self.logger.warning(
                 "Command '%s' returned %d instructions, but range filtering (0x%x - 0x%x) removed all of them! Raw addresses: %s",
                 command_used, before_range_filter_count, block_addr_int, block_end, raw_addresses
+            )
+            self.radare2_log_messages.append(
+                f"WARNING: Command '{command_used}' returned {before_range_filter_count} instructions, "
+                f"but range filtering (0x{block_addr_int:x} - 0x{block_end:x}) removed all of them! Raw addresses: {raw_addresses}"
             )
 
         # Sort by normalized address

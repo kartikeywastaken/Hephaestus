@@ -33,13 +33,10 @@ logger = logging.getLogger("reconstruct")
 
 def setup_logging(output_dir: str = "artifacts") -> logging.Logger:
     from pathlib import Path
-    from datetime import datetime
 
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_path = Path(output_dir) / f"run_{timestamp}.log"
-    latest_path = Path(output_dir) / "latest.log"
+    log_path = Path(output_dir) / "run.log"
 
     formatter = logging.Formatter(
         "%(asctime)s [%(levelname)s] %(name)s - %(filename)s:%(lineno)d: %(message)s"
@@ -64,13 +61,8 @@ def setup_logging(output_dir: str = "artifacts") -> logging.Logger:
     file_handler.setLevel(logging.INFO)
     file_handler.setFormatter(formatter)
 
-    latest_handler = logging.FileHandler(latest_path, mode="w", encoding="utf-8")
-    latest_handler.setLevel(logging.INFO)
-    latest_handler.setFormatter(formatter)
-
     root_logger.addHandler(console_handler)
     root_logger.addHandler(file_handler)
-    root_logger.addHandler(latest_handler)
 
     logger = logging.getLogger("reconstruct")
     logger.info("Logging initialized")
@@ -134,6 +126,11 @@ def parse_args():
     parser.add_argument(
         "--config",
         help="JSON string or file path containing runner configurations."
+    )
+    parser.add_argument(
+        "--debug-logs",
+        action="store_true",
+        help="Allow old per-tool text dumps to be written in addition to run.log"
     )
     return parser.parse_args()
 
@@ -483,6 +480,8 @@ def handle_inspection(ir_file_path: str):
     sys.exit(0)
 
 def handle_analyze_cfg(out_dir: str):
+    from src.utils.run_logging import append_run_log
+    append_run_log(out_dir, "ORCHESTRATION", "Pipeline stage started: CFG Structuring & Analysis")
     logger.info("Executing Phase 3A CFG Analysis Backbone on canonical IR...")
     ir_payload = load_unified_ir_data(out_dir)
     
@@ -520,6 +519,7 @@ def handle_analyze_cfg(out_dir: str):
         json.dump(structuring_reports, f, indent=2, ensure_ascii=False)
         
     logger.info(f"[+] Output structured regions tree committed: {regions_path}")
+    append_run_log(out_dir, "ORCHESTRATION", f"Pipeline stage completed: CFG Structuring & Analysis\nArtifacts written: {structuring_path}, {regions_path}")
     
     # Print a summary
     print("\n============================================================")
@@ -545,6 +545,8 @@ def handle_recover_semantics(out_dir: str):
     Reads unified_ir.json (and optionally structuring_regions.json) and writes
     type_recovery.json to the output directory.
     """
+    from src.utils.run_logging import append_run_log
+    append_run_log(out_dir, "ORCHESTRATION", "Pipeline stage started: Phase 4A Signature & Variable Recovery")
     from src.ir.types.inference import recover_types
     from src.ir.types.emitter import write_type_recovery_artifact
 
@@ -588,6 +590,7 @@ def handle_recover_semantics(out_dir: str):
     source_structuring = regions_path if structuring_regions is not None else None
     write_type_recovery_artifact(functions, output_path, source_ir, source_structuring)
     logger.info("[+] Phase 4A type recovery artifact committed: %s", output_path)
+    append_run_log(out_dir, "ORCHESTRATION", f"Pipeline stage completed: Phase 4A Signature & Variable Recovery\nArtifact written: {output_path}")
 
     # Print summary
     print("\n============================================================")
@@ -615,6 +618,8 @@ def handle_refine_semantics(out_dir: str):
     Reads unified_ir.json and type_recovery.json, applies instruction-level
     constraint propagation, and writes semantic_recovery.json.
     """
+    from src.utils.run_logging import append_run_log
+    append_run_log(out_dir, "ORCHESTRATION", "Pipeline stage started: Phase 4B Type Constraint Refinement")
     from src.ir.types.refinement_engine import TypeRefinementEngine
     from src.ir.types.semantic_emitter import write_semantic_recovery_artifact
 
@@ -683,6 +688,7 @@ def handle_refine_semantics(out_dir: str):
         source_structuring=source_structuring,
     )
     logger.info("[+] Phase 4B semantic recovery artifact committed: %s", output_path)
+    append_run_log(out_dir, "ORCHESTRATION", f"Pipeline stage completed: Phase 4B Type Constraint Refinement\nArtifact written: {output_path}")
 
     # Compute summary stats
     total_constraints = sum(r.total_constraints_applied for r in results)
@@ -709,6 +715,8 @@ def handle_recover_layouts(out_dir: str):
     Reads unified_ir.json, recovers conservative memory layout candidates,
     and writes layout_recovery.json to the output directory.
     """
+    from src.utils.run_logging import append_run_log
+    append_run_log(out_dir, "ORCHESTRATION", "Pipeline stage started: Phase 4C Conservative Data Layout Recovery")
     from src.ir.types.layout_recovery import LayoutRecoveryEngine
     from src.ir.types.layout_emitter import write_layout_recovery_artifact
 
@@ -738,6 +746,7 @@ def handle_recover_layouts(out_dir: str):
         candidates, unbound, output_path, source_ir=ir_path
     )
     logger.info("[+] Phase 4C layout recovery artifact committed: %s", output_path)
+    append_run_log(out_dir, "ORCHESTRATION", f"Pipeline stage completed: Phase 4C Conservative Data Layout Recovery\nArtifact written: {output_path}")
 
     # Compute kind distribution for summary
     kind_counts: dict = {}
@@ -774,6 +783,8 @@ def handle_finalize_semantics(out_dir: str):
     layout_recovery.json (optional), merges them, and writes
     phase4_semantics.json to the output directory.
     """
+    from src.utils.run_logging import append_run_log
+    append_run_log(out_dir, "ORCHESTRATION", "Pipeline stage started: Phase 4D Final Semantic Artifact Merger")
     from src.ir.types.phase4_semantics import build_phase4_semantics
     from src.ir.types.phase4_emitter import write_phase4_semantics_artifact
 
@@ -845,6 +856,7 @@ def handle_finalize_semantics(out_dir: str):
         source_layout_recovery=lr_path if layout_recovery else None,
     )
     logger.info("[+] Phase 4D semantic artifact committed: %s", output_path)
+    append_run_log(out_dir, "ORCHESTRATION", f"Pipeline stage completed: Phase 4D Final Semantic Artifact Merger\nArtifact written: {output_path}")
 
     # Print summary
     s = artifact.summary
@@ -975,6 +987,9 @@ def main():
                 logger.error(f"Failed to parse inline JSON configuration parameter: {e}")
                 sys.exit(1)
 
+    if args.debug_logs:
+        config_dict["debug_logs"] = True
+
     logger.info("Initializing Binary Reconstruction Pipeline Orchestrator (Phases 1 & 2)...")
     logger.info(f"Target binary path target: {binary_path}")
     logger.info(f"Output directory destination: {args.out_dir}")
@@ -998,6 +1013,8 @@ def main():
 
         # Always build the Unified IR if requested or if running the baseline orchestrator
         if args.export_ir or run_all:
+            from src.utils.run_logging import append_run_log
+            append_run_log(args.out_dir, "ORCHESTRATION", "Pipeline stage started: Phase 2 Unified IR Assembly")
             logger.info("Assembling canonical Unified Intermediate Representation (Phase 2 IR)...")
             assembler = IRAssembler(binary_path)
             
@@ -1013,11 +1030,13 @@ def main():
             success, val_msg = IRValidator.validate_payload(ir_payload)
             if not success:
                 logger.warning(f"Generated IR failed schema de-serialization selfcheck: {val_msg}")
+                append_run_log(args.out_dir, "ORCHESTRATION", f"Warning: Generated IR failed schema validation: {val_msg}")
 
             ir_path = os.path.join(args.out_dir, "unified_ir.json")
             with open(ir_path, 'w', encoding='utf-8') as f:
                 json.dump(ir_payload, f, indent=2, ensure_ascii=False)
             logger.info(f"[+] Canonical Phase 2 Unified IR exported to: {ir_path}")
+            append_run_log(args.out_dir, "ORCHESTRATION", f"Pipeline stage completed: Phase 2 Unified IR Assembly\nArtifact written: {ir_path}")
 
         logger.info("[+] Pipeline batch execution completed successfully.")
         logger.info(f"Overall Completion Status: {manifest['status'].upper()}")

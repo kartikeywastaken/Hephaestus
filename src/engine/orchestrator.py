@@ -28,32 +28,42 @@ class PipelineOrchestrator:
         """
         Executes active extraction components and forms a consolidated system manifest.
         """
+        from src.utils.run_logging import append_run_log
         results = {}
         errors = []
 
         if run_ghidra:
             ghidra_out_path = os.path.join(self.output_directory, "ghidra_extraction.json")
+            append_run_log(self.output_directory, "ORCHESTRATION", "Pipeline stage started: Ghidra Extraction")
             try:
                 ghidra_extractor = GhidraExtractor(self.binary_path, ghidra_out_path, self.config)
                 results["ghidra"] = ghidra_extractor.extract()
+                append_run_log(self.output_directory, "ORCHESTRATION", f"Pipeline stage completed: Ghidra Extraction\nArtifact written: {ghidra_out_path}")
             except Exception as e:
                 errors.append(f"Ghidra extraction pipeline failed: {e}")
+                append_run_log(self.output_directory, "ORCHESTRATION", f"Extractor failure: Ghidra extraction pipeline failed: {e}")
 
         if run_radare2:
             radare2_out_path = os.path.join(self.output_directory, "radare2_extraction.json")
+            append_run_log(self.output_directory, "ORCHESTRATION", "Pipeline stage started: Radare2 Extraction")
             try:
                 radare2_extractor = Radare2Extractor(self.binary_path, radare2_out_path, self.config)
                 results["radare2"] = radare2_extractor.extract()
+                append_run_log(self.output_directory, "ORCHESTRATION", f"Pipeline stage completed: Radare2 Extraction\nArtifact written: {radare2_out_path}")
             except Exception as e:
                 errors.append(f"Radare2 extraction pipeline failed: {e}")
+                append_run_log(self.output_directory, "ORCHESTRATION", f"Extractor failure: Radare2 extraction pipeline failed: {e}")
 
         if run_trace:
             trace_out_path = os.path.join(self.output_directory, "trace_extraction.json")
+            append_run_log(self.output_directory, "ORCHESTRATION", "Pipeline stage started: Trace Extraction")
             try:
                 trace_extractor = TraceExtractor(self.binary_path, trace_out_path, self.config)
                 results["trace"] = trace_extractor.extract()
+                append_run_log(self.output_directory, "ORCHESTRATION", f"Pipeline stage completed: Trace Extraction\nArtifact written: {trace_out_path}")
             except Exception as e:
                 errors.append(f"Trace extraction parser failed: {e}")
+                append_run_log(self.output_directory, "ORCHESTRATION", f"Extractor failure: Trace extraction parser failed: {e}")
 
         manifest = {
             "orchestrated_at": time.strftime("%Y-%m-%dT%H:%M:%S-07:00"),
@@ -69,7 +79,9 @@ class PipelineOrchestrator:
             import json
             with open(manifest_path, 'w', encoding='utf-8') as f:
                 json.dump(manifest, f, indent=2, ensure_ascii=False)
+            append_run_log(self.output_directory, "ORCHESTRATION", f"Artifact written: {manifest_path}")
         except Exception as e:
             errors.append(f"Orchestration manifest failed to commit: {e}")
+            append_run_log(self.output_directory, "ORCHESTRATION", f"Warning: Orchestration manifest failed to commit: {e}")
 
         return manifest
