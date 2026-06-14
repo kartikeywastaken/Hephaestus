@@ -2,8 +2,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#define MAX_ITEMS 6
-#define NAME_LEN 8
+#define ITEM_COUNT 7
+#define VALUE_COUNT 5
+#define HISTORY_COUNT 4
 
 typedef struct {
   int x;
@@ -11,64 +12,38 @@ typedef struct {
 } Point;
 
 typedef struct {
+  uint8_t tag;
+  int code;
+  long weight;
+} Meta;
+
+typedef struct {
   int id;
   long score;
   char flag;
-  int values[4];
+  int values[VALUE_COUNT];
   Point pos;
+  Meta meta;
 } Item;
 
 typedef struct {
-  Item items[MAX_ITEMS];
+  Item items[ITEM_COUNT];
   int count;
   long checksum;
-  char tag;
-} Container;
+  char state;
+  int history[HISTORY_COUNT];
+} Store;
 
-typedef int (*ScoreFn)(Item *it, int bias);
+typedef int (*ScoreFn)(Item *item, int bias);
 
-int basic_score(Item *it, int bias) {
-  int total = 0;
-
-  total += it->id;
-  total += (int)(it->score % 97);
-  total += it->flag;
-  total += it->pos.x;
-  total -= it->pos.y;
-
-  for (int i = 0; i < 4; i++) {
-    total += it->values[i];
+static int abs_i(int x) {
+  if (x < 0) {
+    return -x;
   }
-
-  return total + bias;
+  return x;
 }
 
-int weird_score(Item *it, int bias) {
-  int total = bias;
-
-  for (int i = 3; i >= 0; i--) {
-    if (it->values[i] == 0) {
-      continue;
-    }
-
-    if (it->values[i] < 0) {
-      total -= it->values[i];
-    } else {
-      total += it->values[i] * (i + 1);
-    }
-  }
-
-  if (it->flag & 1) {
-    total += it->id * 2;
-  } else {
-    total -= it->id;
-  }
-
-  total += (int)(it->score & 0xff);
-  return total;
-}
-
-int recursive_mix(int n) {
+int recursive_fold(int n) {
   if (n <= 0) {
     return 1;
   }
@@ -77,136 +52,140 @@ int recursive_mix(int n) {
     return 2;
   }
 
-  if (n % 2 == 0) {
-    return n + recursive_mix(n - 2);
+  if ((n & 1) == 0) {
+    return n + recursive_fold(n - 2);
   }
 
-  return n + recursive_mix(n - 1);
+  return n + recursive_fold(n - 1);
 }
 
-void init_item(Item *it, int seed) {
-  it->id = seed;
-  it->score = seed * 100L + 13;
-  it->flag = (char)(seed % 5);
-  it->pos.x = seed * 2;
-  it->pos.y = seed - 3;
+void init_item(Item *item, int seed) {
+  item->id = seed;
+  item->score = seed * 111L + 17;
+  item->flag = (char)(seed % 6);
+  item->pos.x = seed * 3;
+  item->pos.y = seed - 4;
+  item->meta.tag = (uint8_t)(seed + 1);
+  item->meta.code = seed * 10;
+  item->meta.weight = seed * 1000L + 33;
 
-  for (int i = 0; i < 4; i++) {
-    it->values[i] = seed + i;
+  for (int i = 0; i < VALUE_COUNT; i++) {
+    item->values[i] = seed + i;
   }
 
-  if (seed % 3 == 0) {
-    it->values[2] = -seed;
+  if (seed == 3) {
+    item->values[2] = -seed;
   }
 
-  if (seed == 4) {
-    it->flag = 7;
-  }
-}
-
-void init_container(Container *c) {
-  c->count = MAX_ITEMS;
-  c->checksum = 0;
-  c->tag = 'A';
-
-  for (int i = 0; i < MAX_ITEMS; i++) {
-    init_item(&c->items[i], i + 1);
+  if (seed == 5) {
+    item->flag = 9;
   }
 }
 
-long update_checksum(Container *c) {
-  long acc = 0;
+void init_store(Store *store) {
+  store->count = ITEM_COUNT;
+  store->checksum = 0;
+  store->state = 'S';
 
-  for (int i = 0; i < c->count; i++) {
-    Item *it = &c->items[i];
-
-    acc += it->id;
-    acc += it->score;
-    acc += it->flag;
-    acc += it->pos.x;
-    acc += it->pos.y;
-
-    for (int j = 0; j < 4; j++) {
-      acc += it->values[j];
-    }
+  for (int i = 0; i < HISTORY_COUNT; i++) {
+    store->history[i] = i * 7;
   }
 
-  c->checksum = acc;
-  return acc;
+  for (int i = 0; i < ITEM_COUNT; i++) {
+    init_item(&store->items[i], i + 1);
+  }
 }
 
-int classify_item(Item *it) {
-  int bucket = 0;
+int score_basic(Item *item, int bias) {
+  int total = bias;
 
-  switch (it->flag) {
-  case 0:
-    bucket = it->id + 10;
-    break;
-  case 1:
-    bucket = it->values[0] + 20;
-    break;
-  case 2:
-    bucket = it->values[1] + 30;
-    break;
-  case 3:
-    bucket = it->pos.x + 40;
-    break;
-  case 4:
-    bucket = it->pos.y + 50;
-    break;
-  default:
-    bucket = (int)(it->score % 100);
-    break;
+  total += item->id;
+  total += (int)(item->score % 101);
+  total += item->flag;
+  total += item->pos.x;
+  total -= item->pos.y;
+  total += item->meta.tag;
+  total += item->meta.code;
+  total += (int)(item->meta.weight % 97);
+
+  for (int i = 0; i < VALUE_COUNT; i++) {
+    total += item->values[i];
   }
 
-  return bucket;
+  return total;
 }
 
-int process_item(Item *it, ScoreFn fn, int bias) {
-  int score = fn(it, bias);
-  int class_id = classify_item(it);
+int score_weird(Item *item, int bias) {
+  int total = bias;
 
-  if (score > 200) {
-    score -= recursive_mix(it->id);
-  } else if (score < 50) {
-    score += recursive_mix(it->flag);
-  } else {
-    score += class_id;
-  }
+  for (int i = VALUE_COUNT - 1; i >= 0; i--) {
+    int v = item->values[i];
 
-  return score;
-}
-
-int scan_container(Container *c, int limit) {
-  int result = 0;
-
-  for (int i = 0; i < c->count; i++) {
-    Item *it = &c->items[i];
-
-    if (it->id == 2) {
+    if (v == 0) {
       continue;
     }
 
-    if (it->id > limit) {
-      break;
-    }
-
-    ScoreFn fn;
-
-    if (it->flag & 1) {
-      fn = weird_score;
+    if (v < 0) {
+      total += abs_i(v) * (i + 1);
     } else {
-      fn = basic_score;
-    }
-
-    result += process_item(it, fn, i * 3);
-
-    if (result > 500) {
-      result -= classify_item(it);
+      total += v - i;
     }
   }
 
-  return result;
+  if (item->flag & 1) {
+    total += item->id * 3;
+  } else {
+    total -= item->id;
+  }
+
+  total += (int)(item->score & 0xff);
+  total += item->meta.code;
+  return total;
+}
+
+int classify_item(Item *item) {
+  int out = 0;
+
+  switch (item->flag) {
+  case 0:
+    out = item->id + 10;
+    break;
+  case 1:
+    out = item->values[0] + 20;
+    break;
+  case 2:
+    out = item->values[1] + 30;
+    break;
+  case 3:
+    out = item->pos.x + 40;
+    break;
+  case 4:
+    out = item->pos.y + 50;
+    break;
+  case 5:
+    out = item->meta.code + 60;
+    break;
+  default:
+    out = (int)(item->score % 100);
+    break;
+  }
+
+  return out;
+}
+
+int process_one(Item *item, ScoreFn fn, int bias) {
+  int score = fn(item, bias);
+  int bucket = classify_item(item);
+
+  if (score > 250) {
+    score -= recursive_fold(item->id);
+  } else if (score < 80) {
+    score += recursive_fold(item->flag);
+  } else {
+    score += bucket;
+  }
+
+  return score;
 }
 
 void mutate_alias(Item *a, Item *b) {
@@ -215,85 +194,205 @@ void mutate_alias(Item *a, Item *b) {
 
   if (a == b) {
     a->score += 5;
+    a->meta.weight += 11;
     return;
   }
 
   if (a->id < b->id) {
     a->pos.x += b->pos.y;
     b->pos.y -= a->flag;
+    a->meta.code += b->meta.tag;
   } else {
     b->pos.x += a->pos.y;
     a->pos.y -= b->flag;
+    b->meta.code += a->meta.tag;
   }
 }
 
-long pointer_walk(Container *c) {
+long update_checksum(Store *store) {
+  long acc = 0;
+
+  for (int i = 0; i < store->count; i++) {
+    Item *item = &store->items[i];
+
+    acc += item->id;
+    acc += item->score;
+    acc += item->flag;
+    acc += item->pos.x;
+    acc += item->pos.y;
+    acc += item->meta.tag;
+    acc += item->meta.code;
+    acc += item->meta.weight;
+
+    for (int j = 0; j < VALUE_COUNT; j++) {
+      acc += item->values[j];
+    }
+  }
+
+  for (int k = 0; k < HISTORY_COUNT; k++) {
+    acc += store->history[k];
+  }
+
+  store->checksum = acc;
+  return acc;
+}
+
+int scan_store(Store *store, int limit) {
+  int result = 0;
+
+  for (int i = 0; i < store->count; i++) {
+    Item *item = &store->items[i];
+
+    if (item->id == 2) {
+      continue;
+    }
+
+    if (item->id > limit) {
+      break;
+    }
+
+    ScoreFn fn;
+
+    if (item->flag & 1) {
+      fn = score_weird;
+    } else {
+      fn = score_basic;
+    }
+
+    result += process_one(item, fn, i * 5);
+
+    if (result > 700) {
+      result -= classify_item(item);
+    }
+  }
+
+  return result;
+}
+
+long pointer_walk(Store *store) {
   long total = 0;
-  Item *begin = &c->items[0];
-  Item *end = &c->items[c->count];
+  Item *begin = &store->items[0];
+  Item *end = &store->items[store->count];
 
   for (Item *p = begin; p < end; p++) {
     total += p->id;
     total += p->score;
+    total += p->meta.weight;
 
-    if (p->flag == 7) {
-      total += p->values[3];
+    if (p->flag == 9) {
+      total += p->values[VALUE_COUNT - 1];
     }
   }
 
   return total;
 }
 
-int nested_branches(Container *c) {
+int nested_branches(Store *store) {
   int out = 0;
 
-  for (int i = 0; i < c->count; i++) {
-    Item *it = &c->items[i];
+  for (int i = 0; i < store->count; i++) {
+    Item *item = &store->items[i];
 
-    if (it->flag == 0) {
-      out += it->id;
-    } else if (it->flag == 1) {
-      if (it->values[0] > 2) {
-        out += it->values[0];
+    if (item->flag == 0) {
+      out += item->id;
+    } else if (item->flag == 1) {
+      if (item->values[0] > 3) {
+        out += item->values[0];
       } else {
-        out -= it->values[1];
+        out -= item->values[1];
       }
-    } else if (it->flag == 2) {
-      for (int j = 0; j < 4; j++) {
+    } else if (item->flag == 2) {
+      for (int j = 0; j < VALUE_COUNT; j++) {
         if (j == 2) {
           continue;
         }
-        out += it->values[j];
+        out += item->values[j];
       }
+    } else if (item->flag == 3) {
+      int local = 0;
+      for (int j = 0; j < HISTORY_COUNT; j++) {
+        local += store->history[j];
+      }
+      out += local;
     } else {
-      out += classify_item(it);
+      out += classify_item(item);
     }
   }
 
   return out;
 }
 
+int mixed_memory_sizes(Store *store) {
+  int total = 0;
+
+  for (int i = 0; i < store->count; i++) {
+    Item *item = &store->items[i];
+
+    total += item->id;
+    total += item->flag;
+    total += item->meta.tag;
+    total += item->meta.code;
+    total += (int)(item->meta.weight % 13);
+  }
+
+  return total;
+}
+
+int dispatch_score(Store *store, int mode) {
+  int result = 0;
+
+  switch (mode) {
+  case 0:
+    result = scan_store(store, 6);
+    break;
+  case 1:
+    result = nested_branches(store);
+    break;
+  case 2:
+    result = mixed_memory_sizes(store);
+    break;
+  case 3:
+    result = (int)(pointer_walk(store) % 1000);
+    break;
+  default:
+    result = recursive_fold(mode);
+    break;
+  }
+
+  return result;
+}
+
 int main(void) {
-  Container c;
-  init_container(&c);
+  Store store;
+  init_store(&store);
 
-  mutate_alias(&c.items[0], &c.items[1]);
-  mutate_alias(&c.items[2], &c.items[2]);
+  mutate_alias(&store.items[0], &store.items[1]);
+  mutate_alias(&store.items[2], &store.items[2]);
+  mutate_alias(&store.items[3], &store.items[5]);
 
-  long checksum = update_checksum(&c);
-  int scan = scan_container(&c, 5);
-  long walk = pointer_walk(&c);
-  int branches = nested_branches(&c);
+  long checksum = update_checksum(&store);
+  int scan = scan_store(&store, 6);
+  long walk = pointer_walk(&store);
+  int branches = nested_branches(&store);
+  int mixed = mixed_memory_sizes(&store);
+  int dispatch0 = dispatch_score(&store, 0);
+  int dispatch1 = dispatch_score(&store, 1);
+  int dispatch2 = dispatch_score(&store, 2);
+  int dispatch9 = dispatch_score(&store, 9);
 
   printf("checksum=%ld\n", checksum);
   printf("scan=%d\n", scan);
   printf("walk=%ld\n", walk);
   printf("branches=%d\n", branches);
+  printf("mixed=%d\n", mixed);
+  printf("dispatch=%d,%d,%d,%d\n", dispatch0, dispatch1, dispatch2, dispatch9);
 
   if (scan > branches) {
     printf("scan-heavy %d\n", scan - branches);
+  } else if (branches > mixed) {
+    printf("branch-heavy %d\n", branches - mixed);
   } else {
-    printf("branch-heavy %d\n", branches - scan);
+    printf("mixed-heavy %d\n", mixed - scan);
   }
 
   return 0;
