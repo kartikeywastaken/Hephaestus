@@ -1,9 +1,10 @@
 {
-  "schema_version": "4A.0.0",
+  "schema_version": "4B.0.0",
   "provenance": {
-    "phase": "4A",
-    "description": "Signature and variable recovery backbone",
+    "phase": "4B",
+    "description": "Type constraint refinement engine",
     "source_ir": "unified_ir.json",
+    "source_type_recovery": "type_recovery.json",
     "source_structuring": "structuring_regions.json"
   },
   "data": {
@@ -12,7 +13,7 @@
         "name": "_inspect",
         "entry_point": "0x100000460",
         "function_kind": "user",
-        "signature": {
+        "refined_signature": {
           "return_type": {
             "type": "unknown",
             "confidence": 0.2,
@@ -59,88 +60,62 @@
         "variables": [
           {
             "name": "arg_10h",
-            "storage": "stack",
-            "category": "parameter",
-            "type": {
+            "refined_type": {
               "type": "unknown",
               "confidence": 0.45,
               "source": "argument_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -8,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.45,
-            "notes": [
-              "classified via argument_name_heuristic"
-            ]
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
           },
           {
             "name": "arg1",
-            "storage": "stack",
-            "category": "parameter",
-            "type": {
+            "refined_type": {
               "type": "unknown",
               "confidence": 0.45,
               "source": "argument_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -4,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.45,
-            "notes": [
-              "classified via argument_name_heuristic"
-            ]
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
           },
           {
             "name": "var_8h",
-            "storage": "stack",
-            "category": "local",
-            "type": {
+            "refined_type": {
               "type": "unknown",
               "confidence": 0.35,
               "source": "var_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -16,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
           },
           {
             "name": "var_0h",
-            "storage": "stack",
-            "category": "local",
-            "type": {
+            "refined_type": {
               "type": "unknown",
               "confidence": 0.35,
               "source": "var_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -12,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
           }
         ],
+        "total_constraints_applied": 0,
+        "confidence": 0.45,
         "evidence": [
           "function recovered from unified_ir",
-          "parameters recovered from 2 classified variable(s)"
-        ],
-        "confidence": 0.45
+          "parameters recovered from 2 classified variable(s)",
+          "No instruction-level evidence available; Phase 4A types preserved"
+        ]
       },
       {
         "name": "_main",
         "entry_point": "0x1000004b4",
         "function_kind": "entrypoint",
-        "signature": {
+        "refined_signature": {
           "return_type": {
             "type": "int32",
             "confidence": 0.9,
@@ -183,196 +158,128 @@
         "variables": [
           {
             "name": "argv",
-            "storage": "stack",
-            "category": "parameter",
-            "type": {
+            "refined_type": {
               "type": "pointer",
               "confidence": 0.85,
               "source": "argv_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -8,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.85,
-            "notes": [
-              "classified via argv_name_heuristic"
-            ]
+            "constraints_applied": 0,
+            "phase4a_type": "pointer"
           },
           {
             "name": "argc",
-            "storage": "stack",
-            "category": "parameter",
-            "type": {
+            "refined_type": {
               "type": "int32",
               "confidence": 0.9,
               "source": "argc_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -4,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.9,
-            "notes": [
-              "classified via argc_name_heuristic"
-            ]
+            "constraints_applied": 0,
+            "phase4a_type": "int32"
           },
           {
             "name": "var_30h_2",
-            "storage": "stack",
-            "category": "local",
-            "type": {
+            "refined_type": {
               "type": "unknown",
               "confidence": 0.35,
               "source": "var_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -40,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
           },
           {
             "name": "var_30h",
-            "storage": "stack",
-            "category": "local",
-            "type": {
+            "refined_type": {
               "type": "unknown",
               "confidence": 0.35,
               "source": "var_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -36,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
           },
           {
             "name": "var_0h",
-            "storage": "stack",
-            "category": "local",
-            "type": {
+            "refined_type": {
               "type": "unknown",
               "confidence": 0.35,
               "source": "var_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -32,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
           },
           {
             "name": "var_20h",
-            "storage": "stack",
-            "category": "local",
-            "type": {
+            "refined_type": {
               "type": "unknown",
               "confidence": 0.35,
               "source": "var_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -28,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
           },
           {
             "name": "var_18h",
-            "storage": "stack",
-            "category": "local",
-            "type": {
+            "refined_type": {
               "type": "unknown",
               "confidence": 0.35,
               "source": "var_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -24,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
           },
           {
             "name": "var_10h",
-            "storage": "stack",
-            "category": "local",
-            "type": {
+            "refined_type": {
               "type": "unknown",
               "confidence": 0.35,
               "source": "var_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -20,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
           },
           {
             "name": "var_ch",
-            "storage": "stack",
-            "category": "local",
-            "type": {
+            "refined_type": {
               "type": "unknown",
               "confidence": 0.35,
               "source": "var_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -16,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
           },
           {
             "name": "var_0h_2",
-            "storage": "stack",
-            "category": "local",
-            "type": {
+            "refined_type": {
               "type": "unknown",
               "confidence": 0.35,
               "source": "var_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -12,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
           }
         ],
+        "total_constraints_applied": 0,
+        "confidence": 0.9,
         "evidence": [
           "function recovered from unified_ir",
-          "signature inferred using main function heuristic"
-        ],
-        "confidence": 0.9
+          "signature inferred using main function heuristic",
+          "No instruction-level evidence available; Phase 4A types preserved"
+        ]
       },
       {
         "name": "printf",
         "entry_point": "0x100000510",
         "function_kind": "library",
-        "signature": {
+        "refined_signature": {
           "return_type": {
             "type": "int32",
             "confidence": 1.0,
@@ -402,46 +309,34 @@
         "variables": [
           {
             "name": "arg2",
-            "storage": "stack",
-            "category": "parameter",
-            "type": {
+            "refined_type": {
               "type": "unknown",
               "confidence": 0.45,
               "source": "argument_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -8,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.45,
-            "notes": [
-              "classified via argument_name_heuristic"
-            ]
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
           },
           {
             "name": "arg1",
-            "storage": "stack",
-            "category": "parameter",
-            "type": {
+            "refined_type": {
               "type": "unknown",
               "confidence": 0.45,
               "source": "argument_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -4,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.45,
-            "notes": [
-              "classified via argument_name_heuristic"
-            ]
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
           }
         ],
+        "total_constraints_applied": 0,
+        "confidence": 1.0,
         "evidence": [
           "function recovered from unified_ir",
-          "signature recovered from known signature database"
-        ],
-        "confidence": 1.0
+          "signature recovered from known signature database",
+          "No instruction-level evidence available; Phase 4A types preserved"
+        ]
       }
     ]
   }

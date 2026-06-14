@@ -58,8 +58,8 @@ class GhidraExtractor(BaseExtractor):
             else:
                 raise ExtractorError(f"analyzeHeadless executable not found in {ghidra_home}/support/")
 
-        # Use temporary project directory within workspace
-        project_dir = os.path.join(os.path.dirname(self.output_path), "ghidra_temp_proj")
+        # Use temporary project directory within workspace (Tweak 8: absolute path)
+        project_dir = os.path.abspath(os.path.join(os.path.dirname(self.output_path), "ghidra_temp_proj"))
         os.makedirs(project_dir, exist_ok=True)
         project_name = "temp_ghidra_proj"
         
@@ -91,11 +91,23 @@ class GhidraExtractor(BaseExtractor):
             self.logger.info(f"Executing Ghidra subprocess: {' '.join(cmd)}")
             result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, env=env)
 
+            # Tweak 8: Include execution logs in errors
             if result.returncode != 0:
-                raise ExtractorError(f"Ghidra execution failed (code {result.returncode}). Stderr: {result.stderr}")
+                raise ExtractorError(
+                    f"Ghidra execution failed (code {result.returncode}).\n"
+                    f"Command used: {' '.join(cmd)}\n"
+                    f"Stderr: {result.stderr}\n"
+                    f"Stdout: {result.stdout}"
+                )
 
             if not os.path.exists(temp_json_path) or os.path.getsize(temp_json_path) == 0:
-                raise ExtractorError("Ghidra analysis finished but output JSON was not written or is empty.")
+                raise ExtractorError(
+                    f"Ghidra analysis finished but output JSON was not written or is empty.\n"
+                    f"Command used: {' '.join(cmd)}\n"
+                    f"Expected output path: {temp_json_path}\n"
+                    f"Stderr: {result.stderr}\n"
+                    f"Stdout: {result.stdout}"
+                )
 
             with open(temp_json_path, "r", encoding="utf-8") as f:
                 raw_data = json.load(f)

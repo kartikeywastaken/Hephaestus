@@ -91,11 +91,12 @@ public class GhidraExtractorScript extends GhidraScript {
                 Map<String, Object> node = new HashMap<>();
                 node.put("id", block.getMinAddress().toString());
                 node.put("size", block.getNumAddresses());
-                node.put("instructions_count", (block.getNumAddresses() / 4) + 1); // rough estimation
 
                 // Extract real instructions for this block
                 List<Map<String, Object>> instrList = extractBlockInstructions(block);
                 node.put("instructions", instrList);
+                node.put("instructions_count", instrList.size());
+                node.put("estimated_instructions_count", (block.getNumAddresses() / 4) + 1);
 
                 cfgNodes.add(node);
 
@@ -144,52 +145,41 @@ public class GhidraExtractorScript extends GhidraScript {
      * Instruction-level exceptions are caught per-instruction; a single failure
      * never aborts the whole block — that instruction is simply skipped.
      */
+    private static final java.util.regex.Pattern MEM_OP_PATTERN = java.util.regex.Pattern.compile(
+        "^\\s*\\[\\s*([a-zA-Z0-9]+)(?:\\s*,\\s*#?(-?)(0x[0-9a-fA-F]+|[0-9]+))?\\s*\\]\\s*$"
+    );
+
+    /**
+     * Extract real instructions for a single CodeBlock by iterating its address ranges.
+     */
     private List<Map<String, Object>> extractBlockInstructions(CodeBlock block) {
         List<Map<String, Object>> instrList = new ArrayList<>();
         try {
-            // Primary path
-            InstructionIterator instrIter = currentProgram.getListing().getInstructions(block, true);
-            while (instrIter.hasNext()) {
+            for (AddressRange range : block.getAddressRanges()) {
                 try {
-                    Instruction instr = instrIter.next();
-                    Map<String, Object> instrMap = buildInstructionMap(instr);
-                    if (instrMap != null) {
-                        instrList.add(instrMap);
-                    }
-                } catch (Exception e) {
-                    println("[-] Skipping malformed instruction in block " + block.getMinAddress() + ": " + e.getMessage());
-                }
-            }
-        } catch (Exception primaryEx) {
-            // Amendment 2: AddressSet fallback — iterate ranges individually
-            println("[!] Primary getInstructions(block) failed for " + block.getMinAddress() + "; using range fallback: " + primaryEx.getMessage());
-            try {
-                for (AddressRange range : block.getAddressRanges()) {
-                    try {
-                        InstructionIterator rangeIter = currentProgram.getListing()
-                            .getInstructions(range.getMinAddress(), true);
-                        while (rangeIter.hasNext()) {
-                            try {
-                                Instruction instr = rangeIter.next();
-                                // Stop if we have left the range boundary
-                                if (!range.contains(instr.getAddress())) {
-                                    break;
-                                }
-                                Map<String, Object> instrMap = buildInstructionMap(instr);
-                                if (instrMap != null) {
-                                    instrList.add(instrMap);
-                                }
-                            } catch (Exception e) {
-                                println("[-] Skipping malformed instruction in range fallback: " + e.getMessage());
+                    InstructionIterator rangeIter = currentProgram.getListing()
+                        .getInstructions(range.getMinAddress(), true);
+                    while (rangeIter.hasNext()) {
+                        try {
+                            Instruction instr = rangeIter.next();
+                            // Stop if we have left the range boundary
+                            if (!range.contains(instr.getAddress())) {
+                                break;
                             }
+                            Map<String, Object> instrMap = buildInstructionMap(instr);
+                            if (instrMap != null) {
+                                instrList.add(instrMap);
+                            }
+                        } catch (Exception e) {
+                            println("[-] Skipping malformed instruction in range: " + e.getMessage());
                         }
-                    } catch (Exception rangeEx) {
-                        println("[-] Range fallback failed for range " + range + ": " + rangeEx.getMessage());
                     }
+                } catch (Exception rangeEx) {
+                    println("[-] Range extraction failed for range " + range + ": " + rangeEx.getMessage());
                 }
-            } catch (Exception fallbackEx) {
-                println("[-] All instruction extraction attempts failed for block " + block.getMinAddress() + ": " + fallbackEx.getMessage());
             }
+        } catch (Exception e) {
+            println("[-] All instruction extraction attempts failed for block " + block.getMinAddress() + ": " + e.getMessage());
         }
         return instrList;
     }
@@ -213,12 +203,58 @@ public class GhidraExtractorScript extends GhidraScript {
             List<Map<String, Object>> operands = new ArrayList<>();
             int numOperands = instr.getNumOperands();
             for (int i = 0; i < numOperands; i++) {
-                List<Object> repList = instr.getOperandRepresentationList(i);
-                if (repList == null) continue;
-                for (Object obj : repList) {
-                    Map<String, Object> op = buildOperandMap(obj);
-                    if (op != null) {
+                String operandText = instr.getDefaultOperandRepresentation(i);
+                if (operandText == null) continue;
+                String optTrim = operandText.trim();
+                
+                // If it looks like a memory operand (contains brackets)
+                if (optTrim.contains("[") || optTrim.contains("]")) {
+                    java.util.regex.Matcher m = MEM_OP_PATTERN.matcher(optTrim);
+                    if (m.matches()) {
+                        String baseReg = m.group(1);
+                        long offsetVal = 0;
+                        if (m.group(3) != null) {
+                            String sign = m.group(2);
+                            String valStr = m.group(3);
+                            long absVal;
+                            if (valStr.startsWith("0x") || valStr.startsWith("0X")) {
+                                absVal = Long.parseLong(valStr.substring(2), 16);
+                            } else {
+                                absVal = Long.parseLong(valStr, 10);
+                            }
+                            offsetVal = "-".equals(sign) ? -absVal : absVal;
+                        }
+                        
+                        Integer memSize = inferMemoryAccessSize(mnemonic, instr);
+                        Map<String, Object> op = new HashMap<>();
+                        op.put("kind", "memory");
+                        op.put("base", baseReg);
+                        op.put("offset", offsetVal);
+                        op.put("size_bytes", memSize);
                         operands.add(op);
+                    } else {
+                        // Unsupported complex memory operand
+                        Map<String, Object> op = new HashMap<>();
+                        op.put("kind", "unknown");
+                        op.put("raw", optTrim);
+                        operands.add(op);
+                    }
+                } else {
+                    // Fallback to standard token representation list
+                    List<Object> repList = instr.getDefaultOperandRepresentationList(i);
+                    if (repList == null || repList.isEmpty()) {
+                        // Just map the string representation if representation list is empty
+                        Map<String, Object> op = new HashMap<>();
+                        op.put("kind", "unknown");
+                        op.put("raw", optTrim);
+                        operands.add(op);
+                    } else {
+                        for (Object obj : repList) {
+                            Map<String, Object> op = buildOperandMap(obj);
+                            if (op != null) {
+                                operands.add(op);
+                            }
+                        }
                     }
                 }
             }
@@ -227,6 +263,61 @@ public class GhidraExtractorScript extends GhidraScript {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * Infer memory access size conservatively based on mnemonic and source/destination registers.
+     */
+    private Integer inferMemoryAccessSize(String mnemonic, Instruction instr) {
+        if (mnemonic == null) return null;
+        String m = mnemonic.toLowerCase();
+        if (m.endsWith("b")) { // ldrb, strb, etc.
+            return 1;
+        }
+        if (m.endsWith("h")) { // ldrh, strh, etc.
+            return 2;
+        }
+        if (m.equals("ldrsw")) {
+            return 4;
+        }
+        if (m.startsWith("ldr") || m.startsWith("str")) {
+            // Check other operands to see if they are registers starting with w or x
+            int numOperands = instr.getNumOperands();
+            for (int i = 0; i < numOperands; i++) {
+                String rep = instr.getDefaultOperandRepresentation(i);
+                if (rep != null) {
+                    rep = rep.toLowerCase().trim();
+                    if (rep.startsWith("w")) {
+                        return 4;
+                    }
+                    if (rep.startsWith("x") || rep.equals("sp")) {
+                        return 8;
+                    }
+                }
+            }
+            // Fallback: check getOpObjects
+            try {
+                for (int i = 0; i < numOperands; i++) {
+                    Object[] opObjects = instr.getOpObjects(i);
+                    if (opObjects != null) {
+                        for (Object obj : opObjects) {
+                            if (obj instanceof ghidra.program.model.lang.Register) {
+                                String regName = ((ghidra.program.model.lang.Register) obj).getName().toLowerCase();
+                                if (regName.startsWith("w")) {
+                                    return 4;
+                                }
+                                if (regName.startsWith("x") || regName.equals("sp")) {
+                                    return 8;
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                // Ignore
+            }
+        }
+        return null;
     }
 
     /**

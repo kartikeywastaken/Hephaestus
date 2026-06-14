@@ -115,9 +115,17 @@ class TestInstructionExtraction(unittest.TestCase):
         # Valid instruction should NOT be rejected
         self.assertFalse(is_fabricated_placeholder(_make_valid_instr()))
 
-    # Test 3 — Assembler preserves real instructions
+    # Test 3 — Assembler preserves real instructions (including Ghidra-style memory operands)
     def test_assembler_preserves_real_instructions(self):
-        real_instr = _make_valid_instr("0x100000540", "add", "ghidra")
+        real_instr = {
+            "address": "0x100000540",
+            "mnemonic": "ldr",
+            "opcode": "ldr",
+            "operands": [{"kind": "memory", "base": "sp", "offset": 16, "size_bytes": 4}],
+            "size_bytes": 4,
+            "raw": "ldr w0, [sp, #16]",
+            "source": "ghidra",
+        }
         block = _make_block("0x100000540", [real_instr])
         func = _make_func("test_func", "0x100000540", [block])
         ghidra_data = _make_ghidra_raw([func])
@@ -135,8 +143,12 @@ class TestInstructionExtraction(unittest.TestCase):
         # At least one block should have our real instruction
         instrs = blocks[0].get("instructions", [])
         self.assertEqual(len(instrs), 1)
-        self.assertEqual(instrs[0]["opcode"], "add")
+        self.assertEqual(instrs[0]["opcode"], "ldr")
         self.assertEqual(instrs[0]["source"], "ghidra")
+        self.assertEqual(instrs[0]["operands"][0]["kind"], "memory")
+        self.assertEqual(instrs[0]["operands"][0]["base"], "sp")
+        self.assertEqual(instrs[0]["operands"][0]["offset"], 16)
+        self.assertEqual(instrs[0]["operands"][0]["size_bytes"], 4)
 
     # Test 4 — Assembler deduplicates instructions by address
     def test_assembler_deduplicates_instructions_by_address(self):

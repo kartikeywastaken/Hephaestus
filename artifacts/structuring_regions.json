@@ -1,59 +1,23 @@
 [
   {
-    "function_name": "_main",
-    "structured_body": {
-      "type": "sequence",
-      "children": [
-        {
-          "type": "if",
-          "condition_block": "0x100000460",
-          "then_branch": {
-            "type": "sequence",
-            "children": [
-              {
-                "type": "block",
-                "id": "0x100000488"
-              },
-              {
-                "type": "block",
-                "id": "0x10000048c"
-              },
-              {
-                "type": "block",
-                "id": "0x100000498"
-              }
-            ]
-          },
-          "merge_block": "0x1000004a0"
-        },
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x1000004a0"
-            },
-            {
-              "type": "block",
-              "id": "0x1000004b8"
-            }
-          ]
-        }
-      ]
-    }
-  },
-  {
-    "function_name": "atoi",
-    "structured_body": {
-      "type": "block",
-      "id": "0x1000004c8"
-    }
-  },
-  {
     "function_name": "printf",
     "structured_body": {
       "type": "block",
-      "id": "0x1000004d4"
+      "id": "0x100000510"
+    }
+  },
+  {
+    "function_name": "_main",
+    "structured_body": {
+      "type": "block",
+      "id": "0x1000004b4"
+    }
+  },
+  {
+    "function_name": "_inspect",
+    "structured_body": {
+      "type": "block",
+      "id": "0x100000460"
     }
   }
 ]

@@ -116,5 +116,84 @@ class TestExtractionBaseAndExtractors(unittest.TestCase):
         self.assertEqual(manifest["total_jobs_run"], 3)
         self.assertTrue(os.path.exists(os.path.join(self.temp_dir.name, "orchestration_manifest.json")))
 
+    def test_radare2_fallback_order(self):
+        from unittest.mock import MagicMock
+        mock_r2 = MagicMock()
+        
+        # Test 1: aoj succeeds
+        mock_r2.cmdj.side_effect = lambda cmd: [{"addr": 0x1000, "disasm": "add x0, x1, x2"}] if "aoj" in cmd else None
+        ext = Radare2Extractor(self.binary_file, os.path.join(self.temp_dir.name, "r2.json"))
+        res = ext._extract_block_instructions(mock_r2, 0x1000, 4, "radare2", ninstr=1)
+        self.assertEqual(len(res), 1)
+        self.assertEqual(res[0]["address"], "0x1000")
+        self.assertEqual(res[0]["mnemonic"], "add")
+        self.assertTrue(mock_r2.cmdj.call_args_list[0][0][0].startswith("aoj"))
+
+        # Test 2: aoj fails, pdj succeeds
+        mock_r2.reset_mock()
+        mock_r2.cmdj.side_effect = lambda cmd: [{"addr": 0x1000, "disasm": "sub x0, x1, x2"}] if "pdj" in cmd else None
+        res = ext._extract_block_instructions(mock_r2, 0x1000, 4, "radare2", ninstr=1)
+        self.assertEqual(len(res), 1)
+        self.assertEqual(res[0]["mnemonic"], "sub")
+        cmds = [call_args[0][0] for call_args in mock_r2.cmdj.call_args_list]
+        self.assertTrue(any(c.startswith("aoj") for c in cmds))
+        self.assertTrue(any(c.startswith("pdj") for c in cmds))
+
+        # Test 3: aoj and pdj fail, pDj succeeds
+        mock_r2.reset_mock()
+        mock_r2.cmdj.side_effect = lambda cmd: [{"addr": 0x1000, "disasm": "mul x0, x1, x2"}] if "pDj" in cmd else None
+        res = ext._extract_block_instructions(mock_r2, 0x1000, 4, "radare2", ninstr=1)
+        self.assertEqual(len(res), 1)
+        self.assertEqual(res[0]["mnemonic"], "mul")
+        cmds = [call_args[0][0] for call_args in mock_r2.cmdj.call_args_list]
+        self.assertTrue(any(c.startswith("aoj") for c in cmds))
+        self.assertTrue(any(c.startswith("pdj") for c in cmds))
+        self.assertTrue(any(c.startswith("pDj") for c in cmds))
+
+    def test_radare2_address_keys(self):
+        from unittest.mock import MagicMock
+        mock_r2 = MagicMock()
+        ext = Radare2Extractor(self.binary_file, os.path.join(self.temp_dir.name, "r2.json"))
+
+        # Test key: offset
+        mock_r2.cmdj.return_value = [{"offset": 4096, "disasm": "mov x0, 0"}]
+        res = ext._extract_block_instructions(mock_r2, 4096, 4, "radare2", ninstr=1)
+        self.assertEqual(res[0]["address"], "0x1000")
+
+        # Test key: addr
+        mock_r2.cmdj.return_value = [{"addr": 4096, "disasm": "mov x0, 0"}]
+        res = ext._extract_block_instructions(mock_r2, 4096, 4, "radare2", ninstr=1)
+        self.assertEqual(res[0]["address"], "0x1000")
+
+        # Test key: address
+        mock_r2.cmdj.return_value = [{"address": 4096, "disasm": "mov x0, 0"}]
+        res = ext._extract_block_instructions(mock_r2, 4096, 4, "radare2", ninstr=1)
+        self.assertEqual(res[0]["address"], "0x1000")
+
+    def test_radare2_opex_operand_mapping(self):
+        from unittest.mock import MagicMock
+        mock_r2 = MagicMock()
+        ext = Radare2Extractor(self.binary_file, os.path.join(self.temp_dir.name, "r2.json"))
+
+        # Test memory base/reg, disp/offset/delta/imm
+        mock_r2.cmdj.return_value = [{
+            "addr": 4096,
+            "mnemonic": "ldr",
+            "disasm": "ldr x0, [sp, 8]",
+            "size": 4,
+            "opex": {
+                "operands": [
+                    {"type": "reg", "value": "x0"},
+                    {"type": "mem", "reg": "sp", "offset": 8, "size": 8}
+                ]
+            }
+        }]
+        res = ext._extract_block_instructions(mock_r2, 4096, 4, "radare2", ninstr=1)
+        self.assertEqual(len(res), 1)
+        ops = res[0]["operands"]
+        self.assertEqual(len(ops), 2)
+        self.assertEqual(ops[0], {"kind": "register", "value": "x0"})
+        self.assertEqual(ops[1], {"kind": "memory", "base": "sp", "offset": 8, "size_bytes": 8})
+
 if __name__ == "__main__":
     unittest.main()

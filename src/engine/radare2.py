@@ -197,13 +197,14 @@ class Radare2Extractor(BaseExtractor):
 
                         # Extract real instructions for this block (Amendment 1: range-filtered)
                         block_instructions = self._extract_block_instructions(
-                            r2, addr, size, "radare2"
+                            r2, addr, size, "radare2", ninstr=ninstr
                         )
 
                         cfg_nodes.append({
                             "id": block_id,
                             "size": size,
-                            "instructions_count": ninstr,
+                            "instructions_count": len(block_instructions),
+                            "estimated_instructions_count": ninstr,
                             "instructions": block_instructions,
                         })
 
@@ -327,58 +328,78 @@ class Radare2Extractor(BaseExtractor):
         block_addr_int: int,
         block_size: int,
         source: str,
+        ninstr: int = 0,
     ) -> List[Dict[str, Any]]:
         """
-        Extract and validate instructions for a single basic block using ``pDj``.
+        Extract and validate instructions for a single basic block using aoj, pdj, or pDj.
 
         Amendment 1 — Range filter:
-            Any instruction whose ``offset`` falls outside
-            ``[block_addr_int, block_addr_int + block_size)`` is discarded.
+            Any instruction whose address falls outside
+            [block_addr_int, block_addr_int + block_size) is discarded.
 
         Amendment 3 — Missing opcode normalization:
-            If ``opcode`` is absent, the first token of ``disasm`` is used.
-
-        Parameters
-        ----------
-        r2             : Open r2pipe handle.
-        block_addr_int : Block start address as an integer.
-        block_size     : Block size in bytes.
-        source         : Provenance tag (e.g. "radare2").
-
-        Returns
-        -------
-        list[dict]
-            Validated instruction dicts, sorted by address.  May be empty.
+            If opcode is absent, the first token of disasm is used.
         """
         if block_size <= 0:
             return []
 
-        try:
-            raw_instrs = r2.cmdj(f"pDj {block_size} @ {block_addr_int}")
-        except Exception as e:
-            self.logger.debug(
-                "pDj failed for block 0x%x (size=%d): %s", block_addr_int, block_size, e
-            )
-            return []
+        # Tweak 2: Calculate estimated instruction count
+        estimated_ninstr = ninstr if ninstr and ninstr > 0 else max(1, block_size // 4)
 
-        if not isinstance(raw_instrs, list) or not raw_instrs:
+        raw_instrs = None
+        command_used = ""
+
+        # Tweak 1: Prioritized commands (aoj -> pdj -> pDj)
+        # 1. Try aoj (structured operands)
+        try:
+            command_used = f"aoj {estimated_ninstr} @ {block_addr_int}"
+            raw_instrs = r2.cmdj(command_used)
+        except Exception as e:
+            self.logger.debug("aoj failed for block 0x%x: %s", block_addr_int, e)
+
+        # 2. Try pdj (disassembly JSON by instruction count)
+        if not raw_instrs or not isinstance(raw_instrs, list):
+            try:
+                command_used = f"pdj {estimated_ninstr} @ {block_addr_int}"
+                raw_instrs = r2.cmdj(command_used)
+            except Exception as e:
+                self.logger.debug("pdj failed for block 0x%x: %s", block_addr_int, e)
+
+        # 3. Try pDj (disassembly JSON by byte count)
+        if not raw_instrs or not isinstance(raw_instrs, list):
+            try:
+                command_used = f"pDj {block_size} @ {block_addr_int}"
+                raw_instrs = r2.cmdj(command_used)
+            except Exception as e:
+                self.logger.debug("pDj failed for block 0x%x: %s", block_addr_int, e)
+
+        if not raw_instrs or not isinstance(raw_instrs, list):
             return []
 
         block_end = block_addr_int + block_size
         validated: List[Dict[str, Any]] = []
+        before_range_filter_count = len(raw_instrs)
+        raw_addresses: List[str] = []
 
         for ri in raw_instrs:
             if not isinstance(ri, dict):
                 continue
 
-            # Amendment 1: range filter
-            offset = ri.get("offset")
-            if offset is None:
+            # Tweak 3: Address handling (offset or addr or address)
+            addr_val = ri.get("offset") or ri.get("addr") or ri.get("address")
+            if addr_val is None:
                 continue
             try:
-                offset_int = int(offset)
+                # Convert to int for range filtering
+                offset_int = int(addr_val)
             except (TypeError, ValueError):
                 continue
+
+            # Normalize address to lowercase hex string '0x...'
+            norm_addr = hex(offset_int).lower()
+            raw_addresses.append(norm_addr)
+
+            # Tweak 6: Range filtering
             if offset_int < block_addr_int or offset_int >= block_end:
                 self.logger.debug(
                     "Discarding out-of-range instruction at 0x%x (block 0x%x-0x%x)",
@@ -388,18 +409,25 @@ class Radare2Extractor(BaseExtractor):
 
             # Build canonical instruction dict
             disasm = ri.get("disasm") or ri.get("text") or ""
-            opcode_field = ri.get("opcode") or ""
+            
+            # Tweak 4: Opcode/mnemonic extraction precedence
+            mnemonic = ri.get("mnemonic")
+            raw = ri.get("disasm") or ri.get("opcode") or ""
+            
+            def get_first_token(s: str) -> str:
+                if not s:
+                    return ""
+                parts = s.strip().split()
+                return parts[0].lower() if parts else ""
 
-            # Amendment 3: normalize missing opcode from disasm
-            if not opcode_field and disasm.strip():
-                opcode_field = disasm.strip().split()[0].lower()
+            opcode_field = mnemonic or get_first_token(raw) or ri.get("type") or "unknown"
 
             operands = self._parse_r2_operands(ri, disasm)
 
             instr: Dict[str, Any] = {
-                "address": hex(offset_int),
-                "mnemonic": opcode_field.lower() if opcode_field else "",
-                "opcode": opcode_field.lower() if opcode_field else "",
+                "address": norm_addr,
+                "mnemonic": opcode_field.lower(),
+                "opcode": opcode_field.lower(),
                 "operands": operands,
                 "size_bytes": ri.get("size"),
                 "raw": disasm,
@@ -409,8 +437,8 @@ class Radare2Extractor(BaseExtractor):
             # Guard: reject fabricated placeholders
             if is_fabricated_placeholder(instr):
                 self.logger.error(
-                    "Fabricated placeholder detected in r2 instruction at 0x%x; rejected.",
-                    offset_int,
+                    "Fabricated placeholder detected in r2 instruction at %s; rejected.",
+                    norm_addr,
                 )
                 continue
 
@@ -419,8 +447,27 @@ class Radare2Extractor(BaseExtractor):
                 validated.append(instr)
             else:
                 self.logger.debug(
-                    "Invalid instruction at 0x%x skipped: %r", offset_int, instr
+                    "Invalid instruction at %s skipped: %r", norm_addr, instr
                 )
+
+        # Tweak 6: range filter logging
+        self.logger.info(
+            "Radare2 Instruction Extraction Report:\n"
+            "  Command used: %s\n"
+            "  Block range: 0x%x - 0x%x\n"
+            "  Instructions before range filter: %d\n"
+            "  Instructions after range filter: %d\n"
+            "  First few instruction addresses: %s",
+            command_used, block_addr_int, block_end,
+            before_range_filter_count, len(validated),
+            raw_addresses[:5]
+        )
+
+        if before_range_filter_count > 0 and not validated:
+            self.logger.warning(
+                "Command '%s' returned %d instructions, but range filtering (0x%x - 0x%x) removed all of them! Raw addresses: %s",
+                command_used, before_range_filter_count, block_addr_int, block_end, raw_addresses
+            )
 
         # Sort by normalized address
         validated.sort(key=lambda i: int(i["address"], 16)
@@ -449,14 +496,19 @@ class Radare2Extractor(BaseExtractor):
                 elif op_type == "imm":
                     result.append({"kind": "immediate", "value": op.get("value", 0)})
                 elif op_type == "mem":
+                    # Tweak 5: accept fields base, reg, disp, offset, delta, imm
+                    base_val = op.get("base") or op.get("reg") or ""
+                    offset_val = op.get("disp") or op.get("offset") or op.get("delta") or op.get("imm") or 0
                     result.append({
                         "kind": "memory",
-                        "base": op.get("base", ""),
-                        "offset": op.get("disp", 0),
+                        "base": str(base_val),
+                        "offset": offset_val,
                         "size_bytes": op.get("size"),
                     })
                 else:
-                    result.append({"kind": "unknown", "raw": str(op)})
+                    # If it's something else, represent as unknown but preserve raw
+                    raw_val = op.get("value") or op.get("raw") or str(op)
+                    result.append({"kind": "unknown", "raw": str(raw_val)})
             return result
 
         # Fallback: extract operand text portion from disasm

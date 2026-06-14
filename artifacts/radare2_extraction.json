@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "provenance": {
     "tool_name": "Radare2 Headless Analyser",
-    "timestamp": "2026-06-14T07:57:09-07:00",
+    "timestamp": "2026-06-14T15:28:21-07:00",
     "binary_path": "./eh",
     "config": {}
   },
@@ -14,34 +14,21 @@
     },
     "functions": [
       {
-        "name": "atoi",
-        "entry_point": "0x1000004c8",
-        "size_bytes": 12,
-        "calling_convention": 1,
-        "local_variables": [],
-        "cfg": {
-          "nodes": [
-            {
-              "id": "0x1000004c8",
-              "size": 12,
-              "instructions_count": 3
-            }
-          ],
-          "edges": []
-        }
-      },
-      {
         "name": "printf",
-        "entry_point": "0x1000004d4",
-        "size_bytes": 16,
+        "entry_point": "0x100000510",
+        "size_bytes": 20,
         "calling_convention": 1,
-        "local_variables": [],
+        "local_variables": [
+          "arg1",
+          "arg2"
+        ],
         "cfg": {
           "nodes": [
             {
-              "id": "0x1000004d4",
-              "size": 16,
-              "instructions_count": 4
+              "id": "0x100000510",
+              "size": 20,
+              "instructions_count": 5,
+              "instructions": []
             }
           ],
           "edges": []
@@ -49,66 +36,54 @@
       },
       {
         "name": "_main",
-        "entry_point": "0x100000460",
-        "size_bytes": 104,
-        "calling_convention": 2,
+        "entry_point": "0x1000004b4",
+        "size_bytes": 92,
+        "calling_convention": 1,
         "local_variables": [
           "argc",
           "argv",
-          "envp",
-          "var_0h_3",
+          "var_0h_2",
           "var_ch",
           "var_10h",
-          "var_0h_2",
-          "var_0h",
+          "var_18h",
           "var_20h",
-          "var_20h_2"
+          "var_0h",
+          "var_30h",
+          "var_30h_2"
+        ],
+        "cfg": {
+          "nodes": [
+            {
+              "id": "0x1000004b4",
+              "size": 92,
+              "instructions_count": 23,
+              "instructions": []
+            }
+          ],
+          "edges": []
+        }
+      },
+      {
+        "name": "_inspect",
+        "entry_point": "0x100000460",
+        "size_bytes": 84,
+        "calling_convention": 1,
+        "local_variables": [
+          "arg1",
+          "arg_10h",
+          "var_0h",
+          "var_8h"
         ],
         "cfg": {
           "nodes": [
             {
               "id": "0x100000460",
-              "size": 40,
-              "instructions_count": 10
-            },
-            {
-              "id": "0x100000488",
-              "size": 4,
-              "instructions_count": 1
-            },
-            {
-              "id": "0x10000048c",
-              "size": 20,
-              "instructions_count": 5
-            },
-            {
-              "id": "0x1000004a0",
-              "size": 40,
-              "instructions_count": 10
+              "size": 84,
+              "instructions_count": 21,
+              "instructions": []
             }
           ],
-          "edges": [
-            {
-              "source": "0x100000460",
-              "target": "0x1000004a0",
-              "type": "conditional"
-            },
-            {
-              "source": "0x100000460",
-              "target": "0x100000488",
-              "type": "conditional"
-            },
-            {
-              "source": "0x100000488",
-              "target": "0x10000048c",
-              "type": "unconditional"
-            },
-            {
-              "source": "0x10000048c",
-              "target": "0x1000004a0",
-              "type": "unconditional"
-            }
-          ]
+          "edges": []
         }
       }
     ],
@@ -121,18 +96,18 @@
       },
       {
         "address": "0x100000460",
+        "name": "_inspect",
+        "type": "function",
+        "visibility": "global"
+      },
+      {
+        "address": "0x1000004b4",
         "name": "_main",
         "type": "function",
         "visibility": "global"
       },
       {
-        "address": "0x1000004c8",
-        "name": "atoi",
-        "type": "function",
-        "visibility": "static"
-      },
-      {
-        "address": "0x1000004d4",
+        "address": "0x100000510",
         "name": "printf",
         "type": "function",
         "visibility": "static"
@@ -142,18 +117,24 @@
         "name": "func.100000460",
         "type": "function",
         "visibility": "static"
+      },
+      {
+        "address": "0x1000004b4",
+        "name": "func.1000004b4",
+        "type": "function",
+        "visibility": "static"
       }
     ],
     "call_graph": {
       "nodes": [
         "printf",
-        "atoi",
+        "_inspect",
         "_main"
       ],
       "edges": [
         {
           "caller": "_main",
-          "callee": "atoi"
+          "callee": "_inspect"
         },
         {
           "caller": "_main",

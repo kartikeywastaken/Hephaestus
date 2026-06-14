@@ -1,0 +1,12 @@
+{
+  "schema_version": "4C.0.0",
+  "provenance": {
+    "phase": "4C",
+    "description": "Conservative data layout recovery",
+    "source_ir": "unified_ir.json"
+  },
+  "data": {
+    "layout_candidates": [],
+    "unbound_memory_accesses": []
+  }
+}
