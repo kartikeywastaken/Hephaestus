@@ -6,8 +6,9 @@ Coordinates r2pipe analysis dispatches, symbols and CFG extraction, and JSON out
 
 import os
 import time
-from typing import Dict, Any, Optional
+from typing import Any, Dict, List, Optional
 from src.engine.base import BaseExtractor, ExtractorError, execute_with_retry
+from src.ir.instructions.validation import validate_instruction, is_fabricated_placeholder
 
 def clean_r2_name(name: str) -> str:
     """Removes common Radare2 prefixes from symbol and function names."""
@@ -194,10 +195,16 @@ class Radare2Extractor(BaseExtractor):
                         ninstr = block.get("ninstr", 0)
                         size = block.get("size", 0)
 
+                        # Extract real instructions for this block (Amendment 1: range-filtered)
+                        block_instructions = self._extract_block_instructions(
+                            r2, addr, size, "radare2"
+                        )
+
                         cfg_nodes.append({
                             "id": block_id,
                             "size": size,
-                            "instructions_count": ninstr
+                            "instructions_count": ninstr,
+                            "instructions": block_instructions,
                         })
 
                         jump = block.get("jump")
@@ -313,3 +320,147 @@ class Radare2Extractor(BaseExtractor):
 
         except Exception as e:
             raise ExtractorError(f"Radare2 execution failed: {e}")
+
+    def _extract_block_instructions(
+        self,
+        r2: Any,
+        block_addr_int: int,
+        block_size: int,
+        source: str,
+    ) -> List[Dict[str, Any]]:
+        """
+        Extract and validate instructions for a single basic block using ``pDj``.
+
+        Amendment 1 — Range filter:
+            Any instruction whose ``offset`` falls outside
+            ``[block_addr_int, block_addr_int + block_size)`` is discarded.
+
+        Amendment 3 — Missing opcode normalization:
+            If ``opcode`` is absent, the first token of ``disasm`` is used.
+
+        Parameters
+        ----------
+        r2             : Open r2pipe handle.
+        block_addr_int : Block start address as an integer.
+        block_size     : Block size in bytes.
+        source         : Provenance tag (e.g. "radare2").
+
+        Returns
+        -------
+        list[dict]
+            Validated instruction dicts, sorted by address.  May be empty.
+        """
+        if block_size <= 0:
+            return []
+
+        try:
+            raw_instrs = r2.cmdj(f"pDj {block_size} @ {block_addr_int}")
+        except Exception as e:
+            self.logger.debug(
+                "pDj failed for block 0x%x (size=%d): %s", block_addr_int, block_size, e
+            )
+            return []
+
+        if not isinstance(raw_instrs, list) or not raw_instrs:
+            return []
+
+        block_end = block_addr_int + block_size
+        validated: List[Dict[str, Any]] = []
+
+        for ri in raw_instrs:
+            if not isinstance(ri, dict):
+                continue
+
+            # Amendment 1: range filter
+            offset = ri.get("offset")
+            if offset is None:
+                continue
+            try:
+                offset_int = int(offset)
+            except (TypeError, ValueError):
+                continue
+            if offset_int < block_addr_int or offset_int >= block_end:
+                self.logger.debug(
+                    "Discarding out-of-range instruction at 0x%x (block 0x%x-0x%x)",
+                    offset_int, block_addr_int, block_end,
+                )
+                continue
+
+            # Build canonical instruction dict
+            disasm = ri.get("disasm") or ri.get("text") or ""
+            opcode_field = ri.get("opcode") or ""
+
+            # Amendment 3: normalize missing opcode from disasm
+            if not opcode_field and disasm.strip():
+                opcode_field = disasm.strip().split()[0].lower()
+
+            operands = self._parse_r2_operands(ri, disasm)
+
+            instr: Dict[str, Any] = {
+                "address": hex(offset_int),
+                "mnemonic": opcode_field.lower() if opcode_field else "",
+                "opcode": opcode_field.lower() if opcode_field else "",
+                "operands": operands,
+                "size_bytes": ri.get("size"),
+                "raw": disasm,
+                "source": source,
+            }
+
+            # Guard: reject fabricated placeholders
+            if is_fabricated_placeholder(instr):
+                self.logger.error(
+                    "Fabricated placeholder detected in r2 instruction at 0x%x; rejected.",
+                    offset_int,
+                )
+                continue
+
+            # Validate schema
+            if validate_instruction(instr):
+                validated.append(instr)
+            else:
+                self.logger.debug(
+                    "Invalid instruction at 0x%x skipped: %r", offset_int, instr
+                )
+
+        # Sort by normalized address
+        validated.sort(key=lambda i: int(i["address"], 16)
+                        if i.get("address", "").startswith("0x") else 0)
+        return validated
+
+    def _parse_r2_operands(self, ri: Dict[str, Any], disasm: str) -> List[Dict[str, Any]]:
+        """
+        Convert Radare2 opex operands to the canonical operand schema.
+
+        Falls back to a single ``unknown`` operand from the disasm operand
+        portion if structured operands are unavailable.
+        """
+        opex = ri.get("opex") or {}
+        r2_ops = opex.get("operands") if isinstance(opex, dict) else None
+
+        if isinstance(r2_ops, list) and r2_ops:
+            result = []
+            for op in r2_ops:
+                if not isinstance(op, dict):
+                    result.append({"kind": "unknown", "raw": str(op)})
+                    continue
+                op_type = op.get("type", "")
+                if op_type == "reg":
+                    result.append({"kind": "register", "value": op.get("value", "")})
+                elif op_type == "imm":
+                    result.append({"kind": "immediate", "value": op.get("value", 0)})
+                elif op_type == "mem":
+                    result.append({
+                        "kind": "memory",
+                        "base": op.get("base", ""),
+                        "offset": op.get("disp", 0),
+                        "size_bytes": op.get("size"),
+                    })
+                else:
+                    result.append({"kind": "unknown", "raw": str(op)})
+            return result
+
+        # Fallback: extract operand text portion from disasm
+        parts = disasm.strip().split(None, 1)
+        if len(parts) > 1 and parts[1].strip():
+            return [{"kind": "unknown", "raw": parts[1].strip()}]
+        return []

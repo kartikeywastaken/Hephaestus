@@ -608,6 +608,100 @@ def handle_recover_semantics(out_dir: str):
     print("============================================================")
     sys.exit(0)
 
+
+def handle_refine_semantics(out_dir: str):
+    """
+    Phase 4B: Type Constraint Refinement Engine
+    Reads unified_ir.json and type_recovery.json, applies instruction-level
+    constraint propagation, and writes semantic_recovery.json.
+    """
+    from src.ir.types.refinement_engine import TypeRefinementEngine
+    from src.ir.types.semantic_emitter import write_semantic_recovery_artifact
+
+    logger.info("Executing Phase 4B Type Constraint Refinement...")
+
+    # Load Unified IR (required)
+    ir_path = os.path.join(out_dir, "unified_ir.json")
+    if not os.path.exists(ir_path):
+        logger.error(
+            "[-] unified_ir.json not found at %s. Please run extraction first.", ir_path
+        )
+        sys.exit(1)
+    try:
+        with open(ir_path, "r", encoding="utf-8") as f:
+            unified_ir = json.load(f)
+    except Exception as e:
+        logger.error("[-] Failed to read unified_ir.json at %s: %s", ir_path, e)
+        sys.exit(1)
+
+    # Load Phase 4A type recovery (required)
+    tr_path = os.path.join(out_dir, "type_recovery.json")
+    if not os.path.exists(tr_path):
+        logger.error(
+            "[-] type_recovery.json not found at %s. "
+            "Please run 'recover-semantics' first.", tr_path
+        )
+        sys.exit(1)
+    try:
+        with open(tr_path, "r", encoding="utf-8") as f:
+            type_recovery = json.load(f)
+    except Exception as e:
+        logger.error("[-] Failed to read type_recovery.json at %s: %s", tr_path, e)
+        sys.exit(1)
+
+    # Load structuring regions (optional)
+    structuring_regions = None
+    regions_path = os.path.join(out_dir, "structuring_regions.json")
+    if os.path.exists(regions_path):
+        try:
+            with open(regions_path, "r", encoding="utf-8") as f:
+                structuring_regions = json.load(f)
+            if not isinstance(structuring_regions, dict):
+                logger.warning(
+                    "structuring_regions.json is not a dict; continuing with None."
+                )
+                structuring_regions = None
+            else:
+                logger.info("[+] Loaded structuring regions from: %s", regions_path)
+        except Exception as e:
+            logger.warning(
+                "Could not load structuring_regions.json: %s. Continuing with None.", e
+            )
+            structuring_regions = None
+
+    # Run refinement
+    engine = TypeRefinementEngine()
+    results = engine.refine(unified_ir, type_recovery, structuring_regions)
+
+    # Write artifact
+    output_path = os.path.join(out_dir, "semantic_recovery.json")
+    source_structuring = regions_path if structuring_regions is not None else None
+    write_semantic_recovery_artifact(
+        results, output_path,
+        source_ir=ir_path,
+        source_type_recovery=tr_path,
+        source_structuring=source_structuring,
+    )
+    logger.info("[+] Phase 4B semantic recovery artifact committed: %s", output_path)
+
+    # Compute summary stats
+    total_constraints = sum(r.total_constraints_applied for r in results)
+    no_evidence = sum(1 for r in results if r.total_constraints_applied == 0)
+
+    print("\n============================================================")
+    print("          PHASE 4B: TYPE CONSTRAINT REFINEMENT")
+    print("============================================================")
+    print(f"Functions processed:              {len(results)}")
+    print(f"Total constraints applied:        {total_constraints}")
+    print(f"Functions with no instr evidence: {no_evidence}")
+    print("------------------------------------------------------------")
+    for fn in results:
+        print(f"  {fn.name}  [{fn.function_kind}]  constraints_applied={fn.total_constraints_applied}")
+    print("============================================================")
+    print(f"Output: {output_path}")
+    print("============================================================")
+    sys.exit(0)
+
 def main():
     # If help flag is present, avoid running setup_logging to prevent creating output directory unnecessarily
     if "--help" in sys.argv or "-h" in sys.argv:
@@ -660,6 +754,9 @@ def main():
             return
         elif first_arg == "recover-semantics":
             handle_recover_semantics(out_dir)
+            return
+        elif first_arg == "refine-semantics":
+            handle_refine_semantics(out_dir)
             return
 
     args = parse_args()

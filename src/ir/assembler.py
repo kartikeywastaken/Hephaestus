@@ -7,6 +7,7 @@ Converts static tool inputs (Ghidra, IDA) and trace outputs into canonical Unifi
 from typing import Dict, Any, List, Optional
 import hashlib
 from src.ir.models import UnifiedIR
+from src.ir.instructions.validation import validate_instruction, is_fabricated_placeholder
 
 def clean_tool_prefix(name: str) -> str:
     """Removes common tool-specific prefixes from symbol and function names."""
@@ -258,17 +259,40 @@ class IRAssembler:
                 # Filter outgoing edges for this block
                 bb_edges = [e for e in normalized_edges if e["source"] == bb_id]
 
-                # Suspicious x86 instruction warning guard
+                # Validate and deduplicate instructions
+                validated_instructions = []
                 for ins in bb_instructions:
-                    if "eax" in ins or "esp" in ins:
-                        self.logger.warning(
-                            "Suspicious x86 instruction detected in non-x86 target; investigate placeholder leakage."
+                    if not isinstance(ins, dict):
+                        continue
+                    if is_fabricated_placeholder(ins):
+                        self.logger.error(
+                            "Fabricated placeholder instruction detected in block %s; rejecting.",
+                            bb_id
                         )
+                        continue
+                    if validate_instruction(ins):
+                        validated_instructions.append(ins)
+                    else:
+                        self.logger.warning(
+                            "Invalid instruction in block %s skipped: %s", bb_id, ins
+                        )
+
+                # Deduplicate by address, preserving first occurrence, then sort
+                seen_addrs: Dict[str, Dict[str, Any]] = {}
+                for ins in validated_instructions:
+                    addr = ins.get("address", "")
+                    if addr and addr not in seen_addrs:
+                        seen_addrs[addr] = ins
+                deduped_instructions: List[Dict[str, Any]] = sorted(
+                    seen_addrs.values(),
+                    key=lambda i: int(i["address"], 16)
+                    if i.get("address", "").startswith("0x") else 0
+                )
 
                 normalized_blocks.append({
                     "id": bb_id,
                     "size": bb_size,
-                    "instructions": bb_instructions,
+                    "instructions": deduped_instructions,
                     "memory_accesses": bb_mem_accesses,
                     "edges": bb_edges
                 })
@@ -451,8 +475,14 @@ class IRAssembler:
         self.logger.info(f"IR strings count: {len(strings)}")
         self.logger.info(f"IR constants count: {len(constants)}")
 
-        self.logger.warning("No real instructions recovered; emitting empty list.")
-        self.logger.warning("No real memory accesses recovered; emitting empty list.")
+        # Conditional instruction warning — only fire when no real instructions were recovered
+        # across all functions (not unconditionally on every merge).
+        all_funcs_empty_instructions = all(
+            all(not bb.get("instructions") for bb in fdata.get("basic_blocks", []))
+            for fdata in merged_functions.values()
+        )
+        if all_funcs_empty_instructions:
+            self.logger.warning("No real instructions recovered across any function; emitting empty lists.")
         self.logger.warning("No real imports recovered; emitting empty list.")
         self.logger.warning("No real exports recovered; emitting empty list.")
         self.logger.warning("No real strings recovered; emitting empty list.")

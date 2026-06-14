@@ -78,7 +78,44 @@ python3 main.py recover-semantics --out-dir artifact_23
 
 ---
 
-## 5. Output Artifacts Generated
+## 5. Type Constraint Refinement (Phase 4B)
+
+Refines Phase 4A recovered types using real instruction-level evidence extracted
+from the Unified IR basic blocks. Emits `semantic_recovery.json` with a
+conservative, constraint-backed type map.
+
+**Prerequisite**: `recover-semantics` must be run first (produces `type_recovery.json`).
+
+### Run on the default folder (`artifacts/`):
+```bash
+python3 main.py refine-semantics
+```
+
+### Run on a custom folder (e.g., `artifact_23/`):
+```bash
+python3 main.py refine-semantics --out-dir artifact_23
+```
+
+The command prints a summary:
+```
+============================================================
+          PHASE 4B: TYPE CONSTRAINT REFINEMENT
+============================================================
+Functions processed:              <N>
+Total constraints applied:        <N>
+Functions with no instr evidence: <N>
+------------------------------------------------------------
+Output: artifacts/semantic_recovery.json
+============================================================
+```
+
+> **Note**: If no real instructions were extracted (e.g., Ghidra/Radare2 were not
+> run), Phase 4B gracefully no-ops — it preserves Phase 4A types verbatim with
+> `constraints_applied = 0`. This is a valid conservative outcome.
+
+---
+
+## 6. Output Artifacts Generated
 
 After running the commands above, the output folder will contain:
 - `radare2_extraction.json` — Raw Radare2 analysis output.
@@ -87,3 +124,4 @@ After running the commands above, the output folder will contain:
 - `structuring_analysis.json` — Dominator, post-dominator, and back-edge report (Phase 3A).
 - `structuring_regions.json` — Structured control-flow region tree serialization (Phase 3B).
 - `type_recovery.json` — Phase 4A recovered function signatures and variables mapping.
+- `semantic_recovery.json` — Phase 4B constraint-refined type records per function.

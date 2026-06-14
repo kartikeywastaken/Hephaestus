@@ -248,3 +248,71 @@ class RecoveredFunctionSemantics:
             "evidence": list(self.evidence),
             "confidence": round(self.confidence, 4),
         }
+
+
+# ---------------------------------------------------------------------------
+# Phase 4B: Refined records
+# ---------------------------------------------------------------------------
+
+@dataclass
+class RefinedVariableRecord:
+    """
+    A single variable after Phase 4B constraint-based type refinement.
+
+    Attributes
+    ----------
+    name                : Variable name.
+    refined_type        : The type after applying constraints (may equal Phase 4A type).
+    constraints_applied : Number of constraints that changed this variable's type.
+    phase4a_type        : The original Phase 4A type_name before refinement.
+    """
+    name: str = "unknown"
+    refined_type: RecoveredType = field(default_factory=RecoveredType.unknown)
+    constraints_applied: int = 0
+    phase4a_type: str = TYPE_UNKNOWN
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "name": self.name,
+            "refined_type": self.refined_type.to_dict(),
+            "constraints_applied": self.constraints_applied,
+            "phase4a_type": self.phase4a_type,
+        }
+
+
+@dataclass
+class RefinedFunctionRecord:
+    """
+    The complete Phase 4B refinement record for a single function.
+
+    Attributes
+    ----------
+    name                     : Canonical function name.
+    entry_point              : Normalized entry-point address string.
+    function_kind            : library | entrypoint | user | unknown
+    refined_signature        : Signature after Phase 4B parameter refinement.
+    variables                : All refined variable records.
+    total_constraints_applied: Sum of constraints that changed any type.
+    confidence               : Overall function-level confidence after refinement.
+    evidence                 : List of evidence notes.
+    """
+    name: str = "unknown_function"
+    entry_point: str = "unknown"
+    function_kind: str = FUNCTION_KIND_UNKNOWN
+    refined_signature: RecoveredSignature = field(default_factory=RecoveredSignature)
+    variables: List[RefinedVariableRecord] = field(default_factory=list)
+    total_constraints_applied: int = 0
+    confidence: float = 0.2
+    evidence: List[str] = field(default_factory=list)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "name": self.name,
+            "entry_point": self.entry_point,
+            "function_kind": self.function_kind,
+            "refined_signature": self.refined_signature.to_dict(),
+            "variables": [v.to_dict() for v in self.variables],
+            "total_constraints_applied": self.total_constraints_applied,
+            "confidence": round(self.confidence, 4),
+            "evidence": list(self.evidence),
+        }
