@@ -110,7 +110,7 @@
             "phase4a_type": "unknown"
           },
           {
-            "name": "var_28h_2",
+            "name": "var_30h_2",
             "refined_type": {
               "type": "unknown",
               "confidence": 0.35,
@@ -122,28 +122,6 @@
           },
           {
             "name": "var_0h_2",
-            "refined_type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "constraints_applied": 0,
-            "phase4a_type": "unknown"
-          },
-          {
-            "name": "var_0h_3",
-            "refined_type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "constraints_applied": 0,
-            "phase4a_type": "unknown"
-          },
-          {
-            "name": "var_0h_4",
             "refined_type": {
               "type": "unknown",
               "confidence": 0.35,
@@ -187,6 +165,17 @@
             "phase4a_type": "unknown"
           },
           {
+            "name": "var_2ch",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
             "name": "var_28h",
             "refined_type": {
               "type": "unknown",
@@ -198,7 +187,7 @@
             "phase4a_type": "unknown"
           },
           {
-            "name": "var_24h",
+            "name": "var_20h",
             "refined_type": {
               "type": "unknown",
               "confidence": 0.35,
@@ -209,18 +198,7 @@
             "phase4a_type": "unknown"
           },
           {
-            "name": "var_0h_7",
-            "refined_type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "constraints_applied": 0,
-            "phase4a_type": "unknown"
-          },
-          {
-            "name": "var_0h_6",
+            "name": "var_1ch",
             "refined_type": {
               "type": "unknown",
               "confidence": 0.35,
@@ -242,13 +220,35 @@
             "phase4a_type": "unknown"
           },
           {
+            "name": "var_0h_4",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "var_0h_3",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
             "name": "local_80",
             "refined_type": {
               "type": "int32",
               "confidence": 0.6,
               "source": "constraint_refinement(priority=60)",
               "notes": [
-                "refined by constraint (priority=60): local_80 local_80 bound from stack slot [sp + 0x34], stored by str at 0x100000514 with size_bytes=4"
+                "refined by constraint (priority=60): local_80 local_80 bound from stack slot [sp + 0x34], stored by str at 0x1000004f0 with size_bytes=4"
               ]
             },
             "constraints_applied": 1,
@@ -261,7 +261,7 @@
               "confidence": 0.6,
               "source": "constraint_refinement(priority=60)",
               "notes": [
-                "refined by constraint (priority=60): local_78 local_78 bound from stack slot [sp + 0x30], stored by str at 0x100000550 with size_bytes=4"
+                "refined by constraint (priority=60): local_78 local_78 bound from stack slot [sp + 0x30], stored by str at 0x100000500 with size_bytes=4"
               ]
             },
             "constraints_applied": 1,
@@ -270,16 +270,31 @@
           {
             "name": "local_70",
             "refined_type": {
-              "type": "unknown",
-              "confidence": 0.4,
-              "source": "local_name_heuristic",
-              "notes": []
+              "type": "int32",
+              "confidence": 0.6,
+              "source": "constraint_refinement(priority=60)",
+              "notes": [
+                "refined by constraint (priority=60): local_70 local_70 bound from stack slot [sp + 0x2c], stored by str at 0x100000514 with size_bytes=4"
+              ]
             },
-            "constraints_applied": 0,
+            "constraints_applied": 1,
             "phase4a_type": "unknown"
           },
           {
-            "name": "local_5c",
+            "name": "local_64",
+            "refined_type": {
+              "type": "int32",
+              "confidence": 0.6,
+              "source": "constraint_refinement(priority=60)",
+              "notes": [
+                "refined by constraint (priority=60): local_64 local_64 bound from stack slot [sp + 0x28], stored by str at 0x100000550 with size_bytes=4"
+              ]
+            },
+            "constraints_applied": 1,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "local_60",
             "refined_type": {
               "type": "unknown",
               "confidence": 0.4,
@@ -292,11 +307,22 @@
           {
             "name": "local_58",
             "refined_type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "local_54",
+            "refined_type": {
               "type": "int32",
               "confidence": 0.6,
               "source": "constraint_refinement(priority=60)",
               "notes": [
-                "refined by constraint (priority=60): local_58 local_58 bound from stack slot [sp + 0x24], stored by str at 0x1000004d4 with size_bytes=4"
+                "refined by constraint (priority=60): local_54 local_54 bound from stack slot [sp + 0x1c], stored by str at 0x1000004d4 with size_bytes=4"
               ]
             },
             "constraints_applied": 1,
@@ -347,28 +373,6 @@
             "phase4a_type": "unknown"
           },
           {
-            "name": "local_40",
-            "refined_type": {
-              "type": "unknown",
-              "confidence": 0.4,
-              "source": "local_name_heuristic",
-              "notes": []
-            },
-            "constraints_applied": 0,
-            "phase4a_type": "unknown"
-          },
-          {
-            "name": "local_3c",
-            "refined_type": {
-              "type": "unknown",
-              "confidence": 0.4,
-              "source": "local_name_heuristic",
-              "notes": []
-            },
-            "constraints_applied": 0,
-            "phase4a_type": "unknown"
-          },
-          {
             "name": "local_18",
             "refined_type": {
               "type": "unknown",
@@ -391,18 +395,18 @@
             "phase4a_type": "unknown"
           }
         ],
-        "total_constraints_applied": 3,
+        "total_constraints_applied": 5,
         "confidence": 0.9,
         "evidence": [
           "function recovered from unified_ir",
           "signature inferred using main function heuristic",
-          "4 constraint(s) collected; 3 applied"
+          "8 constraint(s) collected; 5 applied"
         ],
         "abi_argument_bindings": [],
         "parameter_layout_evidence": []
       },
       {
-        "name": "_reduce_array",
+        "name": "_reduce_weird",
         "entry_point": "0x100000584",
         "function_kind": "user",
         "refined_signature": {
@@ -605,6 +609,28 @@
             "phase4a_type": "unknown"
           },
           {
+            "name": "var_8h",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "local_38",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
             "name": "local_34",
             "refined_type": {
               "type": "unknown",
@@ -668,12 +694,14 @@
           {
             "name": "local_18",
             "refined_type": {
-              "type": "unknown",
-              "confidence": 0.4,
-              "source": "local_name_heuristic",
-              "notes": []
+              "type": "int32",
+              "confidence": 0.6,
+              "source": "constraint_refinement(priority=60)",
+              "notes": [
+                "refined by constraint (priority=60): local_18 local_18 bound from stack slot [sp + 0x8], stored by str at 0x1000005f4 with size_bytes=4"
+              ]
             },
-            "constraints_applied": 0,
+            "constraints_applied": 1,
             "phase4a_type": "unknown"
           },
           {
@@ -688,19 +716,19 @@
             "phase4a_type": "unknown"
           }
         ],
-        "total_constraints_applied": 3,
+        "total_constraints_applied": 4,
         "confidence": 0.6,
         "evidence": [
           "function recovered from unified_ir",
           "parameters recovered from 4 classified variable(s)",
-          "7 constraint(s) collected; 3 applied"
+          "7 constraint(s) collected; 4 applied"
         ],
         "abi_argument_bindings": [],
         "parameter_layout_evidence": []
       },
       {
         "name": "_op_add",
-        "entry_point": "0x100000630",
+        "entry_point": "0x100000674",
         "function_kind": "user",
         "refined_signature": {
           "return_type": {
@@ -744,13 +772,13 @@
                 "confidence": 0.6,
                 "source": "constraint_refinement(priority=60)",
                 "notes": [
-                  "refined by constraint (priority=60): arg1 arg1 bound from stack slot [sp + 0xc], stored by str at 0x100000634 with size_bytes=4"
+                  "refined by constraint (priority=60): arg1 arg1 bound from stack slot [sp + 0xc], stored by str at 0x100000678 with size_bytes=4"
                 ]
               },
               "source": "unified_ir",
               "confidence": 0.6,
               "notes": [
-                "refined by constraint (priority=60): arg1 arg1 bound from stack slot [sp + 0xc], stored by str at 0x100000634 with size_bytes=4"
+                "refined by constraint (priority=60): arg1 arg1 bound from stack slot [sp + 0xc], stored by str at 0x100000678 with size_bytes=4"
               ]
             }
           ],
@@ -789,7 +817,7 @@
               "confidence": 0.6,
               "source": "constraint_refinement(priority=60)",
               "notes": [
-                "refined by constraint (priority=60): arg1 arg1 bound from stack slot [sp + 0xc], stored by str at 0x100000634 with size_bytes=4"
+                "refined by constraint (priority=60): arg1 arg1 bound from stack slot [sp + 0xc], stored by str at 0x100000678 with size_bytes=4"
               ]
             },
             "constraints_applied": 1,
@@ -824,7 +852,7 @@
               "confidence": 0.6,
               "source": "constraint_refinement(priority=60)",
               "notes": [
-                "refined by constraint (priority=60): local_8 local_8 bound from stack slot [sp + 0x8], stored by str at 0x100000638 with size_bytes=4"
+                "refined by constraint (priority=60): local_8 local_8 bound from stack slot [sp + 0x8], stored by str at 0x10000067c with size_bytes=4"
               ]
             },
             "constraints_applied": 1,
@@ -854,7 +882,7 @@
       },
       {
         "name": "_op_xor",
-        "entry_point": "0x100000650",
+        "entry_point": "0x100000694",
         "function_kind": "user",
         "refined_signature": {
           "return_type": {
@@ -898,13 +926,13 @@
                 "confidence": 0.6,
                 "source": "constraint_refinement(priority=60)",
                 "notes": [
-                  "refined by constraint (priority=60): arg1 arg1 bound from stack slot [sp + 0xc], stored by str at 0x100000654 with size_bytes=4"
+                  "refined by constraint (priority=60): arg1 arg1 bound from stack slot [sp + 0xc], stored by str at 0x100000698 with size_bytes=4"
                 ]
               },
               "source": "unified_ir",
               "confidence": 0.6,
               "notes": [
-                "refined by constraint (priority=60): arg1 arg1 bound from stack slot [sp + 0xc], stored by str at 0x100000654 with size_bytes=4"
+                "refined by constraint (priority=60): arg1 arg1 bound from stack slot [sp + 0xc], stored by str at 0x100000698 with size_bytes=4"
               ]
             }
           ],
@@ -943,7 +971,7 @@
               "confidence": 0.6,
               "source": "constraint_refinement(priority=60)",
               "notes": [
-                "refined by constraint (priority=60): arg1 arg1 bound from stack slot [sp + 0xc], stored by str at 0x100000654 with size_bytes=4"
+                "refined by constraint (priority=60): arg1 arg1 bound from stack slot [sp + 0xc], stored by str at 0x100000698 with size_bytes=4"
               ]
             },
             "constraints_applied": 1,
@@ -978,7 +1006,7 @@
               "confidence": 0.6,
               "source": "constraint_refinement(priority=60)",
               "notes": [
-                "refined by constraint (priority=60): local_8 local_8 bound from stack slot [sp + 0x8], stored by str at 0x100000658 with size_bytes=4"
+                "refined by constraint (priority=60): local_8 local_8 bound from stack slot [sp + 0x8], stored by str at 0x10000069c with size_bytes=4"
               ]
             },
             "constraints_applied": 1,
@@ -1007,8 +1035,214 @@
         "parameter_layout_evidence": []
       },
       {
-        "name": "_weird_loop",
-        "entry_point": "0x100000670",
+        "name": "_nested_control",
+        "entry_point": "0x1000006b4",
+        "function_kind": "user",
+        "refined_signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [
+            {
+              "name": "arg_20h",
+              "index": 0,
+              "type": {
+                "type": "int32",
+                "confidence": 0.6,
+                "source": "constraint_refinement(priority=60)",
+                "notes": [
+                  "refined by constraint (priority=60): arg_20h arg_20h bound from stack slot [sp + 0x1c], stored by str at 0x1000006b8 with size_bytes=4"
+                ]
+              },
+              "source": "unified_ir",
+              "confidence": 0.6,
+              "notes": [
+                "refined by constraint (priority=60): arg_20h arg_20h bound from stack slot [sp + 0x1c], stored by str at 0x1000006b8 with size_bytes=4"
+              ]
+            },
+            {
+              "name": "arg1",
+              "index": 1,
+              "type": {
+                "type": "int32",
+                "confidence": 0.6,
+                "source": "constraint_refinement(priority=60)",
+                "notes": [
+                  "refined by constraint (priority=60): arg1 arg1 bound from stack slot [sp + 0x18], stored by str at 0x1000006c0 with size_bytes=4"
+                ]
+              },
+              "source": "unified_ir",
+              "confidence": 0.6,
+              "notes": [
+                "refined by constraint (priority=60): arg1 arg1 bound from stack slot [sp + 0x18], stored by str at 0x1000006c0 with size_bytes=4"
+              ]
+            }
+          ],
+          "variadic": false,
+          "confidence": 0.6,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [
+          {
+            "name": "arg_20h",
+            "refined_type": {
+              "type": "int32",
+              "confidence": 0.6,
+              "source": "constraint_refinement(priority=60)",
+              "notes": [
+                "refined by constraint (priority=60): arg_20h arg_20h bound from stack slot [sp + 0x1c], stored by str at 0x1000006b8 with size_bytes=4"
+              ]
+            },
+            "constraints_applied": 1,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "arg1",
+            "refined_type": {
+              "type": "int32",
+              "confidence": 0.6,
+              "source": "constraint_refinement(priority=60)",
+              "notes": [
+                "refined by constraint (priority=60): arg1 arg1 bound from stack slot [sp + 0x18], stored by str at 0x1000006c0 with size_bytes=4"
+              ]
+            },
+            "constraints_applied": 1,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "var_1ch",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "var_18h",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "var_14h",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "var_10h",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "var_ch",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "local_14",
+            "refined_type": {
+              "type": "int32",
+              "confidence": 0.6,
+              "source": "constraint_refinement(priority=60)",
+              "notes": [
+                "refined by constraint (priority=60): local_14 local_14 bound from stack slot [sp + 0x14], stored by str at 0x1000006c4 with size_bytes=4"
+              ]
+            },
+            "constraints_applied": 1,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "local_10",
+            "refined_type": {
+              "type": "int32",
+              "confidence": 0.6,
+              "source": "constraint_refinement(priority=60)",
+              "notes": [
+                "refined by constraint (priority=60): local_10 local_10 bound from stack slot [sp + 0x10], stored by str at 0x1000006dc with size_bytes=4"
+              ]
+            },
+            "constraints_applied": 1,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "local_c",
+            "refined_type": {
+              "type": "int32",
+              "confidence": 0.6,
+              "source": "constraint_refinement(priority=60)",
+              "notes": [
+                "refined by constraint (priority=60): local_c local_c bound from stack slot [sp + 0xc], stored by str at 0x100000708 with size_bytes=4"
+              ]
+            },
+            "constraints_applied": 1,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "local_8",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          },
+          {
+            "name": "local_4",
+            "refined_type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "constraints_applied": 0,
+            "phase4a_type": "unknown"
+          }
+        ],
+        "total_constraints_applied": 7,
+        "confidence": 0.6,
+        "evidence": [
+          "function recovered from unified_ir",
+          "parameters recovered from 2 classified variable(s)",
+          "11 constraint(s) collected; 7 applied"
+        ],
+        "abi_argument_bindings": [],
+        "parameter_layout_evidence": []
+      },
+      {
+        "name": "_mix_value",
+        "entry_point": "0x1000007a8",
         "function_kind": "user",
         "refined_signature": {
           "return_type": {
@@ -1113,7 +1347,7 @@
               "confidence": 0.6,
               "source": "constraint_refinement(priority=60)",
               "notes": [
-                "refined by constraint (priority=60): local_c local_c bound from stack slot [sp + 0xc], stored by str at 0x100000674 with size_bytes=4"
+                "refined by constraint (priority=60): local_c local_c bound from stack slot [sp + 0xc], stored by str at 0x1000007ac with size_bytes=4"
               ]
             },
             "constraints_applied": 1,
@@ -1126,7 +1360,7 @@
               "confidence": 0.6,
               "source": "constraint_refinement(priority=60)",
               "notes": [
-                "refined by constraint (priority=60): local_8 local_8 bound from stack slot [sp + 0x8], stored by str at 0x10000067c with size_bytes=4"
+                "refined by constraint (priority=60): local_8 local_8 bound from stack slot [sp + 0x8], stored by str at 0x1000007b4 with size_bytes=4"
               ]
             },
             "constraints_applied": 1,
@@ -1139,7 +1373,7 @@
               "confidence": 0.6,
               "source": "constraint_refinement(priority=60)",
               "notes": [
-                "refined by constraint (priority=60): local_4 local_4 bound from stack slot [sp + 0x4], stored by str at 0x100000680 with size_bytes=4"
+                "refined by constraint (priority=60): local_4 local_4 bound from stack slot [sp + 0x4], stored by str at 0x1000007b8 with size_bytes=4"
               ]
             },
             "constraints_applied": 1,
@@ -1158,7 +1392,7 @@
       },
       {
         "name": "__stack_chk_fail",
-        "entry_point": "0x100000718",
+        "entry_point": "0x100000840",
         "function_kind": "user",
         "refined_signature": {
           "return_type": {
@@ -1186,7 +1420,7 @@
       },
       {
         "name": "printf",
-        "entry_point": "0x100000724",
+        "entry_point": "0x10000084c",
         "function_kind": "library",
         "refined_signature": {
           "return_type": {

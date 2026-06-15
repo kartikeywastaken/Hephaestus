@@ -67,91 +67,7 @@ def _map_c_type(type_str: str) -> str:
 # Recursive region tree walker
 # ---------------------------------------------------------------------------
 
-def _emit_region_tree(
-    region: Dict[str, Any],
-    lines: List[str],
-    indent: int,
-    lowered_blocks: Dict[str, List[Dict[str, Any]]],
-) -> None:
-    """
-    Recursively walk a structuring region tree and emit structural comments.
-
-    Each region type is emitted as a comment describing the control-flow
-    structure observed by Phase 3. No conditions, loop bounds, or source
-    expressions are invented.
-    """
-    prefix = "    " * indent
-    region_type = region.get("type", "unknown")
-
-    if region_type == "block":
-        block_id = region.get("id", "?")
-        lines.append(f"{prefix}/* block {block_id} */")
-        # Emit lowered statements
-        stmts = lowered_blocks.get(block_id, [])
-        for stmt in stmts:
-            text = stmt.get("text") if isinstance(stmt, dict) else stmt.text
-            lines.append(f"{prefix}{text}")
-
-    elif region_type == "sequence":
-        lines.append(f"{prefix}/* sequence begin */")
-        for child in region.get("children", []):
-            if isinstance(child, dict):
-                _emit_region_tree(child, lines, indent + 1, lowered_blocks)
-        lines.append(f"{prefix}/* sequence end */")
-
-    elif region_type == "if":
-        cond_block = region.get("condition_block", "?")
-        merge_block = region.get("merge_block", "?")
-        lines.append(
-            f"{prefix}/* if (condition at block {cond_block}) "
-            f"merge={merge_block} */"
-        )
-        lines.append(f"{prefix}/* then: */")
-        then_branch = region.get("then_branch", {})
-        if isinstance(then_branch, dict):
-            _emit_region_tree(then_branch, lines, indent + 1, lowered_blocks)
-
-    elif region_type == "if_else":
-        cond_block = region.get("condition_block", "?")
-        merge_block = region.get("merge_block", "?")
-        lines.append(
-            f"{prefix}/* if-else (condition at block {cond_block}) "
-            f"merge={merge_block} */"
-        )
-        lines.append(f"{prefix}/* then: */")
-        then_branch = region.get("then_branch", {})
-        if isinstance(then_branch, dict):
-            _emit_region_tree(then_branch, lines, indent + 1, lowered_blocks)
-        lines.append(f"{prefix}/* else: */")
-        else_branch = region.get("else_branch", {})
-        if isinstance(else_branch, dict):
-            _emit_region_tree(else_branch, lines, indent + 1, lowered_blocks)
-
-    elif region_type == "loop":
-        kind = region.get("kind", "unknown")
-        header = region.get("header_block", "?")
-        exits = region.get("exit_blocks", [])
-        lines.append(
-            f"{prefix}/* loop ({kind}) header={header} "
-            f"exits={exits} */"
-        )
-        body = region.get("body", {})
-        if isinstance(body, dict):
-            _emit_region_tree(body, lines, indent + 1, lowered_blocks)
-
-    elif region_type == "unstructured":
-        reason = region.get("reason", "unknown")
-        region_kind = region.get("region_kind", "unknown")
-        lines.append(
-            f"{prefix}/* unstructured region "
-            f"(reason={reason}, kind={region_kind}) */"
-        )
-        for child in region.get("children", []):
-            if isinstance(child, dict):
-                _emit_region_tree(child, lines, indent + 1, lowered_blocks)
-
-    else:
-        lines.append(f"{prefix}/* region type={region_type} */")
+# Region tree C emission logic is delegated to control_emitter.py
 
 
 # ---------------------------------------------------------------------------
@@ -264,9 +180,14 @@ def _emit_function(
     # Structured regions — recursive walk
     if fn.structured_regions:
         lines.append("    /* Control flow structure: */")
-        for region in fn.structured_regions:
-            if isinstance(region, dict):
-                _emit_region_tree(region, lines, indent=1, lowered_blocks=fn.lowered_blocks)
+        from src.ir.source.control_emitter import emit_regions_to_c
+        body_lines, _ = emit_regions_to_c(
+            fn.structured_regions,
+            fn.lowered_blocks,
+            indent=1,
+            seen_blocks=set(),
+        )
+        lines.extend(body_lines)
         lines.append("")
     else:
         # Linear block sequence if no structuring region
@@ -318,7 +239,7 @@ def emit_recovered_c(
     # File header
     timestamp = datetime.now(tz=None).strftime("%Y-%m-%dT%H:%M:%SZ")
     lines.append("/*")
-    lines.append(" * recovered.c — Phase 5.1 Source Reconstruction Skeleton")
+    lines.append(" * recovered.c — Phase 5.3 Conservative Structured Reconstruction")
     lines.append(f" * Schema version: {artifact.schema_version}")
     lines.append(f" * Generated: {timestamp}")
     lines.append(" *")

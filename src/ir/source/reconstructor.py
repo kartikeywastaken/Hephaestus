@@ -509,6 +509,17 @@ def build_source_reconstruction(
     total_lowered = 0
     total_commented = 0
 
+    # Phase 5.3 control flow summary counters
+    control_flow_regions_total = 0
+    control_flow_constructs_emitted = 0
+    loops_emitted = 0
+    if_constructs_emitted = 0
+    if_else_constructs_emitted = 0
+    switch_constructs_emitted = 0
+    fallback_regions = 0
+    duplicate_blocks_skipped = 0
+    condition_expressions_recovered = 0
+
     reconstructed: List[ReconstructedFunction] = []
 
     for ir_func in ir_functions:
@@ -613,6 +624,10 @@ def build_source_reconstruction(
         if local_variables:
             evidence_notes.append(f"{len(local_variables)} local variable(s)")
 
+        # Phase 5.3 control-flow analysis
+        from src.ir.source.control_emitter import analyze_control_flow_regions
+        fn_control_flow = analyze_control_flow_regions(structured_regions)
+
         rec = ReconstructedFunction(
             name=name,
             canonical_name=canonical_name,
@@ -634,8 +649,20 @@ def build_source_reconstruction(
             lowered_statements=lowered_stmts,
             lowered_blocks=dict(lowered_blocks),
             lowering=fn_lowering,
+            control_flow=fn_control_flow,
         )
         reconstructed.append(rec)
+
+        # Accumulate control-flow metrics
+        control_flow_regions_total += fn_control_flow.get("regions_total", 0)
+        control_flow_constructs_emitted += fn_control_flow.get("structured_constructs_emitted", 0)
+        loops_emitted += fn_control_flow.get("loops_emitted", 0)
+        if_constructs_emitted += fn_control_flow.get("if_constructs_emitted", 0)
+        if_else_constructs_emitted += fn_control_flow.get("if_else_constructs_emitted", 0)
+        switch_constructs_emitted += fn_control_flow.get("switch_constructs_emitted", 0)
+        fallback_regions += fn_control_flow.get("fallback_regions", 0)
+        duplicate_blocks_skipped += fn_control_flow.get("duplicate_blocks_skipped", 0)
+        condition_expressions_recovered += fn_control_flow.get("condition_expressions_recovered", 0)
 
         # Update summary counters
         if body_status == "structured":
@@ -698,7 +725,17 @@ def build_source_reconstruction(
         "instructions_total": total_instrs,
         "instructions_lowered": total_lowered,
         "instructions_commented": total_commented,
-        "lowering_coverage_percent": round((total_lowered / total_instrs) * 100, 2) if total_instrs else 0.0
+        "lowering_coverage_percent": round((total_lowered / total_instrs) * 100, 2) if total_instrs else 0.0,
+        # Phase 5.3 statistics
+        "control_flow_regions_total": control_flow_regions_total,
+        "control_flow_constructs_emitted": control_flow_constructs_emitted,
+        "loops_emitted": loops_emitted,
+        "if_constructs_emitted": if_constructs_emitted,
+        "if_else_constructs_emitted": if_else_constructs_emitted,
+        "switch_constructs_emitted": switch_constructs_emitted,
+        "fallback_regions": fallback_regions,
+        "duplicate_blocks_skipped": duplicate_blocks_skipped,
+        "condition_expressions_recovered": condition_expressions_recovered,
     }
 
     artifact = SourceReconstructionArtifact(

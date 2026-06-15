@@ -93,89 +93,7 @@
     }
   },
   {
-    "function_name": "_reduce_array",
-    "structured_body": {
-      "type": "sequence",
-      "children": [
-        {
-          "type": "block",
-          "id": "0x100000584"
-        },
-        {
-          "type": "loop",
-          "kind": "while_like",
-          "header_block": "0x1000005a8",
-          "body": {
-            "type": "sequence",
-            "children": [
-              {
-                "type": "if_else",
-                "condition_block": "0x1000005a8",
-                "then_branch": {
-                  "type": "sequence",
-                  "children": [
-                    {
-                      "type": "block",
-                      "id": "0x1000005d4"
-                    },
-                    {
-                      "type": "block",
-                      "id": "0x1000005d8"
-                    },
-                    {
-                      "type": "block",
-                      "id": "0x1000005e8"
-                    }
-                  ]
-                },
-                "else_branch": {
-                  "type": "block",
-                  "id": "0x1000005f0"
-                },
-                "merge_block": "0x10000060c"
-              },
-              {
-                "type": "sequence",
-                "children": [
-                  {
-                    "type": "block",
-                    "id": "0x10000060c"
-                  },
-                  {
-                    "type": "block",
-                    "id": "0x100000610"
-                  }
-                ]
-              }
-            ]
-          },
-          "exit_blocks": [
-            "0x100000620"
-          ]
-        },
-        {
-          "type": "block",
-          "id": "0x100000620"
-        }
-      ]
-    }
-  },
-  {
-    "function_name": "_op_add",
-    "structured_body": {
-      "type": "block",
-      "id": "0x100000630"
-    }
-  },
-  {
-    "function_name": "_op_xor",
-    "structured_body": {
-      "type": "block",
-      "id": "0x100000650"
-    }
-  },
-  {
-    "function_name": "_weird_loop",
+    "function_name": "_reduce_weird",
     "structured_body": {
       "type": "sequence",
       "children": [
@@ -184,28 +102,32 @@
           "children": [
             {
               "type": "block",
-              "id": "0x100000670"
+              "id": "0x100000584"
             },
             {
               "type": "loop",
               "kind": "while_like",
-              "header_block": "0x100000688",
+              "header_block": "0x1000005a8",
               "body": {
                 "type": "sequence",
                 "children": [
                   {
                     "type": "if_else",
-                    "condition_block": "0x100000688",
+                    "condition_block": "0x1000005a8",
                     "then_branch": {
                       "type": "sequence",
                       "children": [
                         {
                           "type": "block",
-                          "id": "0x1000006c8"
+                          "id": "0x1000005d4"
                         },
                         {
                           "type": "block",
-                          "id": "0x1000006cc"
+                          "id": "0x1000005d8"
+                        },
+                        {
+                          "type": "block",
+                          "id": "0x1000005e8"
                         }
                       ]
                     },
@@ -214,25 +136,61 @@
                       "children": [
                         {
                           "type": "block",
-                          "id": "0x1000006d0"
+                          "id": "0x1000005f0"
                         },
                         {
                           "type": "block",
-                          "id": "0x1000006e8"
+                          "id": "0x100000600"
                         }
                       ]
                     },
-                    "merge_block": "0x1000006fc"
+                    "merge_block": "0x100000610"
                   },
                   {
-                    "type": "block",
-                    "id": "0x1000006fc"
+                    "type": "sequence",
+                    "children": [
+                      {
+                        "type": "block",
+                        "id": "0x100000610"
+                      },
+                      {
+                        "type": "sequence",
+                        "children": [
+                          {
+                            "type": "if_else",
+                            "condition_block": "0x100000628",
+                            "then_branch": {
+                              "type": "sequence",
+                              "children": [
+                                {
+                                  "type": "block",
+                                  "id": "0x100000638"
+                                },
+                                {
+                                  "type": "block",
+                                  "id": "0x10000063c"
+                                }
+                              ]
+                            },
+                            "else_branch": {
+                              "type": "block",
+                              "id": "0x100000640"
+                            },
+                            "merge_block": "0x100000654"
+                          },
+                          {
+                            "type": "block",
+                            "id": "0x100000654"
+                          }
+                        ]
+                      }
+                    ]
                   }
                 ]
               },
               "exit_blocks": [
-                "0x1000006e0",
-                "0x10000070c"
+                "0x100000620",
+                "0x100000664"
               ]
             }
           ]
@@ -242,17 +200,229 @@
           "children": [
             {
               "type": "block",
-              "id": "0x1000006e0"
+              "id": "0x100000620"
             },
             {
               "type": "block",
-              "id": "0x1000006e4"
+              "id": "0x100000624"
             }
           ]
         },
         {
           "type": "block",
-          "id": "0x10000070c"
+          "id": "0x100000664"
+        }
+      ]
+    }
+  },
+  {
+    "function_name": "_op_add",
+    "structured_body": {
+      "type": "block",
+      "id": "0x100000674"
+    }
+  },
+  {
+    "function_name": "_op_xor",
+    "structured_body": {
+      "type": "block",
+      "id": "0x100000694"
+    }
+  },
+  {
+    "function_name": "_nested_control",
+    "structured_body": {
+      "type": "sequence",
+      "children": [
+        {
+          "type": "block",
+          "id": "0x1000006b4"
+        },
+        {
+          "type": "loop",
+          "kind": "while_like",
+          "header_block": "0x1000006cc",
+          "body": {
+            "type": "sequence",
+            "children": [
+              {
+                "type": "block",
+                "id": "0x1000006cc"
+              },
+              {
+                "type": "sequence",
+                "children": [
+                  {
+                    "type": "block",
+                    "id": "0x1000006d8"
+                  },
+                  {
+                    "type": "block",
+                    "id": "0x1000006dc"
+                  },
+                  {
+                    "type": "loop",
+                    "kind": "while_like",
+                    "header_block": "0x1000006e4",
+                    "body": {
+                      "type": "sequence",
+                      "children": [
+                        {
+                          "type": "if_else",
+                          "condition_block": "0x1000006e4",
+                          "then_branch": {
+                            "type": "sequence",
+                            "children": [
+                              {
+                                "type": "block",
+                                "id": "0x100000714"
+                              },
+                              {
+                                "type": "block",
+                                "id": "0x100000718"
+                              }
+                            ]
+                          },
+                          "else_branch": {
+                            "type": "block",
+                            "id": "0x10000072c"
+                          },
+                          "merge_block": "0x100000740"
+                        },
+                        {
+                          "type": "sequence",
+                          "children": [
+                            {
+                              "type": "block",
+                              "id": "0x100000740"
+                            },
+                            {
+                              "type": "block",
+                              "id": "0x100000744"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "exit_blocks": [
+                      "0x100000754"
+                    ]
+                  },
+                  {
+                    "type": "sequence",
+                    "children": [
+                      {
+                        "type": "if_else",
+                        "condition_block": "0x100000754",
+                        "then_branch": {
+                          "type": "sequence",
+                          "children": [
+                            {
+                              "type": "block",
+                              "id": "0x100000764"
+                            },
+                            {
+                              "type": "block",
+                              "id": "0x100000768"
+                            }
+                          ]
+                        },
+                        "else_branch": {
+                          "type": "block",
+                          "id": "0x100000778"
+                        },
+                        "merge_block": "0x100000788"
+                      },
+                      {
+                        "type": "sequence",
+                        "children": [
+                          {
+                            "type": "block",
+                            "id": "0x100000788"
+                          },
+                          {
+                            "type": "block",
+                            "id": "0x10000078c"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "exit_blocks": [
+            "0x10000079c"
+          ]
+        },
+        {
+          "type": "block",
+          "id": "0x10000079c"
+        }
+      ]
+    }
+  },
+  {
+    "function_name": "_mix_value",
+    "structured_body": {
+      "type": "sequence",
+      "children": [
+        {
+          "type": "block",
+          "id": "0x1000007a8"
+        },
+        {
+          "type": "loop",
+          "kind": "while_like",
+          "header_block": "0x1000007c0",
+          "body": {
+            "type": "sequence",
+            "children": [
+              {
+                "type": "if_else",
+                "condition_block": "0x1000007c0",
+                "then_branch": {
+                  "type": "sequence",
+                  "children": [
+                    {
+                      "type": "block",
+                      "id": "0x1000007f8"
+                    },
+                    {
+                      "type": "block",
+                      "id": "0x1000007fc"
+                    }
+                  ]
+                },
+                "else_branch": {
+                  "type": "block",
+                  "id": "0x100000810"
+                },
+                "merge_block": "0x100000820"
+              },
+              {
+                "type": "sequence",
+                "children": [
+                  {
+                    "type": "block",
+                    "id": "0x100000820"
+                  },
+                  {
+                    "type": "block",
+                    "id": "0x100000824"
+                  }
+                ]
+              }
+            ]
+          },
+          "exit_blocks": [
+            "0x100000834"
+          ]
+        },
+        {
+          "type": "block",
+          "id": "0x100000834"
         }
       ]
     }
@@ -261,14 +431,14 @@
     "function_name": "__stack_chk_fail",
     "structured_body": {
       "type": "block",
-      "id": "0x100000718"
+      "id": "0x100000840"
     }
   },
   {
     "function_name": "printf",
     "structured_body": {
       "type": "block",
-      "id": "0x100000724"
+      "id": "0x10000084c"
     }
   }
 ]

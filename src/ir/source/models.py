@@ -20,7 +20,7 @@ from typing import Any, Dict, List
 # Schema version
 # ---------------------------------------------------------------------------
 
-SCHEMA_VERSION = "5.2.0"
+SCHEMA_VERSION = "5.3.0"
 
 
 # ---------------------------------------------------------------------------
@@ -78,6 +78,17 @@ class ReconstructedFunction:
     lowered_statements: List[Dict[str, Any]] = field(default_factory=list)
     lowered_blocks: Dict[str, List[Dict[str, Any]]] = field(default_factory=dict)
     lowering: Dict[str, Any] = field(default_factory=dict)
+    control_flow: Dict[str, Any] = field(default_factory=lambda: {
+        "regions_total": 0,
+        "structured_constructs_emitted": 0,
+        "loops_emitted": 0,
+        "if_constructs_emitted": 0,
+        "if_else_constructs_emitted": 0,
+        "switch_constructs_emitted": 0,
+        "fallback_regions": 0,
+        "duplicate_blocks_skipped": 0,
+        "condition_expressions_recovered": 0
+    })
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -101,6 +112,7 @@ class ReconstructedFunction:
             "lowered_statements": [s.to_dict() if hasattr(s, "to_dict") else dict(s) for s in self.lowered_statements],
             "lowered_blocks": {k: [s.to_dict() if hasattr(s, "to_dict") else dict(s) for s in v] for k, v in self.lowered_blocks.items()},
             "lowering": dict(self.lowering),
+            "control_flow": dict(self.control_flow),
         }
 
 
@@ -111,11 +123,11 @@ class ReconstructedFunction:
 @dataclass
 class SourceReconstructionArtifact:
     """
-    The complete Phase 5.2 output artifact.
+    The complete Phase 5.3 output artifact.
 
     Attributes
     ----------
-    schema_version : Always "5.2.0".
+    schema_version : Always "5.3.0".
     provenance     : Source artifact paths.
     functions      : List of ReconstructedFunction records.
     summary        : Aggregate counters.
@@ -145,6 +157,15 @@ class SourceReconstructionArtifact:
         "instructions_lowered": 0,
         "instructions_commented": 0,
         "lowering_coverage_percent": 0.0,
+        "control_flow_regions_total": 0,
+        "control_flow_constructs_emitted": 0,
+        "loops_emitted": 0,
+        "if_constructs_emitted": 0,
+        "if_else_constructs_emitted": 0,
+        "switch_constructs_emitted": 0,
+        "fallback_regions": 0,
+        "duplicate_blocks_skipped": 0,
+        "condition_expressions_recovered": 0,
     })
 
     def to_dict(self) -> Dict[str, Any]:

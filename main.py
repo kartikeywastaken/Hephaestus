@@ -896,12 +896,12 @@ def handle_reconstruct_source(out_dir: str):
     and recovered.c to the output directory.
     """
     from src.utils.run_logging import append_run_log
-    append_run_log(out_dir, "ORCHESTRATION", "Pipeline stage started: Phase 5.1 Source Reconstruction")
+    append_run_log(out_dir, "ORCHESTRATION", "Pipeline stage started: Phase 5.3 Source Reconstruction")
     from src.ir.source.reconstructor import build_source_reconstruction
     from src.ir.source.emitter import write_source_reconstruction_artifact
     from src.ir.source.c_emitter import emit_recovered_c
 
-    logger.info("Executing Phase 5.1 Source Reconstruction...")
+    logger.info("Executing Phase 5.3 Source Reconstruction...")
 
     # Load unified_ir.json (required)
     ir_path = os.path.join(out_dir, "unified_ir.json")
@@ -974,23 +974,23 @@ def handle_reconstruct_source(out_dir: str):
         source_semantics=sem_path,
         source_layout=lr_path if layout_recovery else None,
     )
-    logger.info("[+] Phase 5.1 source reconstruction artifact committed: %s", recon_path)
+    logger.info("[+] Phase 5.3 source reconstruction artifact committed: %s", recon_path)
 
     # Write recovered.c
     c_path = os.path.join(out_dir, "recovered.c")
     emit_recovered_c(artifact, c_path)
-    logger.info("[+] Phase 5.1 recovered C skeleton committed: %s", c_path)
+    logger.info("[+] Phase 5.3 recovered C skeleton committed: %s", c_path)
 
     append_run_log(
         out_dir, "ORCHESTRATION",
-        f"Pipeline stage completed: Phase 5.1 Source Reconstruction\n"
+        f"Pipeline stage completed: Phase 5.3 Source Reconstruction\n"
         f"Artifacts written: {recon_path}, {c_path}"
     )
 
     # Print summary
     s = artifact.summary
     print("\n============================================================")
-    print("      PHASE 5.2: CONSERVATIVE INSTRUCTION LOWERING")
+    print("      PHASE 5.3: CONSERVATIVE STRUCTURED CONTROL-FLOW EMISSION")
     print("============================================================")
     print(f"Functions reconstructed:          {s['functions_total']}")
     print(f"  Structured:                     {s['functions_structured']}")
@@ -1007,6 +1007,15 @@ def handle_reconstruct_source(out_dir: str):
     print(f"Instructions lowered:             {s['instructions_lowered']}")
     print(f"Instructions commented:           {s['instructions_commented']}")
     print(f"Lowering coverage percent:        {s['lowering_coverage_percent']}%")
+    print(f"Control-flow regions:             {s['control_flow_regions_total']}")
+    print(f"Control-flow constructs:          {s['control_flow_constructs_emitted']}")
+    print(f"  Loops:                          {s['loops_emitted']}")
+    print(f"  If:                             {s['if_constructs_emitted']}")
+    print(f"  If-Else:                        {s['if_else_constructs_emitted']}")
+    print(f"  Switch:                         {s['switch_constructs_emitted']}")
+    print(f"  Fallback/Unstructured:          {s['fallback_regions']}")
+    print(f"  Duplicate blocks skipped:       {s['duplicate_blocks_skipped']}")
+    print(f"Condition expressions recovered:  {s['condition_expressions_recovered']}")
     print("============================================================")
     print(f"Output: {recon_path}")
     print(f"Output: {c_path}")
