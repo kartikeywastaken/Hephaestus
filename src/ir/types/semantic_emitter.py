@@ -24,7 +24,7 @@ from src.ir.types.models import RefinedFunctionRecord
 from src.utils.artifact_io import normalize_provenance_path, write_json_artifact
 
 
-SCHEMA_VERSION = "4B.0.0"
+SCHEMA_VERSION = "4B.2.0"
 
 
 # ---------------------------------------------------------------------------

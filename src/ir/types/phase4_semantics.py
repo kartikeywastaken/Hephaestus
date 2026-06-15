@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 # Data Models
 # ---------------------------------------------------------------------------
 
-SCHEMA_VERSION = "4D.0.0"
+SCHEMA_VERSION = "4D.1.0"
 
 
 @dataclass
@@ -68,6 +68,10 @@ class Phase4FunctionSemantics:
     layout_candidates: List[Dict[str, Any]] = field(default_factory=list)
     unbound_memory_accesses: List[Dict[str, Any]] = field(default_factory=list)
 
+    # Phase 4B.2 (ABI argument binding + parameter-layout evidence)
+    abi_argument_bindings: List[Dict[str, Any]] = field(default_factory=list)
+    parameter_layout_evidence: List[Dict[str, Any]] = field(default_factory=list)
+
     # Synthesized facts and uncertainty
     known_facts: List[str] = field(default_factory=list)
     uncertainties: List[str] = field(default_factory=list)
@@ -86,6 +90,8 @@ class Phase4FunctionSemantics:
             "constraints_summary": dict(self.constraints_summary),
             "layout_candidates": list(self.layout_candidates),
             "unbound_memory_accesses": list(self.unbound_memory_accesses),
+            "abi_argument_bindings": list(self.abi_argument_bindings),
+            "parameter_layout_evidence": list(self.parameter_layout_evidence),
             "known_facts": list(self.known_facts),
             "uncertainties": list(self.uncertainties),
         }
@@ -395,6 +401,16 @@ def _generate_known_facts(fn: Phase4FunctionSemantics) -> List[str]:
     if n_unbound > 0:
         facts.append(f"{n_unbound} unbound memory access(es) were preserved.")
 
+    n_abi = len(fn.abi_argument_bindings)
+    if n_abi > 0:
+        facts.append(f"{n_abi} ABI argument binding(s) were established.")
+
+    n_ple = len(fn.parameter_layout_evidence)
+    if n_ple > 0:
+        facts.append(
+            f"{n_ple} parameter-layout evidence item(s) linked via ABI provenance."
+        )
+
     return facts
 
 
@@ -580,6 +596,13 @@ def build_phase4_semantics(
             fn_entry, fn_name, layout_candidates, layout_unbound
         )
 
+        # --- Phase 4B.2 data (ABI bindings + parameter-layout evidence) ---
+        fn_abi_bindings: List[Dict[str, Any]] = []
+        fn_param_evidence: List[Dict[str, Any]] = []
+        if sr_fn is not None:
+            fn_abi_bindings = _safe_list(sr_fn, "abi_argument_bindings")
+            fn_param_evidence = _safe_list(sr_fn, "parameter_layout_evidence")
+
         # --- Build merged record ---
         fn_record = Phase4FunctionSemantics(
             name=fn_name,
@@ -594,6 +617,8 @@ def build_phase4_semantics(
             constraints_summary=constraints_summary,
             layout_candidates=fn_layout_candidates,
             unbound_memory_accesses=fn_unbound,
+            abi_argument_bindings=fn_abi_bindings,
+            parameter_layout_evidence=fn_param_evidence,
         )
 
         # Generate facts and uncertainties
@@ -665,6 +690,12 @@ def build_phase4_semantics(
         f.constraints_summary.get("total_constraints_applied", 0)
         for f in merged_functions
     )
+    total_abi_bindings = sum(
+        len(f.abi_argument_bindings) for f in merged_functions
+    )
+    total_param_evidence = sum(
+        len(f.parameter_layout_evidence) for f in merged_functions
+    )
 
     summary = {
         "functions_total": len(merged_functions),
@@ -673,6 +704,8 @@ def build_phase4_semantics(
         "total_layout_candidates": total_layout_candidates,
         "total_unbound_memory_accesses": total_unbound,
         "total_constraints_applied": total_constraints,
+        "total_abi_argument_bindings": total_abi_bindings,
+        "total_parameter_layout_evidence": total_param_evidence,
     }
 
     provenance = {
