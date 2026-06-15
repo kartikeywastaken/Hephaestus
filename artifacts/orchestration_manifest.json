@@ -1,12 +1,12 @@
 {
-  "orchestrated_at": "2026-06-15T18:47:20-07:00",
+  "orchestrated_at": "2026-06-15T19:03:38-07:00",
   "binary_profiled": "./t",
   "jobs": {
     "ghidra": {
       "schema_version": "1.0.0",
       "provenance": {
         "tool_name": "Ghidra Headless Analyzer",
-        "timestamp": "2026-06-15T18:47:20-07:00",
+        "timestamp": "2026-06-15T19:03:38-07:00",
         "binary_path": "./t",
         "config": {}
       },
@@ -17,7 +17,7 @@
           "format": "Mac OS X Mach-O",
           "language_id": "AARCH64:LE:64:AppleSilicon",
           "compiler": "unknown",
-          "timestamp": "Mon Jun 15 18:47:19 IST 2026"
+          "timestamp": "Mon Jun 15 19:03:38 IST 2026"
         },
         "functions": [
           {
@@ -4422,7 +4422,7 @@
       "schema_version": "1.0.0",
       "provenance": {
         "tool_name": "Radare2 Headless Analyser",
-        "timestamp": "2026-06-15T18:47:20-07:00",
+        "timestamp": "2026-06-15T19:03:38-07:00",
         "binary_path": "./t",
         "config": {}
       },
@@ -8516,13 +8516,13 @@
         ],
         "call_graph": {
           "nodes": [
-            "_op_add",
             "__stack_chk_fail",
-            "_main",
             "_weird_loop",
-            "_reduce_array",
+            "_main",
             "_op_xor",
-            "printf"
+            "_op_add",
+            "printf",
+            "_reduce_array"
           ],
           "edges": [
             {

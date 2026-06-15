@@ -4617,13 +4617,13 @@
     ],
     "call_graph": {
       "nodes": [
-        "_op_add",
         "__stack_chk_fail",
-        "_main",
         "_weird_loop",
-        "_reduce_array",
+        "_main",
         "_op_xor",
-        "printf"
+        "_op_add",
+        "printf",
+        "_reduce_array"
       ],
       "edges": [
         {
