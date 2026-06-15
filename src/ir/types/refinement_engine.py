@@ -247,6 +247,7 @@ class TypeRefinementEngine:
             collect_abi_bindings,
             link_parameter_layouts,
         )
+        from src.ir.utils.addressing import normalize_address
 
         try:
             abi_bindings_by_entry = collect_abi_bindings(unified_ir)
@@ -254,7 +255,15 @@ class TypeRefinementEngine:
             logger.warning("Phase 4B.2: ABI binding collection failed: %s", exc)
             abi_bindings_by_entry = {}
 
-        # Build param name index from results for better naming
+        # Normalize key mapping for ABI bindings: normalized_ep -> bindings
+        norm_abi_bindings: Dict[str, List[Any]] = {}
+        if isinstance(abi_bindings_by_entry, dict):
+            for k, val in abi_bindings_by_entry.items():
+                norm_k = normalize_address(k)
+                if norm_k:
+                    norm_abi_bindings.setdefault(norm_k, []).extend(val or [])
+
+        # Build param name index from results for better naming (normalized entry points)
         param_names_by_entry: Dict[str, Dict[int, str]] = {}
         for record in results:
             if record.entry_point and record.refined_signature:
@@ -263,11 +272,13 @@ class TypeRefinementEngine:
                     name_map = {}
                     for p in params:
                         name_map[p.index] = p.name
-                    param_names_by_entry[record.entry_point] = name_map
+                    norm_ep = normalize_address(record.entry_point)
+                    if norm_ep:
+                        param_names_by_entry[norm_ep] = name_map
 
         try:
             param_evidence_by_entry = link_parameter_layouts(
-                abi_bindings_by_entry,
+                norm_abi_bindings,
                 layout_recovery,
                 param_names_by_entry,
             )
@@ -275,21 +286,60 @@ class TypeRefinementEngine:
             logger.warning("Phase 4B.2: parameter-layout linking failed: %s", exc)
             param_evidence_by_entry = {}
 
+        # Normalize key mapping for parameter evidence: normalized_ep -> evidence
+        norm_param_evidence: Dict[str, List[Any]] = {}
+        if isinstance(param_evidence_by_entry, dict):
+            for k, val in param_evidence_by_entry.items():
+                norm_k = normalize_address(k)
+                if norm_k:
+                    norm_param_evidence.setdefault(norm_k, []).extend(val or [])
+
         # Attach to records
         total_abi = 0
         total_ple = 0
         for record in results:
             ep = record.entry_point
-            if ep in abi_bindings_by_entry:
-                record.abi_argument_bindings = [
-                    b.to_dict() for b in abi_bindings_by_entry[ep]
-                ]
-                total_abi += len(record.abi_argument_bindings)
-            if ep in param_evidence_by_entry:
-                record.parameter_layout_evidence = [
-                    e.to_dict() for e in param_evidence_by_entry[ep]
-                ]
-                total_ple += len(record.parameter_layout_evidence)
+            norm_ep = normalize_address(ep) if ep else None
+
+            # 1. Attach ABI argument bindings
+            bindings_list = []
+            if ep and ep in abi_bindings_by_entry:
+                bindings_list.extend(abi_bindings_by_entry[ep] or [])
+            elif norm_ep and norm_ep in norm_abi_bindings:
+                bindings_list.extend(norm_abi_bindings[norm_ep] or [])
+
+            # Deduplicate bindings
+            seen_dicts = set()
+            unique_bindings = []
+            for b in bindings_list:
+                d = b.to_dict() if hasattr(b, "to_dict") else b
+                d_str = str(d)
+                if d_str not in seen_dicts:
+                    seen_dicts.add(d_str)
+                    unique_bindings.append(d)
+
+            record.abi_argument_bindings = unique_bindings
+            total_abi += len(unique_bindings)
+
+            # 2. Attach parameter layout evidence
+            evidence_list = []
+            if ep and ep in param_evidence_by_entry:
+                evidence_list.extend(param_evidence_by_entry[ep] or [])
+            elif norm_ep and norm_ep in norm_param_evidence:
+                evidence_list.extend(norm_param_evidence[norm_ep] or [])
+
+            # Deduplicate evidence
+            seen_ple_dicts = set()
+            unique_ple = []
+            for e in evidence_list:
+                d = e.to_dict() if hasattr(e, "to_dict") else e
+                d_str = str(d)
+                if d_str not in seen_ple_dicts:
+                    seen_ple_dicts.add(d_str)
+                    unique_ple.append(d)
+
+            record.parameter_layout_evidence = unique_ple
+            total_ple += len(unique_ple)
 
         logger.info(
             "Phase 4B.2: attached %d ABI binding(s) and %d parameter-layout "

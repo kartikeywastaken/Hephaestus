@@ -593,25 +593,44 @@ def collect_abi_bindings(
 # Link parameter-layout evidence
 # ---------------------------------------------------------------------------
 
-def _extract_layout_candidates(
-    layout_recovery: Optional[Dict[str, Any]],
-) -> List[Dict[str, Any]]:
-    """Extract layout candidates from layout_recovery.json."""
-    if not isinstance(layout_recovery, dict):
+def extract_layout_candidates(layout_recovery: Any) -> List[Dict[str, Any]]:
+    """Extract layout candidates supporting list, dict wrappers, and nested data shapes."""
+    if not layout_recovery:
         return []
-    try:
-        data = layout_recovery["data"]
-    except (KeyError, TypeError):
-        data = layout_recovery
-    if not isinstance(data, dict):
+
+    if isinstance(layout_recovery, list):
+        return layout_recovery
+
+    if isinstance(layout_recovery, dict):
+        if "layout_candidates" in layout_recovery:
+            return layout_recovery.get("layout_candidates") or []
+
+        return (
+            layout_recovery
+            .get("data", {})
+            .get("layout_candidates", [])
+        )
+
+    return []
+
+
+def flatten_abi_bindings(bindings: Any) -> List[PointerBaseBinding]:
+    """Flatten both dict-grouped and list-based ABI bindings into a flat list."""
+    if not bindings:
         return []
-    candidates = data.get("layout_candidates", [])
-    return candidates if isinstance(candidates, list) else []
+
+    if isinstance(bindings, dict):
+        out = []
+        for items in bindings.values():
+            out.extend(items or [])
+        return out
+
+    return list(bindings)
 
 
 def link_parameter_layouts(
-    abi_bindings_by_entry: Dict[str, List[PointerBaseBinding]],
-    layout_recovery: Optional[Dict[str, Any]],
+    abi_bindings_by_entry: Any,
+    layout_recovery: Optional[Any],
     param_names_by_entry: Optional[Dict[str, Dict[int, str]]] = None,
 ) -> Dict[str, List[ParameterLayoutEvidence]]:
     """
@@ -619,33 +638,28 @@ def link_parameter_layouts(
 
     Matching safety: evidence is only linked when BOTH function_entry AND
     base_id match a PointerBaseBinding.
-
-    Parameters
-    ----------
-    abi_bindings_by_entry : Output of collect_abi_bindings().
-    layout_recovery       : Parsed layout_recovery.json dict (optional).
-    param_names_by_entry  : Optional {entry: {arg_idx: param_name}} for naming.
-
-    Returns
-    -------
-    dict[str, list[ParameterLayoutEvidence]]
-        Mapping from function entry to its parameter-layout evidence.
     """
     if not abi_bindings_by_entry:
         return {}
 
-    candidates = _extract_layout_candidates(layout_recovery)
+    candidates = extract_layout_candidates(layout_recovery)
     if not candidates:
         return {}
 
     if param_names_by_entry is None:
         param_names_by_entry = {}
 
-    # Build index: (function_entry, base_id) → list[PointerBaseBinding]
+    from src.ir.utils.addressing import normalize_address
+
+    flat_bindings = flatten_abi_bindings(abi_bindings_by_entry)
+
+    # Build index: (normalized(function_entry), normalized(base_id)) → list[PointerBaseBinding]
     binding_index: Dict[Tuple[str, str], List[PointerBaseBinding]] = {}
-    for entry, bindings in abi_bindings_by_entry.items():
-        for b in bindings:
-            key = (entry, b.base_register)
+    for b in flat_bindings:
+        b_entry = normalize_address(b.function_entry)
+        b_reg = normalize_register_name(b.base_register)
+        if b_entry and b_reg:
+            key = (b_entry, b_reg)
             binding_index.setdefault(key, []).append(b)
 
     result: Dict[str, List[ParameterLayoutEvidence]] = {}
@@ -662,26 +676,33 @@ def link_parameter_layouts(
         if not c_entry or not c_base:
             continue
 
-        # Normalize base_id for matching
+        # Normalize entry and base_id for matching
+        c_entry_norm = normalize_address(c_entry)
         c_base_norm = normalize_register_name(c_base)
 
+        if not c_entry_norm or not c_base_norm:
+            continue
+
         # Lookup: BOTH function_entry AND base_id must match
-        key = (c_entry, c_base_norm)
+        key = (c_entry_norm, c_base_norm)
         matched_bindings = binding_index.get(key, [])
         if not matched_bindings:
             continue
 
         # Check for unambiguous argument index
-        arg_indices = set(b.argument_index for b in matched_bindings)
+        arg_indices = set(b.argument_index for b in matched_bindings if b.argument_index is not None)
         if len(arg_indices) != 1:
             logger.debug(
                 "Phase 4B.2: ambiguous arg indices %s for (%s, %s); skipping.",
-                arg_indices, c_entry, c_base_norm,
+                arg_indices, c_entry_norm, c_base_norm,
             )
             continue
 
         arg_idx = arg_indices.pop()
-        param_name_map = param_names_by_entry.get(c_entry, {})
+        param_name_map = param_names_by_entry.get(c_entry_norm, {})
+        # If not in the entry dict, try fallback lookup with original c_entry
+        if not param_name_map and c_entry in param_names_by_entry:
+            param_name_map = param_names_by_entry.get(c_entry, {})
         param_name = param_name_map.get(arg_idx, f"arg{arg_idx}")
 
         # Collect source instructions from all matching bindings
@@ -697,7 +718,7 @@ def link_parameter_layouts(
             all_source_instrs.extend(str(s) for s in c_source_instrs)
 
         evidence = ParameterLayoutEvidence(
-            function_entry=c_entry,
+            function_entry=c_entry_norm,
             function_name=c_name,
             parameter_index=arg_idx,
             parameter_name=param_name,
@@ -712,15 +733,11 @@ def link_parameter_layouts(
             ]),
         )
 
-        result.setdefault(c_entry, []).append(evidence)
+        result.setdefault(c_entry_norm, []).append(evidence)
         total_evidence += 1
 
     # Sort for determinism
     for entry in result:
         result[entry].sort(key=lambda e: (e.parameter_index, e.base_id))
 
-    logger.info(
-        "Phase 4B.2: linked %d parameter-layout evidence item(s) across %d function(s).",
-        total_evidence, len(result),
-    )
     return result

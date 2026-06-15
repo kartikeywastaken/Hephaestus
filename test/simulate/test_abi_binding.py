@@ -396,3 +396,216 @@ class TestLinkParameterLayouts:
         layout = self._make_layout_recovery("0x1000", "x8")
         result = link_parameter_layouts(bindings, layout)
         assert result == {}
+
+    def test_full_artifact_wrapper_layout(self):
+        """Test 1 — Full Artifact Wrapper Layout Input."""
+        layout_recovery = {
+            "schema_version": "4C.0.0",
+            "data": {
+                "layout_candidates": [
+                    {
+                        "function_entry": "0x1000",
+                        "function_name": "_inspect",
+                        "base_id": "x8",
+                        "layout_kind": "record_like",
+                        "observed_offsets": [0, 8, 16],
+                        "observed_sizes": [4, 8],
+                        "source_instrs": ["0x1010", "0x1014"]
+                    }
+                ]
+            }
+        }
+        binding = PointerBaseBinding(
+            function_entry="0x1000",
+            base_register="x8",
+            argument_index=0,
+            stack_slot=32,
+            source_instrs=("0x1004", "0x1008"),
+            binding_kind="stack_save_restore",
+            evidence_notes=("x8 restored from stack slot containing ABI arg0",)
+        )
+        result = link_parameter_layouts([binding], layout_recovery)
+        assert "0x1000" in result
+        assert len(result["0x1000"]) == 1
+        ple = result["0x1000"][0]
+        assert ple.parameter_index == 0
+        assert ple.base_id == "x8"
+        assert ple.layout_kind == "record_like"
+
+    def test_raw_layout_candidate_list(self):
+        """Test 2 — Raw Layout Candidate List."""
+        candidates = [
+            {
+                "function_entry": "0x1000",
+                "function_name": "_inspect",
+                "base_id": "x8",
+                "layout_kind": "record_like",
+                "observed_offsets": [0, 8, 16],
+                "observed_sizes": [4, 8],
+                "source_instrs": ["0x1010"]
+            }
+        ]
+        binding = PointerBaseBinding(
+            function_entry="0x1000",
+            base_register="x8",
+            argument_index=0,
+            stack_slot=None,
+            source_instrs=(),
+            binding_kind="direct_abi_reg",
+            evidence_notes=()
+        )
+        result = link_parameter_layouts([binding], candidates)
+        assert "0x1000" in result
+        assert len(result["0x1000"]) == 1
+
+    def test_grouped_binding_dict(self):
+        """Test 3 — Grouped Binding Dict."""
+        binding = PointerBaseBinding(
+            function_entry="0x1000",
+            base_register="x8",
+            argument_index=0,
+            stack_slot=None,
+            source_instrs=(),
+            binding_kind="direct_abi_reg",
+            evidence_notes=()
+        )
+        layout = self._make_layout_recovery("0x1000", "x8")
+        result = link_parameter_layouts({"0x1000": [binding]}, layout)
+        assert "0x1000" in result
+        assert len(result["0x1000"]) == 1
+
+    def test_function_mismatch_refusal(self):
+        """Test 4 — Function Mismatch Refusal."""
+        binding = PointerBaseBinding(
+            function_entry="0x1000",
+            base_register="x8",
+            argument_index=0,
+            stack_slot=None,
+            source_instrs=(),
+            binding_kind="direct_abi_reg",
+            evidence_notes=()
+        )
+        layout = self._make_layout_recovery("0x2000", "x8")
+        result = link_parameter_layouts([binding], layout)
+        assert result == {}
+
+    def test_base_register_mismatch_refusal(self):
+        """Test 5 — Base Register Mismatch Refusal."""
+        binding = PointerBaseBinding(
+            function_entry="0x1000",
+            base_register="x8",
+            argument_index=0,
+            stack_slot=None,
+            source_instrs=(),
+            binding_kind="direct_abi_reg",
+            evidence_notes=()
+        )
+        layout = self._make_layout_recovery("0x1000", "x9")
+        result = link_parameter_layouts([binding], layout)
+        assert result == {}
+
+    def test_register_alias_normalization(self):
+        """Test 6 — Register Alias Normalization."""
+        binding = PointerBaseBinding(
+            function_entry="0x1000",
+            base_register="w8",
+            argument_index=0,
+            stack_slot=None,
+            source_instrs=(),
+            binding_kind="direct_abi_reg",
+            evidence_notes=()
+        )
+        layout = self._make_layout_recovery("0x1000", "x8")
+        result = link_parameter_layouts([binding], layout)
+        assert "0x1000" in result
+        assert len(result["0x1000"]) == 1
+
+    def test_stack_save_restore_allowed(self):
+        """Test 7 — Stack Save/Restore Allowed."""
+        binding = PointerBaseBinding(
+            function_entry="0x1000",
+            base_register="x8",
+            argument_index=0,
+            stack_slot=32,
+            source_instrs=(),
+            binding_kind="stack_save_restore",
+            evidence_notes=()
+        )
+        layout = self._make_layout_recovery("0x1000", "x8")
+        result = link_parameter_layouts([binding], layout)
+        assert "0x1000" in result
+
+    def test_unsupported_ambiguous_binding_refused(self):
+        """Test 8 — Unsupported/Ambiguous Binding Refused."""
+        binding = PointerBaseBinding(
+            function_entry="0x1000",
+            base_register="x8",
+            argument_index=None,
+            stack_slot=None,
+            source_instrs=(),
+            binding_kind="direct_abi_reg",
+            evidence_notes=()
+        )
+        layout = self._make_layout_recovery("0x1000", "x8")
+        result = link_parameter_layouts([binding], layout)
+        assert result == {}
+
+    def test_simulated_struct_inspect_integration(self):
+        """Integration Test — struct inspection with stack save/restore."""
+        # Setup instruction stream for function at entry 0x1000
+        instructions = [
+            _instr("str", [_reg_op("x0"), _mem_op("sp", 32)], "0x1004"),
+            _instr("ldr", [_reg_op("x8"), _mem_op("sp", 32)], "0x1008"),
+            _instr("ldr", [_reg_op("w9"), _mem_op("x8", 0)], "0x100c"),
+            _instr("ldr", [_reg_op("x10"), _mem_op("x8", 8)], "0x1010"),
+            _instr("ldrb", [_reg_op("w11"), _mem_op("x8", 16)], "0x1014"),
+        ]
+        
+        ir = {
+            "metadata": {"architecture": "arm64"},
+            "data": {
+                "functions": [{
+                    "name": "inspect",
+                    "entry_point": "0x1000",
+                    "basic_blocks": [{
+                        "id": "0x1000",
+                        "instructions": instructions,
+                    }],
+                }],
+            },
+        }
+        
+        # 1. Collect ABI bindings
+        bindings = collect_abi_bindings(ir)
+        assert "0x1000" in bindings
+        # Ensure we have bindings for x8 tracing to arg0
+        x8_bindings = [b for b in bindings["0x1000"] if b.base_register == "x8"]
+        assert len(x8_bindings) > 0
+        assert x8_bindings[0].argument_index == 0
+        assert x8_bindings[0].binding_kind == "stack_save_restore"
+        
+        # 2. Layout candidates
+        layout_recovery = {
+            "data": {
+                "layout_candidates": [{
+                    "function_entry": "0x1000",
+                    "function_name": "inspect",
+                    "base_id": "x8",
+                    "layout_kind": "record_like",
+                    "observed_offsets": [0, 8, 16],
+                    "observed_sizes": [4, 8, 1],
+                    "source_instrs": ["0x100c", "0x1010", "0x1014"]
+                }]
+            }
+        }
+        
+        # 3. Link parameter layout evidence
+        evidence_by_entry = link_parameter_layouts(bindings, layout_recovery)
+        assert "0x1000" in evidence_by_entry
+        ple_list = evidence_by_entry["0x1000"]
+        assert len(ple_list) == 1
+        ple = ple_list[0]
+        assert ple.parameter_index == 0
+        assert ple.base_id == "x8"
+        assert ple.layout_kind == "record_like"
+        assert list(ple.observed_offsets) == [0, 8, 16]

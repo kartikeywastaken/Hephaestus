@@ -222,9 +222,11 @@ def _build_function_index(
     """
     Build lookup indices for a function list.
 
-    Returns (by_entry_point, by_name) dicts.
+    Returns (by_entry_point, by_name) dicts with normalized entry points.
     Skips non-dict entries.
     """
+    from src.ir.utils.addressing import normalize_address
+
     by_entry: Dict[str, Dict[str, Any]] = {}
     by_name: Dict[str, Dict[str, Any]] = {}
     for fn in functions:
@@ -232,8 +234,9 @@ def _build_function_index(
             continue
         ep = _safe_str(fn, "entry_point")
         name = _safe_str(fn, "name")
-        if ep and ep != "unknown":
-            by_entry[ep] = fn
+        ep_norm = normalize_address(ep) if ep else None
+        if ep_norm and ep_norm != "unknown":
+            by_entry[ep_norm] = fn
         if name and name != "unknown_function":
             by_name[name] = fn
     return by_entry, by_name
@@ -263,7 +266,8 @@ def _match_function(
         if found is not None:
             # Safety check: if the found record has a different entry_point,
             # and we also have a non-trivial entry_point, don't merge
-            found_ep = _safe_str(found, "entry_point")
+            from src.ir.utils.addressing import normalize_address
+            found_ep = normalize_address(_safe_str(found, "entry_point"))
             if (entry_point and entry_point != "unknown" and
                     found_ep and found_ep != "unknown" and
                     found_ep != entry_point):
