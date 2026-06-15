@@ -197,11 +197,38 @@ def analyze_control_flow_regions(regions: list[dict]) -> dict:
     return stats
 
 
+def lookup_condition_annotation(
+    condition_annotations: dict | None,
+    region_kind: str,
+    block_id: str,
+    branch_address: str | None = None,
+) -> str | None:
+    if not condition_annotations:
+        return None
+    # 1. exact key: (region_kind, block_id)
+    key2 = (region_kind, block_id)
+    if key2 in condition_annotations:
+        return condition_annotations[key2]
+    # 2. exact key with branch address if the region carries branch address
+    if branch_address is not None:
+        key3 = (region_kind, block_id, branch_address)
+        if key3 in condition_annotations:
+            return condition_annotations[key3]
+    # 3. conservative fallback: first annotation matching region_kind and block_id
+    for k, val in condition_annotations.items():
+        if isinstance(k, tuple) and len(k) >= 2:
+            if k[0] == region_kind and k[1] == block_id:
+                return val
+    # 4. no annotation -> None
+    return None
+
+
 def emit_regions_to_c(
     regions: list[dict],
     lowered_blocks: dict,
     indent: int = 1,
     seen_blocks: set[str] | None = None,
+    condition_annotations: dict | None = None,
 ) -> tuple[list[str], dict]:
     """
     Emit conservative C-like structured control flow.
@@ -224,6 +251,16 @@ def emit_regions_to_c(
     }
 
     lines: list[str] = []
+
+    def _get_branch_addr(block_id: str) -> str | None:
+        stmts = lowered_blocks.get(block_id, [])
+        for stmt in reversed(stmts):
+            src_ins = stmt.get("source_instruction") if isinstance(stmt, dict) else getattr(stmt, "source_instruction", None)
+            if src_ins and isinstance(src_ins, dict):
+                mn = (src_ins.get("mnemonic") or "").lower().strip()
+                if mn in {"b.eq", "b.ne", "b.lt", "b.le", "b.gt", "b.ge", "b.lo", "b.ls", "b.hi", "b.hs", "b.mi", "b.pl", "b.vs", "b.vc", "cbz", "cbnz", "tbz", "tbnz"}:
+                    return stmt.get("address") if isinstance(stmt, dict) else getattr(stmt, "address", None)
+        return None
 
     def _emit_region_recursive(region: dict, indent_level: int) -> None:
         if not isinstance(region, dict):
@@ -263,7 +300,12 @@ def emit_regions_to_c(
             if merge_block:
                 lines.append(f"{prefix}/* merge block: {merge_block} */")
 
-            lines.append(f"{prefix}if (/* condition unknown: block {cond_block} */) {{")
+            b_addr = _get_branch_addr(cond_block)
+            annot = lookup_condition_annotation(condition_annotations, "if", cond_block, b_addr)
+            if annot:
+                lines.append(f"{prefix}if (/* {annot} */) {{")
+            else:
+                lines.append(f"{prefix}if (/* condition unknown: block {cond_block} */) {{")
 
             then_branch = region.get("then_branch")
             if then_branch and isinstance(then_branch, dict):
@@ -284,7 +326,12 @@ def emit_regions_to_c(
             if merge_block:
                 lines.append(f"{prefix}/* merge block: {merge_block} */")
 
-            lines.append(f"{prefix}if (/* condition unknown: block {cond_block} */) {{")
+            b_addr = _get_branch_addr(cond_block)
+            annot = lookup_condition_annotation(condition_annotations, "if_else", cond_block, b_addr)
+            if annot:
+                lines.append(f"{prefix}if (/* {annot} */) {{")
+            else:
+                lines.append(f"{prefix}if (/* condition unknown: block {cond_block} */) {{")
 
             then_branch = region.get("then_branch")
             if then_branch and isinstance(then_branch, dict):
@@ -315,7 +362,12 @@ def emit_regions_to_c(
             if exits:
                 lines.append(f"{prefix}/* loop exits: {exits} */")
 
-            lines.append(f"{prefix}while (/* condition unknown: loop header {header} */) {{")
+            b_addr = _get_branch_addr(header)
+            annot = lookup_condition_annotation(condition_annotations, "loop", header, b_addr)
+            if annot:
+                lines.append(f"{prefix}while (/* {annot} */) {{")
+            else:
+                lines.append(f"{prefix}while (/* condition unknown: loop header {header} */) {{")
 
             body = region.get("body")
             if body and isinstance(body, dict):

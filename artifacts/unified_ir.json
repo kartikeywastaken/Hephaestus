@@ -1807,8 +1807,8 @@
         "name": "_reduce_weird",
         "entry_point": "0x100000584",
         "size_bytes": 240,
-        "calling_convention": 5,
-        "signature": "5 _reduce_weird()",
+        "calling_convention": "__cdecl",
+        "signature": "__cdecl _reduce_weird()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -3355,8 +3355,8 @@
         "name": "_op_add",
         "entry_point": "0x100000674",
         "size_bytes": 32,
-        "calling_convention": 1,
-        "signature": "1 _op_add()",
+        "calling_convention": "__cdecl",
+        "signature": "__cdecl _op_add()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -3579,8 +3579,8 @@
         "name": "_op_xor",
         "entry_point": "0x100000694",
         "size_bytes": 32,
-        "calling_convention": 1,
-        "signature": "1 _op_xor()",
+        "calling_convention": "__cdecl",
+        "signature": "__cdecl _op_xor()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -3803,8 +3803,8 @@
         "name": "_nested_control",
         "entry_point": "0x1000006b4",
         "size_bytes": 244,
-        "calling_convention": 5,
-        "signature": "5 _nested_control()",
+        "calling_convention": "__cdecl",
+        "signature": "__cdecl _nested_control()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -5344,8 +5344,8 @@
         "name": "_mix_value",
         "entry_point": "0x1000007a8",
         "size_bytes": 152,
-        "calling_convention": 3,
-        "signature": "3 _mix_value()",
+        "calling_convention": "__cdecl",
+        "signature": "__cdecl _mix_value()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -6459,14 +6459,14 @@
     ],
     "call_graph": {
       "nodes": [
-        "_mix_value",
-        "_op_add",
-        "printf",
         "_reduce_weird",
         "__stack_chk_fail",
         "_op_xor",
-        "_nested_control",
-        "_main"
+        "_main",
+        "printf",
+        "_op_add",
+        "_mix_value",
+        "_nested_control"
       ],
       "edges": [
         {
@@ -6841,80 +6841,110 @@
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100008140",
-        "name": "nlist_100008140",
+        "address": "0x100008310",
+        "name": "nlist_100008310",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100008150",
-        "name": "nlist_100008150",
+        "address": "0x100008320",
+        "name": "nlist_100008320",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100008160",
-        "name": "nlist_100008160",
+        "address": "0x100008330",
+        "name": "nlist_100008330",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x10000818a",
-        "name": "s___mh_execute_header_10000818a",
+        "address": "0x100008359",
+        "name": "s__100008359",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x10000819e",
-        "name": "s__main_10000819e",
+        "address": "0x10000835a",
+        "name": "s___mh_execute_header_10000835a",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000081a4",
-        "name": "s____stack_chk_fail_1000081a4",
+        "address": "0x10000836e",
+        "name": "s__main_10000836e",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000081b6",
-        "name": "s____stack_chk_guard_1000081b6",
+        "address": "0x100008374",
+        "name": "s____stack_chk_fail_100008374",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000081c9",
-        "name": "s__printf_1000081c9",
+        "address": "0x100008386",
+        "name": "s____stack_chk_guard_100008386",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000081d1",
-        "name": "s__reduce_weird_1000081d1",
+        "address": "0x100008399",
+        "name": "s__printf_100008399",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000081df",
-        "name": "s__op_add_1000081df",
+        "address": "0x1000083a1",
+        "name": "s__reduce_weird_1000083a1",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000081e7",
-        "name": "s__op_xor_1000081e7",
+        "address": "0x1000083af",
+        "name": "s__op_add_1000083af",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000081ef",
-        "name": "s__nested_control_1000081ef",
+        "address": "0x1000083b7",
+        "name": "s__op_xor_1000083b7",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000081ff",
-        "name": "s__mix_value_1000081ff",
+        "address": "0x1000083bf",
+        "name": "s__nested_control_1000083bf",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "0x1000083cf",
+        "name": "s__mix_value_1000083cf",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "0x1000083da",
+        "name": "s_/Users/kartik/Downloads/binary-r_1000083da",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "0x100008412",
+        "name": "s_t.c_100008412",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "0x100008416",
+        "name": "s_/var/folders/sn/l1bzbbzd14l2xthh_100008416",
+        "type": "Label",
+        "visibility": "DEFAULT"
+      },
+      {
+        "address": "0x100008452",
+        "name": "s__reduce_weird_100008452",
         "type": "Label",
         "visibility": "DEFAULT"
       },
@@ -6923,6 +6953,12 @@
         "name": "___stack_chk_guard",
         "type": "Label",
         "visibility": "IMPORTED"
+      },
+      {
+        "address": "0x6a303b4b",
+        "name": "/var/folders/sn/l1bzbbzd14l2xthhyt7fm2r80000gp/T/t-a6d3ee.o",
+        "type": "function",
+        "visibility": "static"
       }
     ],
     "imports": [],

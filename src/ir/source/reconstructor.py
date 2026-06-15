@@ -532,6 +532,14 @@ def build_source_reconstruction(
     call_arguments_recovered = 0
     call_arguments_unknown = 0
 
+    # Phase 5.5 condition predicate summary counters
+    condition_sites_total = 0
+    condition_sites_with_evidence = 0
+    condition_sites_unknown = 0
+    condition_annotations_recovered = 0
+    conditions_inverted_for_structure = 0
+    ambiguous_condition_sites = 0
+
     # Detect architecture once for the whole IR
     from src.ir.source.lowering import detect_architecture
     arch = detect_architecture(unified_ir)
@@ -656,6 +664,12 @@ def build_source_reconstruction(
             dict(lowered_blocks), arch
         )
 
+        # Phase 5.5 branch predicate annotations
+        from src.ir.source.condition_recovery import analyze_condition_sites
+        fn_condition_recovery = analyze_condition_sites(
+            structured_regions, dict(lowered_blocks), cfg_info=None, architecture=arch
+        )
+
         rec = ReconstructedFunction(
             name=name,
             canonical_name=canonical_name,
@@ -680,6 +694,7 @@ def build_source_reconstruction(
             control_flow=fn_control_flow,
             return_recovery=fn_return_recovery,
             callsite_refinement=fn_callsite_refinement,
+            condition_recovery=fn_condition_recovery,
         )
         reconstructed.append(rec)
 
@@ -707,6 +722,14 @@ def build_source_reconstruction(
         summary_calls_with_arguments += fn_callsite_refinement.get("calls_with_arguments", 0)
         call_arguments_recovered += fn_callsite_refinement.get("arguments_recovered", 0)
         call_arguments_unknown += fn_callsite_refinement.get("arguments_unknown", 0)
+
+        # Accumulate Phase 5.5 condition metrics
+        condition_sites_total += fn_condition_recovery.get("condition_sites_total", 0)
+        condition_sites_with_evidence += fn_condition_recovery.get("condition_sites_with_evidence", 0)
+        condition_sites_unknown += fn_condition_recovery.get("condition_sites_unknown", 0)
+        condition_annotations_recovered += fn_condition_recovery.get("condition_annotations_recovered", 0)
+        conditions_inverted_for_structure += fn_condition_recovery.get("conditions_inverted_for_structure", 0)
+        ambiguous_condition_sites += fn_condition_recovery.get("ambiguous_condition_sites", 0)
 
         # Update summary counters
         if body_status == "structured":
@@ -791,6 +814,13 @@ def build_source_reconstruction(
         "calls_with_arguments": summary_calls_with_arguments,
         "call_arguments_recovered": call_arguments_recovered,
         "call_arguments_unknown": call_arguments_unknown,
+        # Phase 5.5 condition predicate annotation
+        "condition_sites_total": condition_sites_total,
+        "condition_sites_with_evidence": condition_sites_with_evidence,
+        "condition_sites_unknown": condition_sites_unknown,
+        "condition_annotations_recovered": condition_annotations_recovered,
+        "conditions_inverted_for_structure": conditions_inverted_for_structure,
+        "ambiguous_condition_sites": ambiguous_condition_sites,
     }
 
     artifact = SourceReconstructionArtifact(

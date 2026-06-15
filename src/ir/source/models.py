@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Phase 5.4: Source Reconstruction Data Models
+Phase 5.5: Source Reconstruction Data Models
 
-Defines the canonical model classes used by the Phase 5.4 source
+Defines the canonical model classes used by the Phase 5.5 source
 reconstruction pipeline. All models support deterministic to_dict()
 serialization.
 
 Core Rule: Missing evidence is acceptable. Fabricated evidence is not.
-Phase 5.4 only emits information grounded in existing artifacts.
+Phase 5.5 only emits information grounded in existing artifacts.
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ from typing import Any, Dict, List
 # Schema version
 # ---------------------------------------------------------------------------
 
-SCHEMA_VERSION = "5.4.0"
+SCHEMA_VERSION = "5.5.0"
 
 
 # ---------------------------------------------------------------------------
@@ -59,6 +59,7 @@ class ReconstructedFunction:
     lowering          : Function-level instruction lowering summary statistics.
     return_recovery   : Return recovery per-site evidence and metrics.
     callsite_refinement: Call-site refinement per-site metadata and metrics.
+    condition_recovery : Condition recovery branch predicate evidence and metrics.
     """
     name: str = "unknown_function"
     canonical_name: str = "unknown_function"
@@ -93,6 +94,7 @@ class ReconstructedFunction:
     })
     return_recovery: Dict[str, Any] = field(default_factory=dict)
     callsite_refinement: Dict[str, Any] = field(default_factory=dict)
+    condition_recovery: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -119,6 +121,7 @@ class ReconstructedFunction:
             "control_flow": dict(self.control_flow),
             "return_recovery": dict(self.return_recovery) if self.return_recovery else {},
             "callsite_refinement": dict(self.callsite_refinement) if self.callsite_refinement else {},
+            "condition_recovery": dict(self.condition_recovery) if self.condition_recovery else {},
         }
 
 
@@ -129,11 +132,11 @@ class ReconstructedFunction:
 @dataclass
 class SourceReconstructionArtifact:
     """
-    The complete Phase 5.4 output artifact.
+    The complete Phase 5.5 output artifact.
 
     Attributes
     ----------
-    schema_version : Always "5.4.0".
+    schema_version : Always "5.5.0".
     provenance     : Source artifact paths.
     functions      : List of ReconstructedFunction records.
     summary        : Aggregate counters.
@@ -183,6 +186,13 @@ class SourceReconstructionArtifact:
         "calls_with_arguments": 0,
         "call_arguments_recovered": 0,
         "call_arguments_unknown": 0,
+        # Phase 5.5 condition predicate annotation
+        "condition_sites_total": 0,
+        "condition_sites_with_evidence": 0,
+        "condition_sites_unknown": 0,
+        "condition_annotations_recovered": 0,
+        "conditions_inverted_for_structure": 0,
+        "ambiguous_condition_sites": 0,
     })
 
     def to_dict(self) -> Dict[str, Any]:
@@ -195,4 +205,3 @@ class SourceReconstructionArtifact:
                 "summary": dict(self.summary),
             },
         }
-

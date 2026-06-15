@@ -80,13 +80,18 @@ class TestControlFlowEmission:
         assert "tmp_w8 = tmp_w8 + 1;" in body
         
         # Must not contain fabricated conditions
+        import re
+        def strip_c_comments(s: str) -> str:
+            return re.sub(r"/\*.*?\*/", "", s)
+
         for line in lines:
             stripped = line.strip()
             if stripped.startswith("while (") or stripped.startswith("if ("):
-                assert "condition unknown" in stripped
-                assert "tmp_" not in stripped
-                assert "arg" not in stripped
-                assert "stack_" not in stripped
+                assert "condition unknown" in stripped or "condition evidence" in stripped
+                executable = strip_c_comments(stripped)
+                assert "tmp_" not in executable
+                assert "arg" not in executable
+                assert "stack_" not in executable
 
     def test_3_if_emits_conservative_condition(self):
         regions = [
@@ -276,13 +281,18 @@ class TestControlFlowEmission:
 
         lines, stats = emit_regions_to_c(regions, lowered_blocks, indent=1)
         
+        import re
+        def strip_c_comments(s: str) -> str:
+            return re.sub(r"/\*.*?\*/", "", s)
+
         for line in lines:
             stripped = line.strip()
             if stripped.startswith("while (") or stripped.startswith("if ("):
-                assert "condition unknown" in stripped
-                assert "tmp_" not in stripped
-                assert "arg" not in stripped
-                assert "stack_" not in stripped
+                assert "condition unknown" in stripped or "condition evidence" in stripped
+                executable = strip_c_comments(stripped)
+                assert "tmp_" not in executable
+                assert "arg" not in executable
+                assert "stack_" not in executable
 
     def test_f_no_referenced_block_is_silently_dropped(self):
         regions = [
@@ -338,7 +348,7 @@ class TestControlFlowEmission:
         )
         # Verify models schema version matches
         artifact = SourceReconstructionArtifact(schema_version=SCHEMA_VERSION, functions=[fn])
-        assert artifact.schema_version == "5.4.0"
+        assert artifact.schema_version == "5.5.0"
         
         # Populate function stats (mock reconstructor behavior)
         fn.control_flow = analyze_control_flow_regions(fn.structured_regions)

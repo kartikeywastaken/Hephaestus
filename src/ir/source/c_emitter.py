@@ -332,11 +332,26 @@ def _emit_function(
         # We need to hook into the emission to apply replacements.
         # emit_regions_to_c returns lines with block statements.
         # We post-process those lines by matching block IDs and addresses.
+        condition_annotations = {}
+        cr = fn.condition_recovery
+        if isinstance(cr, dict):
+            for site in cr.get("sites", []):
+                if isinstance(site, dict):
+                    rk = site.get("structured_region_kind")
+                    bid = site.get("block_id")
+                    ba = site.get("branch_address")
+                    annot = site.get("annotation")
+                    if rk and bid and annot:
+                        if ba:
+                            condition_annotations[(str(rk), str(bid), str(ba))] = annot
+                        condition_annotations[(str(rk), str(bid))] = annot
+
         body_lines, _ = emit_regions_to_c(
             fn.structured_regions,
             fn.lowered_blocks,
             indent=1,
             seen_blocks=set(),
+            condition_annotations=condition_annotations,
         )
 
         # Post-process emitted lines for return/call-site replacement
@@ -533,7 +548,7 @@ def emit_recovered_c(
     # File header
     timestamp = datetime.now(tz=None).strftime("%Y-%m-%dT%H:%M:%SZ")
     lines.append("/*")
-    lines.append(" * recovered.c — Phase 5.4 Conservative Return and Call-Site Reconstruction")
+    lines.append(" * recovered.c — Phase 5.5 Conservative Branch Predicate Reconstruction")
     lines.append(f" * Schema version: {artifact.schema_version}")
     lines.append(f" * Generated: {timestamp}")
     lines.append(" *")

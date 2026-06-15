@@ -1,8 +1,8 @@
 {
-  "schema_version": "5.4.0",
+  "schema_version": "5.5.0",
   "provenance": {
-    "phase": "5.4",
-    "description": "Conservative source reconstruction with return and call-site refinement",
+    "phase": "5.5",
+    "description": "Conservative source reconstruction with branch predicate annotation",
     "source_ir": "unified_ir.json",
     "source_structuring": "structuring_regions.json",
     "source_semantics": "phase4_semantics.json",
@@ -48,7 +48,13 @@
     "indirect_calls": 1,
     "calls_with_arguments": 6,
     "call_arguments_recovered": 11,
-    "call_arguments_unknown": 1
+    "call_arguments_unknown": 1,
+    "condition_sites_total": 10,
+    "condition_sites_with_evidence": 10,
+    "condition_sites_unknown": 0,
+    "condition_annotations_recovered": 10,
+    "conditions_inverted_for_structure": 7,
+    "ambiguous_condition_sites": 3
   },
   "data": {
     "functions": [
@@ -4995,6 +5001,31 @@
             }
           ],
           "warnings": []
+        },
+        "condition_recovery": {
+          "condition_sites_total": 1,
+          "condition_sites_with_evidence": 1,
+          "condition_sites_unknown": 0,
+          "condition_annotations_recovered": 1,
+          "conditions_inverted_for_structure": 1,
+          "ambiguous_condition_sites": 0,
+          "sites": [
+            {
+              "block_id": "0x100000488",
+              "branch_address": "0x100000490",
+              "branch_mnemonic": "b.ge",
+              "predicate": "ge",
+              "compare_address": "0x10000048c",
+              "compare_mnemonic": "subs",
+              "branch_target": "0x1000004c8",
+              "fallthrough_target": null,
+              "structured_region_kind": "loop",
+              "polarity": "inverted",
+              "annotation": "condition evidence: b.ge at 0x100000490 after subs at 0x10000048c; target 0x1000004c8; loop polarity inverted",
+              "warnings": []
+            }
+          ],
+          "warnings": []
         }
       },
       {
@@ -9018,6 +9049,59 @@
             }
           ],
           "warnings": []
+        },
+        "condition_recovery": {
+          "condition_sites_total": 3,
+          "condition_sites_with_evidence": 3,
+          "condition_sites_unknown": 0,
+          "condition_annotations_recovered": 3,
+          "conditions_inverted_for_structure": 2,
+          "ambiguous_condition_sites": 1,
+          "sites": [
+            {
+              "block_id": "0x1000005a8",
+              "branch_address": "0x1000005b4",
+              "branch_mnemonic": "b.ge",
+              "predicate": "ge",
+              "compare_address": "0x1000005b0",
+              "compare_mnemonic": "subs",
+              "branch_target": "0x100000664",
+              "fallthrough_target": null,
+              "structured_region_kind": "loop",
+              "polarity": "inverted",
+              "annotation": "condition evidence: b.ge at 0x1000005b4 after subs at 0x1000005b0; target 0x100000664; loop polarity inverted",
+              "warnings": []
+            },
+            {
+              "block_id": "0x1000005a8",
+              "branch_address": "0x1000005b4",
+              "branch_mnemonic": "b.ge",
+              "predicate": "ge",
+              "compare_address": "0x1000005b0",
+              "compare_mnemonic": "subs",
+              "branch_target": "0x100000664",
+              "fallthrough_target": null,
+              "structured_region_kind": "if_else",
+              "polarity": "unknown",
+              "annotation": "condition evidence: b.ge at 0x1000005b4 after subs at 0x1000005b0; target 0x100000664",
+              "warnings": []
+            },
+            {
+              "block_id": "0x100000628",
+              "branch_address": "0x100000634",
+              "branch_mnemonic": "b.ne",
+              "predicate": "ne",
+              "compare_address": "0x100000630",
+              "compare_mnemonic": "subs",
+              "branch_target": "0x100000640",
+              "fallthrough_target": null,
+              "structured_region_kind": "if_else",
+              "polarity": "inverted",
+              "annotation": "condition evidence: b.ne at 0x100000634 after subs at 0x100000630; target 0x100000640; polarity inverted",
+              "warnings": []
+            }
+          ],
+          "warnings": []
         }
       },
       {
@@ -9710,6 +9794,16 @@
           "arguments_unknown": 0,
           "sites": [],
           "warnings": []
+        },
+        "condition_recovery": {
+          "condition_sites_total": 0,
+          "condition_sites_with_evidence": 0,
+          "condition_sites_unknown": 0,
+          "condition_annotations_recovered": 0,
+          "conditions_inverted_for_structure": 0,
+          "ambiguous_condition_sites": 0,
+          "sites": [],
+          "warnings": []
         }
       },
       {
@@ -10400,6 +10494,16 @@
           "calls_with_arguments": 0,
           "arguments_recovered": 0,
           "arguments_unknown": 0,
+          "sites": [],
+          "warnings": []
+        },
+        "condition_recovery": {
+          "condition_sites_total": 0,
+          "condition_sites_with_evidence": 0,
+          "condition_sites_unknown": 0,
+          "condition_annotations_recovered": 0,
+          "conditions_inverted_for_structure": 0,
+          "ambiguous_condition_sites": 0,
           "sites": [],
           "warnings": []
         }
@@ -14223,6 +14327,73 @@
           "arguments_unknown": 0,
           "sites": [],
           "warnings": []
+        },
+        "condition_recovery": {
+          "condition_sites_total": 4,
+          "condition_sites_with_evidence": 4,
+          "condition_sites_unknown": 0,
+          "condition_annotations_recovered": 4,
+          "conditions_inverted_for_structure": 3,
+          "ambiguous_condition_sites": 1,
+          "sites": [
+            {
+              "block_id": "0x1000006cc",
+              "branch_address": "0x1000006d4",
+              "branch_mnemonic": "b.ge",
+              "predicate": "ge",
+              "compare_address": "0x1000006d0",
+              "compare_mnemonic": "subs",
+              "branch_target": "0x10000079c",
+              "fallthrough_target": null,
+              "structured_region_kind": "loop",
+              "polarity": "inverted",
+              "annotation": "condition evidence: b.ge at 0x1000006d4 after subs at 0x1000006d0; target 0x10000079c; loop polarity inverted",
+              "warnings": []
+            },
+            {
+              "block_id": "0x1000006e4",
+              "branch_address": "0x1000006ec",
+              "branch_mnemonic": "b.ge",
+              "predicate": "ge",
+              "compare_address": "0x1000006e8",
+              "compare_mnemonic": "subs",
+              "branch_target": "0x100000754",
+              "fallthrough_target": null,
+              "structured_region_kind": "loop",
+              "polarity": "inverted",
+              "annotation": "condition evidence: b.ge at 0x1000006ec after subs at 0x1000006e8; target 0x100000754; loop polarity inverted",
+              "warnings": []
+            },
+            {
+              "block_id": "0x1000006e4",
+              "branch_address": "0x1000006ec",
+              "branch_mnemonic": "b.ge",
+              "predicate": "ge",
+              "compare_address": "0x1000006e8",
+              "compare_mnemonic": "subs",
+              "branch_target": "0x100000754",
+              "fallthrough_target": null,
+              "structured_region_kind": "if_else",
+              "polarity": "unknown",
+              "annotation": "condition evidence: b.ge at 0x1000006ec after subs at 0x1000006e8; target 0x100000754",
+              "warnings": []
+            },
+            {
+              "block_id": "0x100000754",
+              "branch_address": "0x100000760",
+              "branch_mnemonic": "b.ne",
+              "predicate": "ne",
+              "compare_address": "0x10000075c",
+              "compare_mnemonic": "subs",
+              "branch_target": "0x100000778",
+              "fallthrough_target": null,
+              "structured_region_kind": "if_else",
+              "polarity": "inverted",
+              "annotation": "condition evidence: b.ne at 0x100000760 after subs at 0x10000075c; target 0x100000778; polarity inverted",
+              "warnings": []
+            }
+          ],
+          "warnings": []
         }
       },
       {
@@ -16647,6 +16818,45 @@
           "arguments_unknown": 0,
           "sites": [],
           "warnings": []
+        },
+        "condition_recovery": {
+          "condition_sites_total": 2,
+          "condition_sites_with_evidence": 2,
+          "condition_sites_unknown": 0,
+          "condition_annotations_recovered": 2,
+          "conditions_inverted_for_structure": 1,
+          "ambiguous_condition_sites": 1,
+          "sites": [
+            {
+              "block_id": "0x1000007c0",
+              "branch_address": "0x1000007c8",
+              "branch_mnemonic": "b.ge",
+              "predicate": "ge",
+              "compare_address": "0x1000007c4",
+              "compare_mnemonic": "subs",
+              "branch_target": "0x100000834",
+              "fallthrough_target": null,
+              "structured_region_kind": "loop",
+              "polarity": "inverted",
+              "annotation": "condition evidence: b.ge at 0x1000007c8 after subs at 0x1000007c4; target 0x100000834; loop polarity inverted",
+              "warnings": []
+            },
+            {
+              "block_id": "0x1000007c0",
+              "branch_address": "0x1000007c8",
+              "branch_mnemonic": "b.ge",
+              "predicate": "ge",
+              "compare_address": "0x1000007c4",
+              "compare_mnemonic": "subs",
+              "branch_target": "0x100000834",
+              "fallthrough_target": null,
+              "structured_region_kind": "if_else",
+              "polarity": "unknown",
+              "annotation": "condition evidence: b.ge at 0x1000007c8 after subs at 0x1000007c4; target 0x100000834",
+              "warnings": []
+            }
+          ],
+          "warnings": []
         }
       },
       {
@@ -16926,6 +17136,16 @@
           "arguments_unknown": 0,
           "sites": [],
           "warnings": []
+        },
+        "condition_recovery": {
+          "condition_sites_total": 0,
+          "condition_sites_with_evidence": 0,
+          "condition_sites_unknown": 0,
+          "condition_annotations_recovered": 0,
+          "conditions_inverted_for_structure": 0,
+          "ambiguous_condition_sites": 0,
+          "sites": [],
+          "warnings": []
         }
       },
       {
@@ -17193,6 +17413,16 @@
           "arguments_unknown": 0,
           "sites": [],
           "warnings": []
+        },
+        "condition_recovery": {
+          "condition_sites_total": 0,
+          "condition_sites_with_evidence": 0,
+          "condition_sites_unknown": 0,
+          "condition_annotations_recovered": 0,
+          "conditions_inverted_for_structure": 0,
+          "ambiguous_condition_sites": 0,
+          "sites": [],
+          "warnings": []
         }
       }
     ],
@@ -17236,7 +17466,13 @@
       "indirect_calls": 1,
       "calls_with_arguments": 6,
       "call_arguments_recovered": 11,
-      "call_arguments_unknown": 1
+      "call_arguments_unknown": 1,
+      "condition_sites_total": 10,
+      "condition_sites_with_evidence": 10,
+      "condition_sites_unknown": 0,
+      "condition_annotations_recovered": 10,
+      "conditions_inverted_for_structure": 7,
+      "ambiguous_condition_sites": 3
     }
   }
 }

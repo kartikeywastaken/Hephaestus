@@ -1,12 +1,12 @@
 {
-  "orchestrated_at": "2026-06-15T21:06:32-07:00",
+  "orchestrated_at": "2026-06-15T23:20:18-07:00",
   "binary_profiled": "./t",
   "jobs": {
     "ghidra": {
       "schema_version": "1.0.0",
       "provenance": {
         "tool_name": "Ghidra Headless Analyzer",
-        "timestamp": "2026-06-15T21:06:32-07:00",
+        "timestamp": "2026-06-15T23:20:18-07:00",
         "binary_path": "./t",
         "config": {}
       },
@@ -17,7 +17,7 @@
           "format": "Mac OS X Mach-O",
           "language_id": "AARCH64:LE:64:AppleSilicon",
           "compiler": "unknown",
-          "timestamp": "Mon Jun 15 21:06:31 IST 2026"
+          "timestamp": "Mon Jun 15 23:20:17 IST 2026"
         },
         "functions": [
           {
@@ -1645,7 +1645,7 @@
                 }
               ]
             },
-            "name": "entry",
+            "name": "main",
             "local_variables": [
               "local_10",
               "local_18",
@@ -1665,7 +1665,7 @@
           },
           {
             "size_bytes": 240,
-            "calling_convention": "unknown",
+            "calling_convention": "__cdecl",
             "cfg": {
               "nodes": [
                 {
@@ -3080,7 +3080,7 @@
                 }
               ]
             },
-            "name": "_reduce_weird",
+            "name": "reduce_weird",
             "local_variables": [
               "local_10",
               "local_18",
@@ -3095,7 +3095,7 @@
           },
           {
             "size_bytes": 32,
-            "calling_convention": "unknown",
+            "calling_convention": "__cdecl",
             "cfg": {
               "nodes": [
                 {
@@ -3272,7 +3272,7 @@
               ],
               "edges": []
             },
-            "name": "_op_add",
+            "name": "op_add",
             "local_variables": [
               "local_4",
               "local_8"
@@ -3281,7 +3281,7 @@
           },
           {
             "size_bytes": 32,
-            "calling_convention": "unknown",
+            "calling_convention": "__cdecl",
             "cfg": {
               "nodes": [
                 {
@@ -3458,7 +3458,7 @@
               ],
               "edges": []
             },
-            "name": "_op_xor",
+            "name": "op_xor",
             "local_variables": [
               "local_4",
               "local_8"
@@ -3467,7 +3467,7 @@
           },
           {
             "size_bytes": 244,
-            "calling_convention": "unknown",
+            "calling_convention": "__cdecl",
             "cfg": {
               "nodes": [
                 {
@@ -4919,7 +4919,7 @@
                 }
               ]
             },
-            "name": "_nested_control",
+            "name": "nested_control",
             "local_variables": [
               "local_4",
               "local_8",
@@ -4931,7 +4931,7 @@
           },
           {
             "size_bytes": 152,
-            "calling_convention": "unknown",
+            "calling_convention": "__cdecl",
             "cfg": {
               "nodes": [
                 {
@@ -5820,7 +5820,7 @@
                 }
               ]
             },
-            "name": "_mix_value",
+            "name": "mix_value",
             "local_variables": [
               "local_4",
               "local_8",
@@ -5869,13 +5869,19 @@
           {
             "address": "0x100000460",
             "visibility": "IMPORTED",
-            "name": "entry",
+            "name": "main",
             "type": "Function"
           },
           {
             "address": "0x100000460",
             "visibility": "IMPORTED",
             "name": "_main",
+            "type": "Label"
+          },
+          {
+            "address": "0x100000460",
+            "visibility": "IMPORTED",
+            "name": "entry",
             "type": "Label"
           },
           {
@@ -5918,6 +5924,12 @@
             "address": "0x100000584",
             "visibility": "IMPORTED",
             "name": "_reduce_weird",
+            "type": "Label"
+          },
+          {
+            "address": "0x100000584",
+            "visibility": "IMPORTED",
+            "name": "reduce_weird",
             "type": "Function"
           },
           {
@@ -5990,18 +6002,36 @@
             "address": "0x100000674",
             "visibility": "IMPORTED",
             "name": "_op_add",
+            "type": "Label"
+          },
+          {
+            "address": "0x100000674",
+            "visibility": "IMPORTED",
+            "name": "op_add",
             "type": "Function"
           },
           {
             "address": "0x100000694",
             "visibility": "IMPORTED",
             "name": "_op_xor",
+            "type": "Label"
+          },
+          {
+            "address": "0x100000694",
+            "visibility": "IMPORTED",
+            "name": "op_xor",
             "type": "Function"
           },
           {
             "address": "0x1000006b4",
             "visibility": "IMPORTED",
             "name": "_nested_control",
+            "type": "Label"
+          },
+          {
+            "address": "0x1000006b4",
+            "visibility": "IMPORTED",
+            "name": "nested_control",
             "type": "Function"
           },
           {
@@ -6092,6 +6122,12 @@
             "address": "0x1000007a8",
             "visibility": "IMPORTED",
             "name": "_mix_value",
+            "type": "Label"
+          },
+          {
+            "address": "0x1000007a8",
+            "visibility": "IMPORTED",
+            "name": "mix_value",
             "type": "Function"
           },
           {
@@ -6191,81 +6227,111 @@
             "type": "Label"
           },
           {
-            "address": "0x100008140",
+            "address": "0x100008310",
             "visibility": "DEFAULT",
-            "name": "nlist_100008140",
+            "name": "nlist_100008310",
             "type": "Label"
           },
           {
-            "address": "0x100008150",
+            "address": "0x100008320",
             "visibility": "DEFAULT",
-            "name": "nlist_100008150",
+            "name": "nlist_100008320",
             "type": "Label"
           },
           {
-            "address": "0x100008160",
+            "address": "0x100008330",
             "visibility": "DEFAULT",
-            "name": "nlist_100008160",
+            "name": "nlist_100008330",
             "type": "Label"
           },
           {
-            "address": "0x10000818a",
+            "address": "0x100008359",
             "visibility": "DEFAULT",
-            "name": "s___mh_execute_header_10000818a",
+            "name": "s__100008359",
             "type": "Label"
           },
           {
-            "address": "0x10000819e",
+            "address": "0x10000835a",
             "visibility": "DEFAULT",
-            "name": "s__main_10000819e",
+            "name": "s___mh_execute_header_10000835a",
             "type": "Label"
           },
           {
-            "address": "0x1000081a4",
+            "address": "0x10000836e",
             "visibility": "DEFAULT",
-            "name": "s____stack_chk_fail_1000081a4",
+            "name": "s__main_10000836e",
             "type": "Label"
           },
           {
-            "address": "0x1000081b6",
+            "address": "0x100008374",
             "visibility": "DEFAULT",
-            "name": "s____stack_chk_guard_1000081b6",
+            "name": "s____stack_chk_fail_100008374",
             "type": "Label"
           },
           {
-            "address": "0x1000081c9",
+            "address": "0x100008386",
             "visibility": "DEFAULT",
-            "name": "s__printf_1000081c9",
+            "name": "s____stack_chk_guard_100008386",
             "type": "Label"
           },
           {
-            "address": "0x1000081d1",
+            "address": "0x100008399",
             "visibility": "DEFAULT",
-            "name": "s__reduce_weird_1000081d1",
+            "name": "s__printf_100008399",
             "type": "Label"
           },
           {
-            "address": "0x1000081df",
+            "address": "0x1000083a1",
             "visibility": "DEFAULT",
-            "name": "s__op_add_1000081df",
+            "name": "s__reduce_weird_1000083a1",
             "type": "Label"
           },
           {
-            "address": "0x1000081e7",
+            "address": "0x1000083af",
             "visibility": "DEFAULT",
-            "name": "s__op_xor_1000081e7",
+            "name": "s__op_add_1000083af",
             "type": "Label"
           },
           {
-            "address": "0x1000081ef",
+            "address": "0x1000083b7",
             "visibility": "DEFAULT",
-            "name": "s__nested_control_1000081ef",
+            "name": "s__op_xor_1000083b7",
             "type": "Label"
           },
           {
-            "address": "0x1000081ff",
+            "address": "0x1000083bf",
             "visibility": "DEFAULT",
-            "name": "s__mix_value_1000081ff",
+            "name": "s__nested_control_1000083bf",
+            "type": "Label"
+          },
+          {
+            "address": "0x1000083cf",
+            "visibility": "DEFAULT",
+            "name": "s__mix_value_1000083cf",
+            "type": "Label"
+          },
+          {
+            "address": "0x1000083da",
+            "visibility": "DEFAULT",
+            "name": "s_/Users/kartik/Downloads/binary-r_1000083da",
+            "type": "Label"
+          },
+          {
+            "address": "0x100008412",
+            "visibility": "DEFAULT",
+            "name": "s_t.c_100008412",
+            "type": "Label"
+          },
+          {
+            "address": "0x100008416",
+            "visibility": "DEFAULT",
+            "name": "s_/var/folders/sn/l1bzbbzd14l2xthh_100008416",
+            "type": "Label"
+          },
+          {
+            "address": "0x100008452",
+            "visibility": "DEFAULT",
+            "name": "s__reduce_weird_100008452",
             "type": "Label"
           },
           {
@@ -6281,7 +6347,7 @@
       "schema_version": "1.0.0",
       "provenance": {
         "tool_name": "Radare2 Headless Analyser",
-        "timestamp": "2026-06-15T21:06:32-07:00",
+        "timestamp": "2026-06-15T23:20:18-07:00",
         "binary_path": "./t",
         "config": {}
       },
@@ -12057,6 +12123,12 @@
             "visibility": "static"
           },
           {
+            "address": "0x6a303b4b",
+            "name": "/var/folders/sn/l1bzbbzd14l2xthhyt7fm2r80000gp/T/t-a6d3ee.o",
+            "type": "function",
+            "visibility": "static"
+          },
+          {
             "address": "0x10000084c",
             "name": "__stack_chk_fail",
             "type": "function",
@@ -12107,14 +12179,14 @@
         ],
         "call_graph": {
           "nodes": [
-            "_mix_value",
-            "_op_add",
-            "printf",
             "_reduce_weird",
             "__stack_chk_fail",
             "_op_xor",
-            "_nested_control",
-            "_main"
+            "_main",
+            "printf",
+            "_op_add",
+            "_mix_value",
+            "_nested_control"
           ],
           "edges": [
             {
