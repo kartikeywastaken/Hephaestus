@@ -304,6 +304,8 @@ class RefinedFunctionRecord:
     total_constraints_applied: int = 0
     confidence: float = 0.2
     evidence: List[str] = field(default_factory=list)
+    abi_argument_bindings: List[Dict[str, Any]] = field(default_factory=list)
+    parameter_layout_evidence: List[Dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -315,4 +317,6 @@ class RefinedFunctionRecord:
             "total_constraints_applied": self.total_constraints_applied,
             "confidence": round(self.confidence, 4),
             "evidence": list(self.evidence),
+            "abi_argument_bindings": list(self.abi_argument_bindings),
+            "parameter_layout_evidence": list(self.parameter_layout_evidence),
         }

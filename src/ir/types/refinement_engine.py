@@ -124,15 +124,18 @@ class TypeRefinementEngine:
         unified_ir: Dict[str, Any],
         type_recovery: Dict[str, Any],
         structuring_regions: Optional[Dict[str, Any]] = None,
+        layout_recovery: Optional[Dict[str, Any]] = None,
     ) -> List[RefinedFunctionRecord]:
         """
-        Run Phase 4B refinement.
+        Run Phase 4B refinement (4B.1 constraint propagation + 4B.2 ABI binding).
 
         Parameters
         ----------
         unified_ir          : The Unified IR dict (Phase 2 output).
         type_recovery       : The Phase 4A type_recovery.json dict.
         structuring_regions : Optional Phase 3 dict (reserved; not used yet).
+        layout_recovery     : Optional Phase 4C layout_recovery.json dict.
+                              When provided, enables parameter-layout linking.
 
         Returns
         -------
@@ -184,7 +187,7 @@ class TypeRefinementEngine:
                 if name:
                     ir_by_name[name] = fn
 
-        # --- Refine each Phase 4A function ---
+        # --- Phase 4B.1: Refine each Phase 4A function ---
         results: List[RefinedFunctionRecord] = []
         total_constraints_all = 0
 
@@ -213,13 +216,87 @@ class TypeRefinementEngine:
         results.sort(key=lambda r: (r.entry_point or "", r.name or ""))
 
         logger.info(
-            "Phase 4B: refined %d function(s); %d total constraints applied.",
+            "Phase 4B.1: refined %d function(s); %d total constraints applied.",
             len(results),
             total_constraints_all,
         )
+
+        # --- Phase 4B.2: ABI argument binding + parameter-layout linking ---
+        self._run_phase4b2(unified_ir, layout_recovery, results)
+
         return results
 
     # ------------------------------------------------------------------
+    # Phase 4B.2 — ABI argument binding (owned here, NOT in main.py)
+    # ------------------------------------------------------------------
+
+    def _run_phase4b2(
+        self,
+        unified_ir: Dict[str, Any],
+        layout_recovery: Optional[Dict[str, Any]],
+        results: List[RefinedFunctionRecord],
+    ) -> None:
+        """
+        Run Phase 4B.2: collect ABI argument bindings from the Unified IR
+        and link parameter-layout evidence from Phase 4C.
+
+        Mutates ``results`` in-place by setting ``abi_argument_bindings``
+        and ``parameter_layout_evidence`` on each record.
+        """
+        from src.ir.types.abi_binding import (
+            collect_abi_bindings,
+            link_parameter_layouts,
+        )
+
+        try:
+            abi_bindings_by_entry = collect_abi_bindings(unified_ir)
+        except Exception as exc:
+            logger.warning("Phase 4B.2: ABI binding collection failed: %s", exc)
+            abi_bindings_by_entry = {}
+
+        # Build param name index from results for better naming
+        param_names_by_entry: Dict[str, Dict[int, str]] = {}
+        for record in results:
+            if record.entry_point and record.refined_signature:
+                params = record.refined_signature.parameters
+                if params:
+                    name_map = {}
+                    for p in params:
+                        name_map[p.index] = p.name
+                    param_names_by_entry[record.entry_point] = name_map
+
+        try:
+            param_evidence_by_entry = link_parameter_layouts(
+                abi_bindings_by_entry,
+                layout_recovery,
+                param_names_by_entry,
+            )
+        except Exception as exc:
+            logger.warning("Phase 4B.2: parameter-layout linking failed: %s", exc)
+            param_evidence_by_entry = {}
+
+        # Attach to records
+        total_abi = 0
+        total_ple = 0
+        for record in results:
+            ep = record.entry_point
+            if ep in abi_bindings_by_entry:
+                record.abi_argument_bindings = [
+                    b.to_dict() for b in abi_bindings_by_entry[ep]
+                ]
+                total_abi += len(record.abi_argument_bindings)
+            if ep in param_evidence_by_entry:
+                record.parameter_layout_evidence = [
+                    e.to_dict() for e in param_evidence_by_entry[ep]
+                ]
+                total_ple += len(record.parameter_layout_evidence)
+
+        logger.info(
+            "Phase 4B.2: attached %d ABI binding(s) and %d parameter-layout "
+            "evidence item(s) to %d function record(s).",
+            total_abi, total_ple, len(results),
+        )
+
     # Private methods
     # ------------------------------------------------------------------
 

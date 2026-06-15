@@ -154,6 +154,9 @@ def load_unified_ir_data(out_dir: str) -> Dict[str, Any]:
             manifest["jobs"].get("trace")
         )
         ir_payload = unified_ir.to_dict()
+        # Apply symbol alias canonicalization → data.symbol_aliases
+        from src.ir.symbols.aliases import apply_function_aliases_to_ir
+        apply_function_aliases_to_ir(ir_payload)
         write_json_artifact(ir_path, ir_payload)
     
     return load_json_artifact(ir_path)
@@ -660,9 +663,31 @@ def handle_refine_semantics(out_dir: str):
             )
             structuring_regions = None
 
-    # Run refinement
+    # Load layout recovery (optional — enables Phase 4B.2 parameter-layout linking)
+    layout_recovery = None
+    layout_path = os.path.join(out_dir, "layout_recovery.json")
+    if os.path.exists(layout_path):
+        try:
+            layout_recovery = load_json_artifact(layout_path)
+            if not isinstance(layout_recovery, dict):
+                logger.warning(
+                    "layout_recovery.json is not a dict; continuing with None."
+                )
+                layout_recovery = None
+            else:
+                logger.info("[+] Loaded layout recovery from: %s", layout_path)
+        except Exception as e:
+            logger.warning(
+                "Could not load layout_recovery.json: %s. Continuing with None.", e
+            )
+            layout_recovery = None
+
+    # Run refinement (4B.1 + 4B.2 — engine owns all execution)
     engine = TypeRefinementEngine()
-    results = engine.refine(unified_ir, type_recovery, structuring_regions)
+    results = engine.refine(
+        unified_ir, type_recovery, structuring_regions,
+        layout_recovery=layout_recovery,
+    )
 
     # Write artifact
     output_path = os.path.join(out_dir, "semantic_recovery.json")
@@ -679,6 +704,8 @@ def handle_refine_semantics(out_dir: str):
     # Compute summary stats
     total_constraints = sum(r.total_constraints_applied for r in results)
     no_evidence = sum(1 for r in results if r.total_constraints_applied == 0)
+    total_abi = sum(len(r.abi_argument_bindings) for r in results)
+    total_ple = sum(len(r.parameter_layout_evidence) for r in results)
 
     print("\n============================================================")
     print("          PHASE 4B: TYPE CONSTRAINT REFINEMENT")
@@ -686,9 +713,13 @@ def handle_refine_semantics(out_dir: str):
     print(f"Functions processed:              {len(results)}")
     print(f"Total constraints applied:        {total_constraints}")
     print(f"Functions with no instr evidence: {no_evidence}")
+    print(f"ABI argument bindings (4B.2):     {total_abi}")
+    print(f"Parameter-layout evidence (4B.2): {total_ple}")
     print("------------------------------------------------------------")
     for fn in results:
-        print(f"  {fn.name}  [{fn.function_kind}]  constraints_applied={fn.total_constraints_applied}")
+        abi_str = f"  abi={len(fn.abi_argument_bindings)}" if fn.abi_argument_bindings else ""
+        ple_str = f"  ple={len(fn.parameter_layout_evidence)}" if fn.parameter_layout_evidence else ""
+        print(f"  {fn.name}  [{fn.function_kind}]  constraints_applied={fn.total_constraints_applied}{abi_str}{ple_str}")
     print("============================================================")
     print(f"Output: {output_path}")
     print("============================================================")
@@ -1007,6 +1038,9 @@ def main():
 
             unified_ir = assembler.assemble(ghidra_raw, radare2_raw, trace_raw)
             ir_payload = unified_ir.to_dict()
+            # Apply symbol alias canonicalization → data.symbol_aliases
+            from src.ir.symbols.aliases import apply_function_aliases_to_ir
+            apply_function_aliases_to_ir(ir_payload)
 
             # Self-validate generated IR before export
             success, val_msg = IRValidator.validate_payload(ir_payload)
