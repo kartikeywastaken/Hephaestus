@@ -1,8 +1,8 @@
 {
   "schema_version": "2.0.0",
   "provenance": {
-    "binary_path": "./hephaestus_param_layout_1k",
-    "sha256": "afec5bb8df1a59c5c17bcaf1abdb18e44a16df7bf6c2c2434089250cbfd70cf9",
+    "binary_path": "./t",
+    "sha256": "66bb724b79d52e4674eedb2b5343ebb21a8ab35cbb9a6e2e90cf40a5df24a348",
     "architecture": "arm64",
     "schema_version": "2.0.0"
   },
@@ -917,8 +917,8 @@
         "name": "_init_system",
         "entry_point": "0x10000057c",
         "size_bytes": 576,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _init_system()",
+        "calling_convention": 4,
+        "signature": "4 _init_system()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -4229,8 +4229,8 @@
         "name": "_final_pass",
         "entry_point": "0x1000007bc",
         "size_bytes": 244,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _final_pass()",
+        "calling_convention": 3,
+        "signature": "3 _final_pass()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -5732,8 +5732,8 @@
         "name": "_init_item",
         "entry_point": "0x1000008b0",
         "size_bytes": 264,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _init_item()",
+        "calling_convention": 3,
+        "signature": "3 _init_item()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -7307,8 +7307,8 @@
         "name": "_init_device",
         "entry_point": "0x1000009b8",
         "size_bytes": 288,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _init_device()",
+        "calling_convention": 3,
+        "signature": "3 _init_device()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -9035,8 +9035,8 @@
         "name": "_run_system",
         "entry_point": "0x100000ad8",
         "size_bytes": 380,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _run_system()",
+        "calling_convention": 3,
+        "signature": "3 _run_system()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -11264,8 +11264,8 @@
         "name": "_dispatch_item_probes",
         "entry_point": "0x100000c54",
         "size_bytes": 136,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _dispatch_item_probes()",
+        "calling_convention": 2,
+        "signature": "2 _dispatch_item_probes()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -12126,8 +12126,8 @@
         "name": "_process_context",
         "entry_point": "0x100000cdc",
         "size_bytes": 352,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _process_context()",
+        "calling_convention": 4,
+        "signature": "4 _process_context()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -14182,8 +14182,8 @@
         "name": "_device_mix",
         "entry_point": "0x100000e3c",
         "size_bytes": 352,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _device_mix()",
+        "calling_convention": 3,
+        "signature": "3 _device_mix()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -16256,8 +16256,8 @@
         "name": "_walk_table",
         "entry_point": "0x100000f9c",
         "size_bytes": 224,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _walk_table()",
+        "calling_convention": 4,
+        "signature": "4 _walk_table()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -17691,8 +17691,8 @@
         "name": "_compare_items",
         "entry_point": "0x10000107c",
         "size_bytes": 440,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _compare_items()",
+        "calling_convention": 4,
+        "signature": "4 _compare_items()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -20269,8 +20269,8 @@
         "name": "_inspect_item_stack",
         "entry_point": "0x100001234",
         "size_bytes": 416,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _inspect_item_stack()",
+        "calling_convention": 4,
+        "signature": "4 _inspect_item_stack()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -22656,8 +22656,8 @@
         "name": "_mutate_item_deep",
         "entry_point": "0x1000013d4",
         "size_bytes": 580,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _mutate_item_deep()",
+        "calling_convention": 9,
+        "signature": "9 _mutate_item_deep()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -26043,8 +26043,8 @@
         "name": "_tiny_hash",
         "entry_point": "0x100001618",
         "size_bytes": 212,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _tiny_hash()",
+        "calling_convention": 3,
+        "signature": "3 _tiny_hash()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -27473,8 +27473,8 @@
         "name": "_item_probe_000",
         "entry_point": "0x1000016ec",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_000()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_000()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -30187,8 +30187,8 @@
         "name": "_item_probe_001",
         "entry_point": "0x1000018bc",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_001()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_001()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -32901,8 +32901,8 @@
         "name": "_item_probe_002",
         "entry_point": "0x100001a8c",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_002()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_002()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -35615,8 +35615,8 @@
         "name": "_item_probe_003",
         "entry_point": "0x100001c5c",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_003()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_003()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -38329,8 +38329,8 @@
         "name": "_item_probe_004",
         "entry_point": "0x100001e2c",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_004()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_004()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -41043,8 +41043,8 @@
         "name": "_item_probe_005",
         "entry_point": "0x100001ffc",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_005()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_005()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -43757,8 +43757,8 @@
         "name": "_item_probe_006",
         "entry_point": "0x1000021cc",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_006()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_006()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -46471,8 +46471,8 @@
         "name": "_item_probe_007",
         "entry_point": "0x10000239c",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_007()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_007()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -49185,8 +49185,8 @@
         "name": "_item_probe_008",
         "entry_point": "0x10000256c",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_008()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_008()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -51899,8 +51899,8 @@
         "name": "_item_probe_009",
         "entry_point": "0x10000273c",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_009()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_009()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -54613,8 +54613,8 @@
         "name": "_item_probe_010",
         "entry_point": "0x10000290c",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_010()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_010()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -57327,8 +57327,8 @@
         "name": "_item_probe_011",
         "entry_point": "0x100002adc",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_011()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_011()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -60041,8 +60041,8 @@
         "name": "_item_probe_012",
         "entry_point": "0x100002cac",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_012()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_012()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -62755,8 +62755,8 @@
         "name": "_item_probe_013",
         "entry_point": "0x100002e7c",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_013()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_013()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -65469,8 +65469,8 @@
         "name": "_item_probe_014",
         "entry_point": "0x10000304c",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_014()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_014()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -68183,8 +68183,8 @@
         "name": "_item_probe_015",
         "entry_point": "0x10000321c",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_015()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_015()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -70897,8 +70897,8 @@
         "name": "_item_probe_016",
         "entry_point": "0x1000033ec",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_016()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_016()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -73611,8 +73611,8 @@
         "name": "_item_probe_017",
         "entry_point": "0x1000035bc",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_017()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_017()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -76325,8 +76325,8 @@
         "name": "_item_probe_018",
         "entry_point": "0x10000378c",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_018()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_018()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -79039,8 +79039,8 @@
         "name": "_item_probe_019",
         "entry_point": "0x10000395c",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_019()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_019()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -81753,8 +81753,8 @@
         "name": "_item_probe_020",
         "entry_point": "0x100003b2c",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_020()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_020()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -84467,8 +84467,8 @@
         "name": "_item_probe_021",
         "entry_point": "0x100003cfc",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_021()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_021()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -87181,8 +87181,8 @@
         "name": "_item_probe_022",
         "entry_point": "0x100003ecc",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_022()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_022()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -89895,8 +89895,8 @@
         "name": "_item_probe_023",
         "entry_point": "0x10000409c",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_023()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_023()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -92609,8 +92609,8 @@
         "name": "_item_probe_024",
         "entry_point": "0x10000426c",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_024()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_024()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -95323,8 +95323,8 @@
         "name": "_item_probe_025",
         "entry_point": "0x10000443c",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_025()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_025()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -98037,8 +98037,8 @@
         "name": "_item_probe_026",
         "entry_point": "0x10000460c",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_026()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_026()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -100751,8 +100751,8 @@
         "name": "_item_probe_027",
         "entry_point": "0x1000047dc",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_027()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_027()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -103465,8 +103465,8 @@
         "name": "_item_probe_028",
         "entry_point": "0x1000049ac",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_028()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_028()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -106179,8 +106179,8 @@
         "name": "_item_probe_029",
         "entry_point": "0x100004b7c",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_029()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_029()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -108893,8 +108893,8 @@
         "name": "_item_probe_030",
         "entry_point": "0x100004d4c",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_030()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_030()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -111607,8 +111607,8 @@
         "name": "_item_probe_031",
         "entry_point": "0x100004f1c",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_031()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_031()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -114321,8 +114321,8 @@
         "name": "_item_probe_032",
         "entry_point": "0x1000050ec",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_032()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_032()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -117035,8 +117035,8 @@
         "name": "_item_probe_033",
         "entry_point": "0x1000052bc",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_033()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_033()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -119749,8 +119749,8 @@
         "name": "_item_probe_034",
         "entry_point": "0x10000548c",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_034()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_034()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -122463,8 +122463,8 @@
         "name": "_item_probe_035",
         "entry_point": "0x10000565c",
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
-        "signature": "__cdecl _item_probe_035()",
+        "calling_convention": 5,
+        "signature": "5 _item_probe_035()",
         "confidence": 1.0,
         "local_variables": [],
         "stack_variables": [
@@ -125261,57 +125261,57 @@
     ],
     "call_graph": {
       "nodes": [
-        "_tiny_hash",
-        "_item_probe_011",
-        "_device_mix",
+        "_item_probe_026",
         "_item_probe_006",
-        "_item_probe_009",
-        "_item_probe_034",
-        "_item_probe_023",
-        "_init_system",
-        "_item_probe_000",
-        "_final_pass",
-        "_item_probe_007",
-        "_item_probe_008",
-        "_mutate_item_deep",
-        "_run_system",
-        "_item_probe_015",
-        "_item_probe_031",
-        "printf",
-        "_dispatch_item_probes",
-        "_main",
-        "_item_probe_010",
-        "_item_probe_029",
-        "_init_item",
-        "_item_probe_024",
+        "_inspect_item_stack",
         "_item_probe_017",
-        "_walk_table",
         "_item_probe_002",
         "_init_device",
-        "_item_probe_022",
-        "_item_probe_013",
-        "_item_probe_016",
-        "_item_probe_001",
-        "_inspect_item_stack",
-        "_item_probe_020",
-        "_process_context",
-        "_item_probe_005",
-        "_item_probe_012",
         "_item_probe_027",
-        "_item_probe_021",
-        "_item_probe_026",
-        "_item_probe_014",
-        "_item_probe_019",
-        "_item_probe_030",
-        "_item_probe_004",
-        "_item_probe_028",
-        "_item_probe_003",
-        "_item_probe_025",
+        "_walk_table",
         "_item_probe_035",
-        "_item_probe_033",
+        "_item_probe_009",
+        "_item_probe_020",
+        "_item_probe_000",
+        "_item_probe_013",
+        "_item_probe_021",
+        "_final_pass",
+        "_tiny_hash",
+        "_item_probe_007",
+        "_main",
+        "_item_probe_008",
+        "_item_probe_011",
+        "_item_probe_019",
+        "_item_probe_005",
+        "_item_probe_024",
+        "_item_probe_034",
         "_item_probe_032",
+        "_init_item",
+        "_run_system",
+        "_item_probe_004",
+        "_init_system",
+        "_item_probe_030",
+        "_item_probe_001",
+        "_item_probe_012",
+        "_item_probe_028",
+        "_item_probe_023",
+        "_item_probe_016",
+        "_item_probe_022",
+        "_compare_items",
+        "_process_context",
+        "_item_probe_031",
+        "_item_probe_003",
+        "_device_mix",
         "_item_probe_018",
-        "_compare_items"
+        "_dispatch_item_probes",
+        "_item_probe_010",
+        "_item_probe_033",
+        "printf",
+        "_item_probe_029",
+        "_item_probe_014",
+        "_mutate_item_deep",
+        "_item_probe_015",
+        "_item_probe_025"
       ],
       "edges": [
         {
@@ -129500,368 +129500,338 @@
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011148",
-        "name": "nlist_100011148",
+        "address": "0x100010468",
+        "name": "nlist_100010468",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011158",
-        "name": "nlist_100011158",
+        "address": "0x100010478",
+        "name": "nlist_100010478",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011179",
-        "name": "s__100011179",
+        "address": "0x10001049a",
+        "name": "s___mh_execute_header_10001049a",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x10001117a",
-        "name": "s___mh_execute_header_10001117a",
+        "address": "0x1000104ae",
+        "name": "s__main_1000104ae",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x10001118e",
-        "name": "s__main_10001118e",
+        "address": "0x1000104b4",
+        "name": "s____chkstk_darwin_1000104b4",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011194",
-        "name": "s____chkstk_darwin_100011194",
+        "address": "0x1000104c5",
+        "name": "s__printf_1000104c5",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000111a5",
-        "name": "s__printf_1000111a5",
+        "address": "0x1000104cd",
+        "name": "s__init_system_1000104cd",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000111ad",
-        "name": "s__init_system_1000111ad",
+        "address": "0x1000104da",
+        "name": "s__final_pass_1000104da",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000111ba",
-        "name": "s__final_pass_1000111ba",
+        "address": "0x1000104e6",
+        "name": "s__init_item_1000104e6",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000111c6",
-        "name": "s__init_item_1000111c6",
+        "address": "0x1000104f1",
+        "name": "s__init_device_1000104f1",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000111d1",
-        "name": "s__init_device_1000111d1",
+        "address": "0x1000104fe",
+        "name": "s__run_system_1000104fe",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000111de",
-        "name": "s__run_system_1000111de",
+        "address": "0x10001050a",
+        "name": "s__dispatch_item_probes_10001050a",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000111ea",
-        "name": "s__dispatch_item_probes_1000111ea",
+        "address": "0x100010520",
+        "name": "s__process_context_100010520",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011200",
-        "name": "s__process_context_100011200",
+        "address": "0x100010531",
+        "name": "s__device_mix_100010531",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011211",
-        "name": "s__device_mix_100011211",
+        "address": "0x10001053d",
+        "name": "s__walk_table_10001053d",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x10001121d",
-        "name": "s__walk_table_10001121d",
+        "address": "0x100010549",
+        "name": "s__compare_items_100010549",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011229",
-        "name": "s__compare_items_100011229",
+        "address": "0x100010558",
+        "name": "s__inspect_item_stack_100010558",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011238",
-        "name": "s__inspect_item_stack_100011238",
+        "address": "0x10001056c",
+        "name": "s__mutate_item_deep_10001056c",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x10001124c",
-        "name": "s__mutate_item_deep_10001124c",
+        "address": "0x10001057e",
+        "name": "s__tiny_hash_10001057e",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x10001125e",
-        "name": "s__tiny_hash_10001125e",
+        "address": "0x100010589",
+        "name": "s__item_probe_000_100010589",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011269",
-        "name": "s__item_probe_000_100011269",
+        "address": "0x100010599",
+        "name": "s__item_probe_001_100010599",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011279",
-        "name": "s__item_probe_001_100011279",
+        "address": "0x1000105a9",
+        "name": "s__item_probe_002_1000105a9",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011289",
-        "name": "s__item_probe_002_100011289",
+        "address": "0x1000105b9",
+        "name": "s__item_probe_003_1000105b9",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011299",
-        "name": "s__item_probe_003_100011299",
+        "address": "0x1000105c9",
+        "name": "s__item_probe_004_1000105c9",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000112a9",
-        "name": "s__item_probe_004_1000112a9",
+        "address": "0x1000105d9",
+        "name": "s__item_probe_005_1000105d9",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000112b9",
-        "name": "s__item_probe_005_1000112b9",
+        "address": "0x1000105e9",
+        "name": "s__item_probe_006_1000105e9",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000112c9",
-        "name": "s__item_probe_006_1000112c9",
+        "address": "0x1000105f9",
+        "name": "s__item_probe_007_1000105f9",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000112d9",
-        "name": "s__item_probe_007_1000112d9",
+        "address": "0x100010609",
+        "name": "s__item_probe_008_100010609",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000112e9",
-        "name": "s__item_probe_008_1000112e9",
+        "address": "0x100010619",
+        "name": "s__item_probe_009_100010619",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000112f9",
-        "name": "s__item_probe_009_1000112f9",
+        "address": "0x100010629",
+        "name": "s__item_probe_010_100010629",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011309",
-        "name": "s__item_probe_010_100011309",
+        "address": "0x100010639",
+        "name": "s__item_probe_011_100010639",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011319",
-        "name": "s__item_probe_011_100011319",
+        "address": "0x100010649",
+        "name": "s__item_probe_012_100010649",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011329",
-        "name": "s__item_probe_012_100011329",
+        "address": "0x100010659",
+        "name": "s__item_probe_013_100010659",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011339",
-        "name": "s__item_probe_013_100011339",
+        "address": "0x100010669",
+        "name": "s__item_probe_014_100010669",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011349",
-        "name": "s__item_probe_014_100011349",
+        "address": "0x100010679",
+        "name": "s__item_probe_015_100010679",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011359",
-        "name": "s__item_probe_015_100011359",
+        "address": "0x100010689",
+        "name": "s__item_probe_016_100010689",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011369",
-        "name": "s__item_probe_016_100011369",
+        "address": "0x100010699",
+        "name": "s__item_probe_017_100010699",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011379",
-        "name": "s__item_probe_017_100011379",
+        "address": "0x1000106a9",
+        "name": "s__item_probe_018_1000106a9",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011389",
-        "name": "s__item_probe_018_100011389",
+        "address": "0x1000106b9",
+        "name": "s__item_probe_019_1000106b9",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011399",
-        "name": "s__item_probe_019_100011399",
+        "address": "0x1000106c9",
+        "name": "s__item_probe_020_1000106c9",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000113a9",
-        "name": "s__item_probe_020_1000113a9",
+        "address": "0x1000106d9",
+        "name": "s__item_probe_021_1000106d9",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000113b9",
-        "name": "s__item_probe_021_1000113b9",
+        "address": "0x1000106e9",
+        "name": "s__item_probe_022_1000106e9",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000113c9",
-        "name": "s__item_probe_022_1000113c9",
+        "address": "0x1000106f9",
+        "name": "s__item_probe_023_1000106f9",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000113d9",
-        "name": "s__item_probe_023_1000113d9",
+        "address": "0x100010709",
+        "name": "s__item_probe_024_100010709",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000113e9",
-        "name": "s__item_probe_024_1000113e9",
+        "address": "0x100010719",
+        "name": "s__item_probe_025_100010719",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x1000113f9",
-        "name": "s__item_probe_025_1000113f9",
+        "address": "0x100010729",
+        "name": "s__item_probe_026_100010729",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011409",
-        "name": "s__item_probe_026_100011409",
+        "address": "0x100010739",
+        "name": "s__item_probe_027_100010739",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011419",
-        "name": "s__item_probe_027_100011419",
+        "address": "0x100010749",
+        "name": "s__item_probe_028_100010749",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011429",
-        "name": "s__item_probe_028_100011429",
+        "address": "0x100010759",
+        "name": "s__item_probe_029_100010759",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011439",
-        "name": "s__item_probe_029_100011439",
+        "address": "0x100010769",
+        "name": "s__item_probe_030_100010769",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011449",
-        "name": "s__item_probe_030_100011449",
+        "address": "0x100010779",
+        "name": "s__item_probe_031_100010779",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011459",
-        "name": "s__item_probe_031_100011459",
+        "address": "0x100010789",
+        "name": "s__item_probe_032_100010789",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011469",
-        "name": "s__item_probe_032_100011469",
+        "address": "0x100010799",
+        "name": "s__item_probe_033_100010799",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011479",
-        "name": "s__item_probe_033_100011479",
+        "address": "0x1000107a9",
+        "name": "s__item_probe_034_1000107a9",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011489",
-        "name": "s__item_probe_034_100011489",
+        "address": "0x1000107b9",
+        "name": "s__item_probe_035_1000107b9",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100011499",
-        "name": "s__item_probe_035_100011499",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x1000114a9",
-        "name": "s__item_probe_table_1000114a9",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x1000114bb",
-        "name": "s_/Users/kartik/Downloads/binary-r_1000114bb",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x1000114f3",
-        "name": "s_t.c_1000114f3",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x1000114f7",
-        "name": "s_/var/folders/sn/l1bzbbzd14l2xthh_1000114f7",
-        "type": "Label",
-        "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x100011533",
-        "name": "s__init_system_100011533",
+        "address": "0x1000107c9",
+        "name": "s__item_probe_table_1000107c9",
         "type": "Label",
         "visibility": "DEFAULT"
       },
@@ -129870,12 +129840,6 @@
         "name": "___chkstk_darwin",
         "type": "Function",
         "visibility": "DEFAULT"
-      },
-      {
-        "address": "0x6a2f80f9",
-        "name": "/var/folders/sn/l1bzbbzd14l2xthhyt7fm2r80000gp/T/t-95d1f9.o",
-        "type": "function",
-        "visibility": "static"
       }
     ],
     "imports": [],

@@ -2,8 +2,8 @@
   "schema_version": "1.0.0",
   "provenance": {
     "tool_name": "Ghidra Headless Analyzer",
-    "timestamp": "2026-06-15T10:05:24-07:00",
-    "binary_path": "./hephaestus_param_layout_1k",
+    "timestamp": "2026-06-15T10:07:52-07:00",
+    "binary_path": "./t",
     "config": {}
   },
   "data": {
@@ -13,7 +13,7 @@
       "format": "Mac OS X Mach-O",
       "language_id": "AARCH64:LE:64:AppleSilicon",
       "compiler": "unknown",
-      "timestamp": "Mon Jun 15 10:05:24 IST 2026"
+      "timestamp": "Mon Jun 15 10:07:51 IST 2026"
     },
     "functions": [
       {
@@ -818,7 +818,7 @@
             }
           ]
         },
-        "name": "main",
+        "name": "entry",
         "local_variables": [
           "local_10",
           "local_20",
@@ -833,7 +833,7 @@
       },
       {
         "size_bytes": 576,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -4027,7 +4027,7 @@
             }
           ]
         },
-        "name": "init_system",
+        "name": "_init_system",
         "local_variables": [
           "local_10",
           "local_18",
@@ -4041,7 +4041,7 @@
       },
       {
         "size_bytes": 244,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -5440,7 +5440,7 @@
             }
           ]
         },
-        "name": "final_pass",
+        "name": "_final_pass",
         "local_variables": [
           "local_10",
           "local_18",
@@ -5453,7 +5453,7 @@
       },
       {
         "size_bytes": 264,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -6937,7 +6937,7 @@
             }
           ]
         },
-        "name": "init_item",
+        "name": "_init_item",
         "local_variables": [
           "local_8",
           "local_c",
@@ -6949,7 +6949,7 @@
       },
       {
         "size_bytes": 288,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -8570,7 +8570,7 @@
             }
           ]
         },
-        "name": "init_device",
+        "name": "_init_device",
         "local_variables": [
           "local_10",
           "local_18",
@@ -8583,7 +8583,7 @@
       },
       {
         "size_bytes": 380,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -10698,7 +10698,7 @@
             }
           ]
         },
-        "name": "run_system",
+        "name": "_run_system",
         "local_variables": [
           "local_10",
           "local_18",
@@ -10712,7 +10712,7 @@
       },
       {
         "size_bytes": 136,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -11487,7 +11487,7 @@
             }
           ]
         },
-        "name": "dispatch_item_probes",
+        "name": "_dispatch_item_probes",
         "local_variables": [
           "local_10",
           "local_18",
@@ -11499,7 +11499,7 @@
       },
       {
         "size_bytes": 352,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -13451,7 +13451,7 @@
             }
           ]
         },
-        "name": "process_context",
+        "name": "_process_context",
         "local_variables": [
           "local_10",
           "local_18",
@@ -13464,7 +13464,7 @@
       },
       {
         "size_bytes": 352,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -15401,7 +15401,7 @@
             }
           ]
         },
-        "name": "device_mix",
+        "name": "_device_mix",
         "local_variables": [
           "local_10",
           "local_18",
@@ -15417,7 +15417,7 @@
       },
       {
         "size_bytes": 224,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -16733,7 +16733,7 @@
             }
           ]
         },
-        "name": "walk_table",
+        "name": "_walk_table",
         "local_variables": [
           "local_10",
           "local_18",
@@ -16747,7 +16747,7 @@
       },
       {
         "size_bytes": 440,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -19200,7 +19200,7 @@
             }
           ]
         },
-        "name": "compare_items",
+        "name": "_compare_items",
         "local_variables": [
           "local_8",
           "local_10",
@@ -19215,7 +19215,7 @@
       },
       {
         "size_bytes": 416,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -21492,7 +21492,7 @@
             }
           ]
         },
-        "name": "inspect_item_stack",
+        "name": "_inspect_item_stack",
         "local_variables": [
           "local_8",
           "local_c",
@@ -21506,7 +21506,7 @@
       },
       {
         "size_bytes": 580,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -24764,7 +24764,7 @@
             }
           ]
         },
-        "name": "mutate_item_deep",
+        "name": "_mutate_item_deep",
         "local_variables": [
           "local_10",
           "local_18",
@@ -24778,7 +24778,7 @@
       },
       {
         "size_bytes": 212,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -26133,7 +26133,7 @@
             }
           ]
         },
-        "name": "tiny_hash",
+        "name": "_tiny_hash",
         "local_variables": [
           "local_8",
           "local_c",
@@ -26144,7 +26144,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -28754,7 +28754,7 @@
             }
           ]
         },
-        "name": "item_probe_000",
+        "name": "_item_probe_000",
         "local_variables": [
           "local_8",
           "local_c",
@@ -28767,7 +28767,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -31377,7 +31377,7 @@
             }
           ]
         },
-        "name": "item_probe_001",
+        "name": "_item_probe_001",
         "local_variables": [
           "local_8",
           "local_c",
@@ -31390,7 +31390,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -34000,7 +34000,7 @@
             }
           ]
         },
-        "name": "item_probe_002",
+        "name": "_item_probe_002",
         "local_variables": [
           "local_8",
           "local_c",
@@ -34013,7 +34013,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -36623,7 +36623,7 @@
             }
           ]
         },
-        "name": "item_probe_003",
+        "name": "_item_probe_003",
         "local_variables": [
           "local_8",
           "local_c",
@@ -36636,7 +36636,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -39246,7 +39246,7 @@
             }
           ]
         },
-        "name": "item_probe_004",
+        "name": "_item_probe_004",
         "local_variables": [
           "local_8",
           "local_c",
@@ -39259,7 +39259,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -41869,7 +41869,7 @@
             }
           ]
         },
-        "name": "item_probe_005",
+        "name": "_item_probe_005",
         "local_variables": [
           "local_8",
           "local_c",
@@ -41882,7 +41882,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -44492,7 +44492,7 @@
             }
           ]
         },
-        "name": "item_probe_006",
+        "name": "_item_probe_006",
         "local_variables": [
           "local_8",
           "local_c",
@@ -44505,7 +44505,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -47115,7 +47115,7 @@
             }
           ]
         },
-        "name": "item_probe_007",
+        "name": "_item_probe_007",
         "local_variables": [
           "local_8",
           "local_c",
@@ -47128,7 +47128,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -49738,7 +49738,7 @@
             }
           ]
         },
-        "name": "item_probe_008",
+        "name": "_item_probe_008",
         "local_variables": [
           "local_8",
           "local_c",
@@ -49751,7 +49751,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -52361,7 +52361,7 @@
             }
           ]
         },
-        "name": "item_probe_009",
+        "name": "_item_probe_009",
         "local_variables": [
           "local_8",
           "local_c",
@@ -52374,7 +52374,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -54984,7 +54984,7 @@
             }
           ]
         },
-        "name": "item_probe_010",
+        "name": "_item_probe_010",
         "local_variables": [
           "local_8",
           "local_c",
@@ -54997,7 +54997,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -57607,7 +57607,7 @@
             }
           ]
         },
-        "name": "item_probe_011",
+        "name": "_item_probe_011",
         "local_variables": [
           "local_8",
           "local_c",
@@ -57620,7 +57620,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -60230,7 +60230,7 @@
             }
           ]
         },
-        "name": "item_probe_012",
+        "name": "_item_probe_012",
         "local_variables": [
           "local_8",
           "local_c",
@@ -60243,7 +60243,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -62853,7 +62853,7 @@
             }
           ]
         },
-        "name": "item_probe_013",
+        "name": "_item_probe_013",
         "local_variables": [
           "local_8",
           "local_c",
@@ -62866,7 +62866,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -65476,7 +65476,7 @@
             }
           ]
         },
-        "name": "item_probe_014",
+        "name": "_item_probe_014",
         "local_variables": [
           "local_8",
           "local_c",
@@ -65489,7 +65489,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -68099,7 +68099,7 @@
             }
           ]
         },
-        "name": "item_probe_015",
+        "name": "_item_probe_015",
         "local_variables": [
           "local_8",
           "local_c",
@@ -68112,7 +68112,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -70722,7 +70722,7 @@
             }
           ]
         },
-        "name": "item_probe_016",
+        "name": "_item_probe_016",
         "local_variables": [
           "local_8",
           "local_c",
@@ -70735,7 +70735,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -73345,7 +73345,7 @@
             }
           ]
         },
-        "name": "item_probe_017",
+        "name": "_item_probe_017",
         "local_variables": [
           "local_8",
           "local_c",
@@ -73358,7 +73358,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -75968,7 +75968,7 @@
             }
           ]
         },
-        "name": "item_probe_018",
+        "name": "_item_probe_018",
         "local_variables": [
           "local_8",
           "local_c",
@@ -75981,7 +75981,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -78591,7 +78591,7 @@
             }
           ]
         },
-        "name": "item_probe_019",
+        "name": "_item_probe_019",
         "local_variables": [
           "local_8",
           "local_c",
@@ -78604,7 +78604,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -81214,7 +81214,7 @@
             }
           ]
         },
-        "name": "item_probe_020",
+        "name": "_item_probe_020",
         "local_variables": [
           "local_8",
           "local_c",
@@ -81227,7 +81227,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -83837,7 +83837,7 @@
             }
           ]
         },
-        "name": "item_probe_021",
+        "name": "_item_probe_021",
         "local_variables": [
           "local_8",
           "local_c",
@@ -83850,7 +83850,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -86460,7 +86460,7 @@
             }
           ]
         },
-        "name": "item_probe_022",
+        "name": "_item_probe_022",
         "local_variables": [
           "local_8",
           "local_c",
@@ -86473,7 +86473,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -89083,7 +89083,7 @@
             }
           ]
         },
-        "name": "item_probe_023",
+        "name": "_item_probe_023",
         "local_variables": [
           "local_8",
           "local_c",
@@ -89096,7 +89096,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -91706,7 +91706,7 @@
             }
           ]
         },
-        "name": "item_probe_024",
+        "name": "_item_probe_024",
         "local_variables": [
           "local_8",
           "local_c",
@@ -91719,7 +91719,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -94329,7 +94329,7 @@
             }
           ]
         },
-        "name": "item_probe_025",
+        "name": "_item_probe_025",
         "local_variables": [
           "local_8",
           "local_c",
@@ -94342,7 +94342,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -96952,7 +96952,7 @@
             }
           ]
         },
-        "name": "item_probe_026",
+        "name": "_item_probe_026",
         "local_variables": [
           "local_8",
           "local_c",
@@ -96965,7 +96965,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -99575,7 +99575,7 @@
             }
           ]
         },
-        "name": "item_probe_027",
+        "name": "_item_probe_027",
         "local_variables": [
           "local_8",
           "local_c",
@@ -99588,7 +99588,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -102198,7 +102198,7 @@
             }
           ]
         },
-        "name": "item_probe_028",
+        "name": "_item_probe_028",
         "local_variables": [
           "local_8",
           "local_c",
@@ -102211,7 +102211,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -104821,7 +104821,7 @@
             }
           ]
         },
-        "name": "item_probe_029",
+        "name": "_item_probe_029",
         "local_variables": [
           "local_8",
           "local_c",
@@ -104834,7 +104834,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -107444,7 +107444,7 @@
             }
           ]
         },
-        "name": "item_probe_030",
+        "name": "_item_probe_030",
         "local_variables": [
           "local_8",
           "local_c",
@@ -107457,7 +107457,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -110067,7 +110067,7 @@
             }
           ]
         },
-        "name": "item_probe_031",
+        "name": "_item_probe_031",
         "local_variables": [
           "local_8",
           "local_c",
@@ -110080,7 +110080,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -112690,7 +112690,7 @@
             }
           ]
         },
-        "name": "item_probe_032",
+        "name": "_item_probe_032",
         "local_variables": [
           "local_8",
           "local_c",
@@ -112703,7 +112703,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -115313,7 +115313,7 @@
             }
           ]
         },
-        "name": "item_probe_033",
+        "name": "_item_probe_033",
         "local_variables": [
           "local_8",
           "local_c",
@@ -115326,7 +115326,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -117936,7 +117936,7 @@
             }
           ]
         },
-        "name": "item_probe_034",
+        "name": "_item_probe_034",
         "local_variables": [
           "local_8",
           "local_c",
@@ -117949,7 +117949,7 @@
       },
       {
         "size_bytes": 464,
-        "calling_convention": "__cdecl",
+        "calling_convention": "unknown",
         "cfg": {
           "nodes": [
             {
@@ -120559,7 +120559,7 @@
             }
           ]
         },
-        "name": "item_probe_035",
+        "name": "_item_probe_035",
         "local_variables": [
           "local_8",
           "local_c",
@@ -120605,7 +120605,7 @@
       {
         "address": "0x1000004f8",
         "visibility": "IMPORTED",
-        "name": "main",
+        "name": "entry",
         "type": "Function"
       },
       {
@@ -120615,21 +120615,9 @@
         "type": "Label"
       },
       {
-        "address": "0x1000004f8",
-        "visibility": "IMPORTED",
-        "name": "entry",
-        "type": "Label"
-      },
-      {
         "address": "0x10000057c",
         "visibility": "IMPORTED",
         "name": "_init_system",
-        "type": "Label"
-      },
-      {
-        "address": "0x10000057c",
-        "visibility": "IMPORTED",
-        "name": "init_system",
         "type": "Function"
       },
       {
@@ -120708,12 +120696,6 @@
         "address": "0x1000007bc",
         "visibility": "IMPORTED",
         "name": "_final_pass",
-        "type": "Label"
-      },
-      {
-        "address": "0x1000007bc",
-        "visibility": "IMPORTED",
-        "name": "final_pass",
         "type": "Function"
       },
       {
@@ -120768,12 +120750,6 @@
         "address": "0x1000008b0",
         "visibility": "IMPORTED",
         "name": "_init_item",
-        "type": "Label"
-      },
-      {
-        "address": "0x1000008b0",
-        "visibility": "IMPORTED",
-        "name": "init_item",
         "type": "Function"
       },
       {
@@ -120828,12 +120804,6 @@
         "address": "0x1000009b8",
         "visibility": "IMPORTED",
         "name": "_init_device",
-        "type": "Label"
-      },
-      {
-        "address": "0x1000009b8",
-        "visibility": "IMPORTED",
-        "name": "init_device",
         "type": "Function"
       },
       {
@@ -120888,12 +120858,6 @@
         "address": "0x100000ad8",
         "visibility": "IMPORTED",
         "name": "_run_system",
-        "type": "Label"
-      },
-      {
-        "address": "0x100000ad8",
-        "visibility": "IMPORTED",
-        "name": "run_system",
         "type": "Function"
       },
       {
@@ -120948,12 +120912,6 @@
         "address": "0x100000c54",
         "visibility": "IMPORTED",
         "name": "_dispatch_item_probes",
-        "type": "Label"
-      },
-      {
-        "address": "0x100000c54",
-        "visibility": "IMPORTED",
-        "name": "dispatch_item_probes",
         "type": "Function"
       },
       {
@@ -120984,12 +120942,6 @@
         "address": "0x100000cdc",
         "visibility": "IMPORTED",
         "name": "_process_context",
-        "type": "Label"
-      },
-      {
-        "address": "0x100000cdc",
-        "visibility": "IMPORTED",
-        "name": "process_context",
         "type": "Function"
       },
       {
@@ -121044,12 +120996,6 @@
         "address": "0x100000e3c",
         "visibility": "IMPORTED",
         "name": "_device_mix",
-        "type": "Label"
-      },
-      {
-        "address": "0x100000e3c",
-        "visibility": "IMPORTED",
-        "name": "device_mix",
         "type": "Function"
       },
       {
@@ -121104,12 +121050,6 @@
         "address": "0x100000f9c",
         "visibility": "IMPORTED",
         "name": "_walk_table",
-        "type": "Label"
-      },
-      {
-        "address": "0x100000f9c",
-        "visibility": "IMPORTED",
-        "name": "walk_table",
         "type": "Function"
       },
       {
@@ -121164,12 +121104,6 @@
         "address": "0x10000107c",
         "visibility": "IMPORTED",
         "name": "_compare_items",
-        "type": "Label"
-      },
-      {
-        "address": "0x10000107c",
-        "visibility": "IMPORTED",
-        "name": "compare_items",
         "type": "Function"
       },
       {
@@ -121242,12 +121176,6 @@
         "address": "0x100001234",
         "visibility": "IMPORTED",
         "name": "_inspect_item_stack",
-        "type": "Label"
-      },
-      {
-        "address": "0x100001234",
-        "visibility": "IMPORTED",
-        "name": "inspect_item_stack",
         "type": "Function"
       },
       {
@@ -121320,12 +121248,6 @@
         "address": "0x1000013d4",
         "visibility": "IMPORTED",
         "name": "_mutate_item_deep",
-        "type": "Label"
-      },
-      {
-        "address": "0x1000013d4",
-        "visibility": "IMPORTED",
-        "name": "mutate_item_deep",
         "type": "Function"
       },
       {
@@ -121446,12 +121368,6 @@
         "address": "0x100001618",
         "visibility": "IMPORTED",
         "name": "_tiny_hash",
-        "type": "Label"
-      },
-      {
-        "address": "0x100001618",
-        "visibility": "IMPORTED",
-        "name": "tiny_hash",
         "type": "Function"
       },
       {
@@ -121500,12 +121416,6 @@
         "address": "0x1000016ec",
         "visibility": "IMPORTED",
         "name": "_item_probe_000",
-        "type": "Label"
-      },
-      {
-        "address": "0x1000016ec",
-        "visibility": "IMPORTED",
-        "name": "item_probe_000",
         "type": "Function"
       },
       {
@@ -121596,12 +121506,6 @@
         "address": "0x1000018bc",
         "visibility": "IMPORTED",
         "name": "_item_probe_001",
-        "type": "Label"
-      },
-      {
-        "address": "0x1000018bc",
-        "visibility": "IMPORTED",
-        "name": "item_probe_001",
         "type": "Function"
       },
       {
@@ -121692,12 +121596,6 @@
         "address": "0x100001a8c",
         "visibility": "IMPORTED",
         "name": "_item_probe_002",
-        "type": "Label"
-      },
-      {
-        "address": "0x100001a8c",
-        "visibility": "IMPORTED",
-        "name": "item_probe_002",
         "type": "Function"
       },
       {
@@ -121788,12 +121686,6 @@
         "address": "0x100001c5c",
         "visibility": "IMPORTED",
         "name": "_item_probe_003",
-        "type": "Label"
-      },
-      {
-        "address": "0x100001c5c",
-        "visibility": "IMPORTED",
-        "name": "item_probe_003",
         "type": "Function"
       },
       {
@@ -121884,12 +121776,6 @@
         "address": "0x100001e2c",
         "visibility": "IMPORTED",
         "name": "_item_probe_004",
-        "type": "Label"
-      },
-      {
-        "address": "0x100001e2c",
-        "visibility": "IMPORTED",
-        "name": "item_probe_004",
         "type": "Function"
       },
       {
@@ -121980,12 +121866,6 @@
         "address": "0x100001ffc",
         "visibility": "IMPORTED",
         "name": "_item_probe_005",
-        "type": "Label"
-      },
-      {
-        "address": "0x100001ffc",
-        "visibility": "IMPORTED",
-        "name": "item_probe_005",
         "type": "Function"
       },
       {
@@ -122076,12 +121956,6 @@
         "address": "0x1000021cc",
         "visibility": "IMPORTED",
         "name": "_item_probe_006",
-        "type": "Label"
-      },
-      {
-        "address": "0x1000021cc",
-        "visibility": "IMPORTED",
-        "name": "item_probe_006",
         "type": "Function"
       },
       {
@@ -122172,12 +122046,6 @@
         "address": "0x10000239c",
         "visibility": "IMPORTED",
         "name": "_item_probe_007",
-        "type": "Label"
-      },
-      {
-        "address": "0x10000239c",
-        "visibility": "IMPORTED",
-        "name": "item_probe_007",
         "type": "Function"
       },
       {
@@ -122268,12 +122136,6 @@
         "address": "0x10000256c",
         "visibility": "IMPORTED",
         "name": "_item_probe_008",
-        "type": "Label"
-      },
-      {
-        "address": "0x10000256c",
-        "visibility": "IMPORTED",
-        "name": "item_probe_008",
         "type": "Function"
       },
       {
@@ -122364,12 +122226,6 @@
         "address": "0x10000273c",
         "visibility": "IMPORTED",
         "name": "_item_probe_009",
-        "type": "Label"
-      },
-      {
-        "address": "0x10000273c",
-        "visibility": "IMPORTED",
-        "name": "item_probe_009",
         "type": "Function"
       },
       {
@@ -122460,12 +122316,6 @@
         "address": "0x10000290c",
         "visibility": "IMPORTED",
         "name": "_item_probe_010",
-        "type": "Label"
-      },
-      {
-        "address": "0x10000290c",
-        "visibility": "IMPORTED",
-        "name": "item_probe_010",
         "type": "Function"
       },
       {
@@ -122556,12 +122406,6 @@
         "address": "0x100002adc",
         "visibility": "IMPORTED",
         "name": "_item_probe_011",
-        "type": "Label"
-      },
-      {
-        "address": "0x100002adc",
-        "visibility": "IMPORTED",
-        "name": "item_probe_011",
         "type": "Function"
       },
       {
@@ -122652,12 +122496,6 @@
         "address": "0x100002cac",
         "visibility": "IMPORTED",
         "name": "_item_probe_012",
-        "type": "Label"
-      },
-      {
-        "address": "0x100002cac",
-        "visibility": "IMPORTED",
-        "name": "item_probe_012",
         "type": "Function"
       },
       {
@@ -122748,12 +122586,6 @@
         "address": "0x100002e7c",
         "visibility": "IMPORTED",
         "name": "_item_probe_013",
-        "type": "Label"
-      },
-      {
-        "address": "0x100002e7c",
-        "visibility": "IMPORTED",
-        "name": "item_probe_013",
         "type": "Function"
       },
       {
@@ -122844,12 +122676,6 @@
         "address": "0x10000304c",
         "visibility": "IMPORTED",
         "name": "_item_probe_014",
-        "type": "Label"
-      },
-      {
-        "address": "0x10000304c",
-        "visibility": "IMPORTED",
-        "name": "item_probe_014",
         "type": "Function"
       },
       {
@@ -122940,12 +122766,6 @@
         "address": "0x10000321c",
         "visibility": "IMPORTED",
         "name": "_item_probe_015",
-        "type": "Label"
-      },
-      {
-        "address": "0x10000321c",
-        "visibility": "IMPORTED",
-        "name": "item_probe_015",
         "type": "Function"
       },
       {
@@ -123036,12 +122856,6 @@
         "address": "0x1000033ec",
         "visibility": "IMPORTED",
         "name": "_item_probe_016",
-        "type": "Label"
-      },
-      {
-        "address": "0x1000033ec",
-        "visibility": "IMPORTED",
-        "name": "item_probe_016",
         "type": "Function"
       },
       {
@@ -123132,12 +122946,6 @@
         "address": "0x1000035bc",
         "visibility": "IMPORTED",
         "name": "_item_probe_017",
-        "type": "Label"
-      },
-      {
-        "address": "0x1000035bc",
-        "visibility": "IMPORTED",
-        "name": "item_probe_017",
         "type": "Function"
       },
       {
@@ -123228,12 +123036,6 @@
         "address": "0x10000378c",
         "visibility": "IMPORTED",
         "name": "_item_probe_018",
-        "type": "Label"
-      },
-      {
-        "address": "0x10000378c",
-        "visibility": "IMPORTED",
-        "name": "item_probe_018",
         "type": "Function"
       },
       {
@@ -123324,12 +123126,6 @@
         "address": "0x10000395c",
         "visibility": "IMPORTED",
         "name": "_item_probe_019",
-        "type": "Label"
-      },
-      {
-        "address": "0x10000395c",
-        "visibility": "IMPORTED",
-        "name": "item_probe_019",
         "type": "Function"
       },
       {
@@ -123420,12 +123216,6 @@
         "address": "0x100003b2c",
         "visibility": "IMPORTED",
         "name": "_item_probe_020",
-        "type": "Label"
-      },
-      {
-        "address": "0x100003b2c",
-        "visibility": "IMPORTED",
-        "name": "item_probe_020",
         "type": "Function"
       },
       {
@@ -123516,12 +123306,6 @@
         "address": "0x100003cfc",
         "visibility": "IMPORTED",
         "name": "_item_probe_021",
-        "type": "Label"
-      },
-      {
-        "address": "0x100003cfc",
-        "visibility": "IMPORTED",
-        "name": "item_probe_021",
         "type": "Function"
       },
       {
@@ -123612,12 +123396,6 @@
         "address": "0x100003ecc",
         "visibility": "IMPORTED",
         "name": "_item_probe_022",
-        "type": "Label"
-      },
-      {
-        "address": "0x100003ecc",
-        "visibility": "IMPORTED",
-        "name": "item_probe_022",
         "type": "Function"
       },
       {
@@ -123708,12 +123486,6 @@
         "address": "0x10000409c",
         "visibility": "IMPORTED",
         "name": "_item_probe_023",
-        "type": "Label"
-      },
-      {
-        "address": "0x10000409c",
-        "visibility": "IMPORTED",
-        "name": "item_probe_023",
         "type": "Function"
       },
       {
@@ -123804,12 +123576,6 @@
         "address": "0x10000426c",
         "visibility": "IMPORTED",
         "name": "_item_probe_024",
-        "type": "Label"
-      },
-      {
-        "address": "0x10000426c",
-        "visibility": "IMPORTED",
-        "name": "item_probe_024",
         "type": "Function"
       },
       {
@@ -123900,12 +123666,6 @@
         "address": "0x10000443c",
         "visibility": "IMPORTED",
         "name": "_item_probe_025",
-        "type": "Label"
-      },
-      {
-        "address": "0x10000443c",
-        "visibility": "IMPORTED",
-        "name": "item_probe_025",
         "type": "Function"
       },
       {
@@ -123996,12 +123756,6 @@
         "address": "0x10000460c",
         "visibility": "IMPORTED",
         "name": "_item_probe_026",
-        "type": "Label"
-      },
-      {
-        "address": "0x10000460c",
-        "visibility": "IMPORTED",
-        "name": "item_probe_026",
         "type": "Function"
       },
       {
@@ -124092,12 +123846,6 @@
         "address": "0x1000047dc",
         "visibility": "IMPORTED",
         "name": "_item_probe_027",
-        "type": "Label"
-      },
-      {
-        "address": "0x1000047dc",
-        "visibility": "IMPORTED",
-        "name": "item_probe_027",
         "type": "Function"
       },
       {
@@ -124188,12 +123936,6 @@
         "address": "0x1000049ac",
         "visibility": "IMPORTED",
         "name": "_item_probe_028",
-        "type": "Label"
-      },
-      {
-        "address": "0x1000049ac",
-        "visibility": "IMPORTED",
-        "name": "item_probe_028",
         "type": "Function"
       },
       {
@@ -124284,12 +124026,6 @@
         "address": "0x100004b7c",
         "visibility": "IMPORTED",
         "name": "_item_probe_029",
-        "type": "Label"
-      },
-      {
-        "address": "0x100004b7c",
-        "visibility": "IMPORTED",
-        "name": "item_probe_029",
         "type": "Function"
       },
       {
@@ -124380,12 +124116,6 @@
         "address": "0x100004d4c",
         "visibility": "IMPORTED",
         "name": "_item_probe_030",
-        "type": "Label"
-      },
-      {
-        "address": "0x100004d4c",
-        "visibility": "IMPORTED",
-        "name": "item_probe_030",
         "type": "Function"
       },
       {
@@ -124476,12 +124206,6 @@
         "address": "0x100004f1c",
         "visibility": "IMPORTED",
         "name": "_item_probe_031",
-        "type": "Label"
-      },
-      {
-        "address": "0x100004f1c",
-        "visibility": "IMPORTED",
-        "name": "item_probe_031",
         "type": "Function"
       },
       {
@@ -124572,12 +124296,6 @@
         "address": "0x1000050ec",
         "visibility": "IMPORTED",
         "name": "_item_probe_032",
-        "type": "Label"
-      },
-      {
-        "address": "0x1000050ec",
-        "visibility": "IMPORTED",
-        "name": "item_probe_032",
         "type": "Function"
       },
       {
@@ -124668,12 +124386,6 @@
         "address": "0x1000052bc",
         "visibility": "IMPORTED",
         "name": "_item_probe_033",
-        "type": "Label"
-      },
-      {
-        "address": "0x1000052bc",
-        "visibility": "IMPORTED",
-        "name": "item_probe_033",
         "type": "Function"
       },
       {
@@ -124764,12 +124476,6 @@
         "address": "0x10000548c",
         "visibility": "IMPORTED",
         "name": "_item_probe_034",
-        "type": "Label"
-      },
-      {
-        "address": "0x10000548c",
-        "visibility": "IMPORTED",
-        "name": "item_probe_034",
         "type": "Function"
       },
       {
@@ -124860,12 +124566,6 @@
         "address": "0x10000565c",
         "visibility": "IMPORTED",
         "name": "_item_probe_035",
-        "type": "Label"
-      },
-      {
-        "address": "0x10000565c",
-        "visibility": "IMPORTED",
-        "name": "item_probe_035",
         "type": "Function"
       },
       {
@@ -124983,12 +124683,6 @@
         "type": "Label"
       },
       {
-        "address": "0x10000c000",
-        "visibility": "IMPORTED",
-        "name": "item_probe_table",
-        "type": "Label"
-      },
-      {
         "address": "0x100010071",
         "visibility": "DEFAULT",
         "name": "s____chkstk_darwin_100010071",
@@ -125001,369 +124695,339 @@
         "type": "Label"
       },
       {
-        "address": "0x100011148",
+        "address": "0x100010468",
         "visibility": "DEFAULT",
-        "name": "nlist_100011148",
+        "name": "nlist_100010468",
         "type": "Label"
       },
       {
-        "address": "0x100011158",
+        "address": "0x100010478",
         "visibility": "DEFAULT",
-        "name": "nlist_100011158",
+        "name": "nlist_100010478",
         "type": "Label"
       },
       {
-        "address": "0x100011179",
+        "address": "0x10001049a",
         "visibility": "DEFAULT",
-        "name": "s__100011179",
+        "name": "s___mh_execute_header_10001049a",
         "type": "Label"
       },
       {
-        "address": "0x10001117a",
+        "address": "0x1000104ae",
         "visibility": "DEFAULT",
-        "name": "s___mh_execute_header_10001117a",
+        "name": "s__main_1000104ae",
         "type": "Label"
       },
       {
-        "address": "0x10001118e",
+        "address": "0x1000104b4",
         "visibility": "DEFAULT",
-        "name": "s__main_10001118e",
+        "name": "s____chkstk_darwin_1000104b4",
         "type": "Label"
       },
       {
-        "address": "0x100011194",
+        "address": "0x1000104c5",
         "visibility": "DEFAULT",
-        "name": "s____chkstk_darwin_100011194",
+        "name": "s__printf_1000104c5",
         "type": "Label"
       },
       {
-        "address": "0x1000111a5",
+        "address": "0x1000104cd",
         "visibility": "DEFAULT",
-        "name": "s__printf_1000111a5",
+        "name": "s__init_system_1000104cd",
         "type": "Label"
       },
       {
-        "address": "0x1000111ad",
+        "address": "0x1000104da",
         "visibility": "DEFAULT",
-        "name": "s__init_system_1000111ad",
+        "name": "s__final_pass_1000104da",
         "type": "Label"
       },
       {
-        "address": "0x1000111ba",
+        "address": "0x1000104e6",
         "visibility": "DEFAULT",
-        "name": "s__final_pass_1000111ba",
+        "name": "s__init_item_1000104e6",
         "type": "Label"
       },
       {
-        "address": "0x1000111c6",
+        "address": "0x1000104f1",
         "visibility": "DEFAULT",
-        "name": "s__init_item_1000111c6",
+        "name": "s__init_device_1000104f1",
         "type": "Label"
       },
       {
-        "address": "0x1000111d1",
+        "address": "0x1000104fe",
         "visibility": "DEFAULT",
-        "name": "s__init_device_1000111d1",
+        "name": "s__run_system_1000104fe",
         "type": "Label"
       },
       {
-        "address": "0x1000111de",
+        "address": "0x10001050a",
         "visibility": "DEFAULT",
-        "name": "s__run_system_1000111de",
+        "name": "s__dispatch_item_probes_10001050a",
         "type": "Label"
       },
       {
-        "address": "0x1000111ea",
+        "address": "0x100010520",
         "visibility": "DEFAULT",
-        "name": "s__dispatch_item_probes_1000111ea",
+        "name": "s__process_context_100010520",
         "type": "Label"
       },
       {
-        "address": "0x100011200",
+        "address": "0x100010531",
         "visibility": "DEFAULT",
-        "name": "s__process_context_100011200",
+        "name": "s__device_mix_100010531",
         "type": "Label"
       },
       {
-        "address": "0x100011211",
+        "address": "0x10001053d",
         "visibility": "DEFAULT",
-        "name": "s__device_mix_100011211",
+        "name": "s__walk_table_10001053d",
         "type": "Label"
       },
       {
-        "address": "0x10001121d",
+        "address": "0x100010549",
         "visibility": "DEFAULT",
-        "name": "s__walk_table_10001121d",
+        "name": "s__compare_items_100010549",
         "type": "Label"
       },
       {
-        "address": "0x100011229",
+        "address": "0x100010558",
         "visibility": "DEFAULT",
-        "name": "s__compare_items_100011229",
+        "name": "s__inspect_item_stack_100010558",
         "type": "Label"
       },
       {
-        "address": "0x100011238",
+        "address": "0x10001056c",
         "visibility": "DEFAULT",
-        "name": "s__inspect_item_stack_100011238",
+        "name": "s__mutate_item_deep_10001056c",
         "type": "Label"
       },
       {
-        "address": "0x10001124c",
+        "address": "0x10001057e",
         "visibility": "DEFAULT",
-        "name": "s__mutate_item_deep_10001124c",
+        "name": "s__tiny_hash_10001057e",
         "type": "Label"
       },
       {
-        "address": "0x10001125e",
+        "address": "0x100010589",
         "visibility": "DEFAULT",
-        "name": "s__tiny_hash_10001125e",
+        "name": "s__item_probe_000_100010589",
         "type": "Label"
       },
       {
-        "address": "0x100011269",
+        "address": "0x100010599",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_000_100011269",
+        "name": "s__item_probe_001_100010599",
         "type": "Label"
       },
       {
-        "address": "0x100011279",
+        "address": "0x1000105a9",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_001_100011279",
+        "name": "s__item_probe_002_1000105a9",
         "type": "Label"
       },
       {
-        "address": "0x100011289",
+        "address": "0x1000105b9",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_002_100011289",
+        "name": "s__item_probe_003_1000105b9",
         "type": "Label"
       },
       {
-        "address": "0x100011299",
+        "address": "0x1000105c9",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_003_100011299",
+        "name": "s__item_probe_004_1000105c9",
         "type": "Label"
       },
       {
-        "address": "0x1000112a9",
+        "address": "0x1000105d9",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_004_1000112a9",
+        "name": "s__item_probe_005_1000105d9",
         "type": "Label"
       },
       {
-        "address": "0x1000112b9",
+        "address": "0x1000105e9",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_005_1000112b9",
+        "name": "s__item_probe_006_1000105e9",
         "type": "Label"
       },
       {
-        "address": "0x1000112c9",
+        "address": "0x1000105f9",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_006_1000112c9",
+        "name": "s__item_probe_007_1000105f9",
         "type": "Label"
       },
       {
-        "address": "0x1000112d9",
+        "address": "0x100010609",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_007_1000112d9",
+        "name": "s__item_probe_008_100010609",
         "type": "Label"
       },
       {
-        "address": "0x1000112e9",
+        "address": "0x100010619",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_008_1000112e9",
+        "name": "s__item_probe_009_100010619",
         "type": "Label"
       },
       {
-        "address": "0x1000112f9",
+        "address": "0x100010629",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_009_1000112f9",
+        "name": "s__item_probe_010_100010629",
         "type": "Label"
       },
       {
-        "address": "0x100011309",
+        "address": "0x100010639",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_010_100011309",
+        "name": "s__item_probe_011_100010639",
         "type": "Label"
       },
       {
-        "address": "0x100011319",
+        "address": "0x100010649",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_011_100011319",
+        "name": "s__item_probe_012_100010649",
         "type": "Label"
       },
       {
-        "address": "0x100011329",
+        "address": "0x100010659",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_012_100011329",
+        "name": "s__item_probe_013_100010659",
         "type": "Label"
       },
       {
-        "address": "0x100011339",
+        "address": "0x100010669",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_013_100011339",
+        "name": "s__item_probe_014_100010669",
         "type": "Label"
       },
       {
-        "address": "0x100011349",
+        "address": "0x100010679",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_014_100011349",
+        "name": "s__item_probe_015_100010679",
         "type": "Label"
       },
       {
-        "address": "0x100011359",
+        "address": "0x100010689",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_015_100011359",
+        "name": "s__item_probe_016_100010689",
         "type": "Label"
       },
       {
-        "address": "0x100011369",
+        "address": "0x100010699",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_016_100011369",
+        "name": "s__item_probe_017_100010699",
         "type": "Label"
       },
       {
-        "address": "0x100011379",
+        "address": "0x1000106a9",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_017_100011379",
+        "name": "s__item_probe_018_1000106a9",
         "type": "Label"
       },
       {
-        "address": "0x100011389",
+        "address": "0x1000106b9",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_018_100011389",
+        "name": "s__item_probe_019_1000106b9",
         "type": "Label"
       },
       {
-        "address": "0x100011399",
+        "address": "0x1000106c9",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_019_100011399",
+        "name": "s__item_probe_020_1000106c9",
         "type": "Label"
       },
       {
-        "address": "0x1000113a9",
+        "address": "0x1000106d9",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_020_1000113a9",
+        "name": "s__item_probe_021_1000106d9",
         "type": "Label"
       },
       {
-        "address": "0x1000113b9",
+        "address": "0x1000106e9",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_021_1000113b9",
+        "name": "s__item_probe_022_1000106e9",
         "type": "Label"
       },
       {
-        "address": "0x1000113c9",
+        "address": "0x1000106f9",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_022_1000113c9",
+        "name": "s__item_probe_023_1000106f9",
         "type": "Label"
       },
       {
-        "address": "0x1000113d9",
+        "address": "0x100010709",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_023_1000113d9",
+        "name": "s__item_probe_024_100010709",
         "type": "Label"
       },
       {
-        "address": "0x1000113e9",
+        "address": "0x100010719",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_024_1000113e9",
+        "name": "s__item_probe_025_100010719",
         "type": "Label"
       },
       {
-        "address": "0x1000113f9",
+        "address": "0x100010729",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_025_1000113f9",
+        "name": "s__item_probe_026_100010729",
         "type": "Label"
       },
       {
-        "address": "0x100011409",
+        "address": "0x100010739",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_026_100011409",
+        "name": "s__item_probe_027_100010739",
         "type": "Label"
       },
       {
-        "address": "0x100011419",
+        "address": "0x100010749",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_027_100011419",
+        "name": "s__item_probe_028_100010749",
         "type": "Label"
       },
       {
-        "address": "0x100011429",
+        "address": "0x100010759",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_028_100011429",
+        "name": "s__item_probe_029_100010759",
         "type": "Label"
       },
       {
-        "address": "0x100011439",
+        "address": "0x100010769",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_029_100011439",
+        "name": "s__item_probe_030_100010769",
         "type": "Label"
       },
       {
-        "address": "0x100011449",
+        "address": "0x100010779",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_030_100011449",
+        "name": "s__item_probe_031_100010779",
         "type": "Label"
       },
       {
-        "address": "0x100011459",
+        "address": "0x100010789",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_031_100011459",
+        "name": "s__item_probe_032_100010789",
         "type": "Label"
       },
       {
-        "address": "0x100011469",
+        "address": "0x100010799",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_032_100011469",
+        "name": "s__item_probe_033_100010799",
         "type": "Label"
       },
       {
-        "address": "0x100011479",
+        "address": "0x1000107a9",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_033_100011479",
+        "name": "s__item_probe_034_1000107a9",
         "type": "Label"
       },
       {
-        "address": "0x100011489",
+        "address": "0x1000107b9",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_034_100011489",
+        "name": "s__item_probe_035_1000107b9",
         "type": "Label"
       },
       {
-        "address": "0x100011499",
+        "address": "0x1000107c9",
         "visibility": "DEFAULT",
-        "name": "s__item_probe_035_100011499",
-        "type": "Label"
-      },
-      {
-        "address": "0x1000114a9",
-        "visibility": "DEFAULT",
-        "name": "s__item_probe_table_1000114a9",
-        "type": "Label"
-      },
-      {
-        "address": "0x1000114bb",
-        "visibility": "DEFAULT",
-        "name": "s_/Users/kartik/Downloads/binary-r_1000114bb",
-        "type": "Label"
-      },
-      {
-        "address": "0x1000114f3",
-        "visibility": "DEFAULT",
-        "name": "s_t.c_1000114f3",
-        "type": "Label"
-      },
-      {
-        "address": "0x1000114f7",
-        "visibility": "DEFAULT",
-        "name": "s_/var/folders/sn/l1bzbbzd14l2xthh_1000114f7",
-        "type": "Label"
-      },
-      {
-        "address": "0x100011533",
-        "visibility": "DEFAULT",
-        "name": "s__init_system_100011533",
+        "name": "s__item_probe_table_1000107c9",
         "type": "Label"
       },
       {
