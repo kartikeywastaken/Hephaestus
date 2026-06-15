@@ -401,6 +401,26 @@ def _count_instructions(ir_func: Dict[str, Any]) -> Tuple[int, int]:
 # Main builder
 # ---------------------------------------------------------------------------
 
+def _count_unstructured_regions(region: Any) -> int:
+    """Recursively count unstructured region nodes in a region tree."""
+    if not isinstance(region, dict):
+        return 0
+    rtype = region.get("type", "")
+    count = 1 if rtype == "unstructured" else 0
+
+    children = region.get("children", [])
+    if isinstance(children, list):
+        for child in children:
+            count += _count_unstructured_regions(child)
+
+    for branch_name in ("then_branch", "else_branch", "body"):
+        branch = region.get(branch_name)
+        if isinstance(branch, dict):
+            count += _count_unstructured_regions(branch)
+
+    return count
+
+
 def build_source_reconstruction(
     unified_ir: Dict[str, Any],
     structuring_regions: Any,
@@ -421,6 +441,9 @@ def build_source_reconstruction(
     -------
     SourceReconstructionArtifact with all available evidence attached.
     """
+    from src.ir.source.lowering import lower_function_instructions
+    from collections import defaultdict
+
     # Extract function lists
     ir_functions = _extract_ir_functions(unified_ir)
     sem_functions = _extract_semantics_functions(phase4_semantics)
@@ -430,6 +453,40 @@ def build_source_reconstruction(
     # Build indices
     sem_by_entry, sem_by_name = _build_semantics_index(sem_functions)
     regions_index = _build_regions_index(region_list)
+
+    # Pre-build parameter counts map for call signature formatting
+    fn_param_counts: Dict[str, int] = {}
+    for ir_func in ir_functions:
+        if not isinstance(ir_func, dict):
+            continue
+        ep = normalize_address(ir_func.get("entry_point"))
+        name = ir_func.get("name")
+        sem = _match_semantics(ep, name, sem_by_entry, sem_by_name)
+        
+        num_params = 4  # default fallback
+        if sem is not None:
+            params = sem.get("refined_parameters") or sem.get("parameters") or []
+            num_params = len(params)
+        else:
+            # Synthetic parameter count based on unique argument indices
+            abi_bindings = ir_func.get("abi_argument_bindings") or []
+            observed = set()
+            for b in abi_bindings:
+                if isinstance(b, dict) and b.get("argument_index") is not None:
+                    try:
+                        observed.add(int(b["argument_index"]))
+                    except (ValueError, TypeError):
+                        continue
+            if observed:
+                num_params = len(observed)
+                
+        if ep and ep != "unknown":
+            fn_param_counts[ep] = num_params
+        if name:
+            fn_param_counts[name] = num_params
+        canonical_name = alias_map.get(ep, name) if ep else name
+        if canonical_name:
+            fn_param_counts[canonical_name] = num_params
 
     # Counters for summary
     n_structured = 0
@@ -442,6 +499,15 @@ def build_source_reconstruction(
     total_ple = 0
     total_lc = 0
     total_instrs = 0
+
+    # Phase 5.2 new summary counters
+    n_with_structured_regions = 0
+    n_with_semantic_evidence = 0
+    n_with_layout_evidence = 0
+    n_with_parameter_layout_evidence = 0
+    unstructured_regions_total = 0
+    total_lowered = 0
+    total_commented = 0
 
     reconstructed: List[ReconstructedFunction] = []
 
@@ -517,6 +583,22 @@ def build_source_reconstruction(
         # Layout candidates
         layout_cands = _safe_list(sem, "layout_candidates") if sem else []
 
+        # Lower instructions
+        lowered_stmts, fn_lowering = lower_function_instructions(
+            ir_func,
+            semantic_function=sem,
+            layout_candidates=layout_cands,
+            unified_ir=unified_ir,
+            fn_param_counts=fn_param_counts,
+        )
+
+        # Group lowered statements by block ID
+        lowered_blocks = defaultdict(list)
+        for stmt in lowered_stmts:
+            b_id = stmt.source_instruction.get("block_id") if stmt.source_instruction else None
+            if b_id:
+                lowered_blocks[b_id].append(stmt)
+
         # Build evidence notes
         if parameters:
             evidence_notes.append(f"{len(parameters)} parameter(s) recovered")
@@ -549,6 +631,9 @@ def build_source_reconstruction(
             basic_block_count=block_count,
             warnings=warnings,
             evidence_notes=evidence_notes,
+            lowered_statements=lowered_stmts,
+            lowered_blocks=dict(lowered_blocks),
+            lowering=fn_lowering,
         )
         reconstructed.append(rec)
 
@@ -571,9 +656,29 @@ def build_source_reconstruction(
         total_lc += len(layout_cands)
         total_instrs += instr_count
 
+        # Phase 5.2 new summary updates
+        if structured_regions:
+            n_with_structured_regions += 1
+            for r in structured_regions:
+                unstructured_regions_total += _count_unstructured_regions(r)
+        
+        # Semantic evidence present if sem matched or if ABI/params/local vars exist
+        if sem is not None or parameters or abi_bindings or local_variables:
+            n_with_semantic_evidence += 1
+
+        if layout_cands:
+            n_with_layout_evidence += 1
+
+        if param_layout:
+            n_with_parameter_layout_evidence += 1
+
+        total_lowered += fn_lowering.get("instructions_lowered", 0)
+        total_commented += fn_lowering.get("instructions_commented", 0)
+
     # Build summary
     summary = {
         "functions_total": len(reconstructed),
+        "functions_emitted": len(reconstructed),
         "functions_structured": n_structured,
         "functions_partially_structured": n_partial,
         "functions_unstructured": n_unstructured,
@@ -584,6 +689,16 @@ def build_source_reconstruction(
         "total_parameter_layout_evidence": total_ple,
         "total_layout_candidates": total_lc,
         "total_instructions": total_instrs,
+        # Phase 5.2 statistics
+        "functions_with_structured_regions": n_with_structured_regions,
+        "functions_with_semantic_evidence": n_with_semantic_evidence,
+        "functions_with_layout_evidence": n_with_layout_evidence,
+        "functions_with_parameter_layout_evidence": n_with_parameter_layout_evidence,
+        "unstructured_regions_total": unstructured_regions_total,
+        "instructions_total": total_instrs,
+        "instructions_lowered": total_lowered,
+        "instructions_commented": total_commented,
+        "lowering_coverage_percent": round((total_lowered / total_instrs) * 100, 2) if total_instrs else 0.0
     }
 
     artifact = SourceReconstructionArtifact(

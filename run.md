@@ -187,9 +187,9 @@ python3 main.py finalize-semantics --out-dir artifacts
 
 ---
 
-## 9. Phase 5.1: Source Reconstruction
+## 9. Phase 5.2: Source Reconstruction & Instruction Lowering
 
-Reconstruct conservative C skeleton from existing Phase 1–4D artifacts:
+Reconstruct conservative C skeleton and lower IR instructions into pseudo-C statement blocks from existing Phase 1–4D artifacts:
 
 ```bash
 python3 main.py reconstruct-source --out-dir artifacts
@@ -202,13 +202,13 @@ This reads:
 - `layout_recovery.json` (optional)
 
 And writes:
-- `source_reconstruction.json` — Structured source reconstruction artifact (schema 5.1.0)
-- `recovered.c` — Conservative C function skeletons
+- `source_reconstruction.json` — Structured source reconstruction artifact (schema 5.2.0)
+- `recovered.c` — Conservative C function skeletons with instruction lowering
 
 The command prints a summary:
 ```
 ============================================================
-      PHASE 5.1: SOURCE RECONSTRUCTION FOUNDATION
+      PHASE 5.2: CONSERVATIVE INSTRUCTION LOWERING
 ============================================================
 Functions reconstructed:          <N>
   Structured:                     <N>
@@ -216,11 +216,15 @@ Functions reconstructed:          <N>
   Unstructured:                   <N>
   Missing:                        <N>
 Functions with warnings:          <N>
-Total parameters:                 <N>
-Total ABI bindings:               <N>
-Parameter-layout evidence:        <N>
-Layout candidates:                <N>
-Total instructions:               <N>
+Functions with region structures: <N>
+Functions with semantic evidence: <N>
+Functions with layout evidence:   <N>
+Functions with param-layout ev:   <N>
+Unstructured regions total:       <N>
+Instructions total:               <N>
+Instructions lowered:             <N>
+Instructions commented:           <N>
+Lowering coverage percent:        <N>%
 ============================================================
 Output: artifacts/source_reconstruction.json
 Output: artifacts/recovered.c
@@ -229,7 +233,7 @@ Output: artifacts/recovered.c
 
 ---
 
-## 10. Full Pipeline Workflow (Phase 1–5.1)
+## 10. Full Pipeline Workflow (Phase 1–5.2)
 
 ```bash
 python3 main.py ./target_binary --ghidra --radare2 --export-ir
@@ -255,5 +259,5 @@ After running the commands above, the output folder will contain:
 - `semantic_recovery.json` — Phase 4B constraint-refined type records per function.
 - `layout_recovery.json` — Phase 4C conservative memory layout candidates.
 - `phase4_semantics.json` — Phase 4D final merged semantic artifact for Phase 5 handoff.
-- `source_reconstruction.json` — Phase 5.1 source reconstruction artifact (schema 5.1.0).
-- `recovered.c` — Phase 5.1 conservative C function skeletons.
+- `source_reconstruction.json` — Phase 5.2 source reconstruction artifact (schema 5.2.0).
+- `recovered.c` — Phase 5.2 conservative C function skeletons.

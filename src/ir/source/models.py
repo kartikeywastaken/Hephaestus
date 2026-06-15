@@ -20,7 +20,7 @@ from typing import Any, Dict, List
 # Schema version
 # ---------------------------------------------------------------------------
 
-SCHEMA_VERSION = "5.1.0"
+SCHEMA_VERSION = "5.2.0"
 
 
 # ---------------------------------------------------------------------------
@@ -54,6 +54,9 @@ class ReconstructedFunction:
     warnings       : Diagnostic warnings (e.g. "empty_function",
                      "unknown_return_type_defaulted_to_u64").
     evidence_notes : Summarizing what evidence exists for this function.
+    lowered_statements: C statements lowered from instructions.
+    lowered_blocks    : Mapping of block_id -> C statements.
+    lowering          : Function-level instruction lowering summary statistics.
     """
     name: str = "unknown_function"
     canonical_name: str = "unknown_function"
@@ -72,6 +75,9 @@ class ReconstructedFunction:
     basic_block_count: int = 0
     warnings: List[str] = field(default_factory=list)
     evidence_notes: List[str] = field(default_factory=list)
+    lowered_statements: List[Dict[str, Any]] = field(default_factory=list)
+    lowered_blocks: Dict[str, List[Dict[str, Any]]] = field(default_factory=dict)
+    lowering: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -92,6 +98,9 @@ class ReconstructedFunction:
             "basic_block_count": self.basic_block_count,
             "warnings": list(self.warnings),
             "evidence_notes": list(self.evidence_notes),
+            "lowered_statements": [s.to_dict() if hasattr(s, "to_dict") else dict(s) for s in self.lowered_statements],
+            "lowered_blocks": {k: [s.to_dict() if hasattr(s, "to_dict") else dict(s) for s in v] for k, v in self.lowered_blocks.items()},
+            "lowering": dict(self.lowering),
         }
 
 
@@ -102,11 +111,11 @@ class ReconstructedFunction:
 @dataclass
 class SourceReconstructionArtifact:
     """
-    The complete Phase 5.1 output artifact.
+    The complete Phase 5.2 output artifact.
 
     Attributes
     ----------
-    schema_version : Always "5.1.0".
+    schema_version : Always "5.2.0".
     provenance     : Source artifact paths.
     functions      : List of ReconstructedFunction records.
     summary        : Aggregate counters.
@@ -114,8 +123,9 @@ class SourceReconstructionArtifact:
     schema_version: str = SCHEMA_VERSION
     provenance: Dict[str, Any] = field(default_factory=dict)
     functions: List[ReconstructedFunction] = field(default_factory=list)
-    summary: Dict[str, int] = field(default_factory=lambda: {
+    summary: Dict[str, Any] = field(default_factory=lambda: {
         "functions_total": 0,
+        "functions_emitted": 0,
         "functions_structured": 0,
         "functions_partially_structured": 0,
         "functions_unstructured": 0,
@@ -126,14 +136,25 @@ class SourceReconstructionArtifact:
         "total_parameter_layout_evidence": 0,
         "total_layout_candidates": 0,
         "total_instructions": 0,
+        "functions_with_structured_regions": 0,
+        "functions_with_semantic_evidence": 0,
+        "functions_with_layout_evidence": 0,
+        "functions_with_parameter_layout_evidence": 0,
+        "unstructured_regions_total": 0,
+        "instructions_total": 0,
+        "instructions_lowered": 0,
+        "instructions_commented": 0,
+        "lowering_coverage_percent": 0.0,
     })
 
     def to_dict(self) -> Dict[str, Any]:
         return {
             "schema_version": self.schema_version,
             "provenance": dict(self.provenance),
+            "summary": dict(self.summary),
             "data": {
                 "functions": [f.to_dict() for f in self.functions],
                 "summary": dict(self.summary),
             },
         }
+

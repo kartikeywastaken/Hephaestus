@@ -71,6 +71,7 @@ def _emit_region_tree(
     region: Dict[str, Any],
     lines: List[str],
     indent: int,
+    lowered_blocks: Dict[str, List[Dict[str, Any]]],
 ) -> None:
     """
     Recursively walk a structuring region tree and emit structural comments.
@@ -85,12 +86,17 @@ def _emit_region_tree(
     if region_type == "block":
         block_id = region.get("id", "?")
         lines.append(f"{prefix}/* block {block_id} */")
+        # Emit lowered statements
+        stmts = lowered_blocks.get(block_id, [])
+        for stmt in stmts:
+            text = stmt.get("text") if isinstance(stmt, dict) else stmt.text
+            lines.append(f"{prefix}{text}")
 
     elif region_type == "sequence":
         lines.append(f"{prefix}/* sequence begin */")
         for child in region.get("children", []):
             if isinstance(child, dict):
-                _emit_region_tree(child, lines, indent + 1)
+                _emit_region_tree(child, lines, indent + 1, lowered_blocks)
         lines.append(f"{prefix}/* sequence end */")
 
     elif region_type == "if":
@@ -103,7 +109,7 @@ def _emit_region_tree(
         lines.append(f"{prefix}/* then: */")
         then_branch = region.get("then_branch", {})
         if isinstance(then_branch, dict):
-            _emit_region_tree(then_branch, lines, indent + 1)
+            _emit_region_tree(then_branch, lines, indent + 1, lowered_blocks)
 
     elif region_type == "if_else":
         cond_block = region.get("condition_block", "?")
@@ -115,11 +121,11 @@ def _emit_region_tree(
         lines.append(f"{prefix}/* then: */")
         then_branch = region.get("then_branch", {})
         if isinstance(then_branch, dict):
-            _emit_region_tree(then_branch, lines, indent + 1)
+            _emit_region_tree(then_branch, lines, indent + 1, lowered_blocks)
         lines.append(f"{prefix}/* else: */")
         else_branch = region.get("else_branch", {})
         if isinstance(else_branch, dict):
-            _emit_region_tree(else_branch, lines, indent + 1)
+            _emit_region_tree(else_branch, lines, indent + 1, lowered_blocks)
 
     elif region_type == "loop":
         kind = region.get("kind", "unknown")
@@ -131,7 +137,7 @@ def _emit_region_tree(
         )
         body = region.get("body", {})
         if isinstance(body, dict):
-            _emit_region_tree(body, lines, indent + 1)
+            _emit_region_tree(body, lines, indent + 1, lowered_blocks)
 
     elif region_type == "unstructured":
         reason = region.get("reason", "unknown")
@@ -142,7 +148,7 @@ def _emit_region_tree(
         )
         for child in region.get("children", []):
             if isinstance(child, dict):
-                _emit_region_tree(child, lines, indent + 1)
+                _emit_region_tree(child, lines, indent + 1, lowered_blocks)
 
     else:
         lines.append(f"{prefix}/* region type={region_type} */")
@@ -260,12 +266,26 @@ def _emit_function(
         lines.append("    /* Control flow structure: */")
         for region in fn.structured_regions:
             if isinstance(region, dict):
-                _emit_region_tree(region, lines, indent=1)
+                _emit_region_tree(region, lines, indent=1, lowered_blocks=fn.lowered_blocks)
         lines.append("")
+    else:
+        # Linear block sequence if no structuring region
+        from src.ir.source.lowering import address_sort_key
+        sorted_block_ids = sorted(fn.lowered_blocks.keys(), key=address_sort_key)
+        if sorted_block_ids:
+            lines.append("    /* Linear block sequence: */")
+            for b_id in sorted_block_ids:
+                lines.append(f"    /* block {b_id} */")
+                stmts = fn.lowered_blocks.get(b_id, [])
+                for stmt in stmts:
+                    text = stmt.get("text") if isinstance(stmt, dict) else stmt.text
+                    lines.append(f"    {text}")
+            lines.append("")
 
     # Placeholder body
-    lines.append("    /* TODO: body reconstruction pending */")
-    lines.append("")
+    if not fn.lowered_statements:
+        lines.append("    /* TODO: body reconstruction pending */")
+        lines.append("")
 
     # Placeholder return
     if fn.return_type == "void":
@@ -320,6 +340,17 @@ def emit_recovered_c(
     # Standard includes
     lines.append("#include <stdint.h>")
     lines.append("#include <stddef.h>")
+    lines.append("")
+    
+    # Custom type definitions
+    lines.append("typedef uint8_t u8;")
+    lines.append("typedef uint16_t u16;")
+    lines.append("typedef uint32_t u32;")
+    lines.append("typedef uint64_t u64;")
+    lines.append("typedef int8_t i8;")
+    lines.append("typedef int16_t i16;")
+    lines.append("typedef int32_t i32;")
+    lines.append("typedef int64_t i64;")
     lines.append("")
 
     # Forward declarations
