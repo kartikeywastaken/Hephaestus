@@ -187,7 +187,63 @@ python3 main.py finalize-semantics --out-dir artifacts
 
 ---
 
-## 9. Output Artifacts Generated
+## 9. Phase 5.1: Source Reconstruction
+
+Reconstruct conservative C skeleton from existing Phase 1–4D artifacts:
+
+```bash
+python3 main.py reconstruct-source --out-dir artifacts
+```
+
+This reads:
+- `unified_ir.json` (required)
+- `structuring_regions.json` (required)
+- `phase4_semantics.json` (required)
+- `layout_recovery.json` (optional)
+
+And writes:
+- `source_reconstruction.json` — Structured source reconstruction artifact (schema 5.1.0)
+- `recovered.c` — Conservative C function skeletons
+
+The command prints a summary:
+```
+============================================================
+      PHASE 5.1: SOURCE RECONSTRUCTION FOUNDATION
+============================================================
+Functions reconstructed:          <N>
+  Structured:                     <N>
+  Partially structured:           <N>
+  Unstructured:                   <N>
+  Missing:                        <N>
+Functions with warnings:          <N>
+Total parameters:                 <N>
+Total ABI bindings:               <N>
+Parameter-layout evidence:        <N>
+Layout candidates:                <N>
+Total instructions:               <N>
+============================================================
+Output: artifacts/source_reconstruction.json
+Output: artifacts/recovered.c
+============================================================
+```
+
+---
+
+## 10. Full Pipeline Workflow (Phase 1–5.1)
+
+```bash
+python3 main.py ./target_binary --ghidra --radare2 --export-ir
+python3 main.py analyze-cfg --out-dir artifacts
+python3 main.py recover-semantics --out-dir artifacts
+python3 main.py refine-semantics --out-dir artifacts
+python3 main.py recover-layouts --out-dir artifacts
+python3 main.py finalize-semantics --out-dir artifacts
+python3 main.py reconstruct-source --out-dir artifacts
+```
+
+---
+
+## 11. Output Artifacts Generated
 
 After running the commands above, the output folder will contain:
 - `radare2_extraction.json` — Raw Radare2 analysis output.
@@ -199,3 +255,5 @@ After running the commands above, the output folder will contain:
 - `semantic_recovery.json` — Phase 4B constraint-refined type records per function.
 - `layout_recovery.json` — Phase 4C conservative memory layout candidates.
 - `phase4_semantics.json` — Phase 4D final merged semantic artifact for Phase 5 handoff.
+- `source_reconstruction.json` — Phase 5.1 source reconstruction artifact (schema 5.1.0).
+- `recovered.c` — Phase 5.1 conservative C function skeletons.

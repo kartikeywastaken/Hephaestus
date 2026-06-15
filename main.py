@@ -888,6 +888,128 @@ def handle_finalize_semantics(out_dir: str):
     sys.exit(0)
 
 
+def handle_reconstruct_source(out_dir: str):
+    """
+    Phase 5.1: Source Reconstruction Foundation
+    Reads unified_ir.json, structuring_regions.json, phase4_semantics.json,
+    and optionally layout_recovery.json, then writes source_reconstruction.json
+    and recovered.c to the output directory.
+    """
+    from src.utils.run_logging import append_run_log
+    append_run_log(out_dir, "ORCHESTRATION", "Pipeline stage started: Phase 5.1 Source Reconstruction")
+    from src.ir.source.reconstructor import build_source_reconstruction
+    from src.ir.source.emitter import write_source_reconstruction_artifact
+    from src.ir.source.c_emitter import emit_recovered_c
+
+    logger.info("Executing Phase 5.1 Source Reconstruction...")
+
+    # Load unified_ir.json (required)
+    ir_path = os.path.join(out_dir, "unified_ir.json")
+    if not os.path.exists(ir_path):
+        logger.error(
+            "[-] unified_ir.json not found at %s. Please run extraction first.", ir_path
+        )
+        sys.exit(1)
+    try:
+        unified_ir = load_json_artifact(ir_path)
+    except Exception as e:
+        logger.error("[-] Failed to read unified_ir.json at %s: %s", ir_path, e)
+        sys.exit(1)
+
+    # Load structuring_regions.json (required)
+    regions_path = os.path.join(out_dir, "structuring_regions.json")
+    if not os.path.exists(regions_path):
+        logger.error(
+            "[-] structuring_regions.json not found at %s. "
+            "Please run 'analyze-cfg' first.", regions_path
+        )
+        sys.exit(1)
+    try:
+        structuring_regions = load_json_artifact(regions_path)
+    except Exception as e:
+        logger.error("[-] Failed to read structuring_regions.json at %s: %s", regions_path, e)
+        sys.exit(1)
+
+    # Load phase4_semantics.json (required)
+    sem_path = os.path.join(out_dir, "phase4_semantics.json")
+    if not os.path.exists(sem_path):
+        logger.error(
+            "[-] phase4_semantics.json not found at %s. "
+            "Please run 'finalize-semantics' first.", sem_path
+        )
+        sys.exit(1)
+    try:
+        phase4_semantics = load_json_artifact(sem_path)
+    except Exception as e:
+        logger.error("[-] Failed to read phase4_semantics.json at %s: %s", sem_path, e)
+        sys.exit(1)
+
+    # Load layout_recovery.json (optional)
+    layout_recovery = None
+    lr_path = os.path.join(out_dir, "layout_recovery.json")
+    if os.path.exists(lr_path):
+        try:
+            layout_recovery = load_json_artifact(lr_path)
+            logger.info("[+] Loaded layout recovery from: %s", lr_path)
+        except Exception as e:
+            logger.warning(
+                "Could not load layout_recovery.json: %s. Continuing without it.", e
+            )
+            layout_recovery = None
+    else:
+        logger.info("layout_recovery.json not found; continuing without layout data.")
+
+    # Build reconstruction
+    artifact = build_source_reconstruction(
+        unified_ir, structuring_regions, phase4_semantics,
+        layout_recovery=layout_recovery,
+    )
+
+    # Write source_reconstruction.json
+    recon_path = os.path.join(out_dir, "source_reconstruction.json")
+    write_source_reconstruction_artifact(
+        artifact, recon_path,
+        source_ir=ir_path,
+        source_structuring=regions_path,
+        source_semantics=sem_path,
+        source_layout=lr_path if layout_recovery else None,
+    )
+    logger.info("[+] Phase 5.1 source reconstruction artifact committed: %s", recon_path)
+
+    # Write recovered.c
+    c_path = os.path.join(out_dir, "recovered.c")
+    emit_recovered_c(artifact, c_path)
+    logger.info("[+] Phase 5.1 recovered C skeleton committed: %s", c_path)
+
+    append_run_log(
+        out_dir, "ORCHESTRATION",
+        f"Pipeline stage completed: Phase 5.1 Source Reconstruction\n"
+        f"Artifacts written: {recon_path}, {c_path}"
+    )
+
+    # Print summary
+    s = artifact.summary
+    print("\n============================================================")
+    print("      PHASE 5.1: SOURCE RECONSTRUCTION FOUNDATION")
+    print("============================================================")
+    print(f"Functions reconstructed:          {s['functions_total']}")
+    print(f"  Structured:                     {s['functions_structured']}")
+    print(f"  Partially structured:           {s['functions_partially_structured']}")
+    print(f"  Unstructured:                   {s['functions_unstructured']}")
+    print(f"  Missing:                        {s['functions_missing']}")
+    print(f"Functions with warnings:          {s['functions_with_warnings']}")
+    print(f"Total parameters:                 {s['total_parameters']}")
+    print(f"Total ABI bindings:               {s['total_abi_bindings']}")
+    print(f"Parameter-layout evidence:        {s['total_parameter_layout_evidence']}")
+    print(f"Layout candidates:                {s['total_layout_candidates']}")
+    print(f"Total instructions:               {s['total_instructions']}")
+    print("============================================================")
+    print(f"Output: {recon_path}")
+    print(f"Output: {c_path}")
+    print("============================================================")
+    sys.exit(0)
+
+
 def main():
     # If help flag is present, avoid running setup_logging to prevent creating output directory unnecessarily
     if "--help" in sys.argv or "-h" in sys.argv:
@@ -949,6 +1071,9 @@ def main():
             return
         elif first_arg == "finalize-semantics":
             handle_finalize_semantics(out_dir)
+            return
+        elif first_arg == "reconstruct-source":
+            handle_reconstruct_source(out_dir)
             return
 
     args = parse_args()
