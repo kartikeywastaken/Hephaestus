@@ -1,7 +1,7 @@
 /*
- * recovered.c — Phase 5.3 Conservative Structured Reconstruction
- * Schema version: 5.3.0
- * Generated: 2026-06-15T19:39:07Z
+ * recovered.c — Phase 5.4 Conservative Return and Call-Site Reconstruction
+ * Schema version: 5.4.0
+ * Generated: 2026-06-15T21:07:44Z
  *
  * AUTO-GENERATED — DO NOT EDIT
  *
@@ -48,7 +48,7 @@ int32_t main(int32_t argc, void * argv)
 
     /* Layout candidates: */
     /*   base=sp, kind=record_like, offsets=[28, 32, 40, 44, 48, 52, 56], sizes=[4, 8] */
-    /*   base=x8, kind=array_like, offsets=[0, 8], sizes=[8] */
+    /*   base=x8, kind=pointer_like, offsets=[0], sizes=[8] */
     /*   base=x9, kind=array_like, offsets=[0, 8, 16], sizes=[8] */
 
     /* Control flow structure: */
@@ -58,7 +58,7 @@ int32_t main(int32_t argc, void * argv)
     stack_120 = tmp_x30; /* paired store second register inferred offset +8 */
     tmp_x29 = tmp_sp + 112; /* add x29,sp,#0x70 */
     tmp_x8 = 0x100004000; /* adrp x8,0x100004000 */
-    tmp_x8 = *(u64 *)(tmp_x8 + 8); /* ldr x8,[x8, #0x8] */
+    tmp_x8 = *(u64 *)(tmp_x8); /* ldr x8,[x8] */
     tmp_x8 = *(u64 *)(tmp_x8); /* ldr x8,[x8] */
     stack_m8 = tmp_x8; /* stur x8,[x29, #-0x8] */
     stack_m52 = 0; /* stur wzr,[x29, #-0x34] */
@@ -96,7 +96,7 @@ int32_t main(int32_t argc, void * argv)
     stack_28 = tmp_w1; /* str w1,[sp, #0x1c] */
     tmp_x2 = 0x100000000; /* adrp x2,0x100000000 */
     tmp_x2 = tmp_x2 + 1652; /* add x2,x2,#0x674 */
-    call_0x100000584(tmp_x0, tmp_x1, tmp_x2, tmp_x3); /* bl 0x100000584 */
+    call_0x100000584(tmp_x0, tmp_w1, tmp_x2); /* bl 0x100000584; args refined from same-block evidence */
     /* block 0x1000004e4 */
     tmp_w1 = stack_28; /* ldr w1,[sp, #0x1c] */
     tmp_x8 = tmp_x0; /* mov x8,x0 */
@@ -104,13 +104,13 @@ int32_t main(int32_t argc, void * argv)
     stack_52 = tmp_w8; /* str w8,[sp, #0x34] */
     tmp_x2 = 0x100000000; /* adrp x2,0x100000000 */
     tmp_x2 = tmp_x2 + 1684; /* add x2,x2,#0x694 */
-    call_0x100000584(tmp_x0, tmp_x1, tmp_x2, tmp_x3); /* bl 0x100000584 */
+    call_0x100000584(tmp_x0, tmp_w1, tmp_x2); /* bl 0x100000584; args refined from same-block evidence */
     /* block 0x100000500 */
     stack_48 = tmp_w0; /* str w0,[sp, #0x30] */
     tmp_w8 = stack_52; /* ldr w8,[sp, #0x34] */
     tmp_w9 = stack_48; /* ldr w9,[sp, #0x30] */
     tmp_w0 = tmp_w8 ^ tmp_w9; /* eor w0,w8,w9 */
-    call_0x1000006b4(tmp_x0, tmp_x1); /* bl 0x1000006b4 */
+    call_0x1000006b4(tmp_w0); /* bl 0x1000006b4; args refined from same-block evidence */
     /* block 0x100000514 */
     stack_44 = tmp_w0; /* str w0,[sp, #0x2c] */
     tmp_w8 = stack_52; /* ldr w8,[sp, #0x34] */
@@ -124,14 +124,14 @@ int32_t main(int32_t argc, void * argv)
     *(u64 *)(tmp_x9 + 16) = tmp_x8; /* str x8,[x9, #0x10] */
     tmp_x0 = 0x100000000; /* adrp x0,0x100000000 */
     tmp_x0 = tmp_x0 + 2136; /* add x0,x0,#0x858 */
-    call_0x10000084c(tmp_x0); /* bl 0x10000084c */
+    call_0x100000840(tmp_x0); /* bl 0x100000840; args refined from same-block evidence */
     /* block 0x100000548 */
     tmp_w8 = stack_44; /* ldr w8,[sp, #0x2c] */
     tmp_w8 = tmp_w8 & 63; /* and w8,w8,#0x3f */
     stack_40 = tmp_w8; /* str w8,[sp, #0x28] */
     tmp_x9 = stack_m8; /* ldur x9,[x29, #-0x8] */
     tmp_x8 = 0x100004000; /* adrp x8,0x100004000 */
-    tmp_x8 = *(u64 *)(tmp_x8 + 8); /* ldr x8,[x8, #0x8] */
+    tmp_x8 = *(u64 *)(tmp_x8); /* ldr x8,[x8] */
     tmp_x8 = *(u64 *)(tmp_x8); /* ldr x8,[x8] */
     /* 0x100000564: unsupported instruction: subs x8,x8,x9 */
     /* 0x100000568: unsupported instruction: b.eq 0x100000574 */
@@ -140,13 +140,12 @@ int32_t main(int32_t argc, void * argv)
     tmp_x29 = stack_112; /* ldp x29,x30,[sp, #0x70] */
     tmp_x30 = stack_120; /* paired load second register inferred offset +8 */
     tmp_sp = tmp_sp + 128; /* add sp,sp,#0x80 */
-    /* return via x0 */ /* ret */
+    return tmp_w0; /* return value from w0 before ret */
     /* block 0x10000056c */
     /* branch to 0x100000570 */ /* b 0x100000570 */
     /* block 0x100000570 */
-    call_0x100000840(); /* bl 0x100000840 */
+    call_0x10000084c(); /* bl 0x10000084c */
 
-    return 0; /* placeholder */
 }
 
 uint64_t reduce_weird(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg_40h)
@@ -184,7 +183,7 @@ uint64_t reduce_weird(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg_
             tmp_x8 = stack_24; /* ldr x8,[sp, #0x18] */
             tmp_w0 = stack_20; /* ldr w0,[sp, #0x14] */
             tmp_w1 = stack_12; /* ldr w1,[sp, #0xc] */
-            /* indirect call via tmp_x8 */ /* blr x8 */
+            /* indirect call through tmp_x8 with args: tmp_w0, tmp_w1 */ /* blr x8 */
             /* block 0x1000005e8 */
             stack_20 = tmp_w0; /* str w0,[sp, #0x14] */
             /* branch to 0x100000610 */ /* b 0x100000610 */
@@ -193,7 +192,7 @@ uint64_t reduce_weird(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg_
             tmp_w8 = stack_20; /* ldr w8,[sp, #0x14] */
             stack_8 = tmp_w8; /* str w8,[sp, #0x8] */
             tmp_w0 = stack_12; /* ldr w0,[sp, #0xc] */
-            call_0x1000007a8(tmp_x0, tmp_x1); /* bl 0x1000007a8 */
+            call_0x1000007a8(tmp_w0); /* bl 0x1000007a8; args refined from same-block evidence */
             /* block 0x100000600 */
             tmp_w8 = stack_8; /* ldr w8,[sp, #0x8] */
             tmp_w8 = tmp_w8 + tmp_w0; /* add w8,w8,w0 */
@@ -235,9 +234,8 @@ uint64_t reduce_weird(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg_
     tmp_x29 = stack_48; /* ldp x29,x30,[sp, #0x30] */
     tmp_x30 = stack_56; /* paired load second register inferred offset +8 */
     tmp_sp = tmp_sp + 64; /* add sp,sp,#0x40 */
-    /* return via x0 */ /* ret */
+    return tmp_w0; /* return value from w0 before ret */
 
-    return 0; /* placeholder */
 }
 
 uint64_t op_add(int32_t arg1, uint64_t arg2, uint64_t arg_10h)
@@ -259,9 +257,8 @@ uint64_t op_add(int32_t arg1, uint64_t arg2, uint64_t arg_10h)
     tmp_w9 = stack_8; /* ldr w9,[sp, #0x8] */
     tmp_w0 = tmp_w8 + tmp_w9; /* add w0,w8,w9 */
     tmp_sp = tmp_sp + 16; /* add sp,sp,#0x10 */
-    /* return via x0 */ /* ret */
+    return tmp_w0; /* return value from w0 before ret */
 
-    return 0; /* placeholder */
 }
 
 uint64_t op_xor(int32_t arg1, uint64_t arg2, uint64_t arg_10h)
@@ -283,9 +280,8 @@ uint64_t op_xor(int32_t arg1, uint64_t arg2, uint64_t arg_10h)
     tmp_w9 = stack_8; /* ldr w9,[sp, #0x8] */
     tmp_w0 = tmp_w8 ^ tmp_w9; /* eor w0,w8,w9 */
     tmp_sp = tmp_sp + 16; /* add sp,sp,#0x10 */
-    /* return via x0 */ /* ret */
+    return tmp_w0; /* return value from w0 before ret */
 
-    return 0; /* placeholder */
 }
 
 uint64_t nested_control(int32_t arg1, int32_t arg_20h)
@@ -378,9 +374,8 @@ uint64_t nested_control(int32_t arg1, int32_t arg_20h)
     /* block 0x10000079c */
     tmp_w0 = stack_24; /* ldr w0,[sp, #0x18] */
     tmp_sp = tmp_sp + 32; /* add sp,sp,#0x20 */
-    /* return via x0 */ /* ret */
+    return tmp_w0; /* return value from w0 before ret */
 
-    return 0; /* placeholder */
 }
 
 uint64_t mix_value(uint64_t arg1, uint64_t arg_10h)
@@ -434,46 +429,48 @@ uint64_t mix_value(uint64_t arg1, uint64_t arg_10h)
     /* block 0x100000834 */
     tmp_w0 = stack_8; /* ldr w0,[sp, #0x8] */
     tmp_sp = tmp_sp + 16; /* add sp,sp,#0x10 */
-    /* return via x0 */ /* ret */
+    return tmp_w0; /* return value from w0 before ret */
 
-    return 0; /* placeholder */
 }
 
 uint64_t stack_chk_fail(void)
 {
-    /* Entry: 0x100000840 */
-    /* Body status: partially_structured */
-    /* 1 basic block(s), 3 instruction(s) */
-    /* WARNING: unknown_return_type_defaulted_to_u64 */
-
-    /* Layout candidates: */
-    /*   base=x16, kind=scalar, offsets=[0], sizes=[4] */
-
-    /* Control flow structure: */
-    /* block 0x100000840 */
-    tmp_x16 = 0x100004000; /* adrp x16, reloc.__stack_chk_fail */
-    tmp_x16 = *(u64 *)(tmp_x16); /* ldr x16, [x16] */
-    /* branch to tmp_x16 */ /* br x16 */
-
-    return 0; /* placeholder */
-}
-
-int32_t printf(void * format)
-{
     /* Entry: 0x10000084c */
     /* Body status: partially_structured */
     /* 1 basic block(s), 4 instruction(s) */
+    /* WARNING: unknown_return_type_defaulted_to_u64 */
 
     /* Layout candidates: */
     /*   base=x16, kind=scalar, offsets=[16], sizes=[4] */
 
     /* Control flow structure: */
     /* block 0x10000084c */
-    tmp_x16 = 0x100004000; /* adrp x16, reloc.__stack_chk_fail */
+    tmp_x16 = 0x100004000; /* adrp x16, reloc.__stack_chk_guard */
     tmp_x16 = *(u64 *)(tmp_x16 + 16); /* ldr x16, [x16, 0x10] */
     /* branch to tmp_x16 */ /* br x16 */
     /* 0x100000858: unsupported instruction: invalid */
 
-    return 0; /* placeholder */
+    /* return value unknown */
+    return 0;
+}
+
+int32_t printf(void * format)
+{
+    /* Entry: 0x100000840 */
+    /* Body status: structured */
+    /* 1 basic block(s), 3 instruction(s) */
+
+    /* Layout candidates: */
+    /*   base=x16, kind=scalar, offsets=[8], sizes=[4] */
+
+    /* Control flow structure: */
+    /* block 0x100000840 */
+    tmp_x16 = 0x100004000; /* adrp x16, reloc.__stack_chk_guard */
+    tmp_x16 = *(u64 *)(tmp_x16 + 8); /* ldr x16, [x16, 8] */
+    /* branch to tmp_x16 */ /* br x16 */
+    /* block 0x10000084c: no lowered statements */
+
+    /* return value unknown */
+    return 0;
 }
 

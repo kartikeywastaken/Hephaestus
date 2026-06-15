@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "provenance": {
     "tool_name": "Ghidra Headless Analyzer",
-    "timestamp": "2026-06-15T19:39:06-07:00",
+    "timestamp": "2026-06-15T21:06:32-07:00",
     "binary_path": "./t",
     "config": {}
   },
@@ -13,7 +13,7 @@
       "format": "Mac OS X Mach-O",
       "language_id": "AARCH64:LE:64:AppleSilicon",
       "compiler": "unknown",
-      "timestamp": "Mon Jun 15 19:39:05 IST 2026"
+      "timestamp": "Mon Jun 15 21:06:31 IST 2026"
     },
     "functions": [
       {
@@ -125,7 +125,7 @@
                     },
                     {
                       "size_bytes": 8,
-                      "offset": 8,
+                      "offset": 0,
                       "kind": "memory",
                       "base": "x8"
                     }
@@ -133,7 +133,7 @@
                   "address": "0x100000470",
                   "size_bytes": 4,
                   "mnemonic": "ldr",
-                  "raw": "ldr x8,[x8, #0x8]",
+                  "raw": "ldr x8,[x8]",
                   "source": "ghidra",
                   "opcode": "ldr"
                 },
@@ -1237,13 +1237,13 @@
                   "operands": [
                     {
                       "kind": "symbol",
-                      "name": "0x10000084c"
+                      "name": "0x100000840"
                     }
                   ],
                   "address": "0x100000544",
                   "size_bytes": 4,
                   "mnemonic": "bl",
-                  "raw": "bl 0x10000084c",
+                  "raw": "bl 0x100000840",
                   "source": "ghidra",
                   "opcode": "bl"
                 }
@@ -1367,7 +1367,7 @@
                     },
                     {
                       "size_bytes": 8,
-                      "offset": 8,
+                      "offset": 0,
                       "kind": "memory",
                       "base": "x8"
                     }
@@ -1375,7 +1375,7 @@
                   "address": "0x10000055c",
                   "size_bytes": 4,
                   "mnemonic": "ldr",
-                  "raw": "ldr x8,[x8, #0x8]",
+                  "raw": "ldr x8,[x8]",
                   "source": "ghidra",
                   "opcode": "ldr"
                 },
@@ -1469,13 +1469,13 @@
                   "operands": [
                     {
                       "kind": "symbol",
-                      "name": "0x100000840"
+                      "name": "0x10000084c"
                     }
                   ],
                   "address": "0x100000570",
                   "size_bytes": 4,
                   "mnemonic": "bl",
-                  "raw": "bl 0x100000840",
+                  "raw": "bl 0x10000084c",
                   "source": "ghidra",
                   "opcode": "bl"
                 }
@@ -5829,13 +5829,13 @@
       {
         "address": "0x1",
         "visibility": "IMPORTED",
-        "name": "___stack_chk_fail",
+        "name": "_printf",
         "type": "Function"
       },
       {
         "address": "0x2",
         "visibility": "IMPORTED",
-        "name": "_printf",
+        "name": "___stack_chk_fail",
         "type": "Function"
       },
       {
@@ -6135,13 +6135,13 @@
       {
         "address": "0x100000840",
         "visibility": "IMPORTED",
-        "name": "___stack_chk_fail",
+        "name": "_printf",
         "type": "Function"
       },
       {
         "address": "0x10000084c",
         "visibility": "IMPORTED",
-        "name": "_printf",
+        "name": "___stack_chk_fail",
         "type": "Function"
       },
       {
@@ -6153,37 +6153,37 @@
       {
         "address": "0x100004000",
         "visibility": "DEFAULT",
-        "name": "PTR____stack_chk_fail_100004000",
+        "name": "PTR____stack_chk_guard_100004000",
         "type": "Label"
       },
       {
         "address": "0x100004008",
         "visibility": "DEFAULT",
-        "name": "PTR____stack_chk_guard_100004008",
+        "name": "PTR__printf_100004008",
         "type": "Label"
       },
       {
         "address": "0x100004010",
         "visibility": "DEFAULT",
-        "name": "PTR__printf_100004010",
+        "name": "PTR____stack_chk_fail_100004010",
         "type": "Label"
       },
       {
         "address": "0x10000805d",
         "visibility": "DEFAULT",
-        "name": "s____stack_chk_fail_10000805d",
+        "name": "s____stack_chk_guard_10000805d",
         "type": "Label"
       },
       {
-        "address": "0x10000806f",
+        "address": "0x100008070",
         "visibility": "DEFAULT",
-        "name": "s____stack_chk_guard_10000806f",
+        "name": "s__printf_100008070",
         "type": "Label"
       },
       {
-        "address": "0x100008082",
+        "address": "0x100008078",
         "visibility": "DEFAULT",
-        "name": "s__printf_100008082",
+        "name": "s____stack_chk_fail_100008078",
         "type": "Label"
       },
       {

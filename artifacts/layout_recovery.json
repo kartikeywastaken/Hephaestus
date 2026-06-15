@@ -59,19 +59,18 @@
         "function_entry": "0x100000460",
         "function_name": "_main",
         "base_id": "x8",
-        "layout_kind": "array_like",
+        "layout_kind": "pointer_like",
         "observed_offsets": [
-          0,
-          8
+          0
         ],
         "min_offset": 0,
-        "max_offset": 8,
+        "max_offset": 0,
         "observed_sizes": [
           8
         ],
         "access_count": 4,
         "evidence_notes": [
-          "4 memory access(es) observed at base 'x8' in function '_main'; offsets=[0, 8]; sizes=[8]; classification=array_like"
+          "4 memory access(es) observed at base 'x8' in function '_main'; offsets=[0]; sizes=[8]; classification=pointer_like"
         ],
         "source_instrs": [
           "0x100000470",
@@ -295,20 +294,20 @@
       },
       {
         "function_entry": "0x100000840",
-        "function_name": "__stack_chk_fail",
+        "function_name": "printf",
         "base_id": "x16",
         "layout_kind": "scalar",
         "observed_offsets": [
-          0
+          8
         ],
-        "min_offset": 0,
-        "max_offset": 0,
+        "min_offset": 8,
+        "max_offset": 8,
         "observed_sizes": [
           4
         ],
         "access_count": 1,
         "evidence_notes": [
-          "1 memory access(es) observed at base 'x16' in function '__stack_chk_fail'; offsets=[0]; sizes=[4]; classification=scalar"
+          "1 memory access(es) observed at base 'x16' in function 'printf'; offsets=[8]; sizes=[4]; classification=scalar"
         ],
         "source_instrs": [
           "0x100000844"
@@ -316,7 +315,7 @@
       },
       {
         "function_entry": "0x10000084c",
-        "function_name": "printf",
+        "function_name": "__stack_chk_fail",
         "base_id": "x16",
         "layout_kind": "scalar",
         "observed_offsets": [
@@ -329,7 +328,7 @@
         ],
         "access_count": 1,
         "evidence_notes": [
-          "1 memory access(es) observed at base 'x16' in function 'printf'; offsets=[16]; sizes=[4]; classification=scalar"
+          "1 memory access(es) observed at base 'x16' in function '__stack_chk_fail'; offsets=[16]; sizes=[4]; classification=scalar"
         ],
         "source_instrs": [
           "0x100000850"

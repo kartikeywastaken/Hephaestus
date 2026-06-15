@@ -1,8 +1,8 @@
 {
-  "schema_version": "5.3.0",
+  "schema_version": "5.4.0",
   "provenance": {
-    "phase": "5.3",
-    "description": "Conservative source reconstruction with structured control-flow emission",
+    "phase": "5.4",
+    "description": "Conservative source reconstruction with return and call-site refinement",
     "source_ir": "unified_ir.json",
     "source_structuring": "structuring_regions.json",
     "source_semantics": "phase4_semantics.json",
@@ -11,8 +11,8 @@
   "summary": {
     "functions_total": 8,
     "functions_emitted": 8,
-    "functions_structured": 4,
-    "functions_partially_structured": 4,
+    "functions_structured": 5,
+    "functions_partially_structured": 3,
     "functions_unstructured": 0,
     "functions_missing": 0,
     "functions_with_warnings": 6,
@@ -30,7 +30,7 @@
     "instructions_lowered": 231,
     "instructions_commented": 24,
     "lowering_coverage_percent": 90.59,
-    "control_flow_regions_total": 91,
+    "control_flow_regions_total": 93,
     "control_flow_constructs_emitted": 10,
     "loops_emitted": 5,
     "if_constructs_emitted": 0,
@@ -38,7 +38,17 @@
     "switch_constructs_emitted": 0,
     "fallback_regions": 0,
     "duplicate_blocks_skipped": 5,
-    "condition_expressions_recovered": 0
+    "condition_expressions_recovered": 0,
+    "return_sites_total": 6,
+    "return_sites_with_value": 6,
+    "return_sites_unknown": 0,
+    "functions_with_recovered_return_value": 6,
+    "call_sites_total": 7,
+    "direct_calls": 6,
+    "indirect_calls": 1,
+    "calls_with_arguments": 6,
+    "call_arguments_recovered": 11,
+    "call_arguments_unknown": 1
   },
   "data": {
     "functions": [
@@ -567,19 +577,18 @@
             "function_entry": "0x100000460",
             "function_name": "_main",
             "base_id": "x8",
-            "layout_kind": "array_like",
+            "layout_kind": "pointer_like",
             "observed_offsets": [
-              0,
-              8
+              0
             ],
             "min_offset": 0,
-            "max_offset": 8,
+            "max_offset": 0,
             "observed_sizes": [
               8
             ],
             "access_count": 4,
             "evidence_notes": [
-              "4 memory access(es) observed at base 'x8' in function '_main'; offsets=[0, 8]; sizes=[8]; classification=array_like"
+              "4 memory access(es) observed at base 'x8' in function '_main'; offsets=[0]; sizes=[8]; classification=pointer_like"
             ],
             "source_instrs": [
               "0x100000470",
@@ -784,7 +793,7 @@
           {
             "address": "0x100000470",
             "kind": "load",
-            "text": "tmp_x8 = *(u64 *)(tmp_x8 + 8); /* ldr x8,[x8, #0x8] */",
+            "text": "tmp_x8 = *(u64 *)(tmp_x8); /* ldr x8,[x8] */",
             "source_instruction": {
               "operands": [
                 {
@@ -793,7 +802,7 @@
                 },
                 {
                   "size_bytes": 8,
-                  "offset": 8,
+                  "offset": 0,
                   "kind": "memory",
                   "base": "x8"
                 }
@@ -801,7 +810,7 @@
               "address": "0x100000470",
               "size_bytes": 4,
               "mnemonic": "ldr",
-              "raw": "ldr x8,[x8, #0x8]",
+              "raw": "ldr x8,[x8]",
               "source": "ghidra",
               "opcode": "ldr",
               "block_id": "0x100000460"
@@ -2260,18 +2269,18 @@
           {
             "address": "0x100000544",
             "kind": "call",
-            "text": "call_0x10000084c(tmp_x0); /* bl 0x10000084c */",
+            "text": "call_0x100000840(tmp_x0); /* bl 0x100000840 */",
             "source_instruction": {
               "operands": [
                 {
                   "kind": "symbol",
-                  "name": "0x10000084c"
+                  "name": "0x100000840"
                 }
               ],
               "address": "0x100000544",
               "size_bytes": 4,
               "mnemonic": "bl",
-              "raw": "bl 0x10000084c",
+              "raw": "bl 0x100000840",
               "source": "ghidra",
               "opcode": "bl",
               "block_id": "0x100000514"
@@ -2426,7 +2435,7 @@
           {
             "address": "0x10000055c",
             "kind": "load",
-            "text": "tmp_x8 = *(u64 *)(tmp_x8 + 8); /* ldr x8,[x8, #0x8] */",
+            "text": "tmp_x8 = *(u64 *)(tmp_x8); /* ldr x8,[x8] */",
             "source_instruction": {
               "operands": [
                 {
@@ -2435,7 +2444,7 @@
                 },
                 {
                   "size_bytes": 8,
-                  "offset": 8,
+                  "offset": 0,
                   "kind": "memory",
                   "base": "x8"
                 }
@@ -2443,7 +2452,7 @@
               "address": "0x10000055c",
               "size_bytes": 4,
               "mnemonic": "ldr",
-              "raw": "ldr x8,[x8, #0x8]",
+              "raw": "ldr x8,[x8]",
               "source": "ghidra",
               "opcode": "ldr",
               "block_id": "0x100000548"
@@ -2556,18 +2565,18 @@
           {
             "address": "0x100000570",
             "kind": "call",
-            "text": "call_0x100000840(); /* bl 0x100000840 */",
+            "text": "call_0x10000084c(); /* bl 0x10000084c */",
             "source_instruction": {
               "operands": [
                 {
                   "kind": "symbol",
-                  "name": "0x100000840"
+                  "name": "0x10000084c"
                 }
               ],
               "address": "0x100000570",
               "size_bytes": 4,
               "mnemonic": "bl",
-              "raw": "bl 0x100000840",
+              "raw": "bl 0x10000084c",
               "source": "ghidra",
               "opcode": "bl",
               "block_id": "0x100000570"
@@ -2882,7 +2891,7 @@
             {
               "address": "0x100000470",
               "kind": "load",
-              "text": "tmp_x8 = *(u64 *)(tmp_x8 + 8); /* ldr x8,[x8, #0x8] */",
+              "text": "tmp_x8 = *(u64 *)(tmp_x8); /* ldr x8,[x8] */",
               "source_instruction": {
                 "operands": [
                   {
@@ -2891,7 +2900,7 @@
                   },
                   {
                     "size_bytes": 8,
-                    "offset": 8,
+                    "offset": 0,
                     "kind": "memory",
                     "base": "x8"
                   }
@@ -2899,7 +2908,7 @@
                 "address": "0x100000470",
                 "size_bytes": 4,
                 "mnemonic": "ldr",
-                "raw": "ldr x8,[x8, #0x8]",
+                "raw": "ldr x8,[x8]",
                 "source": "ghidra",
                 "opcode": "ldr",
                 "block_id": "0x100000460"
@@ -4374,18 +4383,18 @@
             {
               "address": "0x100000544",
               "kind": "call",
-              "text": "call_0x10000084c(tmp_x0); /* bl 0x10000084c */",
+              "text": "call_0x100000840(tmp_x0); /* bl 0x100000840 */",
               "source_instruction": {
                 "operands": [
                   {
                     "kind": "symbol",
-                    "name": "0x10000084c"
+                    "name": "0x100000840"
                   }
                 ],
                 "address": "0x100000544",
                 "size_bytes": 4,
                 "mnemonic": "bl",
-                "raw": "bl 0x10000084c",
+                "raw": "bl 0x100000840",
                 "source": "ghidra",
                 "opcode": "bl",
                 "block_id": "0x100000514"
@@ -4542,7 +4551,7 @@
             {
               "address": "0x10000055c",
               "kind": "load",
-              "text": "tmp_x8 = *(u64 *)(tmp_x8 + 8); /* ldr x8,[x8, #0x8] */",
+              "text": "tmp_x8 = *(u64 *)(tmp_x8); /* ldr x8,[x8] */",
               "source_instruction": {
                 "operands": [
                   {
@@ -4551,7 +4560,7 @@
                   },
                   {
                     "size_bytes": 8,
-                    "offset": 8,
+                    "offset": 0,
                     "kind": "memory",
                     "base": "x8"
                   }
@@ -4559,7 +4568,7 @@
                 "address": "0x10000055c",
                 "size_bytes": 4,
                 "mnemonic": "ldr",
-                "raw": "ldr x8,[x8, #0x8]",
+                "raw": "ldr x8,[x8]",
                 "source": "ghidra",
                 "opcode": "ldr",
                 "block_id": "0x100000548"
@@ -4676,18 +4685,18 @@
             {
               "address": "0x100000570",
               "kind": "call",
-              "text": "call_0x100000840(); /* bl 0x100000840 */",
+              "text": "call_0x10000084c(); /* bl 0x10000084c */",
               "source_instruction": {
                 "operands": [
                   {
                     "kind": "symbol",
-                    "name": "0x100000840"
+                    "name": "0x10000084c"
                   }
                 ],
                 "address": "0x100000570",
                 "size_bytes": 4,
                 "mnemonic": "bl",
-                "raw": "bl 0x100000840",
+                "raw": "bl 0x10000084c",
                 "source": "ghidra",
                 "opcode": "bl",
                 "block_id": "0x100000570"
@@ -4858,6 +4867,134 @@
           "fallback_regions": 0,
           "duplicate_blocks_skipped": 1,
           "condition_expressions_recovered": 0
+        },
+        "return_recovery": {
+          "return_sites_total": 1,
+          "return_sites_with_value": 1,
+          "return_sites_unknown": 0,
+          "return_registers_observed": [
+            "w0"
+          ],
+          "return_expression_kind": "register",
+          "return_expression": "tmp_w0",
+          "sites": [
+            {
+              "block_id": "0x100000574",
+              "address": "0x100000580",
+              "register": "w0",
+              "expression_kind": "register",
+              "expression": "tmp_w0",
+              "replacement_text": "return tmp_w0; /* return value from w0 before ret */",
+              "evidence_statement_address": "0x100000574",
+              "warnings": []
+            }
+          ],
+          "warnings": []
+        },
+        "callsite_refinement": {
+          "call_sites_total": 5,
+          "direct_calls": 5,
+          "indirect_calls": 0,
+          "calls_with_arguments": 4,
+          "arguments_recovered": 8,
+          "arguments_unknown": 1,
+          "sites": [
+            {
+              "block_id": "0x1000004c8",
+              "address": "0x1000004e0",
+              "kind": "direct",
+              "target": "0x100000584",
+              "original_text": "call_0x100000584(tmp_x0, tmp_x1, tmp_x2, tmp_x3); /* bl 0x100000584 */",
+              "refined_text": "call_0x100000584(tmp_x0, tmp_w1, tmp_x2); /* bl 0x100000584; args refined from same-block evidence */",
+              "arguments": [
+                {
+                  "index": 0,
+                  "expr": "tmp_x0",
+                  "source": "same_block_register_evidence"
+                },
+                {
+                  "index": 1,
+                  "expr": "tmp_w1",
+                  "source": "same_block_register_evidence"
+                },
+                {
+                  "index": 2,
+                  "expr": "tmp_x2",
+                  "source": "same_block_register_evidence"
+                }
+              ],
+              "warnings": []
+            },
+            {
+              "block_id": "0x1000004e4",
+              "address": "0x1000004fc",
+              "kind": "direct",
+              "target": "0x100000584",
+              "original_text": "call_0x100000584(tmp_x0, tmp_x1, tmp_x2, tmp_x3); /* bl 0x100000584 */",
+              "refined_text": "call_0x100000584(tmp_x0, tmp_w1, tmp_x2); /* bl 0x100000584; args refined from same-block evidence */",
+              "arguments": [
+                {
+                  "index": 0,
+                  "expr": "tmp_x0",
+                  "source": "same_block_register_evidence"
+                },
+                {
+                  "index": 1,
+                  "expr": "tmp_w1",
+                  "source": "same_block_register_evidence"
+                },
+                {
+                  "index": 2,
+                  "expr": "tmp_x2",
+                  "source": "same_block_register_evidence"
+                }
+              ],
+              "warnings": []
+            },
+            {
+              "block_id": "0x100000500",
+              "address": "0x100000510",
+              "kind": "direct",
+              "target": "0x1000006b4",
+              "original_text": "call_0x1000006b4(tmp_x0, tmp_x1); /* bl 0x1000006b4 */",
+              "refined_text": "call_0x1000006b4(tmp_w0); /* bl 0x1000006b4; args refined from same-block evidence */",
+              "arguments": [
+                {
+                  "index": 0,
+                  "expr": "tmp_w0",
+                  "source": "same_block_register_evidence"
+                }
+              ],
+              "warnings": []
+            },
+            {
+              "block_id": "0x100000514",
+              "address": "0x100000544",
+              "kind": "direct",
+              "target": "0x100000840",
+              "original_text": "call_0x100000840(tmp_x0); /* bl 0x100000840 */",
+              "refined_text": "call_0x100000840(tmp_x0); /* bl 0x100000840; args refined from same-block evidence */",
+              "arguments": [
+                {
+                  "index": 0,
+                  "expr": "tmp_x0",
+                  "source": "same_block_register_evidence"
+                }
+              ],
+              "warnings": []
+            },
+            {
+              "block_id": "0x100000570",
+              "address": "0x100000570",
+              "kind": "direct",
+              "target": "0x10000084c",
+              "original_text": "call_0x10000084c(); /* bl 0x10000084c */",
+              "refined_text": null,
+              "arguments": [],
+              "warnings": []
+            }
+          ],
+          "warnings": []
         }
       },
       {
@@ -8810,6 +8947,77 @@
           "fallback_regions": 0,
           "duplicate_blocks_skipped": 1,
           "condition_expressions_recovered": 0
+        },
+        "return_recovery": {
+          "return_sites_total": 1,
+          "return_sites_with_value": 1,
+          "return_sites_unknown": 0,
+          "return_registers_observed": [
+            "w0"
+          ],
+          "return_expression_kind": "register",
+          "return_expression": "tmp_w0",
+          "sites": [
+            {
+              "block_id": "0x100000664",
+              "address": "0x100000670",
+              "register": "w0",
+              "expression_kind": "register",
+              "expression": "tmp_w0",
+              "replacement_text": "return tmp_w0; /* return value from w0 before ret */",
+              "evidence_statement_address": "0x100000664",
+              "warnings": []
+            }
+          ],
+          "warnings": []
+        },
+        "callsite_refinement": {
+          "call_sites_total": 2,
+          "direct_calls": 1,
+          "indirect_calls": 1,
+          "calls_with_arguments": 2,
+          "arguments_recovered": 3,
+          "arguments_unknown": 0,
+          "sites": [
+            {
+              "block_id": "0x1000005d8",
+              "address": "0x1000005e4",
+              "kind": "indirect",
+              "target": "tmp_x8",
+              "original_text": "/* indirect call via tmp_x8 */ /* blr x8 */",
+              "refined_text": "/* indirect call through tmp_x8 with args: tmp_w0, tmp_w1 */ /* blr x8 */",
+              "arguments": [
+                {
+                  "index": 0,
+                  "expr": "tmp_w0",
+                  "source": "same_block_register_evidence"
+                },
+                {
+                  "index": 1,
+                  "expr": "tmp_w1",
+                  "source": "same_block_register_evidence"
+                }
+              ],
+              "warnings": []
+            },
+            {
+              "block_id": "0x1000005f0",
+              "address": "0x1000005fc",
+              "kind": "direct",
+              "target": "0x1000007a8",
+              "original_text": "call_0x1000007a8(tmp_x0, tmp_x1); /* bl 0x1000007a8 */",
+              "refined_text": "call_0x1000007a8(tmp_w0); /* bl 0x1000007a8; args refined from same-block evidence */",
+              "arguments": [
+                {
+                  "index": 0,
+                  "expr": "tmp_w0",
+                  "source": "same_block_register_evidence"
+                }
+              ],
+              "warnings": []
+            }
+          ],
+          "warnings": []
         }
       },
       {
@@ -9469,6 +9677,39 @@
           "fallback_regions": 0,
           "duplicate_blocks_skipped": 0,
           "condition_expressions_recovered": 0
+        },
+        "return_recovery": {
+          "return_sites_total": 1,
+          "return_sites_with_value": 1,
+          "return_sites_unknown": 0,
+          "return_registers_observed": [
+            "w0"
+          ],
+          "return_expression_kind": "register",
+          "return_expression": "tmp_w0",
+          "sites": [
+            {
+              "block_id": "0x100000674",
+              "address": "0x100000690",
+              "register": "w0",
+              "expression_kind": "register",
+              "expression": "tmp_w0",
+              "replacement_text": "return tmp_w0; /* return value from w0 before ret */",
+              "evidence_statement_address": "0x100000688",
+              "warnings": []
+            }
+          ],
+          "warnings": []
+        },
+        "callsite_refinement": {
+          "call_sites_total": 0,
+          "direct_calls": 0,
+          "indirect_calls": 0,
+          "calls_with_arguments": 0,
+          "arguments_recovered": 0,
+          "arguments_unknown": 0,
+          "sites": [],
+          "warnings": []
         }
       },
       {
@@ -10128,6 +10369,39 @@
           "fallback_regions": 0,
           "duplicate_blocks_skipped": 0,
           "condition_expressions_recovered": 0
+        },
+        "return_recovery": {
+          "return_sites_total": 1,
+          "return_sites_with_value": 1,
+          "return_sites_unknown": 0,
+          "return_registers_observed": [
+            "w0"
+          ],
+          "return_expression_kind": "register",
+          "return_expression": "tmp_w0",
+          "sites": [
+            {
+              "block_id": "0x100000694",
+              "address": "0x1000006b0",
+              "register": "w0",
+              "expression_kind": "register",
+              "expression": "tmp_w0",
+              "replacement_text": "return tmp_w0; /* return value from w0 before ret */",
+              "evidence_statement_address": "0x1000006a8",
+              "warnings": []
+            }
+          ],
+          "warnings": []
+        },
+        "callsite_refinement": {
+          "call_sites_total": 0,
+          "direct_calls": 0,
+          "indirect_calls": 0,
+          "calls_with_arguments": 0,
+          "arguments_recovered": 0,
+          "arguments_unknown": 0,
+          "sites": [],
+          "warnings": []
         }
       },
       {
@@ -13916,6 +14190,39 @@
           "fallback_regions": 0,
           "duplicate_blocks_skipped": 2,
           "condition_expressions_recovered": 0
+        },
+        "return_recovery": {
+          "return_sites_total": 1,
+          "return_sites_with_value": 1,
+          "return_sites_unknown": 0,
+          "return_registers_observed": [
+            "w0"
+          ],
+          "return_expression_kind": "register",
+          "return_expression": "tmp_w0",
+          "sites": [
+            {
+              "block_id": "0x10000079c",
+              "address": "0x1000007a4",
+              "register": "w0",
+              "expression_kind": "register",
+              "expression": "tmp_w0",
+              "replacement_text": "return tmp_w0; /* return value from w0 before ret */",
+              "evidence_statement_address": "0x10000079c",
+              "warnings": []
+            }
+          ],
+          "warnings": []
+        },
+        "callsite_refinement": {
+          "call_sites_total": 0,
+          "direct_calls": 0,
+          "indirect_calls": 0,
+          "calls_with_arguments": 0,
+          "arguments_recovered": 0,
+          "arguments_unknown": 0,
+          "sites": [],
+          "warnings": []
         }
       },
       {
@@ -16307,255 +16614,49 @@
           "fallback_regions": 0,
           "duplicate_blocks_skipped": 1,
           "condition_expressions_recovered": 0
+        },
+        "return_recovery": {
+          "return_sites_total": 1,
+          "return_sites_with_value": 1,
+          "return_sites_unknown": 0,
+          "return_registers_observed": [
+            "w0"
+          ],
+          "return_expression_kind": "register",
+          "return_expression": "tmp_w0",
+          "sites": [
+            {
+              "block_id": "0x100000834",
+              "address": "0x10000083c",
+              "register": "w0",
+              "expression_kind": "register",
+              "expression": "tmp_w0",
+              "replacement_text": "return tmp_w0; /* return value from w0 before ret */",
+              "evidence_statement_address": "0x100000834",
+              "warnings": []
+            }
+          ],
+          "warnings": []
+        },
+        "callsite_refinement": {
+          "call_sites_total": 0,
+          "direct_calls": 0,
+          "indirect_calls": 0,
+          "calls_with_arguments": 0,
+          "arguments_recovered": 0,
+          "arguments_unknown": 0,
+          "sites": [],
+          "warnings": []
         }
       },
       {
         "name": "__stack_chk_fail",
         "canonical_name": "__stack_chk_fail",
         "c_name": "stack_chk_fail",
-        "entry_point": "0x100000840",
+        "entry_point": "0x10000084c",
         "function_kind": "user",
         "return_type": "u64",
         "parameters": [],
-        "local_variables": [],
-        "body_status": "partially_structured",
-        "structured_regions": [
-          {
-            "type": "block",
-            "id": "0x100000840"
-          }
-        ],
-        "abi_argument_bindings": [],
-        "parameter_layout_evidence": [],
-        "layout_candidates": [
-          {
-            "function_entry": "0x100000840",
-            "function_name": "__stack_chk_fail",
-            "base_id": "x16",
-            "layout_kind": "scalar",
-            "observed_offsets": [
-              0
-            ],
-            "min_offset": 0,
-            "max_offset": 0,
-            "observed_sizes": [
-              4
-            ],
-            "access_count": 1,
-            "evidence_notes": [
-              "1 memory access(es) observed at base 'x16' in function '__stack_chk_fail'; offsets=[0]; sizes=[4]; classification=scalar"
-            ],
-            "source_instrs": [
-              "0x100000844"
-            ]
-          }
-        ],
-        "instruction_count": 3,
-        "basic_block_count": 1,
-        "warnings": [
-          "unknown_return_type_defaulted_to_u64"
-        ],
-        "evidence_notes": [
-          "1 layout candidate(s)"
-        ],
-        "lowered_statements": [
-          {
-            "address": "0x100000840",
-            "kind": "assign",
-            "text": "tmp_x16 = 0x100004000; /* adrp x16, reloc.__stack_chk_fail */",
-            "source_instruction": {
-              "address": "0x100000840",
-              "mnemonic": "adrp",
-              "opcode": "adrp",
-              "operands": [
-                {
-                  "kind": "register",
-                  "value": "x16"
-                },
-                {
-                  "kind": "immediate",
-                  "value": 4294983680
-                }
-              ],
-              "size_bytes": 4,
-              "raw": "adrp x16, reloc.__stack_chk_fail",
-              "source": "radare2",
-              "block_id": "0x100000840"
-            },
-            "lowered": true,
-            "warnings": []
-          },
-          {
-            "address": "0x100000844",
-            "kind": "load",
-            "text": "tmp_x16 = *(u64 *)(tmp_x16); /* ldr x16, [x16] */",
-            "source_instruction": {
-              "address": "0x100000844",
-              "mnemonic": "ldr",
-              "opcode": "ldr",
-              "operands": [
-                {
-                  "kind": "register",
-                  "value": "x16"
-                },
-                {
-                  "kind": "memory",
-                  "base": "x16",
-                  "offset": 0,
-                  "size_bytes": null
-                }
-              ],
-              "size_bytes": 4,
-              "raw": "ldr x16, [x16]",
-              "source": "radare2",
-              "block_id": "0x100000840"
-            },
-            "lowered": true,
-            "warnings": []
-          },
-          {
-            "address": "0x100000848",
-            "kind": "branch_comment",
-            "text": "/* branch to tmp_x16 */ /* br x16 */",
-            "source_instruction": {
-              "address": "0x100000848",
-              "mnemonic": "br",
-              "opcode": "br",
-              "operands": [
-                {
-                  "kind": "register",
-                  "value": "x16"
-                }
-              ],
-              "size_bytes": 4,
-              "raw": "br x16",
-              "source": "radare2",
-              "block_id": "0x100000840"
-            },
-            "lowered": true,
-            "warnings": []
-          }
-        ],
-        "lowered_blocks": {
-          "0x100000840": [
-            {
-              "address": "0x100000840",
-              "kind": "assign",
-              "text": "tmp_x16 = 0x100004000; /* adrp x16, reloc.__stack_chk_fail */",
-              "source_instruction": {
-                "address": "0x100000840",
-                "mnemonic": "adrp",
-                "opcode": "adrp",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x16"
-                  },
-                  {
-                    "kind": "immediate",
-                    "value": 4294983680
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "adrp x16, reloc.__stack_chk_fail",
-                "source": "radare2",
-                "block_id": "0x100000840"
-              },
-              "lowered": true,
-              "warnings": []
-            },
-            {
-              "address": "0x100000844",
-              "kind": "load",
-              "text": "tmp_x16 = *(u64 *)(tmp_x16); /* ldr x16, [x16] */",
-              "source_instruction": {
-                "address": "0x100000844",
-                "mnemonic": "ldr",
-                "opcode": "ldr",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x16"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "x16",
-                    "offset": 0,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "ldr x16, [x16]",
-                "source": "radare2",
-                "block_id": "0x100000840"
-              },
-              "lowered": true,
-              "warnings": []
-            },
-            {
-              "address": "0x100000848",
-              "kind": "branch_comment",
-              "text": "/* branch to tmp_x16 */ /* br x16 */",
-              "source_instruction": {
-                "address": "0x100000848",
-                "mnemonic": "br",
-                "opcode": "br",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x16"
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "br x16",
-                "source": "radare2",
-                "block_id": "0x100000840"
-              },
-              "lowered": true,
-              "warnings": []
-            }
-          ]
-        },
-        "lowering": {
-          "instructions_total": 3,
-          "instructions_lowered": 3,
-          "instructions_commented": 0,
-          "coverage_percent": 100.0
-        },
-        "control_flow": {
-          "regions_total": 1,
-          "structured_constructs_emitted": 0,
-          "loops_emitted": 0,
-          "if_constructs_emitted": 0,
-          "if_else_constructs_emitted": 0,
-          "switch_constructs_emitted": 0,
-          "fallback_regions": 0,
-          "duplicate_blocks_skipped": 0,
-          "condition_expressions_recovered": 0
-        }
-      },
-      {
-        "name": "printf",
-        "canonical_name": "printf",
-        "c_name": "printf",
-        "entry_point": "0x10000084c",
-        "function_kind": "library",
-        "return_type": "i32",
-        "parameters": [
-          {
-            "name": "format",
-            "index": 0,
-            "type": {
-              "type": "pointer",
-              "confidence": 1.0,
-              "source": "known_signature_database",
-              "notes": []
-            },
-            "source": "known_signature_database",
-            "confidence": 1.0,
-            "notes": []
-          }
-        ],
         "local_variables": [],
         "body_status": "partially_structured",
         "structured_regions": [
@@ -16569,7 +16670,7 @@
         "layout_candidates": [
           {
             "function_entry": "0x10000084c",
-            "function_name": "printf",
+            "function_name": "__stack_chk_fail",
             "base_id": "x16",
             "layout_kind": "scalar",
             "observed_offsets": [
@@ -16582,7 +16683,7 @@
             ],
             "access_count": 1,
             "evidence_notes": [
-              "1 memory access(es) observed at base 'x16' in function 'printf'; offsets=[16]; sizes=[4]; classification=scalar"
+              "1 memory access(es) observed at base 'x16' in function '__stack_chk_fail'; offsets=[16]; sizes=[4]; classification=scalar"
             ],
             "source_instrs": [
               "0x100000850"
@@ -16591,16 +16692,17 @@
         ],
         "instruction_count": 4,
         "basic_block_count": 1,
-        "warnings": [],
+        "warnings": [
+          "unknown_return_type_defaulted_to_u64"
+        ],
         "evidence_notes": [
-          "1 parameter(s) recovered",
           "1 layout candidate(s)"
         ],
         "lowered_statements": [
           {
             "address": "0x10000084c",
             "kind": "assign",
-            "text": "tmp_x16 = 0x100004000; /* adrp x16, reloc.__stack_chk_fail */",
+            "text": "tmp_x16 = 0x100004000; /* adrp x16, reloc.__stack_chk_guard */",
             "source_instruction": {
               "address": "0x10000084c",
               "mnemonic": "adrp",
@@ -16616,7 +16718,7 @@
                 }
               ],
               "size_bytes": 4,
-              "raw": "adrp x16, reloc.__stack_chk_fail",
+              "raw": "adrp x16, reloc.__stack_chk_guard",
               "source": "radare2",
               "block_id": "0x10000084c"
             },
@@ -16696,7 +16798,7 @@
             {
               "address": "0x10000084c",
               "kind": "assign",
-              "text": "tmp_x16 = 0x100004000; /* adrp x16, reloc.__stack_chk_fail */",
+              "text": "tmp_x16 = 0x100004000; /* adrp x16, reloc.__stack_chk_guard */",
               "source_instruction": {
                 "address": "0x10000084c",
                 "mnemonic": "adrp",
@@ -16712,7 +16814,7 @@
                   }
                 ],
                 "size_bytes": 4,
-                "raw": "adrp x16, reloc.__stack_chk_fail",
+                "raw": "adrp x16, reloc.__stack_chk_guard",
                 "source": "radare2",
                 "block_id": "0x10000084c"
               },
@@ -16804,14 +16906,301 @@
           "fallback_regions": 0,
           "duplicate_blocks_skipped": 0,
           "condition_expressions_recovered": 0
+        },
+        "return_recovery": {
+          "return_sites_total": 0,
+          "return_sites_with_value": 0,
+          "return_sites_unknown": 0,
+          "return_registers_observed": [],
+          "return_expression_kind": "unknown",
+          "return_expression": null,
+          "sites": [],
+          "warnings": []
+        },
+        "callsite_refinement": {
+          "call_sites_total": 0,
+          "direct_calls": 0,
+          "indirect_calls": 0,
+          "calls_with_arguments": 0,
+          "arguments_recovered": 0,
+          "arguments_unknown": 0,
+          "sites": [],
+          "warnings": []
+        }
+      },
+      {
+        "name": "printf",
+        "canonical_name": "printf",
+        "c_name": "printf",
+        "entry_point": "0x100000840",
+        "function_kind": "library",
+        "return_type": "i32",
+        "parameters": [
+          {
+            "name": "format",
+            "index": 0,
+            "type": {
+              "type": "pointer",
+              "confidence": 1.0,
+              "source": "known_signature_database",
+              "notes": []
+            },
+            "source": "known_signature_database",
+            "confidence": 1.0,
+            "notes": []
+          }
+        ],
+        "local_variables": [],
+        "body_status": "structured",
+        "structured_regions": [
+          {
+            "type": "sequence",
+            "children": [
+              {
+                "type": "block",
+                "id": "0x100000840"
+              },
+              {
+                "type": "block",
+                "id": "0x10000084c"
+              }
+            ]
+          }
+        ],
+        "abi_argument_bindings": [],
+        "parameter_layout_evidence": [],
+        "layout_candidates": [
+          {
+            "function_entry": "0x100000840",
+            "function_name": "printf",
+            "base_id": "x16",
+            "layout_kind": "scalar",
+            "observed_offsets": [
+              8
+            ],
+            "min_offset": 8,
+            "max_offset": 8,
+            "observed_sizes": [
+              4
+            ],
+            "access_count": 1,
+            "evidence_notes": [
+              "1 memory access(es) observed at base 'x16' in function 'printf'; offsets=[8]; sizes=[4]; classification=scalar"
+            ],
+            "source_instrs": [
+              "0x100000844"
+            ]
+          }
+        ],
+        "instruction_count": 3,
+        "basic_block_count": 1,
+        "warnings": [],
+        "evidence_notes": [
+          "1 parameter(s) recovered",
+          "1 layout candidate(s)"
+        ],
+        "lowered_statements": [
+          {
+            "address": "0x100000840",
+            "kind": "assign",
+            "text": "tmp_x16 = 0x100004000; /* adrp x16, reloc.__stack_chk_guard */",
+            "source_instruction": {
+              "address": "0x100000840",
+              "mnemonic": "adrp",
+              "opcode": "adrp",
+              "operands": [
+                {
+                  "kind": "register",
+                  "value": "x16"
+                },
+                {
+                  "kind": "immediate",
+                  "value": 4294983680
+                }
+              ],
+              "size_bytes": 4,
+              "raw": "adrp x16, reloc.__stack_chk_guard",
+              "source": "radare2",
+              "block_id": "0x100000840"
+            },
+            "lowered": true,
+            "warnings": []
+          },
+          {
+            "address": "0x100000844",
+            "kind": "load",
+            "text": "tmp_x16 = *(u64 *)(tmp_x16 + 8); /* ldr x16, [x16, 8] */",
+            "source_instruction": {
+              "address": "0x100000844",
+              "mnemonic": "ldr",
+              "opcode": "ldr",
+              "operands": [
+                {
+                  "kind": "register",
+                  "value": "x16"
+                },
+                {
+                  "kind": "memory",
+                  "base": "x16",
+                  "offset": 8,
+                  "size_bytes": null
+                }
+              ],
+              "size_bytes": 4,
+              "raw": "ldr x16, [x16, 8]",
+              "source": "radare2",
+              "block_id": "0x100000840"
+            },
+            "lowered": true,
+            "warnings": []
+          },
+          {
+            "address": "0x100000848",
+            "kind": "branch_comment",
+            "text": "/* branch to tmp_x16 */ /* br x16 */",
+            "source_instruction": {
+              "address": "0x100000848",
+              "mnemonic": "br",
+              "opcode": "br",
+              "operands": [
+                {
+                  "kind": "register",
+                  "value": "x16"
+                }
+              ],
+              "size_bytes": 4,
+              "raw": "br x16",
+              "source": "radare2",
+              "block_id": "0x100000840"
+            },
+            "lowered": true,
+            "warnings": []
+          }
+        ],
+        "lowered_blocks": {
+          "0x100000840": [
+            {
+              "address": "0x100000840",
+              "kind": "assign",
+              "text": "tmp_x16 = 0x100004000; /* adrp x16, reloc.__stack_chk_guard */",
+              "source_instruction": {
+                "address": "0x100000840",
+                "mnemonic": "adrp",
+                "opcode": "adrp",
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x16"
+                  },
+                  {
+                    "kind": "immediate",
+                    "value": 4294983680
+                  }
+                ],
+                "size_bytes": 4,
+                "raw": "adrp x16, reloc.__stack_chk_guard",
+                "source": "radare2",
+                "block_id": "0x100000840"
+              },
+              "lowered": true,
+              "warnings": []
+            },
+            {
+              "address": "0x100000844",
+              "kind": "load",
+              "text": "tmp_x16 = *(u64 *)(tmp_x16 + 8); /* ldr x16, [x16, 8] */",
+              "source_instruction": {
+                "address": "0x100000844",
+                "mnemonic": "ldr",
+                "opcode": "ldr",
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x16"
+                  },
+                  {
+                    "kind": "memory",
+                    "base": "x16",
+                    "offset": 8,
+                    "size_bytes": null
+                  }
+                ],
+                "size_bytes": 4,
+                "raw": "ldr x16, [x16, 8]",
+                "source": "radare2",
+                "block_id": "0x100000840"
+              },
+              "lowered": true,
+              "warnings": []
+            },
+            {
+              "address": "0x100000848",
+              "kind": "branch_comment",
+              "text": "/* branch to tmp_x16 */ /* br x16 */",
+              "source_instruction": {
+                "address": "0x100000848",
+                "mnemonic": "br",
+                "opcode": "br",
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x16"
+                  }
+                ],
+                "size_bytes": 4,
+                "raw": "br x16",
+                "source": "radare2",
+                "block_id": "0x100000840"
+              },
+              "lowered": true,
+              "warnings": []
+            }
+          ]
+        },
+        "lowering": {
+          "instructions_total": 3,
+          "instructions_lowered": 3,
+          "instructions_commented": 0,
+          "coverage_percent": 100.0
+        },
+        "control_flow": {
+          "regions_total": 3,
+          "structured_constructs_emitted": 0,
+          "loops_emitted": 0,
+          "if_constructs_emitted": 0,
+          "if_else_constructs_emitted": 0,
+          "switch_constructs_emitted": 0,
+          "fallback_regions": 0,
+          "duplicate_blocks_skipped": 0,
+          "condition_expressions_recovered": 0
+        },
+        "return_recovery": {
+          "return_sites_total": 0,
+          "return_sites_with_value": 0,
+          "return_sites_unknown": 0,
+          "return_registers_observed": [],
+          "return_expression_kind": "unknown",
+          "return_expression": null,
+          "sites": [],
+          "warnings": []
+        },
+        "callsite_refinement": {
+          "call_sites_total": 0,
+          "direct_calls": 0,
+          "indirect_calls": 0,
+          "calls_with_arguments": 0,
+          "arguments_recovered": 0,
+          "arguments_unknown": 0,
+          "sites": [],
+          "warnings": []
         }
       }
     ],
     "summary": {
       "functions_total": 8,
       "functions_emitted": 8,
-      "functions_structured": 4,
-      "functions_partially_structured": 4,
+      "functions_structured": 5,
+      "functions_partially_structured": 3,
       "functions_unstructured": 0,
       "functions_missing": 0,
       "functions_with_warnings": 6,
@@ -16829,7 +17218,7 @@
       "instructions_lowered": 231,
       "instructions_commented": 24,
       "lowering_coverage_percent": 90.59,
-      "control_flow_regions_total": 91,
+      "control_flow_regions_total": 93,
       "control_flow_constructs_emitted": 10,
       "loops_emitted": 5,
       "if_constructs_emitted": 0,
@@ -16837,7 +17226,17 @@
       "switch_constructs_emitted": 0,
       "fallback_regions": 0,
       "duplicate_blocks_skipped": 5,
-      "condition_expressions_recovered": 0
+      "condition_expressions_recovered": 0,
+      "return_sites_total": 6,
+      "return_sites_with_value": 6,
+      "return_sites_unknown": 0,
+      "functions_with_recovered_return_value": 6,
+      "call_sites_total": 7,
+      "direct_calls": 6,
+      "indirect_calls": 1,
+      "calls_with_arguments": 6,
+      "call_arguments_recovered": 11,
+      "call_arguments_unknown": 1
     }
   }
 }

@@ -338,7 +338,7 @@ class TestControlFlowEmission:
         )
         # Verify models schema version matches
         artifact = SourceReconstructionArtifact(schema_version=SCHEMA_VERSION, functions=[fn])
-        assert artifact.schema_version == "5.3.0"
+        assert artifact.schema_version == "5.4.0"
         
         # Populate function stats (mock reconstructor behavior)
         fn.control_flow = analyze_control_flow_regions(fn.structured_regions)

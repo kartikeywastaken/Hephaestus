@@ -1931,32 +1931,8 @@
         "confidence": 0.45
       },
       {
-        "name": "__stack_chk_fail",
-        "entry_point": "0x100000840",
-        "function_kind": "user",
-        "signature": {
-          "return_type": {
-            "type": "unknown",
-            "confidence": 0.2,
-            "source": "fallback_unknown_return",
-            "notes": []
-          },
-          "parameters": [],
-          "variadic": false,
-          "confidence": 0.2,
-          "source": "user_function_parameter_recovery",
-          "notes": []
-        },
-        "variables": [],
-        "evidence": [
-          "function recovered from unified_ir",
-          "no parameter variables found; fallback signature emitted"
-        ],
-        "confidence": 0.2
-      },
-      {
         "name": "printf",
-        "entry_point": "0x10000084c",
+        "entry_point": "0x100000840",
         "function_kind": "library",
         "signature": {
           "return_type": {
@@ -1991,6 +1967,30 @@
           "signature recovered from known signature database"
         ],
         "confidence": 1.0
+      },
+      {
+        "name": "__stack_chk_fail",
+        "entry_point": "0x10000084c",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [],
+          "variadic": false,
+          "confidence": 0.2,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [],
+        "evidence": [
+          "function recovered from unified_ir",
+          "no parameter variables found; fallback signature emitted"
+        ],
+        "confidence": 0.2
       }
     ]
   }

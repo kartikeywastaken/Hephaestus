@@ -431,14 +431,23 @@
     "function_name": "__stack_chk_fail",
     "structured_body": {
       "type": "block",
-      "id": "0x100000840"
+      "id": "0x10000084c"
     }
   },
   {
     "function_name": "printf",
     "structured_body": {
-      "type": "block",
-      "id": "0x10000084c"
+      "type": "sequence",
+      "children": [
+        {
+          "type": "block",
+          "id": "0x100000840"
+        },
+        {
+          "type": "block",
+          "id": "0x10000084c"
+        }
+      ]
     }
   }
 ]

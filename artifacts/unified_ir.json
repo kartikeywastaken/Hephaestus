@@ -276,7 +276,7 @@
                   },
                   {
                     "size_bytes": 8,
-                    "offset": 8,
+                    "offset": 0,
                     "kind": "memory",
                     "base": "x8"
                   }
@@ -284,7 +284,7 @@
                 "address": "0x100000470",
                 "size_bytes": 4,
                 "mnemonic": "ldr",
-                "raw": "ldr x8,[x8, #0x8]",
+                "raw": "ldr x8,[x8]",
                 "source": "ghidra",
                 "opcode": "ldr"
               },
@@ -1441,13 +1441,13 @@
                 "operands": [
                   {
                     "kind": "symbol",
-                    "name": "0x10000084c"
+                    "name": "0x100000840"
                   }
                 ],
                 "address": "0x100000544",
                 "size_bytes": 4,
                 "mnemonic": "bl",
-                "raw": "bl 0x10000084c",
+                "raw": "bl 0x100000840",
                 "source": "ghidra",
                 "opcode": "bl"
               }
@@ -1577,7 +1577,7 @@
                   },
                   {
                     "size_bytes": 8,
-                    "offset": 8,
+                    "offset": 0,
                     "kind": "memory",
                     "base": "x8"
                   }
@@ -1585,7 +1585,7 @@
                 "address": "0x10000055c",
                 "size_bytes": 4,
                 "mnemonic": "ldr",
-                "raw": "ldr x8,[x8, #0x8]",
+                "raw": "ldr x8,[x8]",
                 "source": "ghidra",
                 "opcode": "ldr"
               },
@@ -1696,13 +1696,13 @@
                 "operands": [
                   {
                     "kind": "symbol",
-                    "name": "0x100000840"
+                    "name": "0x10000084c"
                   }
                 ],
                 "address": "0x100000570",
                 "size_bytes": 4,
                 "mnemonic": "bl",
-                "raw": "bl 0x100000840",
+                "raw": "bl 0x10000084c",
                 "source": "ghidra",
                 "opcode": "bl"
               }
@@ -6291,86 +6291,10 @@
       },
       {
         "name": "__stack_chk_fail",
-        "entry_point": "0x100000840",
-        "size_bytes": 12,
-        "calling_convention": 1,
-        "signature": "1 __stack_chk_fail()",
-        "confidence": 0.8,
-        "local_variables": [],
-        "stack_variables": [],
-        "heap_variables": [],
-        "basic_blocks": [
-          {
-            "id": "0x100000840",
-            "size": 12,
-            "instructions": [
-              {
-                "address": "0x100000840",
-                "mnemonic": "adrp",
-                "opcode": "adrp",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x16"
-                  },
-                  {
-                    "kind": "immediate",
-                    "value": 4294983680
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "adrp x16, reloc.__stack_chk_fail",
-                "source": "radare2"
-              },
-              {
-                "address": "0x100000844",
-                "mnemonic": "ldr",
-                "opcode": "ldr",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x16"
-                  },
-                  {
-                    "kind": "memory",
-                    "base": "x16",
-                    "offset": 0,
-                    "size_bytes": null
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "ldr x16, [x16]",
-                "source": "radare2"
-              },
-              {
-                "address": "0x100000848",
-                "mnemonic": "br",
-                "opcode": "br",
-                "operands": [
-                  {
-                    "kind": "register",
-                    "value": "x16"
-                  }
-                ],
-                "size_bytes": 4,
-                "raw": "br x16",
-                "source": "radare2"
-              }
-            ],
-            "memory_accesses": [],
-            "edges": []
-          }
-        ],
-        "provenance": [
-          "radare2"
-        ]
-      },
-      {
-        "name": "printf",
         "entry_point": "0x10000084c",
         "size_bytes": 16,
         "calling_convention": 1,
-        "signature": "1 printf()",
+        "signature": "1 __stack_chk_fail()",
         "confidence": 0.8,
         "local_variables": [],
         "stack_variables": [],
@@ -6395,7 +6319,7 @@
                   }
                 ],
                 "size_bytes": 4,
-                "raw": "adrp x16, reloc.__stack_chk_fail",
+                "raw": "adrp x16, reloc.__stack_chk_guard",
                 "source": "radare2"
               },
               {
@@ -6449,18 +6373,100 @@
         "provenance": [
           "radare2"
         ]
+      },
+      {
+        "name": "printf",
+        "entry_point": "0x100000840",
+        "size_bytes": 12,
+        "calling_convention": 0,
+        "signature": "0 printf()",
+        "confidence": 0.8,
+        "local_variables": [],
+        "stack_variables": [],
+        "heap_variables": [],
+        "basic_blocks": [
+          {
+            "id": "0x100000840",
+            "size": 12,
+            "instructions": [
+              {
+                "address": "0x100000840",
+                "mnemonic": "adrp",
+                "opcode": "adrp",
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x16"
+                  },
+                  {
+                    "kind": "immediate",
+                    "value": 4294983680
+                  }
+                ],
+                "size_bytes": 4,
+                "raw": "adrp x16, reloc.__stack_chk_guard",
+                "source": "radare2"
+              },
+              {
+                "address": "0x100000844",
+                "mnemonic": "ldr",
+                "opcode": "ldr",
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x16"
+                  },
+                  {
+                    "kind": "memory",
+                    "base": "x16",
+                    "offset": 8,
+                    "size_bytes": null
+                  }
+                ],
+                "size_bytes": 4,
+                "raw": "ldr x16, [x16, 8]",
+                "source": "radare2"
+              },
+              {
+                "address": "0x100000848",
+                "mnemonic": "br",
+                "opcode": "br",
+                "operands": [
+                  {
+                    "kind": "register",
+                    "value": "x16"
+                  }
+                ],
+                "size_bytes": 4,
+                "raw": "br x16",
+                "source": "radare2"
+              }
+            ],
+            "memory_accesses": [],
+            "edges": [
+              {
+                "source": "0x100000840",
+                "target": "0x10000084c",
+                "type": "unconditional"
+              }
+            ]
+          }
+        ],
+        "provenance": [
+          "radare2"
+        ]
       }
     ],
     "call_graph": {
       "nodes": [
-        "_main",
+        "_mix_value",
+        "_op_add",
+        "printf",
         "_reduce_weird",
         "__stack_chk_fail",
-        "_op_add",
-        "_mix_value",
+        "_op_xor",
         "_nested_control",
-        "printf",
-        "_op_xor"
+        "_main"
       ],
       "edges": [
         {
@@ -6488,13 +6494,13 @@
     "symbols": [
       {
         "address": "0x1",
-        "name": "___stack_chk_fail",
+        "name": "_printf",
         "type": "Function",
         "visibility": "IMPORTED"
       },
       {
         "address": "0x2",
-        "name": "_printf",
+        "name": "___stack_chk_fail",
         "type": "Function",
         "visibility": "IMPORTED"
       },
@@ -6782,13 +6788,13 @@
       },
       {
         "address": "0x100000840",
-        "name": "__stack_chk_fail",
+        "name": "printf",
         "type": "function",
         "visibility": "static"
       },
       {
         "address": "0x10000084c",
-        "name": "printf",
+        "name": "__stack_chk_fail",
         "type": "function",
         "visibility": "static"
       },
@@ -6800,37 +6806,37 @@
       },
       {
         "address": "0x100004000",
-        "name": "PTR____stack_chk_fail_100004000",
+        "name": "PTR____stack_chk_guard_100004000",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
         "address": "0x100004008",
-        "name": "PTR____stack_chk_guard_100004008",
+        "name": "PTR__printf_100004008",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
         "address": "0x100004010",
-        "name": "PTR__printf_100004010",
+        "name": "PTR____stack_chk_fail_100004010",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
         "address": "0x10000805d",
-        "name": "s____stack_chk_fail_10000805d",
+        "name": "s____stack_chk_guard_10000805d",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x10000806f",
-        "name": "s____stack_chk_guard_10000806f",
+        "address": "0x100008070",
+        "name": "s__printf_100008070",
         "type": "Label",
         "visibility": "DEFAULT"
       },
       {
-        "address": "0x100008082",
-        "name": "s__printf_100008082",
+        "address": "0x100008078",
+        "name": "s____stack_chk_fail_100008078",
         "type": "Label",
         "visibility": "DEFAULT"
       },
@@ -7011,9 +7017,9 @@
       },
       {
         "entry_point": "0x100000840",
-        "canonical_name": "__stack_chk_fail",
+        "canonical_name": "printf",
         "aliases": [
-          "__stack_chk_fail"
+          "printf"
         ],
         "sources": [
           "radare2"
@@ -7024,9 +7030,9 @@
       },
       {
         "entry_point": "0x10000084c",
-        "canonical_name": "printf",
+        "canonical_name": "__stack_chk_fail",
         "aliases": [
-          "printf"
+          "__stack_chk_fail"
         ],
         "sources": [
           "radare2"

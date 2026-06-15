@@ -890,18 +890,18 @@ def handle_finalize_semantics(out_dir: str):
 
 def handle_reconstruct_source(out_dir: str):
     """
-    Phase 5.1: Source Reconstruction Foundation
+    Phase 5.4: Conservative Return and Call-Site Refinement
     Reads unified_ir.json, structuring_regions.json, phase4_semantics.json,
     and optionally layout_recovery.json, then writes source_reconstruction.json
     and recovered.c to the output directory.
     """
     from src.utils.run_logging import append_run_log
-    append_run_log(out_dir, "ORCHESTRATION", "Pipeline stage started: Phase 5.3 Source Reconstruction")
+    append_run_log(out_dir, "ORCHESTRATION", "Pipeline stage started: Phase 5.4 Source Reconstruction")
     from src.ir.source.reconstructor import build_source_reconstruction
     from src.ir.source.emitter import write_source_reconstruction_artifact
     from src.ir.source.c_emitter import emit_recovered_c
 
-    logger.info("Executing Phase 5.3 Source Reconstruction...")
+    logger.info("Executing Phase 5.4 Source Reconstruction...")
 
     # Load unified_ir.json (required)
     ir_path = os.path.join(out_dir, "unified_ir.json")
@@ -974,23 +974,23 @@ def handle_reconstruct_source(out_dir: str):
         source_semantics=sem_path,
         source_layout=lr_path if layout_recovery else None,
     )
-    logger.info("[+] Phase 5.3 source reconstruction artifact committed: %s", recon_path)
+    logger.info("[+] Phase 5.4 source reconstruction artifact committed: %s", recon_path)
 
     # Write recovered.c
     c_path = os.path.join(out_dir, "recovered.c")
     emit_recovered_c(artifact, c_path)
-    logger.info("[+] Phase 5.3 recovered C skeleton committed: %s", c_path)
+    logger.info("[+] Phase 5.4 recovered C skeleton committed: %s", c_path)
 
     append_run_log(
         out_dir, "ORCHESTRATION",
-        f"Pipeline stage completed: Phase 5.3 Source Reconstruction\n"
+        f"Pipeline stage completed: Phase 5.4 Source Reconstruction\n"
         f"Artifacts written: {recon_path}, {c_path}"
     )
 
     # Print summary
     s = artifact.summary
     print("\n============================================================")
-    print("      PHASE 5.3: CONSERVATIVE STRUCTURED CONTROL-FLOW EMISSION")
+    print("      PHASE 5.4: CONSERVATIVE RETURN AND CALL-SITE REFINEMENT")
     print("============================================================")
     print(f"Functions reconstructed:          {s['functions_total']}")
     print(f"  Structured:                     {s['functions_structured']}")
@@ -1016,6 +1016,17 @@ def handle_reconstruct_source(out_dir: str):
     print(f"  Fallback/Unstructured:          {s['fallback_regions']}")
     print(f"  Duplicate blocks skipped:       {s['duplicate_blocks_skipped']}")
     print(f"Condition expressions recovered:  {s['condition_expressions_recovered']}")
+    # Phase 5.4 return/call-site refinement
+    print(f"Return sites total:               {s.get('return_sites_total', 0)}")
+    print(f"  With value:                     {s.get('return_sites_with_value', 0)}")
+    print(f"  Unknown:                        {s.get('return_sites_unknown', 0)}")
+    print(f"  Funcs with recovered returns:   {s.get('functions_with_recovered_return_value', 0)}")
+    print(f"Call sites total:                 {s.get('call_sites_total', 0)}")
+    print(f"  Direct:                         {s.get('direct_calls', 0)}")
+    print(f"  Indirect:                       {s.get('indirect_calls', 0)}")
+    print(f"  With arguments:                 {s.get('calls_with_arguments', 0)}")
+    print(f"  Arguments recovered:            {s.get('call_arguments_recovered', 0)}")
+    print(f"  Arguments unknown:              {s.get('call_arguments_unknown', 0)}")
     print("============================================================")
     print(f"Output: {recon_path}")
     print(f"Output: {c_path}")

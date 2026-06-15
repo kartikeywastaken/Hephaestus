@@ -520,6 +520,22 @@ def build_source_reconstruction(
     duplicate_blocks_skipped = 0
     condition_expressions_recovered = 0
 
+    # Phase 5.4 return/call-site summary counters
+    return_sites_total = 0
+    return_sites_with_value = 0
+    return_sites_unknown = 0
+    functions_with_recovered_return_value = 0
+    call_sites_total = 0
+    summary_direct_calls = 0
+    summary_indirect_calls = 0
+    summary_calls_with_arguments = 0
+    call_arguments_recovered = 0
+    call_arguments_unknown = 0
+
+    # Detect architecture once for the whole IR
+    from src.ir.source.lowering import detect_architecture
+    arch = detect_architecture(unified_ir)
+
     reconstructed: List[ReconstructedFunction] = []
 
     for ir_func in ir_functions:
@@ -628,6 +644,18 @@ def build_source_reconstruction(
         from src.ir.source.control_emitter import analyze_control_flow_regions
         fn_control_flow = analyze_control_flow_regions(structured_regions)
 
+        # Phase 5.4 return recovery
+        from src.ir.source.return_recovery import analyze_return_sites
+        fn_return_recovery = analyze_return_sites(
+            dict(lowered_blocks), return_type, arch
+        )
+
+        # Phase 5.4 call-site refinement
+        from src.ir.source.callsite_refinement import analyze_call_sites
+        fn_callsite_refinement = analyze_call_sites(
+            dict(lowered_blocks), arch
+        )
+
         rec = ReconstructedFunction(
             name=name,
             canonical_name=canonical_name,
@@ -650,6 +678,8 @@ def build_source_reconstruction(
             lowered_blocks=dict(lowered_blocks),
             lowering=fn_lowering,
             control_flow=fn_control_flow,
+            return_recovery=fn_return_recovery,
+            callsite_refinement=fn_callsite_refinement,
         )
         reconstructed.append(rec)
 
@@ -663,6 +693,20 @@ def build_source_reconstruction(
         fallback_regions += fn_control_flow.get("fallback_regions", 0)
         duplicate_blocks_skipped += fn_control_flow.get("duplicate_blocks_skipped", 0)
         condition_expressions_recovered += fn_control_flow.get("condition_expressions_recovered", 0)
+
+        # Accumulate Phase 5.4 return/call-site metrics
+        return_sites_total += fn_return_recovery.get("return_sites_total", 0)
+        return_sites_with_value += fn_return_recovery.get("return_sites_with_value", 0)
+        return_sites_unknown += fn_return_recovery.get("return_sites_unknown", 0)
+        if fn_return_recovery.get("return_sites_with_value", 0) > 0:
+            functions_with_recovered_return_value += 1
+
+        call_sites_total += fn_callsite_refinement.get("call_sites_total", 0)
+        summary_direct_calls += fn_callsite_refinement.get("direct_calls", 0)
+        summary_indirect_calls += fn_callsite_refinement.get("indirect_calls", 0)
+        summary_calls_with_arguments += fn_callsite_refinement.get("calls_with_arguments", 0)
+        call_arguments_recovered += fn_callsite_refinement.get("arguments_recovered", 0)
+        call_arguments_unknown += fn_callsite_refinement.get("arguments_unknown", 0)
 
         # Update summary counters
         if body_status == "structured":
@@ -736,6 +780,17 @@ def build_source_reconstruction(
         "fallback_regions": fallback_regions,
         "duplicate_blocks_skipped": duplicate_blocks_skipped,
         "condition_expressions_recovered": condition_expressions_recovered,
+        # Phase 5.4 return/call-site refinement
+        "return_sites_total": return_sites_total,
+        "return_sites_with_value": return_sites_with_value,
+        "return_sites_unknown": return_sites_unknown,
+        "functions_with_recovered_return_value": functions_with_recovered_return_value,
+        "call_sites_total": call_sites_total,
+        "direct_calls": summary_direct_calls,
+        "indirect_calls": summary_indirect_calls,
+        "calls_with_arguments": summary_calls_with_arguments,
+        "call_arguments_recovered": call_arguments_recovered,
+        "call_arguments_unknown": call_arguments_unknown,
     }
 
     artifact = SourceReconstructionArtifact(

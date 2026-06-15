@@ -68,8 +68,8 @@ def write_source_reconstruction_artifact(
 
     # Attach provenance to artifact
     artifact.provenance = {
-        "phase": "5.3",
-        "description": "Conservative source reconstruction with structured control-flow emission",
+        "phase": "5.4",
+        "description": "Conservative source reconstruction with return and call-site refinement",
         "source_ir": norm_ir,
         "source_structuring": norm_st,
         "source_semantics": norm_sem,

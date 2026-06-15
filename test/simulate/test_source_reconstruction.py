@@ -124,14 +124,14 @@ def _make_sem_func(
 # ---------------------------------------------------------------------------
 
 class TestSchemaVersion:
-    def test_schema_version_is_5_3_0(self):
-        assert SCHEMA_VERSION == "5.3.0"
+    def test_schema_version_is_5_4_0(self):
+        assert SCHEMA_VERSION == "5.4.0"
 
     def test_artifact_schema_version(self):
         artifact = SourceReconstructionArtifact()
-        assert artifact.schema_version == "5.3.0"
+        assert artifact.schema_version == "5.4.0"
         d = artifact.to_dict()
-        assert d["schema_version"] == "5.3.0"
+        assert d["schema_version"] == "5.4.0"
 
 
 # ---------------------------------------------------------------------------
@@ -326,7 +326,7 @@ class TestBuildSourceReconstruction:
         )])
 
         artifact = build_source_reconstruction(ir, regions, sem)
-        assert artifact.schema_version == "5.3.0"
+        assert artifact.schema_version == "5.4.0"
         assert len(artifact.functions) == 1
 
         fn = artifact.functions[0]
@@ -537,7 +537,8 @@ class TestCEmitter:
 
         assert "#include <stdint.h>" in output
         assert "int32_t test_func(int32_t x)" in output
-        assert "return 0; /* placeholder */" in output
+        assert "/* return value unknown */" in output
+        assert "return 0;" in output
         assert "Body status: structured" in output
 
     def test_void_return(self):
@@ -549,7 +550,7 @@ class TestCEmitter:
         output = self._emit_to_string(artifact)
 
         assert "void void_fn(void)" in output
-        assert "return; /* placeholder */" in output
+        assert "return; /* void return */" in output
 
     def test_forward_declarations(self):
         fn = ReconstructedFunction(
@@ -821,8 +822,8 @@ class TestEmitter:
             write_source_reconstruction_artifact(artifact, path)
             with open(path, "r") as f:
                 data = json.load(f)
-            assert data["schema_version"] == "5.3.0"
-            assert data["provenance"]["phase"] == "5.3"
+            assert data["schema_version"] == "5.4.0"
+            assert data["provenance"]["phase"] == "5.4"
             assert len(data["data"]["functions"]) == 1
             assert data["data"]["functions"][0]["name"] == "fn1"
             assert data["data"]["functions"][0]["canonical_name"] == "fn1"

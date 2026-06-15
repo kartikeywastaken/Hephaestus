@@ -1391,36 +1391,8 @@
         "parameter_layout_evidence": []
       },
       {
-        "name": "__stack_chk_fail",
-        "entry_point": "0x100000840",
-        "function_kind": "user",
-        "refined_signature": {
-          "return_type": {
-            "type": "unknown",
-            "confidence": 0.2,
-            "source": "fallback_unknown_return",
-            "notes": []
-          },
-          "parameters": [],
-          "variadic": false,
-          "confidence": 0.2,
-          "source": "user_function_parameter_recovery",
-          "notes": []
-        },
-        "variables": [],
-        "total_constraints_applied": 0,
-        "confidence": 0.2,
-        "evidence": [
-          "function recovered from unified_ir",
-          "no parameter variables found; fallback signature emitted",
-          "No instruction-level evidence available; Phase 4A types preserved"
-        ],
-        "abi_argument_bindings": [],
-        "parameter_layout_evidence": []
-      },
-      {
         "name": "printf",
-        "entry_point": "0x10000084c",
+        "entry_point": "0x100000840",
         "function_kind": "library",
         "refined_signature": {
           "return_type": {
@@ -1455,6 +1427,34 @@
         "evidence": [
           "function recovered from unified_ir",
           "signature recovered from known signature database",
+          "No instruction-level evidence available; Phase 4A types preserved"
+        ],
+        "abi_argument_bindings": [],
+        "parameter_layout_evidence": []
+      },
+      {
+        "name": "__stack_chk_fail",
+        "entry_point": "0x10000084c",
+        "function_kind": "user",
+        "refined_signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [],
+          "variadic": false,
+          "confidence": 0.2,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [],
+        "total_constraints_applied": 0,
+        "confidence": 0.2,
+        "evidence": [
+          "function recovered from unified_ir",
+          "no parameter variables found; fallback signature emitted",
           "No instruction-level evidence available; Phase 4A types preserved"
         ],
         "abi_argument_bindings": [],
