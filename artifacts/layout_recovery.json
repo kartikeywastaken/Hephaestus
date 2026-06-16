@@ -23,11 +23,12 @@
         "min_offset": 16,
         "max_offset": 48,
         "observed_sizes": [
-          4
+          4,
+          8
         ],
-        "access_count": 25,
+        "access_count": 26,
         "evidence_notes": [
-          "25 memory access(es) observed at base 'sp' in function '_main'; offsets=[16, 28, 32, 36, 40, 48]; sizes=[4]; classification=record_like"
+          "26 memory access(es) observed at base 'sp' in function '_main'; offsets=[16, 28, 32, 36, 40, 48]; sizes=[4, 8]; classification=record_like"
         ],
         "source_instrs": [
           "0x100000590",
@@ -52,39 +53,17 @@
           "0x1000006a4",
           "0x1000006c0",
           "0x1000006e4",
-          "0x1000006ec",
-          "0x1000006fc",
-          "0x100000728"
-        ]
-      },
-      {
-        "function_entry": "0x100000548",
-        "function_name": "_main",
-        "base_id": "x8",
-        "layout_kind": "scalar",
-        "observed_offsets": [
-          0
-        ],
-        "min_offset": 0,
-        "max_offset": 0,
-        "observed_sizes": [
-          4
-        ],
-        "access_count": 3,
-        "evidence_notes": [
-          "3 memory access(es) observed at base 'x8' in function '_main'; offsets=[0]; sizes=[4]; classification=scalar"
-        ],
-        "source_instrs": [
-          "0x100000588",
-          "0x1000005c4",
-          "0x1000005e0"
+          "0x100000700",
+          "0x100000708",
+          "0x100000718",
+          "0x100000744"
         ]
       },
       {
         "function_entry": "0x100000548",
         "function_name": "_main",
         "base_id": "x9",
-        "layout_kind": "array_like",
+        "layout_kind": "record_like",
         "observed_offsets": [
           0,
           80
@@ -92,22 +71,42 @@
         "min_offset": 0,
         "max_offset": 80,
         "observed_sizes": [
-          4
+          4,
+          8
         ],
-        "access_count": 5,
+        "access_count": 3,
         "evidence_notes": [
-          "5 memory access(es) observed at base 'x9' in function '_main'; offsets=[0, 80]; sizes=[4]; classification=array_like"
+          "3 memory access(es) observed at base 'x9' in function '_main'; offsets=[0, 80]; sizes=[4, 8]; classification=record_like"
         ],
         "source_instrs": [
-          "0x100000600",
-          "0x100000700",
-          "0x10000070c",
-          "0x100000718",
-          "0x100000730"
+          "0x10000071c",
+          "0x100000728",
+          "0x100000734"
         ]
       },
       {
         "function_entry": "0x10000074c",
+        "function_name": "mixed_driver",
+        "base_id": "x9",
+        "layout_kind": "pointer_like",
+        "observed_offsets": [
+          80
+        ],
+        "min_offset": 80,
+        "max_offset": 80,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 1,
+        "evidence_notes": [
+          "1 memory access(es) observed at base 'x9' in function 'mixed_driver'; offsets=[80]; sizes=[8]; classification=pointer_like"
+        ],
+        "source_instrs": [
+          "0x10000074c"
+        ]
+      },
+      {
+        "function_entry": "0x100000768",
         "function_name": "_mixed_driver",
         "base_id": "sp",
         "layout_kind": "array_like",
@@ -120,42 +119,137 @@
         "observed_sizes": [
           4
         ],
-        "access_count": 27,
+        "access_count": 31,
         "evidence_notes": [
-          "27 memory access(es) observed at base 'sp' in function '_mixed_driver'; offsets=[12, 16]; sizes=[4]; classification=array_like"
+          "31 memory access(es) observed at base 'sp' in function '_mixed_driver'; offsets=[12, 16]; sizes=[4]; classification=array_like"
         ],
         "source_instrs": [
-          "0x100000760",
-          "0x100000764",
-          "0x10000076c",
           "0x10000077c",
           "0x100000780",
-          "0x10000078c",
+          "0x100000788",
+          "0x100000798",
+          "0x10000079c",
           "0x1000007a8",
-          "0x1000007b0",
-          "0x1000007b4",
-          "0x1000007b8",
           "0x1000007c4",
           "0x1000007cc",
           "0x1000007d0",
           "0x1000007d4",
+          "0x1000007e0",
           "0x1000007e8",
+          "0x1000007ec",
           "0x1000007f0",
-          "0x1000007f4",
-          "0x1000007fc",
-          "0x100000800",
-          "0x100000808",
-          "0x100000820",
-          "0x100000828",
-          "0x10000082c",
+          "0x100000804",
+          "0x10000080c",
+          "0x100000810",
+          "0x100000818",
+          "0x10000081c",
+          "0x100000824",
+          "0x10000083c",
           "0x100000844",
+          "0x100000848",
+          "0x10000084c",
+          "0x100000858",
           "0x100000860",
-          "0x100000868",
-          "0x100000870"
+          "0x100000864",
+          "0x10000087c",
+          "0x100000898",
+          "0x1000008a0",
+          "0x1000008a8"
         ]
       },
       {
-        "function_entry": "0x100000880",
+        "function_entry": "0x100000788",
+        "function_name": "FUN_100000788",
+        "base_id": "sp",
+        "layout_kind": "record_like",
+        "observed_offsets": [
+          12,
+          16
+        ],
+        "min_offset": 12,
+        "max_offset": 16,
+        "observed_sizes": [
+          4,
+          8
+        ],
+        "access_count": 26,
+        "evidence_notes": [
+          "26 memory access(es) observed at base 'sp' in function 'FUN_100000788'; offsets=[12, 16]; sizes=[4, 8]; classification=record_like"
+        ],
+        "source_instrs": [
+          "0x100000788",
+          "0x100000798",
+          "0x10000079c",
+          "0x1000007a8",
+          "0x1000007c4",
+          "0x1000007cc",
+          "0x1000007d0",
+          "0x1000007d4",
+          "0x1000007e0",
+          "0x1000007e8",
+          "0x1000007ec",
+          "0x1000007f0",
+          "0x100000804",
+          "0x10000080c",
+          "0x100000810",
+          "0x100000818",
+          "0x10000081c",
+          "0x100000824",
+          "0x10000083c",
+          "0x100000844",
+          "0x100000848",
+          "0x10000084c",
+          "0x100000858",
+          "0x100000860",
+          "0x100000864",
+          "0x10000087c"
+        ]
+      },
+      {
+        "function_entry": "0x100000898",
+        "function_name": "FUN_100000898",
+        "base_id": "sp",
+        "layout_kind": "scalar",
+        "observed_offsets": [
+          12
+        ],
+        "min_offset": 12,
+        "max_offset": 12,
+        "observed_sizes": [
+          4
+        ],
+        "access_count": 2,
+        "evidence_notes": [
+          "2 memory access(es) observed at base 'sp' in function 'FUN_100000898'; offsets=[12]; sizes=[4]; classification=scalar"
+        ],
+        "source_instrs": [
+          "0x100000898",
+          "0x1000008a0"
+        ]
+      },
+      {
+        "function_entry": "0x1000008a8",
+        "function_name": "FUN_1000008a8",
+        "base_id": "sp",
+        "layout_kind": "pointer_like",
+        "observed_offsets": [
+          16
+        ],
+        "min_offset": 16,
+        "max_offset": 16,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 1,
+        "evidence_notes": [
+          "1 memory access(es) observed at base 'sp' in function 'FUN_1000008a8'; offsets=[16]; sizes=[8]; classification=pointer_like"
+        ],
+        "source_instrs": [
+          "0x1000008a8"
+        ]
+      },
+      {
+        "function_entry": "0x1000008b8",
         "function_name": "_cfg_pressure",
         "base_id": "sp",
         "layout_kind": "array_like",
@@ -175,37 +269,37 @@
           "27 memory access(es) observed at base 'sp' in function '_cfg_pressure'; offsets=[8, 16, 24, 32]; sizes=[4]; classification=array_like"
         ],
         "source_instrs": [
-          "0x1000008a4",
-          "0x1000008ac",
-          "0x1000008bc",
-          "0x1000008f0",
-          "0x1000008f8",
-          "0x10000090c",
-          "0x100000914",
-          "0x100000920",
-          "0x100000924",
+          "0x1000008dc",
+          "0x1000008e4",
+          "0x1000008f4",
           "0x100000928",
-          "0x100000934",
+          "0x100000930",
           "0x100000944",
-          "0x100000954",
-          "0x100000964",
-          "0x100000974",
-          "0x100000984",
-          "0x100000998",
-          "0x1000009b8",
-          "0x1000009e0",
-          "0x1000009e4",
-          "0x100000a24",
-          "0x100000a8c",
-          "0x100000a90",
-          "0x100000ae4",
-          "0x100000aec",
-          "0x100000b10",
-          "0x100000b18"
+          "0x10000094c",
+          "0x100000958",
+          "0x10000095c",
+          "0x100000960",
+          "0x10000096c",
+          "0x10000097c",
+          "0x10000098c",
+          "0x10000099c",
+          "0x1000009ac",
+          "0x1000009bc",
+          "0x1000009d0",
+          "0x1000009f0",
+          "0x100000a18",
+          "0x100000a1c",
+          "0x100000a5c",
+          "0x100000ac4",
+          "0x100000ac8",
+          "0x100000b1c",
+          "0x100000b24",
+          "0x100000b48",
+          "0x100000b50"
         ]
       },
       {
-        "function_entry": "0x100000880",
+        "function_entry": "0x1000008b8",
         "function_name": "_cfg_pressure",
         "base_id": "x9",
         "layout_kind": "scalar",
@@ -222,12 +316,103 @@
           "2 memory access(es) observed at base 'x9' in function '_cfg_pressure'; offsets=[80]; sizes=[4]; classification=scalar"
         ],
         "source_instrs": [
-          "0x100000b28",
-          "0x100000b30"
+          "0x100000b60",
+          "0x100000b68"
         ]
       },
       {
-        "function_entry": "0x100000b44",
+        "function_entry": "0x1000008e4",
+        "function_name": "FUN_1000008e4",
+        "base_id": "sp",
+        "layout_kind": "array_like",
+        "observed_offsets": [
+          8,
+          16,
+          24,
+          32
+        ],
+        "min_offset": 8,
+        "max_offset": 32,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 24,
+        "evidence_notes": [
+          "24 memory access(es) observed at base 'sp' in function 'FUN_1000008e4'; offsets=[8, 16, 24, 32]; sizes=[8]; classification=array_like"
+        ],
+        "source_instrs": [
+          "0x1000008e4",
+          "0x1000008f4",
+          "0x100000928",
+          "0x100000930",
+          "0x100000944",
+          "0x10000094c",
+          "0x100000958",
+          "0x10000095c",
+          "0x100000960",
+          "0x10000096c",
+          "0x10000097c",
+          "0x10000098c",
+          "0x10000099c",
+          "0x1000009ac",
+          "0x1000009bc",
+          "0x1000009d0",
+          "0x1000009f0",
+          "0x100000a18",
+          "0x100000a1c",
+          "0x100000a5c",
+          "0x100000ac4",
+          "0x100000ac8",
+          "0x100000b1c",
+          "0x100000b24"
+        ]
+      },
+      {
+        "function_entry": "0x100000b48",
+        "function_name": "FUN_100000b48",
+        "base_id": "sp",
+        "layout_kind": "pointer_like",
+        "observed_offsets": [
+          32
+        ],
+        "min_offset": 32,
+        "max_offset": 32,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 2,
+        "evidence_notes": [
+          "2 memory access(es) observed at base 'sp' in function 'FUN_100000b48'; offsets=[32]; sizes=[8]; classification=pointer_like"
+        ],
+        "source_instrs": [
+          "0x100000b48",
+          "0x100000b50"
+        ]
+      },
+      {
+        "function_entry": "0x100000b58",
+        "function_name": "FUN_100000b58",
+        "base_id": "x9",
+        "layout_kind": "pointer_like",
+        "observed_offsets": [
+          80
+        ],
+        "min_offset": 80,
+        "max_offset": 80,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 2,
+        "evidence_notes": [
+          "2 memory access(es) observed at base 'x9' in function 'FUN_100000b58'; offsets=[80]; sizes=[8]; classification=pointer_like"
+        ],
+        "source_instrs": [
+          "0x100000b60",
+          "0x100000b68"
+        ]
+      },
+      {
+        "function_entry": "0x100000b7c",
         "function_name": "_indirect_pressure",
         "base_id": "sp",
         "layout_kind": "array_like",
@@ -247,25 +432,25 @@
           "15 memory access(es) observed at base 'sp' in function '_indirect_pressure'; offsets=[0, 8, 16, 24]; sizes=[4]; classification=array_like"
         ],
         "source_instrs": [
-          "0x100000b5c",
-          "0x100000b64",
-          "0x100000b78",
+          "0x100000b94",
           "0x100000b9c",
-          "0x100000ba0",
-          "0x100000ba8",
-          "0x100000c14",
-          "0x100000c18",
-          "0x100000c24",
-          "0x100000c3c",
-          "0x100000c60",
-          "0x100000c64",
-          "0x100000c78",
-          "0x100000c94",
-          "0x100000c9c"
+          "0x100000bb0",
+          "0x100000bd4",
+          "0x100000bd8",
+          "0x100000be0",
+          "0x100000c4c",
+          "0x100000c50",
+          "0x100000c5c",
+          "0x100000c74",
+          "0x100000c98",
+          "0x100000c9c",
+          "0x100000cb0",
+          "0x100000ccc",
+          "0x100000cd4"
         ]
       },
       {
-        "function_entry": "0x100000b44",
+        "function_entry": "0x100000b7c",
         "function_name": "_indirect_pressure",
         "base_id": "x8",
         "layout_kind": "scalar",
@@ -282,13 +467,13 @@
           "3 memory access(es) observed at base 'x8' in function '_indirect_pressure'; offsets=[0]; sizes=[4]; classification=scalar"
         ],
         "source_instrs": [
-          "0x100000b98",
-          "0x100000c10",
-          "0x100000c5c"
+          "0x100000bd0",
+          "0x100000c48",
+          "0x100000c94"
         ]
       },
       {
-        "function_entry": "0x100000b44",
+        "function_entry": "0x100000b7c",
         "function_name": "_indirect_pressure",
         "base_id": "x9",
         "layout_kind": "scalar",
@@ -305,12 +490,226 @@
           "2 memory access(es) observed at base 'x9' in function '_indirect_pressure'; offsets=[80]; sizes=[4]; classification=scalar"
         ],
         "source_instrs": [
-          "0x100000cac",
-          "0x100000cb4"
+          "0x100000ce4",
+          "0x100000cec"
         ]
       },
       {
-        "function_entry": "0x100000cc8",
+        "function_entry": "0x100000b9c",
+        "function_name": "FUN_100000b9c",
+        "base_id": "sp",
+        "layout_kind": "array_like",
+        "observed_offsets": [
+          0,
+          8,
+          16,
+          24
+        ],
+        "min_offset": 0,
+        "max_offset": 24,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 12,
+        "evidence_notes": [
+          "12 memory access(es) observed at base 'sp' in function 'FUN_100000b9c'; offsets=[0, 8, 16, 24]; sizes=[8]; classification=array_like"
+        ],
+        "source_instrs": [
+          "0x100000b9c",
+          "0x100000bb0",
+          "0x100000bd4",
+          "0x100000bd8",
+          "0x100000be0",
+          "0x100000c4c",
+          "0x100000c50",
+          "0x100000c5c",
+          "0x100000c74",
+          "0x100000c98",
+          "0x100000c9c",
+          "0x100000cb0"
+        ]
+      },
+      {
+        "function_entry": "0x100000ccc",
+        "function_name": "FUN_100000ccc",
+        "base_id": "sp",
+        "layout_kind": "pointer_like",
+        "observed_offsets": [
+          24
+        ],
+        "min_offset": 24,
+        "max_offset": 24,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 2,
+        "evidence_notes": [
+          "2 memory access(es) observed at base 'sp' in function 'FUN_100000ccc'; offsets=[24]; sizes=[8]; classification=pointer_like"
+        ],
+        "source_instrs": [
+          "0x100000ccc",
+          "0x100000cd4"
+        ]
+      },
+      {
+        "function_entry": "0x100000cdc",
+        "function_name": "FUN_100000cdc",
+        "base_id": "x9",
+        "layout_kind": "pointer_like",
+        "observed_offsets": [
+          80
+        ],
+        "min_offset": 80,
+        "max_offset": 80,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 2,
+        "evidence_notes": [
+          "2 memory access(es) observed at base 'x9' in function 'FUN_100000cdc'; offsets=[80]; sizes=[8]; classification=pointer_like"
+        ],
+        "source_instrs": [
+          "0x100000ce4",
+          "0x100000cec"
+        ]
+      },
+      {
+        "function_entry": "0x100000d00",
+        "function_name": "_byte_halfword_pressure",
+        "base_id": "sp",
+        "layout_kind": "record_like",
+        "observed_offsets": [
+          0,
+          8,
+          10,
+          11,
+          12,
+          16,
+          20,
+          24,
+          28,
+          32,
+          40
+        ],
+        "min_offset": 0,
+        "max_offset": 40,
+        "observed_sizes": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "access_count": 48,
+        "evidence_notes": [
+          "48 memory access(es) observed at base 'sp' in function '_byte_halfword_pressure'; offsets=[0, 8, 10, 11, 12, 16, 20, 24, 28, 32, 40]; sizes=[1, 2, 4, 8]; classification=record_like"
+        ],
+        "source_instrs": [
+          "0x100000d20",
+          "0x100000d24",
+          "0x100000d28",
+          "0x100000d2c",
+          "0x100000d34",
+          "0x100000d44",
+          "0x100000d48",
+          "0x100000d5c",
+          "0x100000d6c",
+          "0x100000d74",
+          "0x100000d7c",
+          "0x100000d84",
+          "0x100000d94",
+          "0x100000d98",
+          "0x100000dac",
+          "0x100000dbc",
+          "0x100000dc4",
+          "0x100000dcc",
+          "0x100000dd4",
+          "0x100000de4",
+          "0x100000de8",
+          "0x100000e08",
+          "0x100000e0c",
+          "0x100000e10",
+          "0x100000e30",
+          "0x100000e34",
+          "0x100000e48",
+          "0x100000e4c",
+          "0x100000e6c",
+          "0x100000e70",
+          "0x100000e80",
+          "0x100000e84",
+          "0x100000e88",
+          "0x100000e90",
+          "0x100000e94",
+          "0x100000e9c",
+          "0x100000ea4",
+          "0x100000ea8",
+          "0x100000eb0",
+          "0x100000eb8",
+          "0x100000ebc",
+          "0x100000ed4",
+          "0x100000ef0",
+          "0x100000ef8",
+          "0x100000f00",
+          "0x100000f14",
+          "0x100000f18",
+          "0x100000f3c"
+        ]
+      },
+      {
+        "function_entry": "0x100000d00",
+        "function_name": "_byte_halfword_pressure",
+        "base_id": "x8",
+        "layout_kind": "record_like",
+        "observed_offsets": [
+          0,
+          8
+        ],
+        "min_offset": 0,
+        "max_offset": 8,
+        "observed_sizes": [
+          1,
+          2,
+          8
+        ],
+        "access_count": 6,
+        "evidence_notes": [
+          "6 memory access(es) observed at base 'x8' in function '_byte_halfword_pressure'; offsets=[0, 8]; sizes=[1, 2, 8]; classification=record_like"
+        ],
+        "source_instrs": [
+          "0x100000d14",
+          "0x100000d18",
+          "0x100000e68",
+          "0x100000e7c",
+          "0x100000f24",
+          "0x100000f28"
+        ]
+      },
+      {
+        "function_entry": "0x100000d00",
+        "function_name": "_byte_halfword_pressure",
+        "base_id": "x9",
+        "layout_kind": "record_like",
+        "observed_offsets": [
+          0,
+          80
+        ],
+        "min_offset": 0,
+        "max_offset": 80,
+        "observed_sizes": [
+          1,
+          8
+        ],
+        "access_count": 3,
+        "evidence_notes": [
+          "3 memory access(es) observed at base 'x9' in function '_byte_halfword_pressure'; offsets=[0, 80]; sizes=[1, 8]; classification=record_like"
+        ],
+        "source_instrs": [
+          "0x100000e44",
+          "0x100000f08",
+          "0x100000f10"
+        ]
+      },
+      {
+        "function_entry": "0x100000f50",
         "function_name": "_stack_layout_pressure",
         "base_id": "sp",
         "layout_kind": "record_like",
@@ -335,80 +734,80 @@
           "70 memory access(es) observed at base 'sp' in function '_stack_layout_pressure'; offsets=[8, 16, 20, 24, 28, 32, 36, 40, 48]; sizes=[4]; classification=record_like"
         ],
         "source_instrs": [
-          "0x100000ce8",
-          "0x100000cec",
-          "0x100000cf0",
-          "0x100000cf4",
-          "0x100000cfc",
-          "0x100000d0c",
-          "0x100000d10",
-          "0x100000d24",
-          "0x100000d34",
-          "0x100000d3c",
-          "0x100000d44",
-          "0x100000d4c",
-          "0x100000d5c",
-          "0x100000d60",
-          "0x100000d70",
-          "0x100000d80",
-          "0x100000d88",
-          "0x100000d90",
-          "0x100000d98",
-          "0x100000da8",
-          "0x100000dac",
-          "0x100000dbc",
-          "0x100000dcc",
-          "0x100000dd4",
-          "0x100000ddc",
-          "0x100000de4",
-          "0x100000df4",
-          "0x100000df8",
-          "0x100000e04",
-          "0x100000e14",
-          "0x100000e1c",
-          "0x100000e24",
-          "0x100000e2c",
-          "0x100000e3c",
-          "0x100000e44",
-          "0x100000e54",
-          "0x100000e60",
-          "0x100000e68",
-          "0x100000e6c",
-          "0x100000e78",
-          "0x100000e9c",
-          "0x100000ea4",
-          "0x100000ea8",
-          "0x100000eb4",
-          "0x100000ed8",
-          "0x100000ee0",
-          "0x100000ee4",
-          "0x100000ef0",
-          "0x100000f14",
-          "0x100000f1c",
-          "0x100000f20",
-          "0x100000f38",
-          "0x100000f50",
-          "0x100000f54",
-          "0x100000f58",
-          "0x100000f64",
+          "0x100000f70",
+          "0x100000f74",
+          "0x100000f78",
+          "0x100000f7c",
           "0x100000f84",
-          "0x100000fa4",
+          "0x100000f94",
+          "0x100000f98",
+          "0x100000fac",
+          "0x100000fbc",
           "0x100000fc4",
-          "0x100000fc8",
-          "0x100000fd0",
-          "0x100000fd8",
-          "0x100000fe0",
+          "0x100000fcc",
+          "0x100000fd4",
+          "0x100000fe4",
           "0x100000fe8",
-          "0x100000ff4",
-          "0x100000ffc",
-          "0x100001004",
+          "0x100000ff8",
+          "0x100001008",
+          "0x100001010",
           "0x100001018",
-          "0x10000101c",
-          "0x100001040"
+          "0x100001020",
+          "0x100001030",
+          "0x100001034",
+          "0x100001044",
+          "0x100001054",
+          "0x10000105c",
+          "0x100001064",
+          "0x10000106c",
+          "0x10000107c",
+          "0x100001080",
+          "0x10000108c",
+          "0x10000109c",
+          "0x1000010a4",
+          "0x1000010ac",
+          "0x1000010b4",
+          "0x1000010c4",
+          "0x1000010cc",
+          "0x1000010dc",
+          "0x1000010e8",
+          "0x1000010f0",
+          "0x1000010f4",
+          "0x100001100",
+          "0x100001124",
+          "0x10000112c",
+          "0x100001130",
+          "0x10000113c",
+          "0x100001160",
+          "0x100001168",
+          "0x10000116c",
+          "0x100001178",
+          "0x10000119c",
+          "0x1000011a4",
+          "0x1000011a8",
+          "0x1000011c0",
+          "0x1000011d8",
+          "0x1000011dc",
+          "0x1000011e0",
+          "0x1000011ec",
+          "0x10000120c",
+          "0x10000122c",
+          "0x10000124c",
+          "0x100001250",
+          "0x100001258",
+          "0x100001260",
+          "0x100001268",
+          "0x100001270",
+          "0x10000127c",
+          "0x100001284",
+          "0x10000128c",
+          "0x1000012a0",
+          "0x1000012a4",
+          "0x1000012c8"
         ]
       },
       {
-        "function_entry": "0x100000cc8",
+        "function_entry": "0x100000f50",
         "function_name": "_stack_layout_pressure",
         "base_id": "x8",
         "layout_kind": "array_like",
@@ -426,23 +825,23 @@
           "13 memory access(es) observed at base 'x8' in function '_stack_layout_pressure'; offsets=[0, 8]; sizes=[4]; classification=array_like"
         ],
         "source_instrs": [
-          "0x100000cdc",
-          "0x100000ce0",
-          "0x100000d2c",
-          "0x100000e5c",
-          "0x100000e94",
-          "0x100000ed0",
-          "0x100000f0c",
-          "0x100000f60",
-          "0x100000f7c",
-          "0x100000f9c",
-          "0x100000fbc",
-          "0x100001028",
-          "0x10000102c"
+          "0x100000f64",
+          "0x100000f68",
+          "0x100000fb4",
+          "0x1000010e4",
+          "0x10000111c",
+          "0x100001158",
+          "0x100001194",
+          "0x1000011e8",
+          "0x100001204",
+          "0x100001224",
+          "0x100001244",
+          "0x1000012b0",
+          "0x1000012b4"
         ]
       },
       {
-        "function_entry": "0x100000cc8",
+        "function_entry": "0x100000f50",
         "function_name": "_stack_layout_pressure",
         "base_id": "x9",
         "layout_kind": "array_like",
@@ -460,15 +859,269 @@
           "5 memory access(es) observed at base 'x9' in function '_stack_layout_pressure'; offsets=[0, 80]; sizes=[4]; classification=array_like"
         ],
         "source_instrs": [
-          "0x100000d78",
-          "0x100000dc4",
-          "0x100000e0c",
-          "0x10000100c",
-          "0x100001014"
+          "0x100001000",
+          "0x10000104c",
+          "0x100001094",
+          "0x100001294",
+          "0x10000129c"
+        ]
+      },
+      {
+        "function_entry": "0x100001020",
+        "function_name": "FUN_100001020",
+        "base_id": "sp",
+        "layout_kind": "record_like",
+        "observed_offsets": [
+          28,
+          40
+        ],
+        "min_offset": 28,
+        "max_offset": 40,
+        "observed_sizes": [
+          4,
+          8
+        ],
+        "access_count": 4,
+        "evidence_notes": [
+          "4 memory access(es) observed at base 'sp' in function 'FUN_100001020'; offsets=[28, 40]; sizes=[4, 8]; classification=record_like"
+        ],
+        "source_instrs": [
+          "0x100001020",
+          "0x100001030",
+          "0x100001034",
+          "0x100001044"
         ]
       },
       {
         "function_entry": "0x100001054",
+        "function_name": "abi_pressure",
+        "base_id": "sp",
+        "layout_kind": "record_like",
+        "observed_offsets": [
+          16,
+          20,
+          24,
+          28,
+          40
+        ],
+        "min_offset": 16,
+        "max_offset": 40,
+        "observed_sizes": [
+          4,
+          8
+        ],
+        "access_count": 12,
+        "evidence_notes": [
+          "12 memory access(es) observed at base 'sp' in function 'abi_pressure'; offsets=[16, 20, 24, 28, 40]; sizes=[4, 8]; classification=record_like"
+        ],
+        "source_instrs": [
+          "0x100001054",
+          "0x10000105c",
+          "0x100001064",
+          "0x10000106c",
+          "0x10000107c",
+          "0x100001080",
+          "0x10000108c",
+          "0x10000109c",
+          "0x1000010a4",
+          "0x1000010ac",
+          "0x1000010b4",
+          "0x1000010c4"
+        ]
+      },
+      {
+        "function_entry": "0x1000010cc",
+        "function_name": "FUN_1000010cc",
+        "base_id": "sp",
+        "layout_kind": "record_like",
+        "observed_offsets": [
+          16,
+          20,
+          40,
+          48
+        ],
+        "min_offset": 16,
+        "max_offset": 48,
+        "observed_sizes": [
+          4,
+          8
+        ],
+        "access_count": 23,
+        "evidence_notes": [
+          "23 memory access(es) observed at base 'sp' in function 'FUN_1000010cc'; offsets=[16, 20, 40, 48]; sizes=[4, 8]; classification=record_like"
+        ],
+        "source_instrs": [
+          "0x1000010cc",
+          "0x1000010dc",
+          "0x1000010e8",
+          "0x1000010f0",
+          "0x1000010f4",
+          "0x100001100",
+          "0x100001124",
+          "0x10000112c",
+          "0x100001130",
+          "0x10000113c",
+          "0x100001160",
+          "0x100001168",
+          "0x10000116c",
+          "0x100001178",
+          "0x10000119c",
+          "0x1000011a4",
+          "0x1000011a8",
+          "0x1000011c0",
+          "0x1000011d8",
+          "0x1000011dc",
+          "0x1000011e0",
+          "0x1000011ec",
+          "0x10000120c"
+        ]
+      },
+      {
+        "function_entry": "0x100001220",
+        "function_name": "rotmix",
+        "base_id": "sp",
+        "layout_kind": "record_like",
+        "observed_offsets": [
+          16,
+          20,
+          40
+        ],
+        "min_offset": 16,
+        "max_offset": 40,
+        "observed_sizes": [
+          4,
+          8
+        ],
+        "access_count": 5,
+        "evidence_notes": [
+          "5 memory access(es) observed at base 'sp' in function 'rotmix'; offsets=[16, 20, 40]; sizes=[4, 8]; classification=record_like"
+        ],
+        "source_instrs": [
+          "0x10000122c",
+          "0x10000124c",
+          "0x100001250",
+          "0x100001258",
+          "0x100001260"
+        ]
+      },
+      {
+        "function_entry": "0x100001268",
+        "function_name": "FUN_100001268",
+        "base_id": "sp",
+        "layout_kind": "scalar",
+        "observed_offsets": [
+          16
+        ],
+        "min_offset": 16,
+        "max_offset": 16,
+        "observed_sizes": [
+          4
+        ],
+        "access_count": 2,
+        "evidence_notes": [
+          "2 memory access(es) observed at base 'sp' in function 'FUN_100001268'; offsets=[16]; sizes=[4]; classification=scalar"
+        ],
+        "source_instrs": [
+          "0x100001268",
+          "0x100001270"
+        ]
+      },
+      {
+        "function_entry": "0x100001278",
+        "function_name": "FUN_100001278",
+        "base_id": "sp",
+        "layout_kind": "record_like",
+        "observed_offsets": [
+          8,
+          20,
+          40
+        ],
+        "min_offset": 8,
+        "max_offset": 40,
+        "observed_sizes": [
+          4,
+          8
+        ],
+        "access_count": 5,
+        "evidence_notes": [
+          "5 memory access(es) observed at base 'sp' in function 'FUN_100001278'; offsets=[8, 20, 40]; sizes=[4, 8]; classification=record_like"
+        ],
+        "source_instrs": [
+          "0x10000127c",
+          "0x100001284",
+          "0x10000128c",
+          "0x1000012a0",
+          "0x1000012a4"
+        ]
+      },
+      {
+        "function_entry": "0x100001278",
+        "function_name": "FUN_100001278",
+        "base_id": "x9",
+        "layout_kind": "pointer_like",
+        "observed_offsets": [
+          80
+        ],
+        "min_offset": 80,
+        "max_offset": 80,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 2,
+        "evidence_notes": [
+          "2 memory access(es) observed at base 'x9' in function 'FUN_100001278'; offsets=[80]; sizes=[8]; classification=pointer_like"
+        ],
+        "source_instrs": [
+          "0x100001294",
+          "0x10000129c"
+        ]
+      },
+      {
+        "function_entry": "0x1000012b0",
+        "function_name": "op_add",
+        "base_id": "sp",
+        "layout_kind": "pointer_like",
+        "observed_offsets": [
+          8
+        ],
+        "min_offset": 8,
+        "max_offset": 8,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 1,
+        "evidence_notes": [
+          "1 memory access(es) observed at base 'sp' in function 'op_add'; offsets=[8]; sizes=[8]; classification=pointer_like"
+        ],
+        "source_instrs": [
+          "0x1000012c8"
+        ]
+      },
+      {
+        "function_entry": "0x1000012b0",
+        "function_name": "op_add",
+        "base_id": "x8",
+        "layout_kind": "array_like",
+        "observed_offsets": [
+          0,
+          8
+        ],
+        "min_offset": 0,
+        "max_offset": 8,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 2,
+        "evidence_notes": [
+          "2 memory access(es) observed at base 'x8' in function 'op_add'; offsets=[0, 8]; sizes=[8]; classification=array_like"
+        ],
+        "source_instrs": [
+          "0x1000012b0",
+          "0x1000012b4"
+        ]
+      },
+      {
+        "function_entry": "0x1000012dc",
         "function_name": "_abi_pressure",
         "base_id": "sp",
         "layout_kind": "array_like",
@@ -490,55 +1143,55 @@
           "45 memory access(es) observed at base 'sp' in function '_abi_pressure'; offsets=[0, 8, 16, 24, 32, 40]; sizes=[4]; classification=array_like"
         ],
         "source_instrs": [
-          "0x100001070",
-          "0x100001074",
-          "0x100001078",
-          "0x10000107c",
-          "0x10000109c",
-          "0x1000010a0",
-          "0x1000010a4",
-          "0x1000010ac",
-          "0x1000010b4",
-          "0x1000010b8",
-          "0x1000010bc",
-          "0x1000010c4",
-          "0x1000010cc",
-          "0x1000010d0",
-          "0x1000010dc",
-          "0x1000010e4",
-          "0x1000010ec",
-          "0x1000010f4",
-          "0x1000010fc",
-          "0x100001100",
-          "0x100001114",
-          "0x10000111c",
-          "0x100001124",
-          "0x10000112c",
-          "0x100001134",
-          "0x100001138",
-          "0x100001140",
-          "0x100001154",
-          "0x10000115c",
-          "0x100001164",
-          "0x10000116c",
-          "0x100001174",
-          "0x10000117c",
-          "0x10000118c",
-          "0x100001194",
-          "0x10000119c",
-          "0x1000011a4",
-          "0x1000011ac",
-          "0x1000011b4",
-          "0x1000011b8",
-          "0x1000011d0",
-          "0x1000011ec",
-          "0x1000011f4",
-          "0x1000011fc",
-          "0x100001210"
+          "0x1000012f8",
+          "0x1000012fc",
+          "0x100001300",
+          "0x100001304",
+          "0x100001324",
+          "0x100001328",
+          "0x10000132c",
+          "0x100001334",
+          "0x10000133c",
+          "0x100001340",
+          "0x100001344",
+          "0x10000134c",
+          "0x100001354",
+          "0x100001358",
+          "0x100001364",
+          "0x10000136c",
+          "0x100001374",
+          "0x10000137c",
+          "0x100001384",
+          "0x100001388",
+          "0x10000139c",
+          "0x1000013a4",
+          "0x1000013ac",
+          "0x1000013b4",
+          "0x1000013bc",
+          "0x1000013c0",
+          "0x1000013c8",
+          "0x1000013dc",
+          "0x1000013e4",
+          "0x1000013ec",
+          "0x1000013f4",
+          "0x1000013fc",
+          "0x100001404",
+          "0x100001414",
+          "0x10000141c",
+          "0x100001424",
+          "0x10000142c",
+          "0x100001434",
+          "0x10000143c",
+          "0x100001440",
+          "0x100001458",
+          "0x100001474",
+          "0x10000147c",
+          "0x100001484",
+          "0x100001498"
         ]
       },
       {
-        "function_entry": "0x100001054",
+        "function_entry": "0x1000012dc",
         "function_name": "_abi_pressure",
         "base_id": "x9",
         "layout_kind": "scalar",
@@ -555,173 +1208,45 @@
           "2 memory access(es) observed at base 'x9' in function '_abi_pressure'; offsets=[80]; sizes=[4]; classification=scalar"
         ],
         "source_instrs": [
-          "0x100001204",
-          "0x10000120c"
-        ]
-      },
-      {
-        "function_entry": "0x100001220",
-        "function_name": "_rotmix",
-        "base_id": "sp",
-        "layout_kind": "scalar",
-        "observed_offsets": [
-          8
-        ],
-        "min_offset": 8,
-        "max_offset": 8,
-        "observed_sizes": [
-          4
-        ],
-        "access_count": 16,
-        "evidence_notes": [
-          "16 memory access(es) observed at base 'sp' in function '_rotmix'; offsets=[8]; sizes=[4]; classification=scalar"
-        ],
-        "source_instrs": [
-          "0x100001224",
-          "0x100001228",
-          "0x10000122c",
-          "0x100001234",
-          "0x100001238",
-          "0x100001250",
-          "0x100001254",
-          "0x100001258",
-          "0x100001260",
-          "0x100001264",
-          "0x10000127c",
-          "0x100001280",
-          "0x100001284",
-          "0x10000128c",
-          "0x100001290",
-          "0x1000012a4"
-        ]
-      },
-      {
-        "function_entry": "0x100001220",
-        "function_name": "_rotmix",
-        "base_id": "x9",
-        "layout_kind": "scalar",
-        "observed_offsets": [
-          80
-        ],
-        "min_offset": 80,
-        "max_offset": 80,
-        "observed_sizes": [
-          4
-        ],
-        "access_count": 2,
-        "evidence_notes": [
-          "2 memory access(es) observed at base 'x9' in function '_rotmix'; offsets=[80]; sizes=[4]; classification=scalar"
-        ],
-        "source_instrs": [
-          "0x100001298",
-          "0x1000012a0"
-        ]
-      },
-      {
-        "function_entry": "0x1000012b0",
-        "function_name": "_op_add",
-        "base_id": "sp",
-        "layout_kind": "array_like",
-        "observed_offsets": [
-          8,
-          16,
-          24
-        ],
-        "min_offset": 8,
-        "max_offset": 24,
-        "observed_sizes": [
-          4
-        ],
-        "access_count": 7,
-        "evidence_notes": [
-          "7 memory access(es) observed at base 'sp' in function '_op_add'; offsets=[8, 16, 24]; sizes=[4]; classification=array_like"
-        ],
-        "source_instrs": [
-          "0x1000012b4",
-          "0x1000012b8",
-          "0x1000012bc",
-          "0x1000012c0",
-          "0x1000012d0",
-          "0x1000012d4",
-          "0x1000012e8"
-        ]
-      },
-      {
-        "function_entry": "0x1000012b0",
-        "function_name": "_op_add",
-        "base_id": "x9",
-        "layout_kind": "scalar",
-        "observed_offsets": [
-          80
-        ],
-        "min_offset": 80,
-        "max_offset": 80,
-        "observed_sizes": [
-          4
-        ],
-        "access_count": 2,
-        "evidence_notes": [
-          "2 memory access(es) observed at base 'x9' in function '_op_add'; offsets=[80]; sizes=[4]; classification=scalar"
-        ],
-        "source_instrs": [
-          "0x1000012dc",
-          "0x1000012e4"
+          "0x10000148c",
+          "0x100001494"
         ]
       },
       {
         "function_entry": "0x1000012f4",
-        "function_name": "_op_xor",
+        "function_name": "op_xor",
         "base_id": "sp",
         "layout_kind": "array_like",
         "observed_offsets": [
           8,
           16,
-          24
+          24,
+          32,
+          40
         ],
         "min_offset": 8,
-        "max_offset": 24,
+        "max_offset": 40,
         "observed_sizes": [
-          4
+          8
         ],
-        "access_count": 7,
+        "access_count": 8,
         "evidence_notes": [
-          "7 memory access(es) observed at base 'sp' in function '_op_xor'; offsets=[8, 16, 24]; sizes=[4]; classification=array_like"
+          "8 memory access(es) observed at base 'sp' in function 'op_xor'; offsets=[8, 16, 24, 32, 40]; sizes=[8]; classification=array_like"
         ],
         "source_instrs": [
           "0x1000012f8",
           "0x1000012fc",
           "0x100001300",
           "0x100001304",
-          "0x100001314",
-          "0x100001318",
-          "0x10000132c"
-        ]
-      },
-      {
-        "function_entry": "0x1000012f4",
-        "function_name": "_op_xor",
-        "base_id": "x9",
-        "layout_kind": "scalar",
-        "observed_offsets": [
-          80
-        ],
-        "min_offset": 80,
-        "max_offset": 80,
-        "observed_sizes": [
-          4
-        ],
-        "access_count": 2,
-        "evidence_notes": [
-          "2 memory access(es) observed at base 'x9' in function '_op_xor'; offsets=[80]; sizes=[4]; classification=scalar"
-        ],
-        "source_instrs": [
-          "0x100001320",
-          "0x100001328"
+          "0x100001324",
+          "0x100001328",
+          "0x10000132c",
+          "0x100001334"
         ]
       },
       {
         "function_entry": "0x100001338",
-        "function_name": "_op_mul",
+        "function_name": "op_mul",
         "base_id": "sp",
         "layout_kind": "array_like",
         "observed_offsets": [
@@ -732,46 +1257,395 @@
         "min_offset": 8,
         "max_offset": 24,
         "observed_sizes": [
-          4
+          8
         ],
-        "access_count": 7,
+        "access_count": 10,
         "evidence_notes": [
-          "7 memory access(es) observed at base 'sp' in function '_op_mul'; offsets=[8, 16, 24]; sizes=[4]; classification=array_like"
+          "10 memory access(es) observed at base 'sp' in function 'op_mul'; offsets=[8, 16, 24]; sizes=[8]; classification=array_like"
         ],
         "source_instrs": [
           "0x10000133c",
           "0x100001340",
           "0x100001344",
-          "0x100001350",
-          "0x100001360",
+          "0x10000134c",
+          "0x100001354",
+          "0x100001358",
           "0x100001364",
-          "0x100001378"
+          "0x10000136c",
+          "0x100001374",
+          "0x10000137c"
         ]
       },
       {
-        "function_entry": "0x100001338",
-        "function_name": "_op_mul",
+        "function_entry": "0x100001384",
+        "function_name": "op_shift",
+        "base_id": "sp",
+        "layout_kind": "record_like",
+        "observed_offsets": [
+          0,
+          8,
+          40
+        ],
+        "min_offset": 0,
+        "max_offset": 40,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 9,
+        "evidence_notes": [
+          "9 memory access(es) observed at base 'sp' in function 'op_shift'; offsets=[0, 8, 40]; sizes=[8]; classification=record_like"
+        ],
+        "source_instrs": [
+          "0x100001384",
+          "0x100001388",
+          "0x10000139c",
+          "0x1000013a4",
+          "0x1000013ac",
+          "0x1000013b4",
+          "0x1000013bc",
+          "0x1000013c0",
+          "0x1000013c8"
+        ]
+      },
+      {
+        "function_entry": "0x1000013dc",
+        "function_name": "op_div",
+        "base_id": "sp",
+        "layout_kind": "array_like",
+        "observed_offsets": [
+          0,
+          8,
+          16,
+          24,
+          32,
+          40
+        ],
+        "min_offset": 0,
+        "max_offset": 40,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 13,
+        "evidence_notes": [
+          "13 memory access(es) observed at base 'sp' in function 'op_div'; offsets=[0, 8, 16, 24, 32, 40]; sizes=[8]; classification=array_like"
+        ],
+        "source_instrs": [
+          "0x1000013dc",
+          "0x1000013e4",
+          "0x1000013ec",
+          "0x1000013f4",
+          "0x1000013fc",
+          "0x100001404",
+          "0x100001414",
+          "0x10000141c",
+          "0x100001424",
+          "0x10000142c",
+          "0x100001434",
+          "0x10000143c",
+          "0x100001440"
+        ]
+      },
+      {
+        "function_entry": "0x100001444",
+        "function_name": "op_logic",
+        "base_id": "sp",
+        "layout_kind": "array_like",
+        "observed_offsets": [
+          0,
+          8
+        ],
+        "min_offset": 0,
+        "max_offset": 8,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 4,
+        "evidence_notes": [
+          "4 memory access(es) observed at base 'sp' in function 'op_logic'; offsets=[0, 8]; sizes=[8]; classification=array_like"
+        ],
+        "source_instrs": [
+          "0x100001458",
+          "0x100001474",
+          "0x10000147c",
+          "0x100001484"
+        ]
+      },
+      {
+        "function_entry": "0x100001444",
+        "function_name": "op_logic",
         "base_id": "x9",
-        "layout_kind": "scalar",
+        "layout_kind": "pointer_like",
         "observed_offsets": [
           80
         ],
         "min_offset": 80,
         "max_offset": 80,
         "observed_sizes": [
-          4
+          8
         ],
         "access_count": 2,
         "evidence_notes": [
-          "2 memory access(es) observed at base 'x9' in function '_op_mul'; offsets=[80]; sizes=[4]; classification=scalar"
+          "2 memory access(es) observed at base 'x9' in function 'op_logic'; offsets=[80]; sizes=[8]; classification=pointer_like"
         ],
         "source_instrs": [
-          "0x10000136c",
-          "0x100001374"
+          "0x10000148c",
+          "0x100001494"
         ]
       },
       {
-        "function_entry": "0x100001384",
+        "function_entry": "0x100001498",
+        "function_name": "tri_a",
+        "base_id": "sp",
+        "layout_kind": "pointer_like",
+        "observed_offsets": [
+          8
+        ],
+        "min_offset": 8,
+        "max_offset": 8,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 1,
+        "evidence_notes": [
+          "1 memory access(es) observed at base 'sp' in function 'tri_a'; offsets=[8]; sizes=[8]; classification=pointer_like"
+        ],
+        "source_instrs": [
+          "0x100001498"
+        ]
+      },
+      {
+        "function_entry": "0x1000014a8",
+        "function_name": "_rotmix",
+        "base_id": "sp",
+        "layout_kind": "pointer_like",
+        "observed_offsets": [
+          8
+        ],
+        "min_offset": 8,
+        "max_offset": 8,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 16,
+        "evidence_notes": [
+          "16 memory access(es) observed at base 'sp' in function '_rotmix'; offsets=[8]; sizes=[8]; classification=pointer_like"
+        ],
+        "source_instrs": [
+          "0x1000014ac",
+          "0x1000014b0",
+          "0x1000014b4",
+          "0x1000014bc",
+          "0x1000014c0",
+          "0x1000014d8",
+          "0x1000014dc",
+          "0x1000014e0",
+          "0x1000014e8",
+          "0x1000014ec",
+          "0x100001504",
+          "0x100001508",
+          "0x10000150c",
+          "0x100001514",
+          "0x100001518",
+          "0x10000152c"
+        ]
+      },
+      {
+        "function_entry": "0x1000014a8",
+        "function_name": "_rotmix",
+        "base_id": "x9",
+        "layout_kind": "pointer_like",
+        "observed_offsets": [
+          80
+        ],
+        "min_offset": 80,
+        "max_offset": 80,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 2,
+        "evidence_notes": [
+          "2 memory access(es) observed at base 'x9' in function '_rotmix'; offsets=[80]; sizes=[8]; classification=pointer_like"
+        ],
+        "source_instrs": [
+          "0x100001520",
+          "0x100001528"
+        ]
+      },
+      {
+        "function_entry": "0x100001538",
+        "function_name": "_op_add",
+        "base_id": "sp",
+        "layout_kind": "array_like",
+        "observed_offsets": [
+          8,
+          16,
+          24
+        ],
+        "min_offset": 8,
+        "max_offset": 24,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 6,
+        "evidence_notes": [
+          "6 memory access(es) observed at base 'sp' in function '_op_add'; offsets=[8, 16, 24]; sizes=[8]; classification=array_like"
+        ],
+        "source_instrs": [
+          "0x10000153c",
+          "0x100001540",
+          "0x100001544",
+          "0x100001548",
+          "0x100001558",
+          "0x10000155c"
+        ]
+      },
+      {
+        "function_entry": "0x100001560",
+        "function_name": "tri_b",
+        "base_id": "sp",
+        "layout_kind": "pointer_like",
+        "observed_offsets": [
+          8
+        ],
+        "min_offset": 8,
+        "max_offset": 8,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 1,
+        "evidence_notes": [
+          "1 memory access(es) observed at base 'sp' in function 'tri_b'; offsets=[8]; sizes=[8]; classification=pointer_like"
+        ],
+        "source_instrs": [
+          "0x100001570"
+        ]
+      },
+      {
+        "function_entry": "0x100001560",
+        "function_name": "tri_b",
+        "base_id": "x9",
+        "layout_kind": "pointer_like",
+        "observed_offsets": [
+          80
+        ],
+        "min_offset": 80,
+        "max_offset": 80,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 2,
+        "evidence_notes": [
+          "2 memory access(es) observed at base 'x9' in function 'tri_b'; offsets=[80]; sizes=[8]; classification=pointer_like"
+        ],
+        "source_instrs": [
+          "0x100001564",
+          "0x10000156c"
+        ]
+      },
+      {
+        "function_entry": "0x10000157c",
+        "function_name": "_op_xor",
+        "base_id": "sp",
+        "layout_kind": "array_like",
+        "observed_offsets": [
+          8,
+          16,
+          24
+        ],
+        "min_offset": 8,
+        "max_offset": 24,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 7,
+        "evidence_notes": [
+          "7 memory access(es) observed at base 'sp' in function '_op_xor'; offsets=[8, 16, 24]; sizes=[8]; classification=array_like"
+        ],
+        "source_instrs": [
+          "0x100001580",
+          "0x100001584",
+          "0x100001588",
+          "0x10000158c",
+          "0x10000159c",
+          "0x1000015a0",
+          "0x1000015b4"
+        ]
+      },
+      {
+        "function_entry": "0x10000157c",
+        "function_name": "_op_xor",
+        "base_id": "x9",
+        "layout_kind": "pointer_like",
+        "observed_offsets": [
+          80
+        ],
+        "min_offset": 80,
+        "max_offset": 80,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 2,
+        "evidence_notes": [
+          "2 memory access(es) observed at base 'x9' in function '_op_xor'; offsets=[80]; sizes=[8]; classification=pointer_like"
+        ],
+        "source_instrs": [
+          "0x1000015a8",
+          "0x1000015b0"
+        ]
+      },
+      {
+        "function_entry": "0x1000015c0",
+        "function_name": "_op_mul",
+        "base_id": "sp",
+        "layout_kind": "array_like",
+        "observed_offsets": [
+          8,
+          16,
+          24
+        ],
+        "min_offset": 8,
+        "max_offset": 24,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 7,
+        "evidence_notes": [
+          "7 memory access(es) observed at base 'sp' in function '_op_mul'; offsets=[8, 16, 24]; sizes=[8]; classification=array_like"
+        ],
+        "source_instrs": [
+          "0x1000015c4",
+          "0x1000015c8",
+          "0x1000015cc",
+          "0x1000015d8",
+          "0x1000015e8",
+          "0x1000015ec",
+          "0x100001600"
+        ]
+      },
+      {
+        "function_entry": "0x1000015c0",
+        "function_name": "_op_mul",
+        "base_id": "x9",
+        "layout_kind": "pointer_like",
+        "observed_offsets": [
+          80
+        ],
+        "min_offset": 80,
+        "max_offset": 80,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 2,
+        "evidence_notes": [
+          "2 memory access(es) observed at base 'x9' in function '_op_mul'; offsets=[80]; sizes=[8]; classification=pointer_like"
+        ],
+        "source_instrs": [
+          "0x1000015f4",
+          "0x1000015fc"
+        ]
+      },
+      {
+        "function_entry": "0x10000160c",
         "function_name": "_op_shift",
         "base_id": "sp",
         "layout_kind": "array_like",
@@ -783,48 +1657,68 @@
         "min_offset": 8,
         "max_offset": 24,
         "observed_sizes": [
-          4
+          8
         ],
-        "access_count": 9,
+        "access_count": 8,
         "evidence_notes": [
-          "9 memory access(es) observed at base 'sp' in function '_op_shift'; offsets=[8, 16, 24]; sizes=[4]; classification=array_like"
+          "8 memory access(es) observed at base 'sp' in function '_op_shift'; offsets=[8, 16, 24]; sizes=[8]; classification=array_like"
         ],
         "source_instrs": [
-          "0x100001388",
-          "0x10000138c",
-          "0x100001390",
-          "0x100001394",
-          "0x1000013a0",
-          "0x1000013a4",
-          "0x1000013b8",
-          "0x1000013bc",
-          "0x1000013d0"
+          "0x100001610",
+          "0x100001614",
+          "0x100001618",
+          "0x10000161c",
+          "0x100001628",
+          "0x10000162c",
+          "0x100001640",
+          "0x100001644"
         ]
       },
       {
-        "function_entry": "0x100001384",
-        "function_name": "_op_shift",
+        "function_entry": "0x100001648",
+        "function_name": "tri_c",
+        "base_id": "sp",
+        "layout_kind": "pointer_like",
+        "observed_offsets": [
+          8
+        ],
+        "min_offset": 8,
+        "max_offset": 8,
+        "observed_sizes": [
+          8
+        ],
+        "access_count": 1,
+        "evidence_notes": [
+          "1 memory access(es) observed at base 'sp' in function 'tri_c'; offsets=[8]; sizes=[8]; classification=pointer_like"
+        ],
+        "source_instrs": [
+          "0x100001658"
+        ]
+      },
+      {
+        "function_entry": "0x100001648",
+        "function_name": "tri_c",
         "base_id": "x9",
-        "layout_kind": "scalar",
+        "layout_kind": "pointer_like",
         "observed_offsets": [
           80
         ],
         "min_offset": 80,
         "max_offset": 80,
         "observed_sizes": [
-          4
+          8
         ],
         "access_count": 2,
         "evidence_notes": [
-          "2 memory access(es) observed at base 'x9' in function '_op_shift'; offsets=[80]; sizes=[4]; classification=scalar"
+          "2 memory access(es) observed at base 'x9' in function 'tri_c'; offsets=[80]; sizes=[8]; classification=pointer_like"
         ],
         "source_instrs": [
-          "0x1000013c4",
-          "0x1000013cc"
+          "0x10000164c",
+          "0x100001654"
         ]
       },
       {
-        "function_entry": "0x1000013dc",
+        "function_entry": "0x100001664",
         "function_name": "_op_div",
         "base_id": "sp",
         "layout_kind": "array_like",
@@ -837,50 +1731,50 @@
         "min_offset": 0,
         "max_offset": 24,
         "observed_sizes": [
-          4
+          8
         ],
         "access_count": 11,
         "evidence_notes": [
-          "11 memory access(es) observed at base 'sp' in function '_op_div'; offsets=[0, 8, 16, 24]; sizes=[4]; classification=array_like"
+          "11 memory access(es) observed at base 'sp' in function '_op_div'; offsets=[0, 8, 16, 24]; sizes=[8]; classification=array_like"
         ],
         "source_instrs": [
-          "0x1000013e0",
-          "0x1000013e4",
-          "0x1000013e8",
-          "0x1000013f0",
-          "0x1000013f4",
-          "0x1000013f8",
-          "0x100001400",
-          "0x100001404",
-          "0x100001420",
-          "0x100001424",
-          "0x100001438"
+          "0x100001668",
+          "0x10000166c",
+          "0x100001670",
+          "0x100001678",
+          "0x10000167c",
+          "0x100001680",
+          "0x100001688",
+          "0x10000168c",
+          "0x1000016a8",
+          "0x1000016ac",
+          "0x1000016c0"
         ]
       },
       {
-        "function_entry": "0x1000013dc",
+        "function_entry": "0x100001664",
         "function_name": "_op_div",
         "base_id": "x9",
-        "layout_kind": "scalar",
+        "layout_kind": "pointer_like",
         "observed_offsets": [
           80
         ],
         "min_offset": 80,
         "max_offset": 80,
         "observed_sizes": [
-          4
+          8
         ],
         "access_count": 2,
         "evidence_notes": [
-          "2 memory access(es) observed at base 'x9' in function '_op_div'; offsets=[80]; sizes=[4]; classification=scalar"
+          "2 memory access(es) observed at base 'x9' in function '_op_div'; offsets=[80]; sizes=[8]; classification=pointer_like"
         ],
         "source_instrs": [
-          "0x10000142c",
-          "0x100001434"
+          "0x1000016b4",
+          "0x1000016bc"
         ]
       },
       {
-        "function_entry": "0x100001444",
+        "function_entry": "0x1000016cc",
         "function_name": "_op_logic",
         "base_id": "sp",
         "layout_kind": "array_like",
@@ -892,48 +1786,48 @@
         "min_offset": 8,
         "max_offset": 24,
         "observed_sizes": [
-          4
+          8
         ],
         "access_count": 9,
         "evidence_notes": [
-          "9 memory access(es) observed at base 'sp' in function '_op_logic'; offsets=[8, 16, 24]; sizes=[4]; classification=array_like"
+          "9 memory access(es) observed at base 'sp' in function '_op_logic'; offsets=[8, 16, 24]; sizes=[8]; classification=array_like"
         ],
         "source_instrs": [
-          "0x100001448",
-          "0x10000144c",
-          "0x100001450",
-          "0x100001454",
-          "0x10000145c",
-          "0x100001460",
-          "0x100001474",
-          "0x100001478",
-          "0x10000148c"
+          "0x1000016d0",
+          "0x1000016d4",
+          "0x1000016d8",
+          "0x1000016dc",
+          "0x1000016e4",
+          "0x1000016e8",
+          "0x1000016fc",
+          "0x100001700",
+          "0x100001714"
         ]
       },
       {
-        "function_entry": "0x100001444",
+        "function_entry": "0x1000016cc",
         "function_name": "_op_logic",
         "base_id": "x9",
-        "layout_kind": "scalar",
+        "layout_kind": "pointer_like",
         "observed_offsets": [
           80
         ],
         "min_offset": 80,
         "max_offset": 80,
         "observed_sizes": [
-          4
+          8
         ],
         "access_count": 2,
         "evidence_notes": [
-          "2 memory access(es) observed at base 'x9' in function '_op_logic'; offsets=[80]; sizes=[4]; classification=scalar"
+          "2 memory access(es) observed at base 'x9' in function '_op_logic'; offsets=[80]; sizes=[8]; classification=pointer_like"
         ],
         "source_instrs": [
-          "0x100001480",
-          "0x100001488"
+          "0x100001708",
+          "0x100001710"
         ]
       },
       {
-        "function_entry": "0x100001498",
+        "function_entry": "0x100001720",
         "function_name": "_tri_a",
         "base_id": "sp",
         "layout_kind": "record_like",
@@ -945,34 +1839,35 @@
         "min_offset": 12,
         "max_offset": 24,
         "observed_sizes": [
-          4
+          4,
+          8
         ],
         "access_count": 17,
         "evidence_notes": [
-          "17 memory access(es) observed at base 'sp' in function '_tri_a'; offsets=[12, 16, 24]; sizes=[4]; classification=record_like"
+          "17 memory access(es) observed at base 'sp' in function '_tri_a'; offsets=[12, 16, 24]; sizes=[4, 8]; classification=record_like"
         ],
         "source_instrs": [
-          "0x1000014ac",
-          "0x1000014bc",
-          "0x1000014c4",
-          "0x1000014c8",
-          "0x1000014d0",
-          "0x1000014e0",
-          "0x1000014e4",
-          "0x1000014f0",
-          "0x1000014f4",
-          "0x10000150c",
-          "0x100001524",
-          "0x100001528",
-          "0x100001530",
-          "0x100001538",
-          "0x100001540",
-          "0x100001548",
-          "0x100001550"
+          "0x100001734",
+          "0x100001744",
+          "0x10000174c",
+          "0x100001750",
+          "0x100001758",
+          "0x100001768",
+          "0x10000176c",
+          "0x100001778",
+          "0x10000177c",
+          "0x100001794",
+          "0x1000017ac",
+          "0x1000017b0",
+          "0x1000017b8",
+          "0x1000017c0",
+          "0x1000017c8",
+          "0x1000017d0",
+          "0x1000017d8"
         ]
       },
       {
-        "function_entry": "0x100001560",
+        "function_entry": "0x1000017e8",
         "function_name": "_tri_b",
         "base_id": "sp",
         "layout_kind": "record_like",
@@ -987,64 +1882,66 @@
         "min_offset": 0,
         "max_offset": 40,
         "observed_sizes": [
-          4
+          1,
+          4,
+          8
         ],
         "access_count": 25,
         "evidence_notes": [
-          "25 memory access(es) observed at base 'sp' in function '_tri_b'; offsets=[0, 12, 16, 24, 32, 40]; sizes=[4]; classification=record_like"
+          "25 memory access(es) observed at base 'sp' in function '_tri_b'; offsets=[0, 12, 16, 24, 32, 40]; sizes=[1, 4, 8]; classification=record_like"
         ],
         "source_instrs": [
-          "0x100001564",
-          "0x100001568",
-          "0x10000156c",
-          "0x100001570",
-          "0x100001574",
-          "0x10000157c",
-          "0x100001584",
-          "0x100001588",
-          "0x100001590",
-          "0x1000015a0",
-          "0x1000015ac",
-          "0x1000015b0",
-          "0x1000015b4",
-          "0x1000015bc",
-          "0x1000015c4",
-          "0x1000015c8",
-          "0x1000015cc",
-          "0x1000015dc",
-          "0x1000015e4",
-          "0x1000015e8",
-          "0x100001600",
-          "0x100001618",
-          "0x100001620",
-          "0x100001628",
-          "0x10000163c"
+          "0x1000017ec",
+          "0x1000017f0",
+          "0x1000017f4",
+          "0x1000017f8",
+          "0x1000017fc",
+          "0x100001804",
+          "0x10000180c",
+          "0x100001810",
+          "0x100001818",
+          "0x100001828",
+          "0x100001834",
+          "0x100001838",
+          "0x10000183c",
+          "0x100001844",
+          "0x10000184c",
+          "0x100001850",
+          "0x100001854",
+          "0x100001864",
+          "0x10000186c",
+          "0x100001870",
+          "0x100001888",
+          "0x1000018a0",
+          "0x1000018a8",
+          "0x1000018b0",
+          "0x1000018c4"
         ]
       },
       {
-        "function_entry": "0x100001560",
+        "function_entry": "0x1000017e8",
         "function_name": "_tri_b",
         "base_id": "x9",
-        "layout_kind": "scalar",
+        "layout_kind": "pointer_like",
         "observed_offsets": [
           80
         ],
         "min_offset": 80,
         "max_offset": 80,
         "observed_sizes": [
-          4
+          8
         ],
         "access_count": 2,
         "evidence_notes": [
-          "2 memory access(es) observed at base 'x9' in function '_tri_b'; offsets=[80]; sizes=[4]; classification=scalar"
+          "2 memory access(es) observed at base 'x9' in function '_tri_b'; offsets=[80]; sizes=[8]; classification=pointer_like"
         ],
         "source_instrs": [
-          "0x100001630",
-          "0x100001638"
+          "0x1000018b8",
+          "0x1000018c0"
         ]
       },
       {
-        "function_entry": "0x100001648",
+        "function_entry": "0x1000018d0",
         "function_name": "_tri_c",
         "base_id": "sp",
         "layout_kind": "record_like",
@@ -1057,59 +1954,60 @@
         "min_offset": 0,
         "max_offset": 24,
         "observed_sizes": [
-          4
+          4,
+          8
         ],
         "access_count": 41,
         "evidence_notes": [
-          "41 memory access(es) observed at base 'sp' in function '_tri_c'; offsets=[0, 12, 16, 24]; sizes=[4]; classification=record_like"
+          "41 memory access(es) observed at base 'sp' in function '_tri_c'; offsets=[0, 12, 16, 24]; sizes=[4, 8]; classification=record_like"
         ],
         "source_instrs": [
-          "0x10000165c",
-          "0x100001664",
-          "0x100001668",
-          "0x100001670",
-          "0x100001680",
-          "0x10000168c",
-          "0x100001694",
-          "0x1000016a0",
-          "0x1000016ac",
-          "0x1000016bc",
-          "0x1000016cc",
-          "0x1000016dc",
-          "0x1000016ec",
-          "0x1000016fc",
-          "0x100001710",
-          "0x100001718",
-          "0x100001720",
-          "0x10000172c",
-          "0x10000173c",
-          "0x100001744",
-          "0x10000174c",
-          "0x100001750",
-          "0x100001760",
-          "0x100001768",
-          "0x100001770",
-          "0x100001774",
-          "0x100001780",
-          "0x100001788",
-          "0x100001794",
-          "0x1000017a4",
-          "0x1000017ac",
-          "0x1000017bc",
-          "0x1000017cc",
-          "0x1000017d0",
-          "0x1000017dc",
-          "0x1000017e4",
-          "0x1000017ec",
-          "0x100001804",
-          "0x100001810",
-          "0x100001818",
-          "0x100001820"
+          "0x1000018e4",
+          "0x1000018ec",
+          "0x1000018f0",
+          "0x1000018f8",
+          "0x100001908",
+          "0x100001914",
+          "0x10000191c",
+          "0x100001928",
+          "0x100001934",
+          "0x100001944",
+          "0x100001954",
+          "0x100001964",
+          "0x100001974",
+          "0x100001984",
+          "0x100001998",
+          "0x1000019a0",
+          "0x1000019a8",
+          "0x1000019b4",
+          "0x1000019c4",
+          "0x1000019cc",
+          "0x1000019d4",
+          "0x1000019d8",
+          "0x1000019e8",
+          "0x1000019f0",
+          "0x1000019f8",
+          "0x1000019fc",
+          "0x100001a08",
+          "0x100001a10",
+          "0x100001a1c",
+          "0x100001a2c",
+          "0x100001a34",
+          "0x100001a44",
+          "0x100001a54",
+          "0x100001a58",
+          "0x100001a64",
+          "0x100001a6c",
+          "0x100001a74",
+          "0x100001a8c",
+          "0x100001a98",
+          "0x100001aa0",
+          "0x100001aa8"
         ]
       },
       {
-        "function_entry": "0x100001830",
-        "function_name": "printf",
+        "function_entry": "0x100001ab8",
+        "function_name": "__stack_chk_fail",
         "base_id": "x16",
         "layout_kind": "scalar",
         "observed_offsets": [
@@ -1122,15 +2020,15 @@
         ],
         "access_count": 1,
         "evidence_notes": [
-          "1 memory access(es) observed at base 'x16' in function 'printf'; offsets=[0]; sizes=[4]; classification=scalar"
+          "1 memory access(es) observed at base 'x16' in function '__stack_chk_fail'; offsets=[0]; sizes=[4]; classification=scalar"
         ],
         "source_instrs": [
-          "0x100001834"
+          "0x100001abc"
         ]
       },
       {
-        "function_entry": "0x10000183c",
-        "function_name": "__stack_chk_fail",
+        "function_entry": "0x100001ac4",
+        "function_name": "printf",
         "base_id": "x16",
         "layout_kind": "scalar",
         "observed_offsets": [
@@ -1143,10 +2041,10 @@
         ],
         "access_count": 1,
         "evidence_notes": [
-          "1 memory access(es) observed at base 'x16' in function '__stack_chk_fail'; offsets=[16]; sizes=[4]; classification=scalar"
+          "1 memory access(es) observed at base 'x16' in function 'printf'; offsets=[16]; sizes=[4]; classification=scalar"
         ],
         "source_instrs": [
-          "0x100001840"
+          "0x100001ac8"
         ]
       }
     ],

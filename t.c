@@ -106,7 +106,7 @@ static uint64_t tri_c(uint64_t a, uint64_t b, uint64_t c) {
   for (int i = 0; i < 16; i++) {
     switch ((acc + b + c + (uint64_t)i) & 7ULL) {
     case 0:
-      acc += a ^ i;
+      acc += a ^ (uint64_t)i;
       break;
     case 1:
       acc ^= b + (uint64_t)i * 3ULL;
@@ -127,7 +127,7 @@ static uint64_t tri_c(uint64_t a, uint64_t b, uint64_t c) {
     case 5:
       continue;
     case 6:
-      acc += rotmix(acc ^ i);
+      acc += rotmix(acc ^ (uint64_t)i);
       break;
     default:
       acc ^= 0xdeadbeefcafebabeULL;
@@ -261,15 +261,19 @@ static uint64_t cfg_pressure(uint64_t x, uint64_t y) {
       case 0:
         acc ^= stack_layout_pressure(acc + j);
         break;
+
       case 1:
         acc += indirect_pressure(acc ^ j);
         break;
+
       case 2:
         acc ^= abi_pressure(acc, x, y, i, j, acc >> 3, acc << 2, 0xfeedfaceULL);
         break;
+
       case 3:
         acc = (acc << 3) ^ (acc >> 5) ^ j;
         break;
+
       case 4:
         if ((acc & 1ULL) != 0ULL) {
           acc += tri_a(acc, x, y);
@@ -277,11 +281,14 @@ static uint64_t cfg_pressure(uint64_t x, uint64_t y) {
           acc ^= tri_b(acc, y, x);
         }
         break;
+
       case 5:
         continue;
+
       case 6:
         acc += tri_c(acc, i, j);
         break;
+
       default:
         acc ^= 0xabcdef1234567890ULL;
         break;
@@ -301,6 +308,44 @@ static uint64_t cfg_pressure(uint64_t x, uint64_t y) {
   return acc;
 }
 
+static uint64_t byte_halfword_pressure(uint64_t seed) {
+  uint8_t bytes[257];
+  uint16_t halves[129];
+  uint64_t acc = seed;
+
+  for (int i = 0; i < 257; i++) {
+    bytes[i] = (uint8_t)((seed + (uint64_t)i * 13ULL) & 0xff);
+  }
+
+  for (int i = 0; i < 129; i++) {
+    halves[i] = (uint16_t)((seed ^ ((uint64_t)i * 97ULL)) & 0xffff);
+  }
+
+  for (int round = 0; round < 64; round++) {
+    int bi = (int)((acc + (uint64_t)round * 7ULL) % 257ULL);
+    int hi = (int)((acc + (uint64_t)round * 5ULL) % 129ULL);
+
+    int8_t signed_b = (int8_t)bytes[bi];
+    uint8_t unsigned_b = bytes[(bi + 17) % 257];
+    uint16_t unsigned_h = halves[hi];
+
+    acc += (uint64_t)(int64_t)signed_b;
+    acc ^= (uint64_t)unsigned_b;
+    acc += (uint64_t)unsigned_h;
+
+    if ((acc & 7ULL) == 6ULL) {
+      continue;
+    }
+
+    if ((acc & 0xfffULL) == 0xabcULL) {
+      break;
+    }
+  }
+
+  g_sink ^= acc;
+  return acc;
+}
+
 static uint64_t mixed_driver(uint64_t seed) {
   uint64_t acc = seed;
 
@@ -308,7 +353,9 @@ static uint64_t mixed_driver(uint64_t seed) {
     acc ^= cfg_pressure(acc + (uint64_t)round, seed ^ (uint64_t)(round * 17));
     acc += stack_layout_pressure(acc ^ (uint64_t)round);
     acc ^= indirect_pressure(acc + (uint64_t)round * 3ULL);
-    acc += abi_pressure(acc, seed, round, acc >> 1, acc << 1, 11, 22, 33);
+    acc += abi_pressure(acc, seed, (uint64_t)round, acc >> 1, acc << 1, 11, 22,
+                        33);
+    acc ^= byte_halfword_pressure(acc + (uint64_t)round);
 
     if ((acc & 0x1fULL) == 0x12ULL) {
       continue;
@@ -347,6 +394,7 @@ int main(int argc, char **argv) {
     acc ^= mixed_driver(acc + argmix + (uint64_t)i);
     acc += cfg_pressure(acc, argmix ^ (uint64_t)i);
     acc ^= indirect_pressure(acc + (uint64_t)i * 9ULL);
+    acc += byte_halfword_pressure(acc ^ (uint64_t)i);
   }
 
   printf("%llu\n", (unsigned long long)(acc ^ g_sink ^ g_guard));
