@@ -43,20 +43,21 @@ Hephaestus does not insert mock instructions, fake variables, fake types, fake s
 * Phase 4B.1: Conservative operand-to-variable binding
 * Phase 4C: Conservative data-layout recovery
 * Phase 4D: Final Phase 4 semantic artifact merger
+* Phase 5: Conservative source reconstruction (AST emission, `recovered.c` C skeleton)
+* Phase 5.8: Artifact consolidation, one-shot pipeline runner, and stress testing harness
 
 ### Current Test Status
 
 ```text
-310 passed
+627 passed
 1 xfailed
 0 failures
 ```
 
-The adversarial test suite includes hard cases for instruction validation, assembler stability, CFG structuring, operand binding, type constraints, semantic refinement, layout recovery, artifact merging, integration behavior, and regression invariants.
+The adversarial and simulation test suites include cases for instruction validation, assembler stability, CFG structuring, operand binding, type constraints, semantic refinement, layout recovery, artifact merging, integration behavior, regression invariants, manifest generation, safe path utilities, and stress generation.
 
 ### Next
 
-* Phase 5: Source reconstruction / AST emission
 * Phase 6: Validation, compilation, and repair loop
 
 ---
@@ -461,44 +462,66 @@ Each stage is stress-tested with synthetic fixtures, adversarial cases, and comp
 
 ## Example Workflow
 
-### 1. Run extractors and export IR
+### 1. One-Shot End-to-End Execution (Recommended)
+
+To run the entire decompiler pipeline on a target binary, use the `run-all` subcommand:
 
 ```bash
+python3 main.py run-all ./target_binary --ghidra --radare2 --out-dir artifacts --clean
+```
+
+### 2. Running Individual Phases (Staged Execution)
+
+If you prefer to run the pipeline incrementally:
+
+```bash
+# Phase 1 & 2: Run extractors and export IR
 python3 main.py ./target_binary --ghidra --radare2 --export-ir
-```
 
-### 2. Run CFG analysis and structuring
-
-```bash
+# Phase 3: CFG analysis and structuring
 python3 main.py analyze-cfg --out-dir artifacts
-```
 
-### 3. Run Phase 4A type recovery
-
-```bash
+# Phase 4A: Type recovery
 python3 main.py recover-semantics --out-dir artifacts
+
+# Phase 4B: Type constraint refinement
+python3 main.py refine-semantics --out-dir artifacts
+
+# Phase 4C: Data layout recovery
+python3 main.py recover-layouts --out-dir artifacts
+
+# Phase 4D: Final semantic merger
+python3 main.py finalize-semantics --out-dir artifacts
+
+# Phase 5: Source reconstruction
+python3 main.py reconstruct-source --out-dir artifacts
 ```
 
-### 4. Run Phase 4B semantic refinement
+### 3. Automated Stress Testing
+
+To run the deterministic stress harness:
 
 ```bash
-python3 main.py refine-semantics --out-dir artifacts
+python3 main.py stress-test --profile hard --out-dir artifacts/stress/hard --clean
 ```
 
-### 5. Inspect generated artifacts
+### 4. Inspect generated artifacts
 
-Typical outputs in `artifacts/`:
+Typical outputs in the output directory:
 
-* `ghidra_extraction.json`
-* `radare2_extraction.json`
-* `unified_ir.json`
-* `structuring_analysis.json`
-* `structuring_regions.json`
-* `type_recovery.json`
-* `semantic_recovery.json`
-* `orchestration_manifest.json`
-* `run_<timestamp>.log`
-* `latest.log`
+* `radare2_extraction.json` — Raw Radare2 analysis output.
+* `ghidra_extraction.json` — Raw Ghidra headless analysis output.
+* `unified_ir.json` — Merged canonical Unified IR representation (Phase 2).
+* `structuring_analysis.json` — CFG normalization report (Phase 3A).
+* `structuring_regions.json` — Structured control-flow region tree serialization (Phase 3B).
+* `type_recovery.json` — Phase 4A initial signature and variable mapping.
+* `semantic_recovery.json` — Phase 4B constraint-refined type records.
+* `layout_recovery.json` — Phase 4C memory layout candidates.
+* `phase4_semantics.json` — Phase 4D final merged semantic evidence.
+* `source_reconstruction.json` — Phase 5 source reconstruction summary (schema 5.7.2).
+* `recovered.c` — Emitted C skeletons with syntax-safe condition adapters.
+* `pipeline_manifest.json` — Execution manifest showing stages, timings, and decompiler summary metrics.
+* `run.log` — Consolidated pipeline run execution logs.
 
 ---
 
