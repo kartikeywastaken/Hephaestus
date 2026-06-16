@@ -267,9 +267,9 @@ class TestReturnCallRefinement:
 
     # 12. Schema and summary validation
     def test_12_schema_and_summary_validation(self):
-        assert SCHEMA_VERSION == "5.7.0"
+        assert SCHEMA_VERSION == "5.7.1"
         artifact = SourceReconstructionArtifact()
-        assert artifact.schema_version == "5.7.0"
+        assert artifact.schema_version == "5.7.1"
         s = artifact.summary
         assert "return_sites_total" in s
         assert "return_sites_with_value" in s

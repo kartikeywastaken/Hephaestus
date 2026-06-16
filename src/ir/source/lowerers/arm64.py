@@ -90,24 +90,24 @@ def memory_expr(
         return expr
 
 
-def parse_indexed_memory(raw_str: str) -> tuple[str, str, int] | None:
+def parse_shifted_extended_reg(op: dict[str, Any]) -> tuple[str, str | None, int] | None:
     """
-    Parse a raw string representing an indexed memory operand.
-    Format: [base, index, LSL #shift] or [base, index]
-    E.g. [x9, x10, LSL #0x2] -> ("x9", "x10", 2)
-         [x9, x10]           -> ("x9", "x10", 0)
+    Parse a shifted or extended register operand.
+    E.g. w9, SXTW #2 or x9, LSL #3 or w9, SXTW
     """
-    cleaned = raw_str.strip()
+    if op.get("kind") != "unknown":
+        return None
+    raw = str(op.get("raw") or "").strip()
     match = re.match(
-        r"^\[\s*([a-zA-Z0-9_]+)\s*,\s*([a-zA-Z0-9_]+)(?:\s*,\s*(?:LSL|lsl)\s*#\s*(0x[0-9a-fA-F]+|[0-9]+))?\s*\]!?$",
-        cleaned
+        r"^([a-zA-Z0-9_]+)\s*,\s*(LSL|lsl|LSR|lsr|ASR|asr|SXTW|sxtw|UXTW|uxtw|SXTX|sxtx|UXTX|uxtx)(?:\s*#?\s*(0x[0-9a-fA-F]+|[0-9]+))?$",
+        raw
     )
     if not match:
         return None
-    base = match.group(1)
-    index = match.group(2)
+    reg = match.group(1)
+    shift_type = match.group(2).upper()
     shift_val_str = match.group(3)
-
+    
     shift = 0
     if shift_val_str:
         try:
@@ -116,9 +116,144 @@ def parse_indexed_memory(raw_str: str) -> tuple[str, str, int] | None:
             else:
                 shift = int(shift_val_str)
         except ValueError:
-            return None
+            pass
+    return reg, shift_type, shift
 
-    return base, index, shift
+
+def format_shifted_extended_expr(
+    reg: str,
+    shift_type: str | None,
+    shift: int,
+    reg_to_arg: dict[str, str] | None = None,
+) -> str:
+    reg_expr = c_temp_for_register(reg, reg_to_arg)
+    if not shift_type:
+        return reg_expr
+        
+    if shift_type in {"LSL", "LSR", "ASR"}:
+        op = "<<" if shift_type == "LSL" else ">>"
+        return f"({reg_expr} {op} {shift})"
+        
+    if shift_type == "SXTW":
+        inner = f"((i64)(i32){reg_expr})"
+    elif shift_type == "UXTW":
+        inner = f"((u64)(u32){reg_expr})"
+    elif shift_type == "SXTX":
+        inner = f"((i64){reg_expr})"
+    elif shift_type == "UXTX":
+        inner = f"((u64){reg_expr})"
+    else:
+        return reg_expr
+        
+    if shift > 0:
+        return f"({inner} << {shift})"
+    else:
+        return inner
+
+
+def parse_indexed_memory_enhanced(raw_str: str) -> tuple[str, str, str | None, int, list[str]] | None:
+    cleaned = raw_str.strip()
+    if not (cleaned.startswith("[") and (cleaned.endswith("]") or cleaned.endswith("]!"))):
+        return None
+    
+    inside = cleaned.replace("[", "").replace("]", "").replace("!", "").strip()
+    parts = [p.strip() for p in inside.split(",") if p.strip()]
+    if len(parts) < 2:
+        return None
+        
+    base = parts[0]
+    index = ""
+    ext = None
+    shift = 0
+    warnings = []
+    
+    # 3 parts (base, index, ext_shift)
+    if len(parts) >= 3:
+        index = parts[1]
+        ext_shift = parts[2]
+        subparts = ext_shift.split()
+        if len(subparts) >= 1:
+            ext = subparts[0].upper()
+            if len(subparts) >= 2:
+                shift_str = subparts[1].replace("#", "").strip()
+                if not shift_str:
+                    return None
+                is_hex = shift_str.lower().startswith("0x")
+                val_to_check = shift_str[2:] if is_hex else shift_str
+                if not val_to_check or not all(c in "0123456789abcdefABCDEF" if is_hex else c in "0123456789" for c in val_to_check):
+                    return None
+                try:
+                    if is_hex:
+                        shift = int(shift_str, 16)
+                    else:
+                        shift = int(shift_str)
+                except ValueError:
+                    return None
+            else:
+                if ext in {"LSL", "SXTW", "UXTW", "SXTX", "UXTX"}:
+                    warnings.append("indexed_shift_missing_defaulted_to_0")
+                    shift = 0
+    else:
+        # 2 parts
+        index_and_more = parts[1]
+        subparts = index_and_more.split()
+        if len(subparts) >= 1:
+            index = subparts[0]
+            if len(subparts) >= 2:
+                ext = subparts[1].upper()
+                if len(subparts) >= 3:
+                    shift_str = subparts[2].replace("#", "").strip()
+                    if not shift_str:
+                        return None
+                    is_hex = shift_str.lower().startswith("0x")
+                    val_to_check = shift_str[2:] if is_hex else shift_str
+                    if not val_to_check or not all(c in "0123456789abcdefABCDEF" if is_hex else c in "0123456789" for c in val_to_check):
+                        return None
+                    try:
+                        if is_hex:
+                            shift = int(shift_str, 16)
+                        else:
+                            shift = int(shift_str)
+                    except ValueError:
+                        return None
+                else:
+                    if ext in {"LSL", "SXTW", "UXTW", "SXTX", "UXTX"}:
+                        warnings.append("indexed_shift_missing_defaulted_to_0")
+                        shift = 0
+            else:
+                ext = None
+                shift = 0
+        else:
+            return None
+            
+    return base, index, ext, shift, warnings
+
+
+def format_indexed_address(
+    base: str,
+    index: str,
+    ext: str | None,
+    shift: int,
+    reg_to_arg: dict[str, str] | None = None,
+) -> str:
+    base_expr = c_temp_for_register(base, reg_to_arg)
+    index_expr = c_temp_for_register(index, reg_to_arg)
+    
+    if ext == "SXTW":
+        inner = f"((i64)(i32){index_expr})"
+    elif ext == "UXTW":
+        inner = f"((u64)(u32){index_expr})"
+    elif ext == "SXTX":
+        inner = f"((i64){index_expr})"
+    elif ext == "UXTX":
+        inner = f"((u64){index_expr})"
+    else:
+        inner = index_expr
+        
+    if shift > 0:
+        return f"{base_expr} + ({inner} << {shift})"
+    else:
+        return f"{base_expr} + {inner}"
 
 
 def indexed_memory_expr(
@@ -195,6 +330,7 @@ def operand_to_expr(
     reg_to_arg: dict[str, str] | None = None,
     size_override: int | None = None,
     is_signed_override: bool = False,
+    warnings: list[str] | None = None,
 ) -> str:
     """Convert an operand dictionary into its C expression string."""
     kind = op.get("kind", "")
@@ -238,11 +374,23 @@ def operand_to_expr(
     elif kind == "unknown":
         raw = op.get("raw", "")
 
-        parsed_indexed = parse_indexed_memory(raw)
+        parsed_indexed = parse_indexed_memory_enhanced(raw)
         if parsed_indexed:
-            base, index, shift = parsed_indexed
+            base, index, ext, shift, warnings_list = parsed_indexed
+            if warnings is not None:
+                warnings.extend(warnings_list)
+            addr_expr = format_indexed_address(base, index, ext, shift, reg_to_arg)
             size = size_override if size_override is not None else op.get("size_bytes")
-            return indexed_memory_expr(base, index, shift, size, reg_to_arg, is_signed_override)
+            if is_signed_override and size == 4:
+                ctype = "i32"
+            else:
+                size_map = {1: "u8", 2: "u16", 4: "u32", 8: "u64"}
+                ctype = size_map.get(size, "u64")
+            
+            expr = f"*({ctype} *)({addr_expr})"
+            if is_signed_override and size == 4:
+                return f"(i64){expr}"
+            return expr
 
         parsed_raw = parse_raw_mem_operand(raw)
         if parsed_raw:
@@ -293,10 +441,29 @@ def filter_semantic_operands(ops: list[dict[str, Any]] | None) -> list[dict[str,
             clean.append(op)
         elif kind == "unknown":
             raw = str(op.get("raw") or "").strip()
-            # Check if it represents a brackets memory operand
-            if raw.startswith("[") and "]" in raw:
+            # Check if it represents a brackets memory operand or shifted/extended register
+            if (raw.startswith("[") and "]" in raw) or parse_shifted_extended_reg(op) is not None:
                 clean.append(op)
     return clean
+
+
+def format_comment_operand(op: dict[str, Any], reg_to_arg: dict[str, str] | None) -> str:
+    kind = op.get("kind", "")
+    if kind == "register":
+        val = str(op.get("value", "")).lower()
+        if val in {"wzr", "xzr"}:
+            return val
+        return c_temp_for_register(val, reg_to_arg)
+    elif kind == "immediate":
+        val = op.get("value")
+        if isinstance(val, int):
+            if val >= 0:
+                return f"#0x{val:x}"
+            else:
+                return f"#-0x{-val:x}"
+        return f"#{val}"
+    else:
+        return operand_to_expr(op, reg_to_arg)
 
 
 # ---------------------------------------------------------------------------
@@ -359,87 +526,141 @@ def lower_arm64_instructions(
         stmt_kind = "unknown"
         is_lowered = False
         warnings: list[str] = []
+        custom_comment = False
 
         try:
             # Check for supported instruction patterns
             if mnemonic in {"mov", "movz"} and len(ops) >= 2:
                 dst, src = ops[0], ops[1]
-                dst_expr = operand_to_expr(dst, reg_to_arg)
-                src_expr = operand_to_expr(src, reg_to_arg)
+                dst_expr = operand_to_expr(dst, reg_to_arg, warnings=warnings)
+                src_expr = operand_to_expr(src, reg_to_arg, warnings=warnings)
                 lowered_text_list.append(f"{dst_expr} = {src_expr};")
                 stmt_kind = "assign"
                 is_lowered = True
 
             elif mnemonic == "adrp" and len(ops) >= 2:
                 dst, imm = ops[0], ops[1]
-                dst_expr = operand_to_expr(dst, reg_to_arg)
+                dst_expr = operand_to_expr(dst, reg_to_arg, warnings=warnings)
                 val = imm.get("value")
-                imm_expr = hex(val) if isinstance(val, int) else operand_to_expr(imm, reg_to_arg)
+                imm_expr = hex(val) if isinstance(val, int) else operand_to_expr(imm, reg_to_arg, warnings=warnings)
                 lowered_text_list.append(f"{dst_expr} = {imm_expr};")
                 stmt_kind = "assign"
                 is_lowered = True
 
-            elif mnemonic in {"add", "sub"}:
-                if len(ops) >= 3:
-                    dst, src1, src2 = ops[0], ops[1], ops[2]
-                    dst_expr = operand_to_expr(dst, reg_to_arg)
-                    src1_expr = operand_to_expr(src1, reg_to_arg)
-                    src2_expr = operand_to_expr(src2, reg_to_arg)
-                    op_sym = "+" if mnemonic == "add" else "-"
-                    lowered_text_list.append(f"{dst_expr} = {src1_expr} {op_sym} {src2_expr};")
-                    is_lowered = True
-                elif len(ops) == 2:
-                    dst, src = ops[0], ops[1]
-                    dst_expr = operand_to_expr(dst, reg_to_arg)
-                    src_expr = operand_to_expr(src, reg_to_arg)
-                    op_sym = "+" if mnemonic == "add" else "-"
-                    lowered_text_list.append(f"{dst_expr} = {dst_expr} {op_sym} {src_expr};")
-                    is_lowered = True
-                
-                if is_lowered:
-                    dst_norm = normalize_register(ops[0].get("value"))
-                    if dst_norm == "sp":
-                        stmt_kind = "stack_adjust"
+            elif mnemonic in {"subs", "adds"}:
+                if len(ops) >= 2:
+                    if len(ops) >= 3:
+                        dst, src1, src2 = ops[0], ops[1], ops[2]
                     else:
-                        stmt_kind = "binary_op"
-
-            elif mnemonic == "mul":
-                if len(ops) >= 3:
-                    dst, src1, src2 = ops[0], ops[1], ops[2]
-                    dst_expr = operand_to_expr(dst, reg_to_arg)
-                    src1_expr = operand_to_expr(src1, reg_to_arg)
-                    src2_expr = operand_to_expr(src2, reg_to_arg)
-                    lowered_text_list.append(f"{dst_expr} = {src1_expr} * {src2_expr};")
-                    is_lowered = True
-                elif len(ops) == 2:
-                    dst, src = ops[0], ops[1]
-                    dst_expr = operand_to_expr(dst, reg_to_arg)
-                    src_expr = operand_to_expr(src, reg_to_arg)
-                    lowered_text_list.append(f"{dst_expr} = {dst_expr} * {src_expr};")
-                    is_lowered = True
-                stmt_kind = "binary_op"
-
-            elif mnemonic in {"and", "orr", "eor"}:
-                op_sym = "&" if mnemonic == "and" else ("|" if mnemonic == "orr" else "^")
-                if len(ops) >= 3:
-                    dst, src1, src2 = ops[0], ops[1], ops[2]
-                    dst_expr = operand_to_expr(dst, reg_to_arg)
-                    src1_expr = operand_to_expr(src1, reg_to_arg)
-                    src2_expr = operand_to_expr(src2, reg_to_arg)
+                        dst, src1, src2 = ops[0], ops[0], ops[1]
                     
-                    # Special case: orr with wzr/xzr
+                    dst_val = str(dst.get("value") or "").lower()
+                    is_zero = dst_val in {"wzr", "xzr"}
+                    op_sym = "+" if mnemonic == "adds" else "-"
+                    
+                    src1_expr = operand_to_expr(src1, reg_to_arg, warnings=warnings)
+                    src2_expr = operand_to_expr(src2, reg_to_arg, warnings=warnings)
+                    
+                    if is_zero:
+                        # Zero register target: comparison comment only
+                        src1_comment = format_comment_operand(src1, reg_to_arg)
+                        src2_comment = format_comment_operand(src2, reg_to_arg)
+                        comment_text = f"/* {mnemonic} {dst_val},{src1_comment},{src2_comment}; flags updated, result discarded */"
+                        lowered_text_list.append(comment_text)
+                        stmt_kind = "compare"
+                        is_lowered = True
+                        custom_comment = True
+                    else:
+                        dst_expr = operand_to_expr(dst, reg_to_arg, warnings=warnings)
+                        stmt_text = f"{dst_expr} = {src1_expr} {op_sym} {src2_expr};"
+                        lowered_text_list.append(f"{stmt_text} /* {raw}; flags updated */")
+                        stmt_kind = "binary_op"
+                        is_lowered = True
+                        custom_comment = True
+
+            elif mnemonic in {"add", "sub", "and", "orr", "eor"}:
+                if len(ops) >= 2:
+                    if len(ops) >= 3:
+                        dst, src1, src2 = ops[0], ops[1], ops[2]
+                    else:
+                        dst, src1, src2 = ops[0], ops[0], ops[1]
+                    
+                    dst_expr = operand_to_expr(dst, reg_to_arg, warnings=warnings)
+                    src1_expr = operand_to_expr(src1, reg_to_arg, warnings=warnings)
+                    
+                    # 1. Try parsing shift/extend from raw text
+                    shift_type = None
+                    shift_val = 0
+                    raw_clean = raw.strip()
+                    shift_match = re.search(
+                        r",\s*(LSL|lsl|LSR|lsr|ASR|asr|SXTW|sxtw|UXTW|uxtw|SXTX|sxtx|UXTX|uxtx)(?:\s*#?\s*(0x[0-9a-fA-F]+|[0-9]+))?\s*$",
+                        raw_clean
+                    )
+                    if shift_match:
+                        shift_type = shift_match.group(1).upper()
+                        shift_val_str = shift_match.group(2)
+                        if shift_val_str:
+                            try:
+                                if shift_val_str.lower().startswith("0x"):
+                                    shift_val = int(shift_val_str, 16)
+                                else:
+                                    shift_val = int(shift_val)
+                            except ValueError:
+                                pass
+                                
+                    # 2. Try parsing from src2 if it's unknown kind
+                    src2_expr = None
+                    if src2.get("kind") == "unknown":
+                        parsed = parse_shifted_extended_reg(src2)
+                        if parsed:
+                            reg, s_type, s_val = parsed
+                            src2_expr = format_shifted_extended_expr(reg, s_type, s_val, reg_to_arg)
+                            
+                    if not src2_expr:
+                        if shift_type:
+                            src2_expr = format_shifted_extended_expr(src2.get("value", ""), shift_type, shift_val, reg_to_arg)
+                        else:
+                            src2_expr = operand_to_expr(src2, reg_to_arg, warnings=warnings)
+                            
+                    # Construct expression based on mnemonic
+                    if mnemonic == "add":
+                        op_sym = "+"
+                    elif mnemonic == "sub":
+                        op_sym = "-"
+                    elif mnemonic == "and":
+                        op_sym = "&"
+                    elif mnemonic == "orr":
+                        op_sym = "|"
+                    elif mnemonic == "eor":
+                        op_sym = "^"
+                        
                     if mnemonic == "orr" and src1_expr == "0":
                         lowered_text_list.append(f"{dst_expr} = {src2_expr};")
                     elif mnemonic == "orr" and src2_expr == "0":
                         lowered_text_list.append(f"{dst_expr} = {src1_expr};")
                     else:
                         lowered_text_list.append(f"{dst_expr} = {src1_expr} {op_sym} {src2_expr};")
+                    
+                    dst_norm = normalize_register(dst.get("value"))
+                    if dst_norm == "sp":
+                        stmt_kind = "stack_adjust"
+                    else:
+                        stmt_kind = "binary_op"
+                    is_lowered = True
+
+            elif mnemonic == "mul":
+                if len(ops) >= 3:
+                    dst, src1, src2 = ops[0], ops[1], ops[2]
+                    dst_expr = operand_to_expr(dst, reg_to_arg, warnings=warnings)
+                    src1_expr = operand_to_expr(src1, reg_to_arg, warnings=warnings)
+                    src2_expr = operand_to_expr(src2, reg_to_arg, warnings=warnings)
+                    lowered_text_list.append(f"{dst_expr} = {src1_expr} * {src2_expr};")
                     is_lowered = True
                 elif len(ops) == 2:
                     dst, src = ops[0], ops[1]
-                    dst_expr = operand_to_expr(dst, reg_to_arg)
-                    src_expr = operand_to_expr(src, reg_to_arg)
-                    lowered_text_list.append(f"{dst_expr} = {dst_expr} {op_sym} {src_expr};")
+                    dst_expr = operand_to_expr(dst, reg_to_arg, warnings=warnings)
+                    src_expr = operand_to_expr(src, reg_to_arg, warnings=warnings)
+                    lowered_text_list.append(f"{dst_expr} = {dst_expr} * {src_expr};")
                     is_lowered = True
                 stmt_kind = "binary_op"
 
@@ -448,22 +669,22 @@ def lower_arm64_instructions(
                 extra = " /* arithmetic shift */" if mnemonic == "asr" else ""
                 if len(ops) >= 3:
                     dst, src, shift = ops[0], ops[1], ops[2]
-                    dst_expr = operand_to_expr(dst, reg_to_arg)
-                    src_expr = operand_to_expr(src, reg_to_arg)
-                    shift_expr = operand_to_expr(shift, reg_to_arg)
+                    dst_expr = operand_to_expr(dst, reg_to_arg, warnings=warnings)
+                    src_expr = operand_to_expr(src, reg_to_arg, warnings=warnings)
+                    shift_expr = operand_to_expr(shift, reg_to_arg, warnings=warnings)
                     lowered_text_list.append(f"{dst_expr} = {src_expr} {op_sym} {shift_expr};{extra}")
                     is_lowered = True
                 elif len(ops) == 2:
                     dst, shift = ops[0], ops[1]
-                    dst_expr = operand_to_expr(dst, reg_to_arg)
-                    shift_expr = operand_to_expr(shift, reg_to_arg)
+                    dst_expr = operand_to_expr(dst, reg_to_arg, warnings=warnings)
+                    shift_expr = operand_to_expr(shift, reg_to_arg, warnings=warnings)
                     lowered_text_list.append(f"{dst_expr} = {dst_expr} {op_sym} {shift_expr};{extra}")
                     is_lowered = True
                 stmt_kind = "binary_op"
 
             elif mnemonic in {"ldr", "ldur", "ldrb", "ldrh", "ldrsw", "ldursw"} and len(ops) >= 2:
                 dst, mem = ops[0], ops[1]
-                dst_expr = operand_to_expr(dst, reg_to_arg)
+                dst_expr = operand_to_expr(dst, reg_to_arg, warnings=warnings)
                 
                 # Determine access size
                 if mnemonic == "ldrb":
@@ -478,14 +699,14 @@ def lower_arm64_instructions(
                         dst_val = str(dst.get("value") or "").lower()
                         size = 4 if dst_val.startswith("w") else 8
                 
-                mem_expr = operand_to_expr(mem, reg_to_arg, size_override=size, is_signed_override=(mnemonic in {"ldrsw", "ldursw"}))
+                mem_expr = operand_to_expr(mem, reg_to_arg, size_override=size, is_signed_override=(mnemonic in {"ldrsw", "ldursw"}), warnings=warnings)
                 lowered_text_list.append(f"{dst_expr} = {mem_expr};")
                 stmt_kind = "load"
                 is_lowered = True
 
             elif mnemonic in {"str", "stur", "strb", "strh"} and len(ops) >= 2:
                 src, mem = ops[0], ops[1]
-                src_expr = operand_to_expr(src, reg_to_arg)
+                src_expr = operand_to_expr(src, reg_to_arg, warnings=warnings)
                 
                 # Determine access size
                 if mnemonic == "strb":
@@ -498,15 +719,15 @@ def lower_arm64_instructions(
                         src_val = str(src.get("value") or "").lower()
                         size = 4 if src_val.startswith("w") else 8
                 
-                mem_expr = operand_to_expr(mem, reg_to_arg, size_override=size)
+                mem_expr = operand_to_expr(mem, reg_to_arg, size_override=size, warnings=warnings)
                 lowered_text_list.append(f"{mem_expr} = {src_expr};")
                 stmt_kind = "store"
                 is_lowered = True
 
             elif mnemonic in {"cmp", "cmn", "tst"} and len(ops) >= 2:
                 op1, op2 = ops[0], ops[1]
-                op1_expr = operand_to_expr(op1, reg_to_arg)
-                op2_expr = operand_to_expr(op2, reg_to_arg)
+                op1_expr = operand_to_expr(op1, reg_to_arg, warnings=warnings)
+                op2_expr = operand_to_expr(op2, reg_to_arg, warnings=warnings)
                 lowered_text_list.append(f"/* compare: {op1_expr} vs {op2_expr} */")
                 stmt_kind = "compare"
                 is_lowered = True
@@ -543,14 +764,51 @@ def lower_arm64_instructions(
 
             elif mnemonic == "blr" and len(ops) >= 1:
                 reg = ops[0]
-                reg_expr = operand_to_expr(reg, reg_to_arg)
+                reg_expr = operand_to_expr(reg, reg_to_arg, warnings=warnings)
                 lowered_text_list.append(f"/* indirect call via {reg_expr} */")
                 stmt_kind = "comment"
                 is_lowered = True
 
+            elif mnemonic in {"b.eq", "b.ne", "b.ge", "b.gt", "b.le", "b.lt", "b.hi", "b.hs", "b.lo", "b.ls", "b.mi", "b.pl", "b.vs", "b.vc", "b.cs", "b.cc"} and len(ops) >= 1:
+                target = ops[0]
+                target_expr = operand_to_expr(target, reg_to_arg, warnings=warnings)
+                norm_target = normalize_address(target_expr)
+                lowered_text_list.append(f"/* conditional branch {mnemonic} -> {norm_target} */")
+                stmt_kind = "conditional_branch_comment"
+                is_lowered = True
+                custom_comment = True
+
+            elif mnemonic in {"cbz", "cbnz"} and len(ops) >= 2:
+                reg, target = ops[0], ops[1]
+                reg_expr = operand_to_expr(reg, reg_to_arg, warnings=warnings)
+                target_expr = operand_to_expr(target, reg_to_arg, warnings=warnings)
+                norm_target = normalize_address(target_expr)
+                lowered_text_list.append(f"/* {mnemonic} {reg_expr} -> {norm_target} */")
+                stmt_kind = "compare_branch_comment"
+                is_lowered = True
+                custom_comment = True
+
+            elif mnemonic in {"tbz", "tbnz"} and len(ops) >= 3:
+                reg, bit, target = ops[0], ops[1], ops[2]
+                reg_expr = operand_to_expr(reg, reg_to_arg, warnings=warnings)
+                bit_val = bit.get("value")
+                if bit_val is not None:
+                    try:
+                        bit_str = str(int(bit_val))
+                    except (ValueError, TypeError):
+                        bit_str = str(bit_val).replace("#", "")
+                else:
+                    bit_str = operand_to_expr(bit, reg_to_arg, warnings=warnings).replace("#", "")
+                target_expr = operand_to_expr(target, reg_to_arg, warnings=warnings)
+                norm_target = normalize_address(target_expr)
+                lowered_text_list.append(f"/* {mnemonic} {reg_expr} bit {bit_str} -> {norm_target} */")
+                stmt_kind = "test_branch_comment"
+                is_lowered = True
+                custom_comment = True
+
             elif mnemonic in {"b", "br"} and len(ops) >= 1:
                 target = ops[0]
-                target_expr = operand_to_expr(target, reg_to_arg)
+                target_expr = operand_to_expr(target, reg_to_arg, warnings=warnings)
                 lowered_text_list.append(f"/* branch to {target_expr} */")
                 stmt_kind = "branch_comment"
                 is_lowered = True
@@ -562,8 +820,8 @@ def lower_arm64_instructions(
 
             elif mnemonic in {"stp", "ldp"} and len(ops) >= 3:
                 reg1, reg2, mem = ops[0], ops[1], ops[2]
-                reg1_expr = operand_to_expr(reg1, reg_to_arg)
-                reg2_expr = operand_to_expr(reg2, reg_to_arg)
+                reg1_expr = operand_to_expr(reg1, reg_to_arg, warnings=warnings)
+                reg2_expr = operand_to_expr(reg2, reg_to_arg, warnings=warnings)
 
                 # Resolve base and offset
                 base, offset = "", 0
@@ -628,8 +886,10 @@ def lower_arm64_instructions(
 
         if is_lowered and lowered_text_list:
             for i, text in enumerate(lowered_text_list):
-                # The first statement gets the original instruction raw comment
-                comment_part = f" /* {raw} */" if i == 0 else ""
+                if custom_comment:
+                    comment_part = ""
+                else:
+                    comment_part = f" /* {raw} */" if i == 0 else ""
                 stmt = LoweredStatement(
                     address=addr,
                     kind=stmt_kind,

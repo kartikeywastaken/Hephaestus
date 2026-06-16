@@ -647,6 +647,18 @@ def build_source_reconstruction(
             fn_param_counts=fn_param_counts,
         )
 
+        # Calculate unsupported instruction kinds
+        unsupported_kinds = {}
+        for stmt in lowered_stmts:
+            if not stmt.lowered and stmt.kind == "unknown":
+                mnem = "invalid"
+                if stmt.source_instruction and stmt.source_instruction.get("mnemonic"):
+                    mnem = str(stmt.source_instruction["mnemonic"]).strip().lower()
+                if not mnem:
+                    mnem = "invalid"
+                unsupported_kinds[mnem] = unsupported_kinds.get(mnem, 0) + 1
+        fn_lowering["unsupported_instruction_kinds"] = {k: v for k, v in sorted(unsupported_kinds.items())}
+
         # Group lowered statements by block ID
         lowered_blocks = defaultdict(list)
         for stmt in lowered_stmts:
@@ -806,6 +818,13 @@ def build_source_reconstruction(
         total_lowered += fn_lowering.get("instructions_lowered", 0)
         total_commented += fn_lowering.get("instructions_commented", 0)
 
+    # Accumulate global unsupported instruction kinds
+    global_unsupported_kinds = {}
+    for fn in reconstructed:
+        fn_unsupported = fn.lowering.get("unsupported_instruction_kinds", {})
+        for mnem, count in fn_unsupported.items():
+            global_unsupported_kinds[mnem] = global_unsupported_kinds.get(mnem, 0) + count
+
     # Build summary
     summary = {
         "functions_total": len(reconstructed),
@@ -870,6 +889,8 @@ def build_source_reconstruction(
         "condition_evidence_adapters": 0,
         "condition_unknown_adapters": 0,
         "unknown_condition_helpers_emitted": 0,
+        # Phase 5.7.1 unsupported instruction kinds
+        "unsupported_instruction_kinds": {k: v for k, v in sorted(global_unsupported_kinds.items())},
     }
 
     artifact = SourceReconstructionArtifact(

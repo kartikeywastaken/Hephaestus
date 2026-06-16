@@ -10,7 +10,7 @@
     "functions": [
       {
         "name": "_main",
-        "entry_point": "0x100000460",
+        "entry_point": "0x100000548",
         "function_kind": "entrypoint",
         "signature": {
           "return_type": {
@@ -63,7 +63,7 @@
               "source": "argv_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -60,
+            "offset_bytes": -36,
             "size_bytes": 4,
             "source": "unified_ir",
             "confidence": 0.85,
@@ -81,7 +81,7 @@
               "source": "argc_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -56,
+            "offset_bytes": -32,
             "size_bytes": 4,
             "source": "unified_ir",
             "confidence": 0.9,
@@ -90,97 +90,7 @@
             ]
           },
           {
-            "name": "var_70h_2",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -120,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_70h",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -116,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_0h",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -112,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_30h_2",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -108,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_0h_2",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -104,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_38h",
+            "name": "var_60h_2",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -198,7 +108,7 @@
             ]
           },
           {
-            "name": "var_34h",
+            "name": "var_60h",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -216,7 +126,7 @@
             ]
           },
           {
-            "name": "var_30h",
+            "name": "var_0h",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -234,7 +144,7 @@
             ]
           },
           {
-            "name": "var_2ch",
+            "name": "var_0h_2",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -252,7 +162,7 @@
             ]
           },
           {
-            "name": "var_28h",
+            "name": "var_0h_3",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -270,7 +180,7 @@
             ]
           },
           {
-            "name": "var_20h",
+            "name": "var_0h_4",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -288,7 +198,7 @@
             ]
           },
           {
-            "name": "var_1ch",
+            "name": "var_0h_5",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -306,7 +216,7 @@
             ]
           },
           {
-            "name": "var_0h_5",
+            "name": "var_0h_6",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -324,7 +234,7 @@
             ]
           },
           {
-            "name": "var_0h_4",
+            "name": "var_30h",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -342,7 +252,7 @@
             ]
           },
           {
-            "name": "var_0h_3",
+            "name": "var_28h",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -360,115 +270,97 @@
             ]
           },
           {
-            "name": "local_80",
+            "name": "var_0h_7",
             "storage": "stack",
             "category": "local",
             "type": {
               "type": "unknown",
-              "confidence": 0.4,
-              "source": "local_name_heuristic",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -60,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_20h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -56,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_1ch",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
               "notes": []
             },
             "offset_bytes": -52,
             "size_bytes": 4,
             "source": "unified_ir",
-            "confidence": 0.4,
+            "confidence": 0.35,
             "notes": [
-              "classified via local_name_heuristic"
+              "classified via var_name_heuristic"
             ]
           },
           {
-            "name": "local_78",
+            "name": "var_10h",
             "storage": "stack",
             "category": "local",
             "type": {
               "type": "unknown",
-              "confidence": 0.4,
-              "source": "local_name_heuristic",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
               "notes": []
             },
             "offset_bytes": -48,
             "size_bytes": 4,
             "source": "unified_ir",
-            "confidence": 0.4,
+            "confidence": 0.35,
             "notes": [
-              "classified via local_name_heuristic"
+              "classified via var_name_heuristic"
             ]
           },
           {
-            "name": "local_70",
+            "name": "var_0h_8",
             "storage": "stack",
             "category": "local",
             "type": {
               "type": "unknown",
-              "confidence": 0.4,
-              "source": "local_name_heuristic",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
               "notes": []
             },
             "offset_bytes": -44,
             "size_bytes": 4,
             "source": "unified_ir",
-            "confidence": 0.4,
+            "confidence": 0.35,
             "notes": [
-              "classified via local_name_heuristic"
+              "classified via var_name_heuristic"
             ]
           },
           {
-            "name": "local_64",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.4,
-              "source": "local_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -40,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.4,
-            "notes": [
-              "classified via local_name_heuristic"
-            ]
-          },
-          {
-            "name": "local_60",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.4,
-              "source": "local_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -36,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.4,
-            "notes": [
-              "classified via local_name_heuristic"
-            ]
-          },
-          {
-            "name": "local_58",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.4,
-              "source": "local_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -32,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.4,
-            "notes": [
-              "classified via local_name_heuristic"
-            ]
-          },
-          {
-            "name": "local_54",
+            "name": "local_34",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -486,7 +378,7 @@
             ]
           },
           {
-            "name": "local_50",
+            "name": "local_30",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -504,7 +396,7 @@
             ]
           },
           {
-            "name": "local_4c",
+            "name": "local_28",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -522,7 +414,7 @@
             ]
           },
           {
-            "name": "local_48",
+            "name": "local_20",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -540,7 +432,375 @@
             ]
           },
           {
-            "name": "local_44",
+            "name": "local_18",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -12,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_14",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -8,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_10",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -4,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "envp",
+            "storage": "stack",
+            "category": "unknown_stack_slot",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.2,
+              "source": "fallback",
+              "notes": []
+            },
+            "offset_bytes": -40,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.2,
+            "notes": [
+              "no heuristic matched; classified as unknown_stack_slot"
+            ]
+          }
+        ],
+        "evidence": [
+          "function recovered from unified_ir",
+          "signature inferred using main function heuristic"
+        ],
+        "confidence": 0.9
+      },
+      {
+        "name": "FUN_100000580",
+        "entry_point": "0x100000580",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [],
+          "variadic": false,
+          "confidence": 0.2,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [],
+        "evidence": [
+          "function recovered from unified_ir",
+          "no parameter variables found; fallback signature emitted"
+        ],
+        "confidence": 0.2
+      },
+      {
+        "name": "mega_driver",
+        "entry_point": "0x1000005dc",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [],
+          "variadic": false,
+          "confidence": 0.2,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [],
+        "evidence": [
+          "function recovered from unified_ir",
+          "no parameter variables found; fallback signature emitted"
+        ],
+        "confidence": 0.2
+      },
+      {
+        "name": "FUN_100000668",
+        "entry_point": "0x100000668",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [],
+          "variadic": false,
+          "confidence": 0.2,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [],
+        "evidence": [
+          "function recovered from unified_ir",
+          "no parameter variables found; fallback signature emitted"
+        ],
+        "confidence": 0.2
+      },
+      {
+        "name": "driver",
+        "entry_point": "0x1000006e8",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [],
+          "variadic": false,
+          "confidence": 0.2,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [],
+        "evidence": [
+          "function recovered from unified_ir",
+          "no parameter variables found; fallback signature emitted"
+        ],
+        "confidence": 0.2
+      },
+      {
+        "name": "_mixed_driver",
+        "entry_point": "0x10000074c",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [
+            {
+              "name": "arg_30h",
+              "index": 0,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg1",
+              "index": 1,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            }
+          ],
+          "variadic": false,
+          "confidence": 0.45,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [
+          {
+            "name": "arg_30h",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -24,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg1",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -20,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_20h_2",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -44,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_20h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -40,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_0h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -36,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_10h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -32,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_ch",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -28,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_24",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -16,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_20",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -596,13 +856,3662 @@
         ],
         "evidence": [
           "function recovered from unified_ir",
-          "signature inferred using main function heuristic"
+          "parameters recovered from 2 classified variable(s)"
         ],
-        "confidence": 0.9
+        "confidence": 0.45
       },
       {
-        "name": "_reduce_weird",
-        "entry_point": "0x100000584",
+        "name": "FUN_10000076c",
+        "entry_point": "0x10000076c",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [],
+          "variadic": false,
+          "confidence": 0.2,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [],
+        "evidence": [
+          "function recovered from unified_ir",
+          "no parameter variables found; fallback signature emitted"
+        ],
+        "confidence": 0.2
+      },
+      {
+        "name": "leaf_a",
+        "entry_point": "0x1000007e4",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [],
+          "variadic": false,
+          "confidence": 0.2,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [],
+        "evidence": [
+          "function recovered from unified_ir",
+          "no parameter variables found; fallback signature emitted"
+        ],
+        "confidence": 0.2
+      },
+      {
+        "name": "_cfg_pressure",
+        "entry_point": "0x100000880",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [
+            {
+              "name": "arg_50h",
+              "index": 0,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg2",
+              "index": 1,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg1",
+              "index": 2,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            }
+          ],
+          "variadic": false,
+          "confidence": 0.45,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [
+          {
+            "name": "arg_50h",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -32,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg2",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -28,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg1",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -24,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_40h_2",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -68,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_40h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -64,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_0h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -60,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_0h_2",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -56,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_0h_3",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -52,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_20h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -48,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_18h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -44,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_10h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -40,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_8h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -36,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_30",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -20,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_28",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -16,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_20",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -12,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_18",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -8,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_10",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -4,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          }
+        ],
+        "evidence": [
+          "function recovered from unified_ir",
+          "parameters recovered from 3 classified variable(s)"
+        ],
+        "confidence": 0.45
+      },
+      {
+        "name": "FUN_1000008ac",
+        "entry_point": "0x1000008ac",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [],
+          "variadic": false,
+          "confidence": 0.2,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [],
+        "evidence": [
+          "function recovered from unified_ir",
+          "no parameter variables found; fallback signature emitted"
+        ],
+        "confidence": 0.2
+      },
+      {
+        "name": "FUN_1000008f8",
+        "entry_point": "0x1000008f8",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [],
+          "variadic": false,
+          "confidence": 0.2,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [],
+        "evidence": [
+          "function recovered from unified_ir",
+          "no parameter variables found; fallback signature emitted"
+        ],
+        "confidence": 0.2
+      },
+      {
+        "name": "leaf_b",
+        "entry_point": "0x100000940",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [],
+          "variadic": false,
+          "confidence": 0.2,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [],
+        "evidence": [
+          "function recovered from unified_ir",
+          "no parameter variables found; fallback signature emitted"
+        ],
+        "confidence": 0.2
+      },
+      {
+        "name": "FUN_100000b10",
+        "entry_point": "0x100000b10",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [],
+          "variadic": false,
+          "confidence": 0.2,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [],
+        "evidence": [
+          "function recovered from unified_ir",
+          "no parameter variables found; fallback signature emitted"
+        ],
+        "confidence": 0.2
+      },
+      {
+        "name": "FUN_100000b20",
+        "entry_point": "0x100000b20",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [],
+          "variadic": false,
+          "confidence": 0.2,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [],
+        "evidence": [
+          "function recovered from unified_ir",
+          "no parameter variables found; fallback signature emitted"
+        ],
+        "confidence": 0.2
+      },
+      {
+        "name": "_indirect_pressure",
+        "entry_point": "0x100000b44",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [
+            {
+              "name": "arg_40h",
+              "index": 0,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg1",
+              "index": 1,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            }
+          ],
+          "variadic": false,
+          "confidence": 0.45,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [
+          {
+            "name": "arg_40h",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -36,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg1",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -32,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_30h_2",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -68,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_30h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -64,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_0h_2",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -60,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_0h_3",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -56,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_18h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -52,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_10h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -48,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_8h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -44,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_0h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -40,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_40",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -28,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_38",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -24,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_30",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -20,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_28",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -16,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_20",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -12,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_18",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -8,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_10",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -4,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          }
+        ],
+        "evidence": [
+          "function recovered from unified_ir",
+          "parameters recovered from 2 classified variable(s)"
+        ],
+        "confidence": 0.45
+      },
+      {
+        "name": "_stack_layout_pressure",
+        "entry_point": "0x100000cc8",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [
+            {
+              "name": "arg1",
+              "index": 0,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            }
+          ],
+          "variadic": false,
+          "confidence": 0.45,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [
+          {
+            "name": "arg1",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -12,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_10h_3",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -84,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_10h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -80,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_20h_3",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -76,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_20h_2",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -72,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_0h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -68,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_278h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -64,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_138h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -60,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_b8h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -56,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_38h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -52,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_30h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -48,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_28h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -44,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_24h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -40,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_20h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -36,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_1ch",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -32,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_18h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -28,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_14h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -24,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_10h_2",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -20,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_8h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -16,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_20",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -8,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_10",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -4,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          }
+        ],
+        "evidence": [
+          "function recovered from unified_ir",
+          "parameters recovered from 1 classified variable(s)"
+        ],
+        "confidence": 0.45
+      },
+      {
+        "name": "leaf_c",
+        "entry_point": "0x100000ce4",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [],
+          "variadic": false,
+          "confidence": 0.2,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [],
+        "evidence": [
+          "function recovered from unified_ir",
+          "no parameter variables found; fallback signature emitted"
+        ],
+        "confidence": 0.2
+      },
+      {
+        "name": "_abi_pressure",
+        "entry_point": "0x100001054",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [
+            {
+              "name": "arg_60h",
+              "index": 0,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg8",
+              "index": 1,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg7",
+              "index": 2,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg6",
+              "index": 3,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg5",
+              "index": 4,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg4",
+              "index": 5,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg3",
+              "index": 6,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg2",
+              "index": 7,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg1",
+              "index": 8,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            }
+          ],
+          "variadic": false,
+          "confidence": 0.45,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [
+          {
+            "name": "arg_60h",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -80,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg8",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -76,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg7",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -72,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg6",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -68,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg5",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -64,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg4",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -60,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg3",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -56,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg2",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -52,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg1",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -48,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_50h_2",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -128,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_50h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -124,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_0h_2",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -120,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_0h_3",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -116,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_0h_4",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -112,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_0h_5",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -108,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_28h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -104,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_20h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -100,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_18h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -96,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_10h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -92,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_8h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -88,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_0h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -84,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_60",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -44,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_58",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -40,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_50",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -36,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_48",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -32,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_40",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -28,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_38",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -24,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_30",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -20,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_28",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -16,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_20",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -12,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_18",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -8,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_10",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -4,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          }
+        ],
+        "evidence": [
+          "function recovered from unified_ir",
+          "parameters recovered from 9 classified variable(s)"
+        ],
+        "confidence": 0.45
+      },
+      {
+        "name": "_rotmix",
+        "entry_point": "0x100001220",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [
+            {
+              "name": "arg_10h",
+              "index": 0,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg1",
+              "index": 1,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            }
+          ],
+          "variadic": false,
+          "confidence": 0.45,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [
+          {
+            "name": "arg_10h",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -12,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg1",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -8,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_8h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -16,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_8",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -4,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          }
+        ],
+        "evidence": [
+          "function recovered from unified_ir",
+          "parameters recovered from 2 classified variable(s)"
+        ],
+        "confidence": 0.45
+      },
+      {
+        "name": "_op_add",
+        "entry_point": "0x1000012b0",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [
+            {
+              "name": "arg_20h",
+              "index": 0,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg2",
+              "index": 1,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg1",
+              "index": 2,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            }
+          ],
+          "variadic": false,
+          "confidence": 0.45,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [
+          {
+            "name": "arg_20h",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -24,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg2",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -20,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg1",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -16,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_18h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -36,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_10h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -32,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_8h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -28,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_18",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -12,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_10",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -8,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_8",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -4,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          }
+        ],
+        "evidence": [
+          "function recovered from unified_ir",
+          "parameters recovered from 3 classified variable(s)"
+        ],
+        "confidence": 0.45
+      },
+      {
+        "name": "_op_xor",
+        "entry_point": "0x1000012f4",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [
+            {
+              "name": "arg_20h",
+              "index": 0,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg2",
+              "index": 1,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg1",
+              "index": 2,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            }
+          ],
+          "variadic": false,
+          "confidence": 0.45,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [
+          {
+            "name": "arg_20h",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -24,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg2",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -20,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg1",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -16,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_18h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -36,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_10h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -32,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_8h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -28,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_18",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -12,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_10",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -8,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_8",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -4,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          }
+        ],
+        "evidence": [
+          "function recovered from unified_ir",
+          "parameters recovered from 3 classified variable(s)"
+        ],
+        "confidence": 0.45
+      },
+      {
+        "name": "_op_mul",
+        "entry_point": "0x100001338",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [
+            {
+              "name": "arg_20h",
+              "index": 0,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg2",
+              "index": 1,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg1",
+              "index": 2,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            }
+          ],
+          "variadic": false,
+          "confidence": 0.45,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [
+          {
+            "name": "arg_20h",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -24,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg2",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -20,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg1",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -16,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_18h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -36,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_10h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -32,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_8h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -28,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_18",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -12,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_10",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -8,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_8",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -4,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          }
+        ],
+        "evidence": [
+          "function recovered from unified_ir",
+          "parameters recovered from 3 classified variable(s)"
+        ],
+        "confidence": 0.45
+      },
+      {
+        "name": "_op_shift",
+        "entry_point": "0x100001384",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [
+            {
+              "name": "arg_20h",
+              "index": 0,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg2",
+              "index": 1,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg1",
+              "index": 2,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            }
+          ],
+          "variadic": false,
+          "confidence": 0.45,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [
+          {
+            "name": "arg_20h",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -24,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg2",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -20,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg1",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -16,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_18h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -36,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_10h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -32,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_8h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -28,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_18",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -12,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_10",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -8,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_8",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -4,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          }
+        ],
+        "evidence": [
+          "function recovered from unified_ir",
+          "parameters recovered from 3 classified variable(s)"
+        ],
+        "confidence": 0.45
+      },
+      {
+        "name": "_op_div",
+        "entry_point": "0x1000013dc",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [
+            {
+              "name": "arg_20h",
+              "index": 0,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg2",
+              "index": 1,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg1",
+              "index": 2,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            }
+          ],
+          "variadic": false,
+          "confidence": 0.45,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [
+          {
+            "name": "arg_20h",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -28,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg2",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -24,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg1",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -20,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_18h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -44,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_10h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -40,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_8h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -36,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_0h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -32,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_20",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -16,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_18",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -12,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_10",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -8,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_8",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -4,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          }
+        ],
+        "evidence": [
+          "function recovered from unified_ir",
+          "parameters recovered from 3 classified variable(s)"
+        ],
+        "confidence": 0.45
+      },
+      {
+        "name": "_op_logic",
+        "entry_point": "0x100001444",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [
+            {
+              "name": "arg_20h",
+              "index": 0,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg2",
+              "index": 1,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg1",
+              "index": 2,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            }
+          ],
+          "variadic": false,
+          "confidence": 0.45,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [
+          {
+            "name": "arg_20h",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -24,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg2",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -20,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg1",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -16,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_18h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -36,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_10h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -32,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_8h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -28,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_18",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -12,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_10",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -8,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_8",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -4,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          }
+        ],
+        "evidence": [
+          "function recovered from unified_ir",
+          "parameters recovered from 3 classified variable(s)"
+        ],
+        "confidence": 0.45
+      },
+      {
+        "name": "_tri_a",
+        "entry_point": "0x100001498",
         "function_kind": "user",
         "signature": {
           "return_type": {
@@ -689,7 +4598,7 @@
               "source": "argument_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -48,
+            "offset_bytes": -40,
             "size_bytes": 4,
             "source": "unified_ir",
             "confidence": 0.45,
@@ -707,7 +4616,7 @@
               "source": "argument_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -44,
+            "offset_bytes": -36,
             "size_bytes": 4,
             "source": "unified_ir",
             "confidence": 0.45,
@@ -725,7 +4634,7 @@
               "source": "argument_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -40,
+            "offset_bytes": -32,
             "size_bytes": 4,
             "source": "unified_ir",
             "confidence": 0.45,
@@ -743,7 +4652,7 @@
               "source": "argument_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -36,
+            "offset_bytes": -28,
             "size_bytes": 4,
             "source": "unified_ir",
             "confidence": 0.45,
@@ -761,7 +4670,7 @@
               "source": "var_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -84,
+            "offset_bytes": -68,
             "size_bytes": 4,
             "source": "unified_ir",
             "confidence": 0.35,
@@ -779,7 +4688,7 @@
               "source": "var_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -80,
+            "offset_bytes": -64,
             "size_bytes": 4,
             "source": "unified_ir",
             "confidence": 0.35,
@@ -797,7 +4706,7 @@
               "source": "var_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -76,
+            "offset_bytes": -60,
             "size_bytes": 4,
             "source": "unified_ir",
             "confidence": 0.35,
@@ -815,7 +4724,7 @@
               "source": "var_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -72,
+            "offset_bytes": -56,
             "size_bytes": 4,
             "source": "unified_ir",
             "confidence": 0.35,
@@ -833,25 +4742,7 @@
               "source": "var_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -68,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_14h",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -64,
+            "offset_bytes": -52,
             "size_bytes": 4,
             "source": "unified_ir",
             "confidence": 0.35,
@@ -869,7 +4760,7 @@
               "source": "var_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -60,
+            "offset_bytes": -48,
             "size_bytes": 4,
             "source": "unified_ir",
             "confidence": 0.35,
@@ -887,70 +4778,16 @@
               "source": "var_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -56,
+            "offset_bytes": -44,
             "size_bytes": 4,
             "source": "unified_ir",
             "confidence": 0.35,
             "notes": [
               "classified via var_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_8h",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -52,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
-          },
-          {
-            "name": "local_38",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.4,
-              "source": "local_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -32,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.4,
-            "notes": [
-              "classified via local_name_heuristic"
             ]
           },
           {
             "name": "local_34",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.4,
-              "source": "local_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -28,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.4,
-            "notes": [
-              "classified via local_name_heuristic"
-            ]
-          },
-          {
-            "name": "local_30",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -968,7 +4805,7 @@
             ]
           },
           {
-            "name": "local_2c",
+            "name": "local_30",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -1004,7 +4841,7 @@
             ]
           },
           {
-            "name": "local_1c",
+            "name": "local_20",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -1065,8 +4902,8 @@
         "confidence": 0.45
       },
       {
-        "name": "_op_add",
-        "entry_point": "0x100000674",
+        "name": "_tri_b",
+        "entry_point": "0x100001560",
         "function_kind": "user",
         "signature": {
           "return_type": {
@@ -1077,7 +4914,7 @@
           },
           "parameters": [
             {
-              "name": "arg_10h",
+              "name": "arg_30h",
               "index": 0,
               "type": {
                 "type": "unknown",
@@ -1092,7 +4929,7 @@
               ]
             },
             {
-              "name": "arg2",
+              "name": "arg3",
               "index": 1,
               "type": {
                 "type": "unknown",
@@ -1107,8 +4944,23 @@
               ]
             },
             {
-              "name": "arg1",
+              "name": "arg2",
               "index": 2,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg1",
+              "index": 3,
               "type": {
                 "type": "unknown",
                 "confidence": 0.45,
@@ -1129,7 +4981,7 @@
         },
         "variables": [
           {
-            "name": "arg_10h",
+            "name": "arg_30h",
             "storage": "stack",
             "category": "parameter",
             "type": {
@@ -1138,7 +4990,25 @@
               "source": "argument_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -20,
+            "offset_bytes": -40,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg3",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -36,
             "size_bytes": 4,
             "source": "unified_ir",
             "confidence": 0.45,
@@ -1156,7 +5026,7 @@
               "source": "argument_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -16,
+            "offset_bytes": -32,
             "size_bytes": 4,
             "source": "unified_ir",
             "confidence": 0.45,
@@ -1174,349 +5044,6 @@
               "source": "argument_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -12,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.45,
-            "notes": [
-              "classified via argument_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_ch",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -28,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_8h",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -24,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
-          },
-          {
-            "name": "local_8",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.4,
-              "source": "local_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -8,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.4,
-            "notes": [
-              "classified via local_name_heuristic"
-            ]
-          },
-          {
-            "name": "local_4",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.4,
-              "source": "local_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -4,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.4,
-            "notes": [
-              "classified via local_name_heuristic"
-            ]
-          }
-        ],
-        "evidence": [
-          "function recovered from unified_ir",
-          "parameters recovered from 3 classified variable(s)"
-        ],
-        "confidence": 0.45
-      },
-      {
-        "name": "_op_xor",
-        "entry_point": "0x100000694",
-        "function_kind": "user",
-        "signature": {
-          "return_type": {
-            "type": "unknown",
-            "confidence": 0.2,
-            "source": "fallback_unknown_return",
-            "notes": []
-          },
-          "parameters": [
-            {
-              "name": "arg_10h",
-              "index": 0,
-              "type": {
-                "type": "unknown",
-                "confidence": 0.45,
-                "source": "argument_name_heuristic",
-                "notes": []
-              },
-              "source": "unified_ir",
-              "confidence": 0.45,
-              "notes": [
-                "classified via argument_name_heuristic"
-              ]
-            },
-            {
-              "name": "arg2",
-              "index": 1,
-              "type": {
-                "type": "unknown",
-                "confidence": 0.45,
-                "source": "argument_name_heuristic",
-                "notes": []
-              },
-              "source": "unified_ir",
-              "confidence": 0.45,
-              "notes": [
-                "classified via argument_name_heuristic"
-              ]
-            },
-            {
-              "name": "arg1",
-              "index": 2,
-              "type": {
-                "type": "unknown",
-                "confidence": 0.45,
-                "source": "argument_name_heuristic",
-                "notes": []
-              },
-              "source": "unified_ir",
-              "confidence": 0.45,
-              "notes": [
-                "classified via argument_name_heuristic"
-              ]
-            }
-          ],
-          "variadic": false,
-          "confidence": 0.45,
-          "source": "user_function_parameter_recovery",
-          "notes": []
-        },
-        "variables": [
-          {
-            "name": "arg_10h",
-            "storage": "stack",
-            "category": "parameter",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.45,
-              "source": "argument_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -20,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.45,
-            "notes": [
-              "classified via argument_name_heuristic"
-            ]
-          },
-          {
-            "name": "arg2",
-            "storage": "stack",
-            "category": "parameter",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.45,
-              "source": "argument_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -16,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.45,
-            "notes": [
-              "classified via argument_name_heuristic"
-            ]
-          },
-          {
-            "name": "arg1",
-            "storage": "stack",
-            "category": "parameter",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.45,
-              "source": "argument_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -12,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.45,
-            "notes": [
-              "classified via argument_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_ch",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -28,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_8h",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -24,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
-          },
-          {
-            "name": "local_8",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.4,
-              "source": "local_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -8,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.4,
-            "notes": [
-              "classified via local_name_heuristic"
-            ]
-          },
-          {
-            "name": "local_4",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.4,
-              "source": "local_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -4,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.4,
-            "notes": [
-              "classified via local_name_heuristic"
-            ]
-          }
-        ],
-        "evidence": [
-          "function recovered from unified_ir",
-          "parameters recovered from 3 classified variable(s)"
-        ],
-        "confidence": 0.45
-      },
-      {
-        "name": "_nested_control",
-        "entry_point": "0x1000006b4",
-        "function_kind": "user",
-        "signature": {
-          "return_type": {
-            "type": "unknown",
-            "confidence": 0.2,
-            "source": "fallback_unknown_return",
-            "notes": []
-          },
-          "parameters": [
-            {
-              "name": "arg_20h",
-              "index": 0,
-              "type": {
-                "type": "unknown",
-                "confidence": 0.45,
-                "source": "argument_name_heuristic",
-                "notes": []
-              },
-              "source": "unified_ir",
-              "confidence": 0.45,
-              "notes": [
-                "classified via argument_name_heuristic"
-              ]
-            },
-            {
-              "name": "arg1",
-              "index": 1,
-              "type": {
-                "type": "unknown",
-                "confidence": 0.45,
-                "source": "argument_name_heuristic",
-                "notes": []
-              },
-              "source": "unified_ir",
-              "confidence": 0.45,
-              "notes": [
-                "classified via argument_name_heuristic"
-              ]
-            }
-          ],
-          "variadic": false,
-          "confidence": 0.45,
-          "source": "user_function_parameter_recovery",
-          "notes": []
-        },
-        "variables": [
-          {
-            "name": "arg_20h",
-            "storage": "stack",
-            "category": "parameter",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.45,
-              "source": "argument_name_heuristic",
-              "notes": []
-            },
             "offset_bytes": -28,
             "size_bytes": 4,
             "source": "unified_ir",
@@ -1526,25 +5053,7 @@
             ]
           },
           {
-            "name": "arg1",
-            "storage": "stack",
-            "category": "parameter",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.45,
-              "source": "argument_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -24,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.45,
-            "notes": [
-              "classified via argument_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_1ch",
+            "name": "var_28h",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -1553,7 +5062,25 @@
               "source": "var_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -48,
+            "offset_bytes": -64,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_20h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -60,
             "size_bytes": 4,
             "source": "unified_ir",
             "confidence": 0.35,
@@ -1571,25 +5098,7 @@
               "source": "var_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -44,
-            "size_bytes": 4,
-            "source": "unified_ir",
-            "confidence": 0.35,
-            "notes": [
-              "classified via var_name_heuristic"
-            ]
-          },
-          {
-            "name": "var_14h",
-            "storage": "stack",
-            "category": "local",
-            "type": {
-              "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
-              "notes": []
-            },
-            "offset_bytes": -40,
+            "offset_bytes": -56,
             "size_bytes": 4,
             "source": "unified_ir",
             "confidence": 0.35,
@@ -1607,7 +5116,7 @@
               "source": "var_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -36,
+            "offset_bytes": -52,
             "size_bytes": 4,
             "source": "unified_ir",
             "confidence": 0.35,
@@ -1625,7 +5134,7 @@
               "source": "var_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -32,
+            "offset_bytes": -48,
             "size_bytes": 4,
             "source": "unified_ir",
             "confidence": 0.35,
@@ -1634,7 +5143,43 @@
             ]
           },
           {
-            "name": "local_14",
+            "name": "var_0h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -44,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_30",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -24,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_24",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -1652,7 +5197,7 @@
             ]
           },
           {
-            "name": "local_10",
+            "name": "local_20",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -1670,7 +5215,7 @@
             ]
           },
           {
-            "name": "local_c",
+            "name": "local_18",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -1688,7 +5233,7 @@
             ]
           },
           {
-            "name": "local_8",
+            "name": "local_10",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -1706,7 +5251,7 @@
             ]
           },
           {
-            "name": "local_4",
+            "name": "local_8",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -1726,13 +5271,13 @@
         ],
         "evidence": [
           "function recovered from unified_ir",
-          "parameters recovered from 2 classified variable(s)"
+          "parameters recovered from 4 classified variable(s)"
         ],
         "confidence": 0.45
       },
       {
-        "name": "_mix_value",
-        "entry_point": "0x1000007a8",
+        "name": "_tri_c",
+        "entry_point": "0x100001648",
         "function_kind": "user",
         "signature": {
           "return_type": {
@@ -1743,7 +5288,7 @@
           },
           "parameters": [
             {
-              "name": "arg_10h",
+              "name": "arg_40h",
               "index": 0,
               "type": {
                 "type": "unknown",
@@ -1758,8 +5303,38 @@
               ]
             },
             {
-              "name": "arg1",
+              "name": "arg3",
               "index": 1,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg2",
+              "index": 2,
+              "type": {
+                "type": "unknown",
+                "confidence": 0.45,
+                "source": "argument_name_heuristic",
+                "notes": []
+              },
+              "source": "unified_ir",
+              "confidence": 0.45,
+              "notes": [
+                "classified via argument_name_heuristic"
+              ]
+            },
+            {
+              "name": "arg1",
+              "index": 3,
               "type": {
                 "type": "unknown",
                 "confidence": 0.45,
@@ -1780,7 +5355,7 @@
         },
         "variables": [
           {
-            "name": "arg_10h",
+            "name": "arg_40h",
             "storage": "stack",
             "category": "parameter",
             "type": {
@@ -1789,7 +5364,43 @@
               "source": "argument_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -20,
+            "offset_bytes": -44,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg3",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -40,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.45,
+            "notes": [
+              "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "arg2",
+            "storage": "stack",
+            "category": "parameter",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.45,
+              "source": "argument_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -36,
             "size_bytes": 4,
             "source": "unified_ir",
             "confidence": 0.45,
@@ -1807,12 +5418,120 @@
               "source": "argument_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -16,
+            "offset_bytes": -32,
             "size_bytes": 4,
             "source": "unified_ir",
             "confidence": 0.45,
             "notes": [
               "classified via argument_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_30h_2",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -76,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_30h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -72,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_0h_2",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -68,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_0h_3",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -64,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_18h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -60,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "var_10h",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.35,
+              "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -56,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
             ]
           },
           {
@@ -1825,7 +5544,7 @@
               "source": "var_name_heuristic",
               "notes": []
             },
-            "offset_bytes": -32,
+            "offset_bytes": -52,
             "size_bytes": 4,
             "source": "unified_ir",
             "confidence": 0.35,
@@ -1834,43 +5553,97 @@
             ]
           },
           {
-            "name": "var_8h",
+            "name": "var_0h",
             "storage": "stack",
             "category": "local",
             "type": {
               "type": "unknown",
               "confidence": 0.35,
               "source": "var_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -48,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.35,
+            "notes": [
+              "classified via var_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_40",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
               "notes": []
             },
             "offset_bytes": -28,
             "size_bytes": 4,
             "source": "unified_ir",
-            "confidence": 0.35,
+            "confidence": 0.4,
             "notes": [
-              "classified via var_name_heuristic"
+              "classified via local_name_heuristic"
             ]
           },
           {
-            "name": "var_4h",
+            "name": "local_34",
             "storage": "stack",
             "category": "local",
             "type": {
               "type": "unknown",
-              "confidence": 0.35,
-              "source": "var_name_heuristic",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
               "notes": []
             },
             "offset_bytes": -24,
             "size_bytes": 4,
             "source": "unified_ir",
-            "confidence": 0.35,
+            "confidence": 0.4,
             "notes": [
-              "classified via var_name_heuristic"
+              "classified via local_name_heuristic"
             ]
           },
           {
-            "name": "local_c",
+            "name": "local_30",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -20,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_28",
+            "storage": "stack",
+            "category": "local",
+            "type": {
+              "type": "unknown",
+              "confidence": 0.4,
+              "source": "local_name_heuristic",
+              "notes": []
+            },
+            "offset_bytes": -16,
+            "size_bytes": 4,
+            "source": "unified_ir",
+            "confidence": 0.4,
+            "notes": [
+              "classified via local_name_heuristic"
+            ]
+          },
+          {
+            "name": "local_20",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -1888,7 +5661,7 @@
             ]
           },
           {
-            "name": "local_8",
+            "name": "local_18",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -1906,7 +5679,7 @@
             ]
           },
           {
-            "name": "local_4",
+            "name": "local_10",
             "storage": "stack",
             "category": "local",
             "type": {
@@ -1926,13 +5699,37 @@
         ],
         "evidence": [
           "function recovered from unified_ir",
-          "parameters recovered from 2 classified variable(s)"
+          "parameters recovered from 4 classified variable(s)"
         ],
         "confidence": 0.45
       },
       {
+        "name": "__stack_chk_fail",
+        "entry_point": "0x100001830",
+        "function_kind": "user",
+        "signature": {
+          "return_type": {
+            "type": "unknown",
+            "confidence": 0.2,
+            "source": "fallback_unknown_return",
+            "notes": []
+          },
+          "parameters": [],
+          "variadic": false,
+          "confidence": 0.2,
+          "source": "user_function_parameter_recovery",
+          "notes": []
+        },
+        "variables": [],
+        "evidence": [
+          "function recovered from unified_ir",
+          "no parameter variables found; fallback signature emitted"
+        ],
+        "confidence": 0.2
+      },
+      {
         "name": "printf",
-        "entry_point": "0x100000840",
+        "entry_point": "0x10000183c",
         "function_kind": "library",
         "signature": {
           "return_type": {
@@ -1969,8 +5766,8 @@
         "confidence": 1.0
       },
       {
-        "name": "__stack_chk_fail",
-        "entry_point": "0x10000084c",
+        "name": "FUN_1000005d8",
+        "entry_point": "unknown",
         "function_kind": "user",
         "signature": {
           "return_type": {

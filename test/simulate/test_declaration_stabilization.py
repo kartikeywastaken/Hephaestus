@@ -40,9 +40,9 @@ class TestDeclarationStabilization:
 
     # Test 1 — Schema update
     def test_1_schema_update(self):
-        assert SCHEMA_VERSION == "5.7.0"
+        assert SCHEMA_VERSION == "5.7.1"
         artifact = SourceReconstructionArtifact()
-        assert artifact.schema_version == "5.7.0"
+        assert artifact.schema_version == "5.7.1"
 
     # Test 2 — Pseudo-register declarations
     def test_2_pseudo_register_declarations(self):

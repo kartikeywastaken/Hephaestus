@@ -74,7 +74,7 @@ def _map_c_type(type_str: str) -> str:
 # Parameter formatting
 # ---------------------------------------------------------------------------
 
-def _format_param(param: Dict[str, Any]) -> str:
+def _format_param(param: Dict[str, Any], is_main: bool = False) -> str:
     """Format a single parameter for a C function signature."""
     name = param.get("name", "arg")
     ptype = param.get("type", "u64")
@@ -83,7 +83,10 @@ def _format_param(param: Dict[str, Any]) -> str:
     if isinstance(ptype, dict):
         ptype = ptype.get("type", "unknown")
 
-    c_type = _map_c_type(str(ptype))
+    if is_main and name == "argv":
+        c_type = "char **"
+    else:
+        c_type = _map_c_type(str(ptype))
     return f"{c_type} {name}"
 
 
@@ -244,7 +247,7 @@ def _emit_function(
 
     # Parameter list
     if fn.parameters:
-        param_strs = [_format_param(p) for p in fn.parameters]
+        param_strs = [_format_param(p, is_main=(fn.c_name == "main")) for p in fn.parameters]
         param_list = ", ".join(param_strs)
     else:
         param_list = "void"
@@ -604,7 +607,7 @@ def emit_recovered_c(
     # File header
     timestamp = datetime.now(tz=None).strftime("%Y-%m-%dT%H:%M:%SZ")
     lines.append("/*")
-    lines.append(" * recovered.c — Phase 5.7 Syntax-Safe Conservative Reconstruction")
+    lines.append(" * recovered.c — Phase 5.7.1 Conservative ARM64 Lowering Coverage Pass")
     lines.append(f" * Schema version: {artifact.schema_version}")
     lines.append(f" * Generated: {timestamp}")
     lines.append(" *")
@@ -668,7 +671,7 @@ def emit_recovered_c(
         for fn in artifact.functions:
             c_ret = _map_c_type(fn.return_type)
             if fn.parameters:
-                param_strs = [_format_param(p) for p in fn.parameters]
+                param_strs = [_format_param(p, is_main=(fn.c_name == "main")) for p in fn.parameters]
                 param_list = ", ".join(param_strs)
             else:
                 param_list = "void"
