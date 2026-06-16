@@ -296,3 +296,51 @@ After running the commands above, the output folder will contain:
 - `phase4_semantics.json` — Phase 4D final merged semantic artifact for Phase 5 handoff.
 - `source_reconstruction.json` — Phase 5.7 source reconstruction artifact (schema 5.7.2).
 - `recovered.c` — Phase 5.7 conservative C function skeletons.
+- `pipeline_manifest.json` — Execution manifest showing timings, stages, outputs, and metrics.
+- `stress_report.json` — Stress run-level report containing invariant check results and compilation diagnostics.
+
+---
+
+## 12. One-Shot End-to-End Execution (Phase 5.8)
+
+Instead of running each phase manually, you can execute the entire Hephaestus decompiler pipeline from binary extraction to source reconstruction with a single command:
+
+```bash
+python3 main.py run-all ./target_binary --ghidra --radare2 --out-dir artifacts --clean
+```
+
+### Options:
+- `--ghidra`: Run the Ghidra headless extractor.
+- `--radare2`: Run the Radare2 extractor.
+- `--out-dir DIR`: Directory where all generated intermediate and final artifacts are saved (defaults to `artifacts`).
+- `--clean`: Safely delete previously generated Hephaestus artifacts in the output directory before running.
+- `--no-source`: Stop after final semantics merger (`phase4_semantics.json`), skipping source reconstruction and `recovered.c` generation.
+- `--stop-after STAGE`: Execute up to and including the specified stage (e.g., `extract`, `analyze_cfg`, `recover_semantics`, `refine_semantics`, `recover_layouts`, `finalize_semantics`, `reconstruct_source`).
+- `--continue-on-error`: Log errors and continue processing subsequent stages on non-fatal failures.
+
+Running `run-all` generates all individual stage outputs and a final `pipeline_manifest.json` under the output directory summarizing metrics and timings.
+
+---
+
+## 13. Deterministic Stress Testing & Invariant Verification (Phase 5.8)
+
+To evaluate decompiler correctness, robustness, and lowering coverage, run the automated stress harness subcommand:
+
+```bash
+python3 main.py stress-test --profile hard --out-dir artifacts/stress/hard --clean
+```
+
+### Options:
+- `--profile {small,medium,hard,brutal}`: Size and complexity scale of the generated C stress program.
+- `--out-dir DIR`: Output folder to write generated C source, compiled binary, intermediate artifacts, and reports.
+- `--clean`: Clean output directory before executing.
+- `--seed SEED`: Seed value for deterministic C generation (defaults to `1337`).
+
+The harness:
+1. **Generates** a deterministic C source program using the specified seed and profile.
+2. **Compiles** it with `clang -O0 -g`.
+3. **Runs** the Hephaestus `run-all` pipeline using Radare2.
+4. **Performs** validation check routines checking safety invariants (no phantom pointers, no structures fabrication, zero condition expressions recovered, syntax-safe adapters consistency, etc.).
+5. **Checks** syntax validity of the output `recovered.c` using `clang -fsyntax-only`.
+6. **Writes** a comprehensive `stress_report.json` report containing execution logs, metrics, and diagnostics.
+
