@@ -68,8 +68,8 @@ def write_source_reconstruction_artifact(
 
     # Attach provenance to artifact
     artifact.provenance = {
-        "phase": "5.5",
-        "description": "Conservative source reconstruction with branch predicate annotation",
+        "phase": "5.6",
+        "description": "Conservative source reconstruction with declaration and compile-shape stabilization",
         "source_ir": norm_ir,
         "source_structuring": norm_st,
         "source_semantics": norm_sem,

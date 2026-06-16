@@ -20,7 +20,7 @@ from typing import Any, Dict, List
 # Schema version
 # ---------------------------------------------------------------------------
 
-SCHEMA_VERSION = "5.5.0"
+SCHEMA_VERSION = "5.6.0"
 
 
 # ---------------------------------------------------------------------------
@@ -95,6 +95,7 @@ class ReconstructedFunction:
     return_recovery: Dict[str, Any] = field(default_factory=dict)
     callsite_refinement: Dict[str, Any] = field(default_factory=dict)
     condition_recovery: Dict[str, Any] = field(default_factory=dict)
+    declaration_recovery: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -122,6 +123,7 @@ class ReconstructedFunction:
             "return_recovery": dict(self.return_recovery) if self.return_recovery else {},
             "callsite_refinement": dict(self.callsite_refinement) if self.callsite_refinement else {},
             "condition_recovery": dict(self.condition_recovery) if self.condition_recovery else {},
+            "declaration_recovery": dict(self.declaration_recovery) if self.declaration_recovery else {},
         }
 
 
@@ -193,6 +195,13 @@ class SourceReconstructionArtifact:
         "condition_annotations_recovered": 0,
         "conditions_inverted_for_structure": 0,
         "ambiguous_condition_sites": 0,
+        # Phase 5.6 declarations
+        "pseudo_registers_declared_total": 0,
+        "pseudo_stack_slots_declared_total": 0,
+        "call_helpers_declared_total": 0,
+        "declarations_total": 0,
+        "functions_with_declarations": 0,
+        "compile_shape_warnings_total": 0,
     })
 
     def to_dict(self) -> Dict[str, Any]:

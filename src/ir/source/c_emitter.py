@@ -236,6 +236,7 @@ def _emit_block_stmts_with_replacements(
 def _emit_function(
     fn: ReconstructedFunction,
     lines: List[str],
+    global_call_helpers: Set[str] | None = None,
 ) -> None:
     """Emit a single function skeleton."""
     # Return type
@@ -324,14 +325,13 @@ def _emit_function(
     callsite_lookup = _build_callsite_replacement_lookup(fn)
     replacer = _StatementReplacer(fn, return_lookup, callsite_lookup)
 
+    temp_body_lines = []
+
     # Structured regions — recursive walk with replacements
     if fn.structured_regions:
-        lines.append("    /* Control flow structure: */")
+        temp_body_lines.append("    /* Control flow structure: */")
         from src.ir.source.control_emitter import emit_regions_to_c
 
-        # We need to hook into the emission to apply replacements.
-        # emit_regions_to_c returns lines with block statements.
-        # We post-process those lines by matching block IDs and addresses.
         condition_annotations = {}
         cr = fn.condition_recovery
         if isinstance(cr, dict):
@@ -358,29 +358,55 @@ def _emit_function(
         processed_lines = _postprocess_body_lines(
             body_lines, fn, replacer
         )
-        lines.extend(processed_lines)
-        lines.append("")
+        temp_body_lines.extend(processed_lines)
+        temp_body_lines.append("")
     else:
         # Linear block sequence if no structuring region
         from src.ir.source.lowering import address_sort_key
         sorted_block_ids = sorted(fn.lowered_blocks.keys(), key=address_sort_key)
         if sorted_block_ids:
-            lines.append("    /* Linear block sequence: */")
+            temp_body_lines.append("    /* Linear block sequence: */")
             for b_id in sorted_block_ids:
-                lines.append(f"    /* block {b_id} */")
+                temp_body_lines.append(f"    /* block {b_id} */")
                 stmts = fn.lowered_blocks.get(b_id, [])
                 _emit_block_stmts_with_replacements(
-                    stmts, b_id, replacer, "    ", lines
+                    stmts, b_id, replacer, "    ", temp_body_lines
                 )
-            lines.append("")
+            temp_body_lines.append("")
 
     # Placeholder body
     if not fn.lowered_statements:
-        lines.append("    /* TODO: body reconstruction pending */")
-        lines.append("")
+        temp_body_lines.append("    /* TODO: body reconstruction pending */")
+        temp_body_lines.append("")
 
     # End-of-function return — Phase 5.4 strict placement rules
-    _emit_fallback_return(fn, replacer, lines)
+    _emit_fallback_return(fn, replacer, temp_body_lines)
+
+    # Phase 5.6: run declaration analysis on final emitted body lines
+    from src.ir.source.declaration_recovery import analyze_declarations_for_function
+    decls_data = analyze_declarations_for_function(
+        fn.name, fn.return_type, fn.parameters, fn.lowered_blocks, fn.structured_regions, emitted_body_lines=temp_body_lines
+    )
+    
+    # Store global call helpers if collector is provided
+    if global_call_helpers is not None:
+        for helper in decls_data.get("call_helpers", []):
+            global_call_helpers.add(helper)
+
+    # Update function-level metadata declarations so serialized JSON is in sync
+    fn.declaration_recovery = decls_data
+
+    # Emit local declarations block
+    if decls_data.get("declarations"):
+        lines.append("    /* Conservative pseudo declarations: */")
+        for decl in decls_data["declarations"]:
+            name = decl["name"]
+            ctype = decl["ctype"]
+            lines.append(f"    {ctype} {name} = 0;")
+        lines.append("")
+
+    # Emit actual body lines
+    lines.extend(temp_body_lines)
 
     lines.append("}")
     lines.append("")
@@ -548,7 +574,7 @@ def emit_recovered_c(
     # File header
     timestamp = datetime.now(tz=None).strftime("%Y-%m-%dT%H:%M:%SZ")
     lines.append("/*")
-    lines.append(" * recovered.c — Phase 5.5 Conservative Branch Predicate Reconstruction")
+    lines.append(" * recovered.c — Phase 5.6 Conservative Compile-Shape Reconstruction")
     lines.append(f" * Schema version: {artifact.schema_version}")
     lines.append(f" * Generated: {timestamp}")
     lines.append(" *")
@@ -583,6 +609,15 @@ def emit_recovered_c(
     lines.append("typedef int64_t i64;")
     lines.append("")
 
+    # 1. Pre-generate function definition lines and collect call helpers
+    function_definitions: List[Tuple[ReconstructedFunction, List[str]]] = []
+    global_call_helpers: Set[str] = set()
+    
+    for fn in artifact.functions:
+        fn_lines = []
+        _emit_function(fn, fn_lines, global_call_helpers)
+        function_definitions.append((fn, fn_lines))
+
     # Forward declarations
     if artifact.functions:
         lines.append(
@@ -605,8 +640,34 @@ def emit_recovered_c(
             lines.append(f"{c_ret} {fn.c_name}({param_list});")
         lines.append("")
 
+    # 2. Emit global call helpers
+    existing_fn_names = set()
+    for fn in artifact.functions:
+        existing_fn_names.add(fn.c_name)
+        existing_fn_names.add(fn.name)
+        existing_fn_names.add(fn.canonical_name)
+    existing_fn_names.update({"printf", "stack_chk_fail", "main"})
+
+    filtered_helpers = []
+    for helper in global_call_helpers:
+        if helper not in existing_fn_names:
+            filtered_helpers.append(helper)
+
+    def helper_sort_key(name: str) -> int:
+        try:
+            return int(name[7:], 16)
+        except ValueError:
+            return 0
+
+    sorted_helpers = sorted(filtered_helpers, key=helper_sort_key)
+    if sorted_helpers:
+        lines.append("/* Conservative call target helpers */")
+        for helper in sorted_helpers:
+            lines.append(f"u64 {helper}();")
+        lines.append("")
+
     # Function bodies
-    if artifact.functions:
+    if function_definitions:
         lines.append(
             "/* ================================================== */"
         )
@@ -617,8 +678,8 @@ def emit_recovered_c(
             "/* ================================================== */"
         )
         lines.append("")
-        for fn in artifact.functions:
-            _emit_function(fn, lines)
+        for fn, fn_lines in function_definitions:
+            lines.extend(fn_lines)
 
     # Write to file
     os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)

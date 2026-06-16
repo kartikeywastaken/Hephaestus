@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "provenance": {
     "tool_name": "Ghidra Headless Analyzer",
-    "timestamp": "2026-06-15T23:20:18-07:00",
+    "timestamp": "2026-06-16T10:22:04-07:00",
     "binary_path": "./t",
     "config": {}
   },
@@ -13,7 +13,7 @@
       "format": "Mac OS X Mach-O",
       "language_id": "AARCH64:LE:64:AppleSilicon",
       "compiler": "unknown",
-      "timestamp": "Mon Jun 15 23:20:17 IST 2026"
+      "timestamp": "Tue Jun 16 10:22:03 IST 2026"
     },
     "functions": [
       {

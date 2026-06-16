@@ -1,7 +1,7 @@
 /*
- * recovered.c — Phase 5.5 Conservative Branch Predicate Reconstruction
- * Schema version: 5.5.0
- * Generated: 2026-06-15T23:20:45Z
+ * recovered.c — Phase 5.6 Conservative Compile-Shape Reconstruction
+ * Schema version: 5.6.0
+ * Generated: 2026-06-16T10:22:43Z
  *
  * AUTO-GENERATED — DO NOT EDIT
  *
@@ -36,6 +36,13 @@ uint64_t mix_value(uint64_t arg1, uint64_t arg_10h);
 uint64_t stack_chk_fail(void);
 int32_t printf(void * format);
 
+/* Conservative call target helpers */
+u64 call_0x100000584();
+u64 call_0x1000006b4();
+u64 call_0x1000007a8();
+u64 call_0x100000840();
+u64 call_0x10000084c();
+
 /* ================================================== */
 /*                 Function Definitions                */
 /* ================================================== */
@@ -50,6 +57,32 @@ int32_t main(int32_t argc, void * argv)
     /*   base=sp, kind=record_like, offsets=[28, 32, 40, 44, 48, 52, 56], sizes=[4, 8] */
     /*   base=x8, kind=pointer_like, offsets=[0], sizes=[8] */
     /*   base=x9, kind=array_like, offsets=[0, 8, 16], sizes=[8] */
+
+    /* Conservative pseudo declarations: */
+    u64 tmp_sp = 0;
+    u64 tmp_x0 = 0;
+    u64 tmp_x2 = 0;
+    u64 tmp_x8 = 0;
+    u64 tmp_x9 = 0;
+    u64 tmp_x10 = 0;
+    u64 tmp_x11 = 0;
+    u64 tmp_x29 = 0;
+    u64 tmp_x30 = 0;
+    u32 tmp_w0 = 0;
+    u32 tmp_w1 = 0;
+    u32 tmp_w8 = 0;
+    u32 tmp_w9 = 0;
+    u64 stack_m8 = 0;
+    u64 stack_m52 = 0;
+    u32 stack_28 = 0;
+    u64 stack_32 = 0;
+    u32 stack_40 = 0;
+    u32 stack_44 = 0;
+    u32 stack_48 = 0;
+    u32 stack_52 = 0;
+    u64 stack_56 = 0;
+    u64 stack_112 = 0;
+    u64 stack_120 = 0;
 
     /* Control flow structure: */
     /* block 0x100000460 */
@@ -158,6 +191,27 @@ uint64_t reduce_weird(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg_
     /* Layout candidates: */
     /*   base=sp, kind=record_like, offsets=[8, 12, 16, 20, 24], sizes=[4, 8] */
 
+    /* Conservative pseudo declarations: */
+    u64 tmp_sp = 0;
+    u64 tmp_x0 = 0;
+    u64 tmp_x2 = 0;
+    u64 tmp_x8 = 0;
+    u64 tmp_x29 = 0;
+    u64 tmp_x30 = 0;
+    u32 tmp_w0 = 0;
+    u32 tmp_w1 = 0;
+    u32 tmp_w8 = 0;
+    u32 tmp_w9 = 0;
+    u64 stack_m8 = 0;
+    u32 stack_m12 = 0;
+    u32 stack_8 = 0;
+    u32 stack_12 = 0;
+    u32 stack_16 = 0;
+    u32 stack_20 = 0;
+    u64 stack_24 = 0;
+    u64 stack_48 = 0;
+    u64 stack_56 = 0;
+
     /* Control flow structure: */
     /* block 0x100000584 */
     tmp_sp = tmp_sp - 64; /* sub sp,sp,#0x40 */
@@ -248,6 +302,15 @@ uint64_t op_add(int32_t arg1, uint64_t arg2, uint64_t arg_10h)
     /* Layout candidates: */
     /*   base=sp, kind=array_like, offsets=[8, 12], sizes=[4] */
 
+    /* Conservative pseudo declarations: */
+    u64 tmp_sp = 0;
+    u32 tmp_w0 = 0;
+    u32 tmp_w1 = 0;
+    u32 tmp_w8 = 0;
+    u32 tmp_w9 = 0;
+    u32 stack_8 = 0;
+    u32 stack_12 = 0;
+
     /* Control flow structure: */
     /* block 0x100000674 */
     tmp_sp = tmp_sp - 16; /* sub sp,sp,#0x10 */
@@ -271,6 +334,15 @@ uint64_t op_xor(int32_t arg1, uint64_t arg2, uint64_t arg_10h)
     /* Layout candidates: */
     /*   base=sp, kind=array_like, offsets=[8, 12], sizes=[4] */
 
+    /* Conservative pseudo declarations: */
+    u64 tmp_sp = 0;
+    u32 tmp_w0 = 0;
+    u32 tmp_w1 = 0;
+    u32 tmp_w8 = 0;
+    u32 tmp_w9 = 0;
+    u32 stack_8 = 0;
+    u32 stack_12 = 0;
+
     /* Control flow structure: */
     /* block 0x100000694 */
     tmp_sp = tmp_sp - 16; /* sub sp,sp,#0x10 */
@@ -293,6 +365,17 @@ uint64_t nested_control(int32_t arg1, int32_t arg_20h)
 
     /* Layout candidates: */
     /*   base=sp, kind=array_like, offsets=[12, 16, 20, 24, 28], sizes=[4] */
+
+    /* Conservative pseudo declarations: */
+    u64 tmp_sp = 0;
+    u32 tmp_w0 = 0;
+    u32 tmp_w8 = 0;
+    u32 tmp_w9 = 0;
+    u32 stack_12 = 0;
+    u32 stack_16 = 0;
+    u32 stack_20 = 0;
+    u32 stack_24 = 0;
+    u32 stack_28 = 0;
 
     /* Control flow structure: */
     /* block 0x1000006b4 */
@@ -388,6 +471,15 @@ uint64_t mix_value(uint64_t arg1, uint64_t arg_10h)
     /* Layout candidates: */
     /*   base=sp, kind=array_like, offsets=[4, 8, 12], sizes=[4] */
 
+    /* Conservative pseudo declarations: */
+    u64 tmp_sp = 0;
+    u32 tmp_w0 = 0;
+    u32 tmp_w8 = 0;
+    u32 tmp_w9 = 0;
+    u32 stack_4 = 0;
+    u32 stack_8 = 0;
+    u32 stack_12 = 0;
+
     /* Control flow structure: */
     /* block 0x1000007a8 */
     tmp_sp = tmp_sp - 16; /* sub sp,sp,#0x10 */
@@ -443,6 +535,9 @@ uint64_t stack_chk_fail(void)
     /* Layout candidates: */
     /*   base=x16, kind=scalar, offsets=[16], sizes=[4] */
 
+    /* Conservative pseudo declarations: */
+    u64 tmp_x16 = 0;
+
     /* Control flow structure: */
     /* block 0x10000084c */
     tmp_x16 = 0x100004000; /* adrp x16, reloc.__stack_chk_guard */
@@ -462,6 +557,9 @@ int32_t printf(void * format)
 
     /* Layout candidates: */
     /*   base=x16, kind=scalar, offsets=[8], sizes=[4] */
+
+    /* Conservative pseudo declarations: */
+    u64 tmp_x16 = 0;
 
     /* Control flow structure: */
     /* block 0x100000840 */

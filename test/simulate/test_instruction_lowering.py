@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Tests for Phase 5.2 Instruction Lowering and Architecture Dispatching.
+Updated for Phase 5.6.
 """
 
 from __future__ import annotations

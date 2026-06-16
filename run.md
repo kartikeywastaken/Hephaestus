@@ -187,9 +187,9 @@ python3 main.py finalize-semantics --out-dir artifacts
 
 ---
 
-## 9. Phase 5.5: Source Reconstruction & Branch Predicate Annotation
+## 9. Phase 5.6: Source Reconstruction & Declarations Stabilization
 
-Reconstruct conservative C skeleton, emit real structured control flow, and annotate condition header comments with conditional branch and compare instruction evidence:
+Reconstruct conservative C skeleton, emit real structured control flow, annotate condition header comments with branch evidence, and declare all pseudo-registers, stack slots, and global call target helpers:
 
 ```bash
 python3 main.py reconstruct-source --out-dir artifacts
@@ -202,13 +202,13 @@ This reads:
 - `layout_recovery.json` (optional)
 
 And writes:
-- `source_reconstruction.json` — Structured source reconstruction artifact (schema 5.5.0)
-- `recovered.c` — Conservative C function skeletons with structured control flow, return/call refinements, and branch predicate annotations.
+- `source_reconstruction.json` — Structured source reconstruction artifact (schema 5.6.0)
+- `recovered.c` — Conservative C function skeletons with structured control flow, return/call refinements, branch predicate annotations, and pseudo declarations.
 
 The command prints a summary:
 ```
 ============================================================
-      PHASE 5.5: CONSERVATIVE BRANCH PREDICATE ANNOTATION
+      PHASE 5.6: CONSERVATIVE DECLARATION & STABILIZATION
 ============================================================
 Functions reconstructed:          <N>
   Structured:                     <N>
@@ -225,6 +225,15 @@ Instructions total:               <N>
 Instructions lowered:             <N>
 Instructions commented:           <N>
 Lowering coverage percent:        <N>%
+Control-flow regions:             <N>
+Control-flow constructs:          <N>
+  Loops:                          <N>
+  If:                             <N>
+  If-Else:                        <N>
+  Switch:                         <N>
+  Fallback/Unstructured:          <N>
+  Duplicate blocks skipped:       <N>
+Condition expressions recovered:  <N>
 Return sites total:               <N>
   With value:                     <N>
   Unknown:                        <N>
@@ -241,6 +250,12 @@ Condition sites total:            <N>
   Annotations recovered:          <N>
   Inverted polarity:              <N>
   Ambiguous sites:                <N>
+Declarations total:               <N>
+  Pseudo registers:               <N>
+  Pseudo stack slots:             <N>
+  Call helpers:                   <N>
+  Funcs with declarations:        <N>
+Compile shape warnings total:     <N>
 ============================================================
 Output: artifacts/source_reconstruction.json
 Output: artifacts/recovered.c
@@ -249,7 +264,7 @@ Output: artifacts/recovered.c
 
 ---
 
-## 10. Full Pipeline Workflow (Phase 1–5.5)
+## 10. Full Pipeline Workflow (Phase 1–5.6)
 
 ```bash
 python3 main.py ./t --ghidra --radare2 --export-ir
@@ -275,5 +290,5 @@ After running the commands above, the output folder will contain:
 - `semantic_recovery.json` — Phase 4B constraint-refined type records per function.
 - `layout_recovery.json` — Phase 4C conservative memory layout candidates.
 - `phase4_semantics.json` — Phase 4D final merged semantic artifact for Phase 5 handoff.
-- `source_reconstruction.json` — Phase 5.5 source reconstruction artifact (schema 5.5.0).
-- `recovered.c` — Phase 5.5 conservative C function skeletons.
+- `source_reconstruction.json` — Phase 5.6 source reconstruction artifact (schema 5.6.0).
+- `recovered.c` — Phase 5.6 conservative C function skeletons.

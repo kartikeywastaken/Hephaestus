@@ -540,6 +540,26 @@ def build_source_reconstruction(
     conditions_inverted_for_structure = 0
     ambiguous_condition_sites = 0
 
+    # Phase 5.6 declarations summary counters
+    pseudo_registers_declared_total = 0
+    pseudo_stack_slots_declared_total = 0
+    call_helpers_declared_total = 0
+    declarations_total = 0
+    functions_with_declarations = 0
+    compile_shape_warnings_total = 0
+    global_call_helpers = set()
+    existing_fn_names = set()
+    for ir_f in ir_functions:
+        if isinstance(ir_f, dict):
+            fn_n = _safe_str(ir_f, "name", "unknown_function")
+            ep_r = _safe_str(ir_f, "entry_point", "unknown")
+            ep_n = normalize_address(ep_r) or ep_r
+            canon_n = alias_map.get(ep_n, fn_n)
+            existing_fn_names.add(fn_n)
+            existing_fn_names.add(canon_n)
+            existing_fn_names.add(sanitize_c_identifier(canon_n))
+    existing_fn_names.update({"printf", "stack_chk_fail", "main"})
+
     # Detect architecture once for the whole IR
     from src.ir.source.lowering import detect_architecture
     arch = detect_architecture(unified_ir)
@@ -670,6 +690,12 @@ def build_source_reconstruction(
             structured_regions, dict(lowered_blocks), cfg_info=None, architecture=arch
         )
 
+        # Phase 5.6 local pseudo declarations recovery (preliminary scan)
+        from src.ir.source.declaration_recovery import analyze_declarations_for_function
+        fn_declaration_recovery = analyze_declarations_for_function(
+            name, return_type, parameters, dict(lowered_blocks), structured_regions, emitted_body_lines=None
+        )
+
         rec = ReconstructedFunction(
             name=name,
             canonical_name=canonical_name,
@@ -695,6 +721,7 @@ def build_source_reconstruction(
             return_recovery=fn_return_recovery,
             callsite_refinement=fn_callsite_refinement,
             condition_recovery=fn_condition_recovery,
+            declaration_recovery=fn_declaration_recovery,
         )
         reconstructed.append(rec)
 
@@ -730,6 +757,16 @@ def build_source_reconstruction(
         condition_annotations_recovered += fn_condition_recovery.get("condition_annotations_recovered", 0)
         conditions_inverted_for_structure += fn_condition_recovery.get("conditions_inverted_for_structure", 0)
         ambiguous_condition_sites += fn_condition_recovery.get("ambiguous_condition_sites", 0)
+
+        # Accumulate Phase 5.6 declaration metrics
+        pseudo_registers_declared_total += fn_declaration_recovery.get("pseudo_registers_declared", 0)
+        pseudo_stack_slots_declared_total += fn_declaration_recovery.get("pseudo_stack_slots_declared", 0)
+        compile_shape_warnings_total += len(fn_declaration_recovery.get("warnings", []))
+        if fn_declaration_recovery.get("declarations_total", 0) > 0:
+            functions_with_declarations += 1
+        for helper in fn_declaration_recovery.get("call_helpers", []):
+            if helper not in existing_fn_names:
+                global_call_helpers.add(helper)
 
         # Update summary counters
         if body_status == "structured":
@@ -821,6 +858,13 @@ def build_source_reconstruction(
         "condition_annotations_recovered": condition_annotations_recovered,
         "conditions_inverted_for_structure": conditions_inverted_for_structure,
         "ambiguous_condition_sites": ambiguous_condition_sites,
+        # Phase 5.6 declarations
+        "pseudo_registers_declared_total": pseudo_registers_declared_total,
+        "pseudo_stack_slots_declared_total": pseudo_stack_slots_declared_total,
+        "call_helpers_declared_total": len(global_call_helpers),
+        "declarations_total": pseudo_registers_declared_total + pseudo_stack_slots_declared_total,
+        "functions_with_declarations": functions_with_declarations,
+        "compile_shape_warnings_total": compile_shape_warnings_total,
     }
 
     artifact = SourceReconstructionArtifact(

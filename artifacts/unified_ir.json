@@ -6460,13 +6460,13 @@
     "call_graph": {
       "nodes": [
         "_reduce_weird",
-        "__stack_chk_fail",
         "_op_xor",
+        "_mix_value",
+        "__stack_chk_fail",
+        "_nested_control",
         "_main",
         "printf",
-        "_op_add",
-        "_mix_value",
-        "_nested_control"
+        "_op_add"
       ],
       "edges": [
         {
@@ -6955,8 +6955,8 @@
         "visibility": "IMPORTED"
       },
       {
-        "address": "0x6a303b4b",
-        "name": "/var/folders/sn/l1bzbbzd14l2xthhyt7fm2r80000gp/T/t-a6d3ee.o",
+        "address": "0x6a30d645",
+        "name": "/var/folders/sn/l1bzbbzd14l2xthhyt7fm2r80000gp/T/t-07242d.o",
         "type": "function",
         "visibility": "static"
       }
