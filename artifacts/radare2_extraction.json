@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "provenance": {
     "tool_name": "Radare2 Headless Analyser",
-    "timestamp": "2026-06-16T16:00:35-07:00",
+    "timestamp": "2026-06-16T17:15:34-07:00",
     "binary_path": "./t",
     "config": {}
   },
@@ -15,78 +15,6 @@
     "functions": [
       {
         "name": "__stack_chk_fail",
-        "entry_point": "0x100001830",
-        "size_bytes": 12,
-        "calling_convention": 1,
-        "local_variables": [],
-        "cfg": {
-          "nodes": [
-            {
-              "id": "0x100001830",
-              "size": 12,
-              "instructions_count": 3,
-              "estimated_instructions_count": 3,
-              "instructions": [
-                {
-                  "address": "0x100001830",
-                  "mnemonic": "adrp",
-                  "opcode": "adrp",
-                  "operands": [
-                    {
-                      "kind": "register",
-                      "value": "x16"
-                    },
-                    {
-                      "kind": "immediate",
-                      "value": 4294983680
-                    }
-                  ],
-                  "size_bytes": 4,
-                  "raw": "adrp x16, reloc.__stack_chk_fail",
-                  "source": "radare2"
-                },
-                {
-                  "address": "0x100001834",
-                  "mnemonic": "ldr",
-                  "opcode": "ldr",
-                  "operands": [
-                    {
-                      "kind": "register",
-                      "value": "x16"
-                    },
-                    {
-                      "kind": "memory",
-                      "base": "x16",
-                      "offset": 0,
-                      "size_bytes": null
-                    }
-                  ],
-                  "size_bytes": 4,
-                  "raw": "ldr x16, [x16]",
-                  "source": "radare2"
-                },
-                {
-                  "address": "0x100001838",
-                  "mnemonic": "br",
-                  "opcode": "br",
-                  "operands": [
-                    {
-                      "kind": "register",
-                      "value": "x16"
-                    }
-                  ],
-                  "size_bytes": 4,
-                  "raw": "br x16",
-                  "source": "radare2"
-                }
-              ]
-            }
-          ],
-          "edges": []
-        }
-      },
-      {
-        "name": "printf",
         "entry_point": "0x10000183c",
         "size_bytes": 16,
         "calling_convention": 1,
@@ -114,7 +42,7 @@
                     }
                   ],
                   "size_bytes": 4,
-                  "raw": "adrp x16, reloc.__stack_chk_fail",
+                  "raw": "adrp x16, reloc.printf",
                   "source": "radare2"
                 },
                 {
@@ -164,6 +92,84 @@
             }
           ],
           "edges": []
+        }
+      },
+      {
+        "name": "printf",
+        "entry_point": "0x100001830",
+        "size_bytes": 12,
+        "calling_convention": 0,
+        "local_variables": [],
+        "cfg": {
+          "nodes": [
+            {
+              "id": "0x100001830",
+              "size": 12,
+              "instructions_count": 3,
+              "estimated_instructions_count": 3,
+              "instructions": [
+                {
+                  "address": "0x100001830",
+                  "mnemonic": "adrp",
+                  "opcode": "adrp",
+                  "operands": [
+                    {
+                      "kind": "register",
+                      "value": "x16"
+                    },
+                    {
+                      "kind": "immediate",
+                      "value": 4294983680
+                    }
+                  ],
+                  "size_bytes": 4,
+                  "raw": "adrp x16, reloc.printf",
+                  "source": "radare2"
+                },
+                {
+                  "address": "0x100001834",
+                  "mnemonic": "ldr",
+                  "opcode": "ldr",
+                  "operands": [
+                    {
+                      "kind": "register",
+                      "value": "x16"
+                    },
+                    {
+                      "kind": "memory",
+                      "base": "x16",
+                      "offset": 0,
+                      "size_bytes": null
+                    }
+                  ],
+                  "size_bytes": 4,
+                  "raw": "ldr x16, [x16]",
+                  "source": "radare2"
+                },
+                {
+                  "address": "0x100001838",
+                  "mnemonic": "br",
+                  "opcode": "br",
+                  "operands": [
+                    {
+                      "kind": "register",
+                      "value": "x16"
+                    }
+                  ],
+                  "size_bytes": 4,
+                  "raw": "br x16",
+                  "source": "radare2"
+                }
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": "0x100001830",
+              "target": "0x10000183c",
+              "type": "unconditional"
+            }
+          ]
         }
       },
       {
@@ -2666,7 +2672,7 @@
                   "operands": [
                     {
                       "kind": "immediate",
-                      "value": 4294973500
+                      "value": 4294973488
                     }
                   ],
                   "size_bytes": 4,
@@ -10884,7 +10890,7 @@
                     }
                   ],
                   "size_bytes": 4,
-                  "raw": "adrp x8, reloc.__stack_chk_fail",
+                  "raw": "adrp x8, reloc.printf",
                   "source": "radare2"
                 },
                 {
@@ -15256,7 +15262,7 @@
                     }
                   ],
                   "size_bytes": 4,
-                  "raw": "adrp x8, reloc.__stack_chk_fail",
+                  "raw": "adrp x8, reloc.printf",
                   "source": "radare2"
                 },
                 {
@@ -15372,7 +15378,7 @@
                   "operands": [
                     {
                       "kind": "immediate",
-                      "value": 4294973488
+                      "value": 4294973500
                     }
                   ],
                   "size_bytes": 4,
@@ -26867,13 +26873,13 @@
         "visibility": "static"
       },
       {
-        "address": "0x100001830",
+        "address": "0x10000183c",
         "name": "__stack_chk_fail",
         "type": "function",
         "visibility": "static"
       },
       {
-        "address": "0x10000183c",
+        "address": "0x100001830",
         "name": "printf",
         "type": "function",
         "visibility": "static"
@@ -26977,24 +26983,24 @@
     ],
     "call_graph": {
       "nodes": [
-        "_op_shift",
-        "_op_xor",
         "__stack_chk_fail",
-        "_cfg_pressure",
-        "printf",
-        "_stack_layout_pressure",
-        "_op_mul",
         "_op_add",
-        "_rotmix",
-        "_indirect_pressure",
+        "_tri_b",
         "_tri_c",
-        "_tri_a",
-        "_op_div",
-        "_main",
         "_op_logic",
         "_mixed_driver",
-        "_tri_b",
-        "_abi_pressure"
+        "_rotmix",
+        "_abi_pressure",
+        "_tri_a",
+        "_op_mul",
+        "_indirect_pressure",
+        "_op_shift",
+        "_stack_layout_pressure",
+        "_op_xor",
+        "_main",
+        "printf",
+        "_cfg_pressure",
+        "_op_div"
       ],
       "edges": [
         {

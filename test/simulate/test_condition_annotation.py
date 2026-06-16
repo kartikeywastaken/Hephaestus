@@ -41,9 +41,9 @@ class TestConditionAnnotation:
 
     # Test 1 — Schema update
     def test_1_schema_update(self):
-        assert SCHEMA_VERSION == "5.7.1"
+        assert SCHEMA_VERSION == "5.7.2"
         artifact = SourceReconstructionArtifact()
-        assert artifact.schema_version == "5.7.1"
+        assert artifact.schema_version == "5.7.2"
 
     # Test 2 — Condition expressions remain zero
     def test_2_condition_expressions_remain_zero(self):

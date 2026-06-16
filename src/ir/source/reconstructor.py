@@ -889,6 +889,9 @@ def build_source_reconstruction(
         "condition_evidence_adapters": 0,
         "condition_unknown_adapters": 0,
         "unknown_condition_helpers_emitted": 0,
+        # Phase 5.7.2 cset adapter
+        "cset_adapters_inserted": 0,
+        "cset_helper_emitted": 0,
         # Phase 5.7.1 unsupported instruction kinds
         "unsupported_instruction_kinds": {k: v for k, v in sorted(global_unsupported_kinds.items())},
     }

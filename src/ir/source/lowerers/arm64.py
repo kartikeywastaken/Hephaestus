@@ -40,6 +40,12 @@ def c_temp_for_register(reg: str, reg_to_arg: dict[str, str] | None = None) -> s
         if norm in reg_to_arg:
             return reg_to_arg[norm]
 
+    # Map x29/fp -> fp, x30/lr -> lr
+    if r in {"x29", "fp"}:
+        r = "fp"
+    elif r in {"x30", "lr"}:
+        r = "lr"
+
     # Sanitize register to valid C identifier characters
     safe = re.sub(r"[^a-zA-Z0-9_]", "_", r)
     return f"tmp_{safe}"
@@ -159,6 +165,10 @@ def parse_indexed_memory_enhanced(raw_str: str) -> tuple[str, str, str | None, i
     inside = cleaned.replace("[", "").replace("]", "").replace("!", "").strip()
     parts = [p.strip() for p in inside.split(",") if p.strip()]
     if len(parts) < 2:
+        return None
+        
+    sec_part = parts[1].strip()
+    if sec_part.startswith("#") or sec_part.startswith("-") or sec_part.startswith("+") or (sec_part and sec_part[0].isdigit()):
         return None
         
     base = parts[0]
@@ -433,6 +443,7 @@ def filter_semantic_operands(ops: list[dict[str, Any]] | None) -> list[dict[str,
     if not isinstance(ops, list):
         return []
     clean = []
+    cond_codes = {"eq", "ne", "cs", "hs", "cc", "lo", "mi", "pl", "vs", "vc", "hi", "ls", "ge", "lt", "gt", "le", "al", "nv"}
     for op in ops:
         if not isinstance(op, dict):
             continue
@@ -442,7 +453,7 @@ def filter_semantic_operands(ops: list[dict[str, Any]] | None) -> list[dict[str,
         elif kind == "unknown":
             raw = str(op.get("raw") or "").strip()
             # Check if it represents a brackets memory operand or shifted/extended register
-            if (raw.startswith("[") and "]" in raw) or parse_shifted_extended_reg(op) is not None:
+            if (raw.startswith("[") and "]" in raw) or parse_shifted_extended_reg(op) is not None or raw.lower() in cond_codes:
                 clean.append(op)
     return clean
 
@@ -682,14 +693,87 @@ def lower_arm64_instructions(
                     is_lowered = True
                 stmt_kind = "binary_op"
 
-            elif mnemonic in {"ldr", "ldur", "ldrb", "ldrh", "ldrsw", "ldursw"} and len(ops) >= 2:
+            elif mnemonic in {"udiv", "sdiv"} and len(ops) >= 3:
+                dst, src1, src2 = ops[0], ops[1], ops[2]
+                dst_val = str(dst.get("value") or "").lower()
+                is_zero = dst_val in {"wzr", "xzr"}
+                
+                src1_expr = operand_to_expr(src1, reg_to_arg, warnings=warnings)
+                src2_expr = operand_to_expr(src2, reg_to_arg, warnings=warnings)
+                
+                if mnemonic == "udiv":
+                    if is_zero:
+                        comment_text = f"/* udiv {dst_val},{c_temp_for_register(src1.get('value', ''), reg_to_arg)},{c_temp_for_register(src2.get('value', ''), reg_to_arg)}; result discarded */"
+                        lowered_text_list.append(comment_text)
+                        stmt_kind = "compare"
+                        is_lowered = True
+                        custom_comment = True
+                    else:
+                        dst_expr = operand_to_expr(dst, reg_to_arg, warnings=warnings)
+                        lowered_text_list.append(f"{dst_expr} = {src1_expr} / {src2_expr};")
+                        stmt_kind = "binary_op"
+                        is_lowered = True
+                else:  # sdiv
+                    # Determine cast type
+                    cast_type = "i64" if dst_val.startswith("x") or dst_val == "xzr" else "i32"
+                    if is_zero:
+                        comment_text = f"/* sdiv {dst_val},(({cast_type}){c_temp_for_register(src1.get('value', ''), reg_to_arg)}),(({cast_type}){c_temp_for_register(src2.get('value', ''), reg_to_arg)}); result discarded */"
+                        lowered_text_list.append(comment_text)
+                        stmt_kind = "compare"
+                        is_lowered = True
+                        custom_comment = True
+                    else:
+                        dst_expr = operand_to_expr(dst, reg_to_arg, warnings=warnings)
+                        lowered_text_list.append(f"{dst_expr} = (({cast_type}){src1_expr}) / (({cast_type}){src2_expr});")
+                        stmt_kind = "binary_op"
+                        is_lowered = True
+
+            elif mnemonic == "ldrsb" and len(ops) >= 2:
+                dst, mem = ops[0], ops[1]
+                dst_expr = operand_to_expr(dst, reg_to_arg, warnings=warnings)
+                dst_val = str(dst.get("value") or "").lower()
+                outer_cast = "(i64)" if dst_val.startswith("x") else "(i32)"
+                
+                mem_expr = operand_to_expr(mem, reg_to_arg, size_override=1, warnings=warnings)
+                mem_expr_signed = mem_expr.replace("*(u8 *)", "*(i8 *)")
+                
+                lowered_text_list.append(f"{dst_expr} = {outer_cast}{mem_expr_signed};")
+                stmt_kind = "load"
+                is_lowered = True
+
+            elif mnemonic == "sxtw" and len(ops) >= 2:
+                dst, src = ops[0], ops[1]
+                dst_expr = operand_to_expr(dst, reg_to_arg, warnings=warnings)
+                src_expr = operand_to_expr(src, reg_to_arg, warnings=warnings)
+                dst_val = str(dst.get("value") or "").lower()
+                
+                if dst_val.startswith("x"):
+                    lowered_text_list.append(f"{dst_expr} = (i64)(i32){src_expr};")
+                else:
+                    lowered_text_list.append(f"{dst_expr} = {src_expr}; /* sxtw {dst_val},{src.get('value', '')}; width already 32-bit */")
+                    custom_comment = True
+                stmt_kind = "binary_op"
+                is_lowered = True
+
+            elif mnemonic == "cset" and len(ops) >= 2:
+                dst, cond_op = ops[0], ops[1]
+                dst_expr = operand_to_expr(dst, reg_to_arg, warnings=warnings)
+                cond_val = str(cond_op.get("value") or cond_op.get("name") or cond_op.get("raw") or "").lower().strip()
+                escaped_cond = cond_val.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t")
+                
+                lowered_text_list.append(f"{dst_expr} = HEPHAESTUS_CSET(\"{escaped_cond}\"); /* cset {dst.get('value', '')},{cond_val}; flags not modeled */")
+                stmt_kind = "binary_op"
+                is_lowered = True
+                custom_comment = True
+
+            elif mnemonic in {"ldr", "ldur", "ldrb", "ldrh", "ldurb", "ldurh", "ldrsw", "ldursw"} and len(ops) >= 2:
                 dst, mem = ops[0], ops[1]
                 dst_expr = operand_to_expr(dst, reg_to_arg, warnings=warnings)
                 
                 # Determine access size
-                if mnemonic == "ldrb":
+                if mnemonic in {"ldrb", "ldurb"}:
                     size = 1
-                elif mnemonic == "ldrh":
+                elif mnemonic in {"ldrh", "ldurh"}:
                     size = 2
                 elif mnemonic in {"ldrsw", "ldursw"}:
                     size = 4
@@ -904,8 +988,10 @@ def lower_arm64_instructions(
             # Fallback to unsupported instruction comment
             if ("[" in raw or "]" in raw) and (mnemonic in {"str", "stur", "strb", "strh"}):
                 fallback_text = f"/* unsupported indexed memory store: {raw} */"
-            elif ("[" in raw or "]" in raw) and (mnemonic in {"ldr", "ldur", "ldrb", "ldrh", "ldrsw", "ldursw"}):
+            elif ("[" in raw or "]" in raw) and (mnemonic in {"ldr", "ldur", "ldrb", "ldrh", "ldurb", "ldurh", "ldrsw", "ldursw"}):
                 fallback_text = f"/* unsupported indexed memory load: {raw} */"
+            elif mnemonic == "ldp":
+                fallback_text = f"/* unsupported paired load: {raw} */"
             else:
                 fallback_text = f"/* {addr}: unsupported instruction: {raw} */"
 

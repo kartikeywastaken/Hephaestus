@@ -154,6 +154,18 @@
                   },
                   {
                     "type": "block",
+                    "id": "0x100000690"
+                  },
+                  {
+                    "type": "block",
+                    "id": "0x1000006b0"
+                  },
+                  {
+                    "type": "block",
+                    "id": "0x1000006d4"
+                  },
+                  {
+                    "type": "block",
                     "id": "0x1000006e4"
                   }
                 ]
@@ -164,178 +176,6 @@
             "0x1000006f4"
           ]
         },
-        {
-          "type": "block",
-          "id": "0x1000006f4"
-        }
-      ]
-    }
-  },
-  {
-    "function_name": "FUN_100000580",
-    "structured_body": {
-      "type": "sequence",
-      "children": [
-        {
-          "type": "if",
-          "condition_block": "0x100000580",
-          "then_branch": {
-            "type": "sequence",
-            "children": [
-              {
-                "type": "block",
-                "id": "0x100000598"
-              },
-              {
-                "type": "block",
-                "id": "0x10000059c"
-              }
-            ]
-          },
-          "merge_block": "0x1000005b0"
-        },
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x1000005b0"
-            },
-            {
-              "type": "block",
-              "id": "0x1000005b8"
-            },
-            {
-              "type": "block",
-              "id": "0x1000005bc"
-            }
-          ]
-        }
-      ]
-    }
-  },
-  {
-    "function_name": "FUN_1000005d8",
-    "structured_body": {
-      "type": "block",
-      "id": "0x1000005d8"
-    }
-  },
-  {
-    "function_name": "mega_driver",
-    "structured_body": {
-      "type": "unstructured",
-      "children": [
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x10000065c"
-            },
-            {
-              "type": "block",
-              "id": "0x100000660"
-            }
-          ]
-        },
-        {
-          "type": "block",
-          "id": "0x1000005dc"
-        },
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x100000638"
-            },
-            {
-              "type": "block",
-              "id": "0x10000064c"
-            }
-          ]
-        },
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x1000005e8"
-            },
-            {
-              "type": "block",
-              "id": "0x1000005ec"
-            }
-          ]
-        },
-        {
-          "type": "block",
-          "id": "0x100000624"
-        },
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x10000061c"
-            },
-            {
-              "type": "block",
-              "id": "0x100000620"
-            }
-          ]
-        },
-        {
-          "type": "block",
-          "id": "0x100000628"
-        }
-      ],
-      "reason": "fragmented_loop_body",
-      "region_kind": "acyclic"
-    }
-  },
-  {
-    "function_name": "FUN_100000668",
-    "structured_body": {
-      "type": "sequence",
-      "children": [
-        {
-          "type": "block",
-          "id": "0x100000668"
-        },
-        {
-          "type": "block",
-          "id": "0x100000674"
-        },
-        {
-          "type": "block",
-          "id": "0x100000678"
-        },
-        {
-          "type": "block",
-          "id": "0x100000690"
-        },
-        {
-          "type": "block",
-          "id": "0x1000006b0"
-        },
-        {
-          "type": "block",
-          "id": "0x1000006d4"
-        },
-        {
-          "type": "block",
-          "id": "0x1000006e4"
-        }
-      ]
-    }
-  },
-  {
-    "function_name": "driver",
-    "structured_body": {
-      "type": "unstructured",
-      "children": [
         {
           "type": "sequence",
           "children": [
@@ -348,14 +188,8 @@
               "id": "0x100000728"
             }
           ]
-        },
-        {
-          "type": "block",
-          "id": "0x1000006e8"
         }
-      ],
-      "reason": "fragmented_loop_body",
-      "region_kind": "acyclic"
+      ]
     }
   },
   {
@@ -442,101 +276,6 @@
     }
   },
   {
-    "function_name": "FUN_10000076c",
-    "structured_body": {
-      "type": "sequence",
-      "children": [
-        {
-          "type": "block",
-          "id": "0x10000076c"
-        },
-        {
-          "type": "block",
-          "id": "0x100000778"
-        },
-        {
-          "type": "block",
-          "id": "0x10000077c"
-        },
-        {
-          "type": "block",
-          "id": "0x1000007a8"
-        },
-        {
-          "type": "block",
-          "id": "0x1000007c4"
-        }
-      ]
-    }
-  },
-  {
-    "function_name": "leaf_a",
-    "structured_body": {
-      "type": "sequence",
-      "children": [
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x1000007e4"
-            },
-            {
-              "type": "block",
-              "id": "0x1000007e8"
-            },
-            {
-              "type": "block",
-              "id": "0x100000820"
-            }
-          ]
-        },
-        {
-          "type": "block",
-          "id": "0x100000844"
-        },
-        {
-          "type": "block",
-          "id": "0x10000085c"
-        },
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x100000854"
-            },
-            {
-              "type": "block",
-              "id": "0x100000858"
-            },
-            {
-              "type": "block",
-              "id": "0x100000870"
-            }
-          ]
-        },
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x10000083c"
-            },
-            {
-              "type": "block",
-              "id": "0x100000840"
-            }
-          ]
-        },
-        {
-          "type": "block",
-          "id": "0x100000860"
-        }
-      ]
-    }
-  },
-  {
     "function_name": "_cfg_pressure",
     "structured_body": {
       "type": "unstructured",
@@ -584,8 +323,17 @@
           ]
         },
         {
-          "type": "block",
-          "id": "0x100000994"
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x100000994"
+            },
+            {
+              "type": "block",
+              "id": "0x1000009a4"
+            }
+          ]
         },
         {
           "type": "sequence",
@@ -601,282 +349,6 @@
           ]
         },
         {
-          "type": "block",
-          "id": "0x1000009b4"
-        },
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x100000940"
-            },
-            {
-              "type": "block",
-              "id": "0x100000944"
-            }
-          ]
-        },
-        {
-          "type": "block",
-          "id": "0x1000009d4"
-        },
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x100000950"
-            },
-            {
-              "type": "block",
-              "id": "0x100000954"
-            }
-          ]
-        },
-        {
-          "type": "block",
-          "id": "0x100000a14"
-        },
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x100000960"
-            },
-            {
-              "type": "block",
-              "id": "0x100000964"
-            }
-          ]
-        },
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "if_else",
-              "condition_block": "0x100000a34",
-              "then_branch": {
-                "type": "sequence",
-                "children": [
-                  {
-                    "type": "block",
-                    "id": "0x100000a3c"
-                  },
-                  {
-                    "type": "block",
-                    "id": "0x100000a40"
-                  }
-                ]
-              },
-              "else_branch": {
-                "type": "block",
-                "id": "0x100000a60"
-              },
-              "merge_block": "0x100000a80"
-            },
-            {
-              "type": "block",
-              "id": "0x100000a80"
-            }
-          ]
-        },
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x100000970"
-            },
-            {
-              "type": "block",
-              "id": "0x100000974"
-            }
-          ]
-        },
-        {
-          "type": "block",
-          "id": "0x100000a84"
-        },
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x100000980"
-            },
-            {
-              "type": "block",
-              "id": "0x100000984"
-            }
-          ]
-        },
-        {
-          "type": "block",
-          "id": "0x100000a88"
-        },
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x100000990"
-            },
-            {
-              "type": "block",
-              "id": "0x100000aa8"
-            }
-          ]
-        },
-        {
-          "type": "block",
-          "id": "0x100000ac8"
-        },
-        {
-          "type": "block",
-          "id": "0x100000ae0"
-        },
-        {
-          "type": "block",
-          "id": "0x100000ae4"
-        },
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x100000ad8"
-            },
-            {
-              "type": "block",
-              "id": "0x100000adc"
-            }
-          ]
-        },
-        {
-          "type": "block",
-          "id": "0x100000af4"
-        },
-        {
-          "type": "block",
-          "id": "0x100000b0c"
-        },
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x100000b04"
-            },
-            {
-              "type": "block",
-              "id": "0x100000b08"
-            }
-          ]
-        },
-        {
-          "type": "block",
-          "id": "0x100000b20"
-        },
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x1000008e8"
-            },
-            {
-              "type": "block",
-              "id": "0x1000008ec"
-            }
-          ]
-        },
-        {
-          "type": "block",
-          "id": "0x100000b10"
-        }
-      ],
-      "reason": "multi_exit_loop",
-      "region_kind": "cyclic"
-    }
-  },
-  {
-    "function_name": "FUN_1000008ac",
-    "structured_body": {
-      "type": "sequence",
-      "children": [
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x1000008ac"
-            },
-            {
-              "type": "block",
-              "id": "0x1000008b8"
-            },
-            {
-              "type": "block",
-              "id": "0x1000008bc"
-            }
-          ]
-        },
-        {
-          "type": "block",
-          "id": "0x1000008f0"
-        },
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x1000008e8"
-            },
-            {
-              "type": "block",
-              "id": "0x1000008ec"
-            }
-          ]
-        }
-      ]
-    }
-  },
-  {
-    "function_name": "FUN_1000008f8",
-    "structured_body": {
-      "type": "sequence",
-      "children": [
-        {
-          "type": "block",
-          "id": "0x1000008f8"
-        },
-        {
-          "type": "block",
-          "id": "0x100000904"
-        },
-        {
-          "type": "block",
-          "id": "0x100000908"
-        },
-        {
-          "type": "block",
-          "id": "0x100000930"
-        },
-        {
-          "type": "block",
-          "id": "0x100000934"
-        }
-      ]
-    }
-  },
-  {
-    "function_name": "leaf_b",
-    "structured_body": {
-      "type": "unstructured",
-      "children": [
-        {
           "type": "sequence",
           "children": [
             {
@@ -886,19 +358,6 @@
             {
               "type": "block",
               "id": "0x1000009c4"
-            }
-          ]
-        },
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x100000994"
-            },
-            {
-              "type": "block",
-              "id": "0x1000009a4"
             }
           ]
         },
@@ -1080,12 +539,12 @@
             {
               "type": "block",
               "id": "0x100000adc"
-            },
-            {
-              "type": "block",
-              "id": "0x100000af4"
             }
           ]
+        },
+        {
+          "type": "block",
+          "id": "0x100000af4"
         },
         {
           "type": "block",
@@ -1103,24 +562,31 @@
               "id": "0x100000b08"
             }
           ]
+        },
+        {
+          "type": "block",
+          "id": "0x100000b20"
+        },
+        {
+          "type": "sequence",
+          "children": [
+            {
+              "type": "block",
+              "id": "0x1000008e8"
+            },
+            {
+              "type": "block",
+              "id": "0x1000008ec"
+            }
+          ]
+        },
+        {
+          "type": "block",
+          "id": "0x100000b10"
         }
       ],
-      "reason": "fragmented_loop_body",
-      "region_kind": "acyclic"
-    }
-  },
-  {
-    "function_name": "FUN_100000b10",
-    "structured_body": {
-      "type": "block",
-      "id": "0x100000b10"
-    }
-  },
-  {
-    "function_name": "FUN_100000b20",
-    "structured_body": {
-      "type": "block",
-      "id": "0x100000b20"
+      "reason": "multi_exit_loop",
+      "region_kind": "cyclic"
     }
   },
   {
@@ -1244,256 +710,6 @@
         {
           "type": "block",
           "id": "0x100000cc8"
-        },
-        {
-          "type": "loop",
-          "kind": "while_like",
-          "header_block": "0x100000cfc",
-          "body": {
-            "type": "sequence",
-            "children": [
-              {
-                "type": "block",
-                "id": "0x100000cfc"
-              },
-              {
-                "type": "sequence",
-                "children": [
-                  {
-                    "type": "block",
-                    "id": "0x100000d08"
-                  },
-                  {
-                    "type": "block",
-                    "id": "0x100000d0c"
-                  },
-                  {
-                    "type": "block",
-                    "id": "0x100000d34"
-                  }
-                ]
-              }
-            ]
-          },
-          "exit_blocks": [
-            "0x100000d44"
-          ]
-        },
-        {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x100000d44"
-            },
-            {
-              "type": "loop",
-              "kind": "while_like",
-              "header_block": "0x100000d4c",
-              "body": {
-                "type": "sequence",
-                "children": [
-                  {
-                    "type": "block",
-                    "id": "0x100000d4c"
-                  },
-                  {
-                    "type": "sequence",
-                    "children": [
-                      {
-                        "type": "block",
-                        "id": "0x100000d58"
-                      },
-                      {
-                        "type": "block",
-                        "id": "0x100000d5c"
-                      },
-                      {
-                        "type": "block",
-                        "id": "0x100000d80"
-                      }
-                    ]
-                  }
-                ]
-              },
-              "exit_blocks": [
-                "0x100000d90"
-              ]
-            },
-            {
-              "type": "sequence",
-              "children": [
-                {
-                  "type": "block",
-                  "id": "0x100000d90"
-                },
-                {
-                  "type": "loop",
-                  "kind": "while_like",
-                  "header_block": "0x100000d98",
-                  "body": {
-                    "type": "sequence",
-                    "children": [
-                      {
-                        "type": "block",
-                        "id": "0x100000d98"
-                      },
-                      {
-                        "type": "sequence",
-                        "children": [
-                          {
-                            "type": "block",
-                            "id": "0x100000da4"
-                          },
-                          {
-                            "type": "block",
-                            "id": "0x100000da8"
-                          },
-                          {
-                            "type": "block",
-                            "id": "0x100000dcc"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  "exit_blocks": [
-                    "0x100000ddc"
-                  ]
-                },
-                {
-                  "type": "sequence",
-                  "children": [
-                    {
-                      "type": "block",
-                      "id": "0x100000ddc"
-                    },
-                    {
-                      "type": "loop",
-                      "kind": "while_like",
-                      "header_block": "0x100000de4",
-                      "body": {
-                        "type": "sequence",
-                        "children": [
-                          {
-                            "type": "block",
-                            "id": "0x100000de4"
-                          },
-                          {
-                            "type": "sequence",
-                            "children": [
-                              {
-                                "type": "block",
-                                "id": "0x100000df0"
-                              },
-                              {
-                                "type": "block",
-                                "id": "0x100000df4"
-                              },
-                              {
-                                "type": "block",
-                                "id": "0x100000e14"
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      "exit_blocks": [
-                        "0x100000e24"
-                      ]
-                    },
-                    {
-                      "type": "sequence",
-                      "children": [
-                        {
-                          "type": "block",
-                          "id": "0x100000e24"
-                        },
-                        {
-                          "type": "loop",
-                          "kind": "while_like",
-                          "header_block": "0x100000e2c",
-                          "body": {
-                            "type": "sequence",
-                            "children": [
-                              {
-                                "type": "if",
-                                "condition_block": "0x100000e2c",
-                                "then_branch": {
-                                  "type": "sequence",
-                                  "children": [
-                                    {
-                                      "type": "block",
-                                      "id": "0x100000f48"
-                                    },
-                                    {
-                                      "type": "block",
-                                      "id": "0x100000f4c"
-                                    }
-                                  ]
-                                },
-                                "merge_block": "0x100000ff0"
-                              },
-                              {
-                                "type": "sequence",
-                                "children": [
-                                  {
-                                    "type": "block",
-                                    "id": "0x100000ff0"
-                                  },
-                                  {
-                                    "type": "block",
-                                    "id": "0x100000ff4"
-                                  }
-                                ]
-                              }
-                            ]
-                          },
-                          "exit_blocks": [
-                            "0x100001004"
-                          ]
-                        },
-                        {
-                          "type": "if_else",
-                          "condition_block": "0x100001004",
-                          "then_branch": {
-                            "type": "sequence",
-                            "children": [
-                              {
-                                "type": "block",
-                                "id": "0x100001038"
-                              },
-                              {
-                                "type": "block",
-                                "id": "0x10000103c"
-                              }
-                            ]
-                          },
-                          "else_branch": {
-                            "type": "block",
-                            "id": "0x100001040"
-                          },
-                          "merge_block": null
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  },
-  {
-    "function_name": "leaf_c",
-    "structured_body": {
-      "type": "sequence",
-      "children": [
-        {
-          "type": "block",
-          "id": "0x100000ce4"
         },
         {
           "type": "loop",
@@ -2273,14 +1489,23 @@
     "function_name": "__stack_chk_fail",
     "structured_body": {
       "type": "block",
-      "id": "0x100001830"
+      "id": "0x10000183c"
     }
   },
   {
     "function_name": "printf",
     "structured_body": {
-      "type": "block",
-      "id": "0x10000183c"
+      "type": "sequence",
+      "children": [
+        {
+          "type": "block",
+          "id": "0x100001830"
+        },
+        {
+          "type": "block",
+          "id": "0x10000183c"
+        }
+      ]
     }
   }
 ]

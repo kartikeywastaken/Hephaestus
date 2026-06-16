@@ -583,6 +583,7 @@ def emit_recovered_c(
     total_adapters_inserted = 0
     total_evidence_adapters = 0
     total_unknown_adapters = 0
+    total_cset_adapters_inserted = 0
 
     for fn in artifact.functions:
         fn_lines = []
@@ -592,22 +593,31 @@ def emit_recovered_c(
             total_adapters_inserted += stats.get("condition_adapters_inserted", 0)
             total_evidence_adapters += stats.get("condition_evidence_adapters", 0)
             total_unknown_adapters += stats.get("condition_unknown_adapters", 0)
+        
+        # Count HEPHAESTUS_CSET in fn_lines
+        for line in fn_lines:
+            if "HEPHAESTUS_CSET(" in line:
+                total_cset_adapters_inserted += line.count("HEPHAESTUS_CSET(")
+                
         function_definitions.append((fn, fn_lines))
 
     unknown_condition_helpers_emitted = 1 if total_adapters_inserted > 0 else 0
+    cset_helper_emitted = 1 if total_cset_adapters_inserted > 0 else 0
 
     # Update artifact summary counts
     artifact.summary["condition_adapters_inserted"] = total_adapters_inserted
     artifact.summary["condition_evidence_adapters"] = total_evidence_adapters
     artifact.summary["condition_unknown_adapters"] = total_unknown_adapters
     artifact.summary["unknown_condition_helpers_emitted"] = unknown_condition_helpers_emitted
+    artifact.summary["cset_adapters_inserted"] = total_cset_adapters_inserted
+    artifact.summary["cset_helper_emitted"] = cset_helper_emitted
 
     lines: List[str] = []
 
     # File header
     timestamp = datetime.now(tz=None).strftime("%Y-%m-%dT%H:%M:%SZ")
     lines.append("/*")
-    lines.append(" * recovered.c — Phase 5.7.1 Conservative ARM64 Lowering Coverage Pass")
+    lines.append(" * recovered.c — Phase 5.7.2 Conservative ARM64 Coverage Cleanup")
     lines.append(f" * Schema version: {artifact.schema_version}")
     lines.append(f" * Generated: {timestamp}")
     lines.append(" *")
@@ -652,6 +662,19 @@ def emit_recovered_c(
         lines.append("static int HEPHAESTUS_UNKNOWN_COND(const char *evidence)")
         lines.append("{")
         lines.append("    (void)evidence;")
+        lines.append("    return 0;")
+        lines.append("}")
+        lines.append("")
+
+    if cset_helper_emitted == 1:
+        lines.append("/*")
+        lines.append(" * HEPHAESTUS_CSET is a syntax adapter for ARM64 cset instructions.")
+        lines.append(" * Its argument preserves the ARM64 condition code. The return value is not a")
+        lines.append(" * recovered high-level condition.")
+        lines.append(" */")
+        lines.append("static u64 HEPHAESTUS_CSET(const char *condition)")
+        lines.append("{")
+        lines.append("    (void)condition;")
         lines.append("    return 0;")
         lines.append("}")
         lines.append("")

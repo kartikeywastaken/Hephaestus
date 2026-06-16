@@ -202,7 +202,7 @@ This reads:
 - `layout_recovery.json` (optional)
 
 And writes:
-- `source_reconstruction.json` — Structured source reconstruction artifact (schema 5.7.1)
+- `source_reconstruction.json` — Structured source reconstruction artifact (schema 5.7.2)
 - `recovered.c` — Conservative C function skeletons with structured control flow, return/call refinements, branch predicate annotations, pseudo declarations, and syntax-safe condition adapters.
 
 The command prints a summary:
@@ -294,5 +294,5 @@ After running the commands above, the output folder will contain:
 - `semantic_recovery.json` — Phase 4B constraint-refined type records per function.
 - `layout_recovery.json` — Phase 4C conservative memory layout candidates.
 - `phase4_semantics.json` — Phase 4D final merged semantic artifact for Phase 5 handoff.
-- `source_reconstruction.json` — Phase 5.7 source reconstruction artifact (schema 5.7.1).
+- `source_reconstruction.json` — Phase 5.7 source reconstruction artifact (schema 5.7.2).
 - `recovered.c` — Phase 5.7 conservative C function skeletons.

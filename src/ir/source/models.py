@@ -20,7 +20,7 @@ from typing import Any, Dict, List
 # Schema version
 # ---------------------------------------------------------------------------
 
-SCHEMA_VERSION = "5.7.1"
+SCHEMA_VERSION = "5.7.2"
 
 
 # ---------------------------------------------------------------------------
@@ -209,6 +209,9 @@ class SourceReconstructionArtifact:
         "condition_evidence_adapters": 0,
         "condition_unknown_adapters": 0,
         "unknown_condition_helpers_emitted": 0,
+        # Phase 5.7.2 cset adapter
+        "cset_adapters_inserted": 0,
+        "cset_helper_emitted": 0,
         # Phase 5.7.1 analytics
         "unsupported_instruction_kinds": {},
     })

@@ -235,8 +235,8 @@ class TestInstructionLoweringRules:
         stmts, _ = lower_function_instructions(ir_fn, unified_ir=_make_ir(arch="arm64"))
         
         assert len(stmts) == 2
-        assert "stack_16 = tmp_x29;" in stmts[0].text
-        assert "stack_24 = tmp_x30;" in stmts[1].text
+        assert "stack_16 = tmp_fp;" in stmts[0].text
+        assert "stack_24 = tmp_lr;" in stmts[1].text
 
 
 # ---------------------------------------------------------------------------

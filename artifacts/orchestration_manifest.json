@@ -1,12 +1,12 @@
 {
-  "orchestrated_at": "2026-06-16T16:00:35-07:00",
+  "orchestrated_at": "2026-06-16T17:15:34-07:00",
   "binary_profiled": "./t",
   "jobs": {
     "ghidra": {
       "schema_version": "1.0.0",
       "provenance": {
         "tool_name": "Ghidra Headless Analyzer",
-        "timestamp": "2026-06-16T16:00:34-07:00",
+        "timestamp": "2026-06-16T17:15:33-07:00",
         "binary_path": "./t",
         "config": {}
       },
@@ -17,11 +17,11 @@
           "format": "Mac OS X Mach-O",
           "language_id": "AARCH64:LE:64:AppleSilicon",
           "compiler": "unknown",
-          "timestamp": "Tue Jun 16 16:00:33 IST 2026"
+          "timestamp": "Tue Jun 16 17:15:32 IST 2026"
         },
         "functions": [
           {
-            "size_bytes": 56,
+            "size_bytes": 516,
             "calling_convention": "__cdecl",
             "cfg": {
               "nodes": [
@@ -330,38 +330,7 @@
                   "estimated_instructions_count": 3,
                   "instructions_count": 2,
                   "id": "0x100000578"
-                }
-              ],
-              "edges": [
-                {
-                  "source": "0x100000548",
-                  "type": "unconditional",
-                  "target": "0x100000574"
                 },
-                {
-                  "source": "0x100000574",
-                  "type": "unconditional",
-                  "target": "0x100000578"
-                }
-              ]
-            },
-            "name": "main",
-            "local_variables": [
-              "local_10",
-              "local_14",
-              "local_18",
-              "local_20",
-              "local_28",
-              "local_30",
-              "local_34"
-            ],
-            "entry_point": "0x100000548"
-          },
-          {
-            "size_bytes": 88,
-            "calling_convention": "unknown",
-            "cfg": {
-              "nodes": [
                 {
                   "instructions": [
                     {
@@ -835,50 +804,7 @@
                   "estimated_instructions_count": 8,
                   "instructions_count": 7,
                   "id": "0x1000005bc"
-                }
-              ],
-              "edges": [
-                {
-                  "source": "0x100000580",
-                  "type": "conditional_taken",
-                  "target": "0x1000005b0"
                 },
-                {
-                  "source": "0x100000580",
-                  "type": "unconditional",
-                  "target": "0x100000598"
-                },
-                {
-                  "source": "0x100000598",
-                  "type": "unconditional",
-                  "target": "0x10000059c"
-                },
-                {
-                  "source": "0x10000059c",
-                  "type": "unconditional",
-                  "target": "0x1000005b0"
-                },
-                {
-                  "source": "0x1000005b0",
-                  "type": "unconditional",
-                  "target": "0x1000005b8"
-                },
-                {
-                  "source": "0x1000005b8",
-                  "type": "unconditional",
-                  "target": "0x1000005bc"
-                }
-              ]
-            },
-            "name": "FUN_100000580",
-            "local_variables": [],
-            "entry_point": "0x100000580"
-          },
-          {
-            "size_bytes": 4,
-            "calling_convention": "unknown",
-            "cfg": {
-              "nodes": [
                 {
                   "instructions": [
                     {
@@ -900,27 +826,7 @@
                       "raw": "ldr x8,[sp, #0x30]",
                       "source": "ghidra",
                       "opcode": "ldr"
-                    }
-                  ],
-                  "size": 4,
-                  "estimated_instructions_count": 2,
-                  "instructions_count": 1,
-                  "id": "0x1000005d8"
-                }
-              ],
-              "edges": []
-            },
-            "name": "FUN_1000005d8",
-            "local_variables": [],
-            "entry_point": "0x1000005d8"
-          },
-          {
-            "size_bytes": 140,
-            "calling_convention": "__cdecl",
-            "cfg": {
-              "nodes": [
-                {
-                  "instructions": [
+                    },
                     {
                       "operands": [
                         {
@@ -978,10 +884,10 @@
                       "opcode": "cbz"
                     }
                   ],
-                  "size": 12,
-                  "estimated_instructions_count": 4,
-                  "instructions_count": 3,
-                  "id": "0x1000005dc"
+                  "size": 16,
+                  "estimated_instructions_count": 5,
+                  "instructions_count": 4,
+                  "id": "0x1000005d8"
                 },
                 {
                   "instructions": [
@@ -1672,70 +1578,7 @@
                   "estimated_instructions_count": 3,
                   "instructions_count": 2,
                   "id": "0x100000660"
-                }
-              ],
-              "edges": [
-                {
-                  "source": "0x1000005dc",
-                  "type": "conditional_taken",
-                  "target": "0x100000638"
                 },
-                {
-                  "source": "0x1000005dc",
-                  "type": "unconditional",
-                  "target": "0x1000005e8"
-                },
-                {
-                  "source": "0x1000005e8",
-                  "type": "unconditional",
-                  "target": "0x1000005ec"
-                },
-                {
-                  "source": "0x1000005ec",
-                  "type": "conditional_taken",
-                  "target": "0x100000624"
-                },
-                {
-                  "source": "0x1000005ec",
-                  "type": "unconditional",
-                  "target": "0x10000061c"
-                },
-                {
-                  "source": "0x10000061c",
-                  "type": "unconditional",
-                  "target": "0x100000620"
-                },
-                {
-                  "source": "0x100000620",
-                  "type": "unconditional",
-                  "target": "0x100000628"
-                },
-                {
-                  "source": "0x100000624",
-                  "type": "unconditional",
-                  "target": "0x100000628"
-                },
-                {
-                  "source": "0x100000638",
-                  "type": "unconditional",
-                  "target": "0x10000064c"
-                },
-                {
-                  "source": "0x10000065c",
-                  "type": "unconditional",
-                  "target": "0x100000660"
-                }
-              ]
-            },
-            "name": "mega_driver",
-            "local_variables": [],
-            "entry_point": "0x1000005dc"
-          },
-          {
-            "size_bytes": 128,
-            "calling_convention": "unknown",
-            "cfg": {
-              "nodes": [
                 {
                   "instructions": [
                     {
@@ -2413,58 +2256,7 @@
                       "raw": "ldr w8,[sp, #0x20]",
                       "source": "ghidra",
                       "opcode": "ldr"
-                    }
-                  ],
-                  "size": 4,
-                  "estimated_instructions_count": 2,
-                  "instructions_count": 1,
-                  "id": "0x1000006e4"
-                }
-              ],
-              "edges": [
-                {
-                  "source": "0x100000668",
-                  "type": "unconditional",
-                  "target": "0x100000674"
-                },
-                {
-                  "source": "0x100000674",
-                  "type": "unconditional",
-                  "target": "0x100000678"
-                },
-                {
-                  "source": "0x100000678",
-                  "type": "unconditional",
-                  "target": "0x100000690"
-                },
-                {
-                  "source": "0x100000690",
-                  "type": "unconditional",
-                  "target": "0x1000006b0"
-                },
-                {
-                  "source": "0x1000006b0",
-                  "type": "unconditional",
-                  "target": "0x1000006d4"
-                },
-                {
-                  "source": "0x1000006d4",
-                  "type": "unconditional",
-                  "target": "0x1000006e4"
-                }
-              ]
-            },
-            "name": "FUN_100000668",
-            "local_variables": [],
-            "entry_point": "0x100000668"
-          },
-          {
-            "size_bytes": 100,
-            "calling_convention": "__cdecl",
-            "cfg": {
-              "nodes": [
-                {
-                  "instructions": [
+                    },
                     {
                       "operands": [
                         {
@@ -2526,10 +2318,10 @@
                       "opcode": "b"
                     }
                   ],
-                  "size": 12,
-                  "estimated_instructions_count": 4,
-                  "instructions_count": 3,
-                  "id": "0x1000006e8"
+                  "size": 16,
+                  "estimated_instructions_count": 5,
+                  "instructions_count": 4,
+                  "id": "0x1000006e4"
                 },
                 {
                   "instructions": [
@@ -2779,13 +2571,13 @@
                       "operands": [
                         {
                           "kind": "symbol",
-                          "name": "0x10000183c"
+                          "name": "0x100001830"
                         }
                       ],
                       "address": "0x100000724",
                       "size_bytes": 4,
                       "mnemonic": "bl",
-                      "raw": "bl 0x10000183c",
+                      "raw": "bl 0x100001830",
                       "source": "ghidra",
                       "opcode": "bl"
                     }
@@ -2991,19 +2783,199 @@
               ],
               "edges": [
                 {
+                  "source": "0x100000548",
+                  "type": "conditional_taken",
+                  "target": "0x100000660"
+                },
+                {
+                  "source": "0x100000548",
+                  "type": "unconditional",
+                  "target": "0x100000574"
+                },
+                {
+                  "source": "0x100000574",
+                  "type": "unconditional",
+                  "target": "0x100000578"
+                },
+                {
+                  "source": "0x100000578",
+                  "type": "unconditional",
+                  "target": "0x100000580"
+                },
+                {
+                  "source": "0x100000580",
+                  "type": "conditional_taken",
+                  "target": "0x1000005b0"
+                },
+                {
+                  "source": "0x100000580",
+                  "type": "unconditional",
+                  "target": "0x100000598"
+                },
+                {
+                  "source": "0x100000598",
+                  "type": "unconditional",
+                  "target": "0x10000059c"
+                },
+                {
+                  "source": "0x10000059c",
+                  "type": "unconditional",
+                  "target": "0x1000005b0"
+                },
+                {
+                  "source": "0x1000005b0",
+                  "type": "conditional_taken",
+                  "target": "0x10000065c"
+                },
+                {
+                  "source": "0x1000005b0",
+                  "type": "unconditional",
+                  "target": "0x1000005b8"
+                },
+                {
+                  "source": "0x1000005b8",
+                  "type": "unconditional",
+                  "target": "0x1000005bc"
+                },
+                {
+                  "source": "0x1000005bc",
+                  "type": "unconditional",
+                  "target": "0x1000005d8"
+                },
+                {
+                  "source": "0x1000005d8",
+                  "type": "conditional_taken",
+                  "target": "0x100000638"
+                },
+                {
+                  "source": "0x1000005d8",
+                  "type": "unconditional",
+                  "target": "0x1000005e8"
+                },
+                {
+                  "source": "0x1000005e8",
+                  "type": "unconditional",
+                  "target": "0x1000005ec"
+                },
+                {
+                  "source": "0x1000005ec",
+                  "type": "conditional_taken",
+                  "target": "0x100000624"
+                },
+                {
+                  "source": "0x1000005ec",
+                  "type": "unconditional",
+                  "target": "0x10000061c"
+                },
+                {
+                  "source": "0x10000061c",
+                  "type": "unconditional",
+                  "target": "0x100000620"
+                },
+                {
+                  "source": "0x100000620",
+                  "type": "unconditional",
+                  "target": "0x100000628"
+                },
+                {
+                  "source": "0x100000624",
+                  "type": "unconditional",
+                  "target": "0x100000628"
+                },
+                {
+                  "source": "0x100000628",
+                  "type": "unconditional",
+                  "target": "0x1000005d8"
+                },
+                {
+                  "source": "0x100000638",
+                  "type": "unconditional",
+                  "target": "0x10000064c"
+                },
+                {
+                  "source": "0x10000064c",
+                  "type": "unconditional",
+                  "target": "0x100000580"
+                },
+                {
+                  "source": "0x10000065c",
+                  "type": "unconditional",
+                  "target": "0x100000660"
+                },
+                {
+                  "source": "0x100000660",
+                  "type": "unconditional",
+                  "target": "0x100000668"
+                },
+                {
+                  "source": "0x100000668",
+                  "type": "conditional_taken",
+                  "target": "0x1000006f4"
+                },
+                {
+                  "source": "0x100000668",
+                  "type": "unconditional",
+                  "target": "0x100000674"
+                },
+                {
+                  "source": "0x100000674",
+                  "type": "unconditional",
+                  "target": "0x100000678"
+                },
+                {
+                  "source": "0x100000678",
+                  "type": "unconditional",
+                  "target": "0x100000690"
+                },
+                {
+                  "source": "0x100000690",
+                  "type": "unconditional",
+                  "target": "0x1000006b0"
+                },
+                {
+                  "source": "0x1000006b0",
+                  "type": "unconditional",
+                  "target": "0x1000006d4"
+                },
+                {
+                  "source": "0x1000006d4",
+                  "type": "unconditional",
+                  "target": "0x1000006e4"
+                },
+                {
+                  "source": "0x1000006e4",
+                  "type": "unconditional",
+                  "target": "0x100000668"
+                },
+                {
                   "source": "0x1000006f4",
                   "type": "unconditional",
                   "target": "0x100000728"
                 }
               ]
             },
-            "name": "driver",
-            "local_variables": [],
-            "entry_point": "0x1000006e8"
+            "name": "main",
+            "local_variables": [
+              "local_10",
+              "local_14",
+              "local_18",
+              "local_20",
+              "local_28",
+              "local_30",
+              "local_34",
+              "local_40",
+              "local_48",
+              "local_4c",
+              "local_50",
+              "local_54",
+              "local_60",
+              "local_70"
+            ],
+            "entry_point": "0x100000548"
           },
           {
-            "size_bytes": 32,
-            "calling_convention": "unknown",
+            "size_bytes": 308,
+            "calling_convention": "__cdecl",
             "cfg": {
               "nodes": [
                 {
@@ -3183,24 +3155,7 @@
                   "estimated_instructions_count": 9,
                   "instructions_count": 8,
                   "id": "0x10000074c"
-                }
-              ],
-              "edges": []
-            },
-            "name": "_mixed_driver",
-            "local_variables": [
-              "local_10",
-              "local_18",
-              "local_20",
-              "local_24"
-            ],
-            "entry_point": "0x10000074c"
-          },
-          {
-            "size_bytes": 120,
-            "calling_convention": "unknown",
-            "cfg": {
-              "nodes": [
+                },
                 {
                   "instructions": [
                     {
@@ -3832,48 +3787,7 @@
                       "raw": "add x0,x8,x9",
                       "source": "ghidra",
                       "opcode": "add"
-                    }
-                  ],
-                  "size": 32,
-                  "estimated_instructions_count": 9,
-                  "instructions_count": 8,
-                  "id": "0x1000007c4"
-                }
-              ],
-              "edges": [
-                {
-                  "source": "0x10000076c",
-                  "type": "unconditional",
-                  "target": "0x100000778"
-                },
-                {
-                  "source": "0x100000778",
-                  "type": "unconditional",
-                  "target": "0x10000077c"
-                },
-                {
-                  "source": "0x10000077c",
-                  "type": "unconditional",
-                  "target": "0x1000007a8"
-                },
-                {
-                  "source": "0x1000007a8",
-                  "type": "unconditional",
-                  "target": "0x1000007c4"
-                }
-              ]
-            },
-            "name": "FUN_10000076c",
-            "local_variables": [],
-            "entry_point": "0x10000076c"
-          },
-          {
-            "size_bytes": 156,
-            "calling_convention": "__cdecl",
-            "cfg": {
-              "nodes": [
-                {
-                  "instructions": [
+                    },
                     {
                       "operands": [
                         {
@@ -3889,10 +3803,10 @@
                       "opcode": "bl"
                     }
                   ],
-                  "size": 4,
-                  "estimated_instructions_count": 2,
-                  "instructions_count": 1,
-                  "id": "0x1000007e4"
+                  "size": 36,
+                  "estimated_instructions_count": 10,
+                  "instructions_count": 9,
+                  "id": "0x1000007c4"
                 },
                 {
                   "instructions": [
@@ -4734,7 +4648,37 @@
               ],
               "edges": [
                 {
-                  "source": "0x1000007e4",
+                  "source": "0x10000074c",
+                  "type": "unconditional",
+                  "target": "0x10000076c"
+                },
+                {
+                  "source": "0x10000076c",
+                  "type": "conditional_taken",
+                  "target": "0x100000870"
+                },
+                {
+                  "source": "0x10000076c",
+                  "type": "unconditional",
+                  "target": "0x100000778"
+                },
+                {
+                  "source": "0x100000778",
+                  "type": "unconditional",
+                  "target": "0x10000077c"
+                },
+                {
+                  "source": "0x10000077c",
+                  "type": "unconditional",
+                  "target": "0x1000007a8"
+                },
+                {
+                  "source": "0x1000007a8",
+                  "type": "unconditional",
+                  "target": "0x1000007c4"
+                },
+                {
+                  "source": "0x1000007c4",
                   "type": "unconditional",
                   "target": "0x1000007e8"
                 },
@@ -4787,16 +4731,26 @@
                   "source": "0x10000085c",
                   "type": "unconditional",
                   "target": "0x100000860"
+                },
+                {
+                  "source": "0x100000860",
+                  "type": "unconditional",
+                  "target": "0x10000076c"
                 }
               ]
             },
-            "name": "leaf_a",
-            "local_variables": [],
-            "entry_point": "0x1000007e4"
+            "name": "mixed_driver",
+            "local_variables": [
+              "local_10",
+              "local_18",
+              "local_20",
+              "local_24"
+            ],
+            "entry_point": "0x10000074c"
           },
           {
-            "size_bytes": 44,
-            "calling_convention": "unknown",
+            "size_bytes": 708,
+            "calling_convention": "__cdecl",
             "cfg": {
               "nodes": [
                 {
@@ -5038,25 +4992,7 @@
                   "estimated_instructions_count": 12,
                   "instructions_count": 11,
                   "id": "0x100000880"
-                }
-              ],
-              "edges": []
-            },
-            "name": "_cfg_pressure",
-            "local_variables": [
-              "local_10",
-              "local_18",
-              "local_20",
-              "local_28",
-              "local_30"
-            ],
-            "entry_point": "0x100000880"
-          },
-          {
-            "size_bytes": 76,
-            "calling_convention": "unknown",
-            "cfg": {
-              "nodes": [
+                },
                 {
                   "instructions": [
                     {
@@ -5502,45 +5438,7 @@
                   "estimated_instructions_count": 3,
                   "instructions_count": 2,
                   "id": "0x1000008f0"
-                }
-              ],
-              "edges": [
-                {
-                  "source": "0x1000008ac",
-                  "type": "unconditional",
-                  "target": "0x1000008b8"
                 },
-                {
-                  "source": "0x1000008b8",
-                  "type": "unconditional",
-                  "target": "0x1000008bc"
-                },
-                {
-                  "source": "0x1000008bc",
-                  "type": "conditional_taken",
-                  "target": "0x1000008f0"
-                },
-                {
-                  "source": "0x1000008bc",
-                  "type": "unconditional",
-                  "target": "0x1000008e8"
-                },
-                {
-                  "source": "0x1000008e8",
-                  "type": "unconditional",
-                  "target": "0x1000008ec"
-                }
-              ]
-            },
-            "name": "FUN_1000008ac",
-            "local_variables": [],
-            "entry_point": "0x1000008ac"
-          },
-          {
-            "size_bytes": 72,
-            "calling_convention": "unknown",
-            "cfg": {
-              "nodes": [
                 {
                   "instructions": [
                     {
@@ -5936,40 +5834,7 @@
                   "estimated_instructions_count": 4,
                   "instructions_count": 3,
                   "id": "0x100000934"
-                }
-              ],
-              "edges": [
-                {
-                  "source": "0x1000008f8",
-                  "type": "unconditional",
-                  "target": "0x100000904"
                 },
-                {
-                  "source": "0x100000904",
-                  "type": "unconditional",
-                  "target": "0x100000908"
-                },
-                {
-                  "source": "0x100000908",
-                  "type": "unconditional",
-                  "target": "0x100000930"
-                },
-                {
-                  "source": "0x100000930",
-                  "type": "unconditional",
-                  "target": "0x100000934"
-                }
-              ]
-            },
-            "name": "FUN_1000008f8",
-            "local_variables": [],
-            "entry_point": "0x1000008f8"
-          },
-          {
-            "size_bytes": 464,
-            "calling_convention": "__cdecl",
-            "cfg": {
-              "nodes": [
                 {
                   "instructions": [
                     {
@@ -8617,9 +8482,369 @@
                   "estimated_instructions_count": 2,
                   "instructions_count": 1,
                   "id": "0x100000b0c"
+                },
+                {
+                  "instructions": [
+                    {
+                      "operands": [
+                        {
+                          "kind": "register",
+                          "value": "x8"
+                        },
+                        {
+                          "size_bytes": 8,
+                          "offset": 32,
+                          "kind": "memory",
+                          "base": "sp"
+                        }
+                      ],
+                      "address": "0x100000b10",
+                      "size_bytes": 4,
+                      "mnemonic": "ldr",
+                      "raw": "ldr x8,[sp, #0x20]",
+                      "source": "ghidra",
+                      "opcode": "ldr"
+                    },
+                    {
+                      "operands": [
+                        {
+                          "kind": "register",
+                          "value": "x8"
+                        },
+                        {
+                          "kind": "register",
+                          "value": "x8"
+                        },
+                        {
+                          "kind": "unknown",
+                          "raw": "#"
+                        },
+                        {
+                          "kind": "immediate",
+                          "value": 1
+                        }
+                      ],
+                      "address": "0x100000b14",
+                      "size_bytes": 4,
+                      "mnemonic": "add",
+                      "raw": "add x8,x8,#0x1",
+                      "source": "ghidra",
+                      "opcode": "add"
+                    },
+                    {
+                      "operands": [
+                        {
+                          "kind": "register",
+                          "value": "x8"
+                        },
+                        {
+                          "size_bytes": 8,
+                          "offset": 32,
+                          "kind": "memory",
+                          "base": "sp"
+                        }
+                      ],
+                      "address": "0x100000b18",
+                      "size_bytes": 4,
+                      "mnemonic": "str",
+                      "raw": "str x8,[sp, #0x20]",
+                      "source": "ghidra",
+                      "opcode": "str"
+                    },
+                    {
+                      "operands": [
+                        {
+                          "kind": "symbol",
+                          "name": "0x1000008ac"
+                        }
+                      ],
+                      "address": "0x100000b1c",
+                      "size_bytes": 4,
+                      "mnemonic": "b",
+                      "raw": "b 0x1000008ac",
+                      "source": "ghidra",
+                      "opcode": "b"
+                    }
+                  ],
+                  "size": 16,
+                  "estimated_instructions_count": 5,
+                  "instructions_count": 4,
+                  "id": "0x100000b10"
+                },
+                {
+                  "instructions": [
+                    {
+                      "operands": [
+                        {
+                          "kind": "register",
+                          "value": "x10"
+                        },
+                        {
+                          "size_bytes": null,
+                          "offset": -24,
+                          "kind": "memory",
+                          "base": "x29"
+                        }
+                      ],
+                      "address": "0x100000b20",
+                      "size_bytes": 4,
+                      "mnemonic": "ldur",
+                      "raw": "ldur x10,[x29, #-0x18]",
+                      "source": "ghidra",
+                      "opcode": "ldur"
+                    },
+                    {
+                      "operands": [
+                        {
+                          "kind": "register",
+                          "value": "x9"
+                        },
+                        {
+                          "kind": "immediate",
+                          "value": 4295000064
+                        }
+                      ],
+                      "address": "0x100000b24",
+                      "size_bytes": 4,
+                      "mnemonic": "adrp",
+                      "raw": "adrp x9,0x100008000",
+                      "source": "ghidra",
+                      "opcode": "adrp"
+                    },
+                    {
+                      "operands": [
+                        {
+                          "kind": "register",
+                          "value": "x8"
+                        },
+                        {
+                          "size_bytes": 8,
+                          "offset": 80,
+                          "kind": "memory",
+                          "base": "x9"
+                        }
+                      ],
+                      "address": "0x100000b28",
+                      "size_bytes": 4,
+                      "mnemonic": "ldr",
+                      "raw": "ldr x8,[x9, #0x50]",
+                      "source": "ghidra",
+                      "opcode": "ldr"
+                    },
+                    {
+                      "operands": [
+                        {
+                          "kind": "register",
+                          "value": "x8"
+                        },
+                        {
+                          "kind": "register",
+                          "value": "x8"
+                        },
+                        {
+                          "kind": "register",
+                          "value": "x10"
+                        }
+                      ],
+                      "address": "0x100000b2c",
+                      "size_bytes": 4,
+                      "mnemonic": "eor",
+                      "raw": "eor x8,x8,x10",
+                      "source": "ghidra",
+                      "opcode": "eor"
+                    },
+                    {
+                      "operands": [
+                        {
+                          "kind": "register",
+                          "value": "x8"
+                        },
+                        {
+                          "size_bytes": 8,
+                          "offset": 80,
+                          "kind": "memory",
+                          "base": "x9"
+                        }
+                      ],
+                      "address": "0x100000b30",
+                      "size_bytes": 4,
+                      "mnemonic": "str",
+                      "raw": "str x8,[x9, #0x50]",
+                      "source": "ghidra",
+                      "opcode": "str"
+                    },
+                    {
+                      "operands": [
+                        {
+                          "kind": "register",
+                          "value": "x0"
+                        },
+                        {
+                          "size_bytes": null,
+                          "offset": -24,
+                          "kind": "memory",
+                          "base": "x29"
+                        }
+                      ],
+                      "address": "0x100000b34",
+                      "size_bytes": 4,
+                      "mnemonic": "ldur",
+                      "raw": "ldur x0,[x29, #-0x18]",
+                      "source": "ghidra",
+                      "opcode": "ldur"
+                    },
+                    {
+                      "operands": [
+                        {
+                          "kind": "register",
+                          "value": "x29"
+                        },
+                        {
+                          "kind": "register",
+                          "value": "x30"
+                        },
+                        {
+                          "size_bytes": null,
+                          "offset": 64,
+                          "kind": "memory",
+                          "base": "sp"
+                        }
+                      ],
+                      "address": "0x100000b38",
+                      "size_bytes": 4,
+                      "mnemonic": "ldp",
+                      "raw": "ldp x29,x30,[sp, #0x40]",
+                      "source": "ghidra",
+                      "opcode": "ldp"
+                    },
+                    {
+                      "operands": [
+                        {
+                          "kind": "register",
+                          "value": "sp"
+                        },
+                        {
+                          "kind": "register",
+                          "value": "sp"
+                        },
+                        {
+                          "kind": "unknown",
+                          "raw": "#"
+                        },
+                        {
+                          "kind": "immediate",
+                          "value": 80
+                        }
+                      ],
+                      "address": "0x100000b3c",
+                      "size_bytes": 4,
+                      "mnemonic": "add",
+                      "raw": "add sp,sp,#0x50",
+                      "source": "ghidra",
+                      "opcode": "add"
+                    },
+                    {
+                      "operands": [],
+                      "address": "0x100000b40",
+                      "size_bytes": 4,
+                      "mnemonic": "ret",
+                      "raw": "ret",
+                      "source": "ghidra",
+                      "opcode": "ret"
+                    }
+                  ],
+                  "size": 36,
+                  "estimated_instructions_count": 10,
+                  "instructions_count": 9,
+                  "id": "0x100000b20"
                 }
               ],
               "edges": [
+                {
+                  "source": "0x100000880",
+                  "type": "unconditional",
+                  "target": "0x1000008ac"
+                },
+                {
+                  "source": "0x1000008ac",
+                  "type": "conditional_taken",
+                  "target": "0x100000b20"
+                },
+                {
+                  "source": "0x1000008ac",
+                  "type": "unconditional",
+                  "target": "0x1000008b8"
+                },
+                {
+                  "source": "0x1000008b8",
+                  "type": "unconditional",
+                  "target": "0x1000008bc"
+                },
+                {
+                  "source": "0x1000008bc",
+                  "type": "conditional_taken",
+                  "target": "0x1000008f0"
+                },
+                {
+                  "source": "0x1000008bc",
+                  "type": "unconditional",
+                  "target": "0x1000008e8"
+                },
+                {
+                  "source": "0x1000008e8",
+                  "type": "unconditional",
+                  "target": "0x1000008ec"
+                },
+                {
+                  "source": "0x1000008ec",
+                  "type": "unconditional",
+                  "target": "0x100000b10"
+                },
+                {
+                  "source": "0x1000008f0",
+                  "type": "unconditional",
+                  "target": "0x1000008f8"
+                },
+                {
+                  "source": "0x1000008f8",
+                  "type": "conditional_taken",
+                  "target": "0x100000af4"
+                },
+                {
+                  "source": "0x1000008f8",
+                  "type": "unconditional",
+                  "target": "0x100000904"
+                },
+                {
+                  "source": "0x100000904",
+                  "type": "unconditional",
+                  "target": "0x100000908"
+                },
+                {
+                  "source": "0x100000908",
+                  "type": "conditional_taken",
+                  "target": "0x100000994"
+                },
+                {
+                  "source": "0x100000908",
+                  "type": "unconditional",
+                  "target": "0x100000930"
+                },
+                {
+                  "source": "0x100000930",
+                  "type": "unconditional",
+                  "target": "0x100000934"
+                },
+                {
+                  "source": "0x100000934",
+                  "type": "conditional_taken",
+                  "target": "0x1000009b4"
+                },
+                {
+                  "source": "0x100000934",
+                  "type": "unconditional",
+                  "target": "0x100000940"
+                },
                 {
                   "source": "0x100000940",
                   "type": "unconditional",
@@ -8821,6 +9046,11 @@
                   "target": "0x100000ae4"
                 },
                 {
+                  "source": "0x100000ae4",
+                  "type": "unconditional",
+                  "target": "0x1000008f8"
+                },
+                {
                   "source": "0x100000af4",
                   "type": "conditional_taken",
                   "target": "0x100000b0c"
@@ -8834,315 +9064,40 @@
                   "source": "0x100000b04",
                   "type": "unconditional",
                   "target": "0x100000b08"
+                },
+                {
+                  "source": "0x100000b08",
+                  "type": "unconditional",
+                  "target": "0x100000b20"
+                },
+                {
+                  "source": "0x100000b0c",
+                  "type": "unconditional",
+                  "target": "0x100000b10"
+                },
+                {
+                  "source": "0x100000b10",
+                  "type": "unconditional",
+                  "target": "0x1000008ac"
                 }
               ]
             },
-            "name": "leaf_b",
-            "local_variables": [],
-            "entry_point": "0x100000940"
-          },
-          {
-            "size_bytes": 16,
-            "calling_convention": "unknown",
-            "cfg": {
-              "nodes": [
-                {
-                  "instructions": [
-                    {
-                      "operands": [
-                        {
-                          "kind": "register",
-                          "value": "x8"
-                        },
-                        {
-                          "size_bytes": 8,
-                          "offset": 32,
-                          "kind": "memory",
-                          "base": "sp"
-                        }
-                      ],
-                      "address": "0x100000b10",
-                      "size_bytes": 4,
-                      "mnemonic": "ldr",
-                      "raw": "ldr x8,[sp, #0x20]",
-                      "source": "ghidra",
-                      "opcode": "ldr"
-                    },
-                    {
-                      "operands": [
-                        {
-                          "kind": "register",
-                          "value": "x8"
-                        },
-                        {
-                          "kind": "register",
-                          "value": "x8"
-                        },
-                        {
-                          "kind": "unknown",
-                          "raw": "#"
-                        },
-                        {
-                          "kind": "immediate",
-                          "value": 1
-                        }
-                      ],
-                      "address": "0x100000b14",
-                      "size_bytes": 4,
-                      "mnemonic": "add",
-                      "raw": "add x8,x8,#0x1",
-                      "source": "ghidra",
-                      "opcode": "add"
-                    },
-                    {
-                      "operands": [
-                        {
-                          "kind": "register",
-                          "value": "x8"
-                        },
-                        {
-                          "size_bytes": 8,
-                          "offset": 32,
-                          "kind": "memory",
-                          "base": "sp"
-                        }
-                      ],
-                      "address": "0x100000b18",
-                      "size_bytes": 4,
-                      "mnemonic": "str",
-                      "raw": "str x8,[sp, #0x20]",
-                      "source": "ghidra",
-                      "opcode": "str"
-                    },
-                    {
-                      "operands": [
-                        {
-                          "kind": "symbol",
-                          "name": "0x1000008ac"
-                        }
-                      ],
-                      "address": "0x100000b1c",
-                      "size_bytes": 4,
-                      "mnemonic": "b",
-                      "raw": "b 0x1000008ac",
-                      "source": "ghidra",
-                      "opcode": "b"
-                    }
-                  ],
-                  "size": 16,
-                  "estimated_instructions_count": 5,
-                  "instructions_count": 4,
-                  "id": "0x100000b10"
-                }
-              ],
-              "edges": []
-            },
-            "name": "FUN_100000b10",
-            "local_variables": [],
-            "entry_point": "0x100000b10"
-          },
-          {
-            "size_bytes": 36,
-            "calling_convention": "unknown",
-            "cfg": {
-              "nodes": [
-                {
-                  "instructions": [
-                    {
-                      "operands": [
-                        {
-                          "kind": "register",
-                          "value": "x10"
-                        },
-                        {
-                          "size_bytes": null,
-                          "offset": -24,
-                          "kind": "memory",
-                          "base": "x29"
-                        }
-                      ],
-                      "address": "0x100000b20",
-                      "size_bytes": 4,
-                      "mnemonic": "ldur",
-                      "raw": "ldur x10,[x29, #-0x18]",
-                      "source": "ghidra",
-                      "opcode": "ldur"
-                    },
-                    {
-                      "operands": [
-                        {
-                          "kind": "register",
-                          "value": "x9"
-                        },
-                        {
-                          "kind": "immediate",
-                          "value": 4295000064
-                        }
-                      ],
-                      "address": "0x100000b24",
-                      "size_bytes": 4,
-                      "mnemonic": "adrp",
-                      "raw": "adrp x9,0x100008000",
-                      "source": "ghidra",
-                      "opcode": "adrp"
-                    },
-                    {
-                      "operands": [
-                        {
-                          "kind": "register",
-                          "value": "x8"
-                        },
-                        {
-                          "size_bytes": 8,
-                          "offset": 80,
-                          "kind": "memory",
-                          "base": "x9"
-                        }
-                      ],
-                      "address": "0x100000b28",
-                      "size_bytes": 4,
-                      "mnemonic": "ldr",
-                      "raw": "ldr x8,[x9, #0x50]",
-                      "source": "ghidra",
-                      "opcode": "ldr"
-                    },
-                    {
-                      "operands": [
-                        {
-                          "kind": "register",
-                          "value": "x8"
-                        },
-                        {
-                          "kind": "register",
-                          "value": "x8"
-                        },
-                        {
-                          "kind": "register",
-                          "value": "x10"
-                        }
-                      ],
-                      "address": "0x100000b2c",
-                      "size_bytes": 4,
-                      "mnemonic": "eor",
-                      "raw": "eor x8,x8,x10",
-                      "source": "ghidra",
-                      "opcode": "eor"
-                    },
-                    {
-                      "operands": [
-                        {
-                          "kind": "register",
-                          "value": "x8"
-                        },
-                        {
-                          "size_bytes": 8,
-                          "offset": 80,
-                          "kind": "memory",
-                          "base": "x9"
-                        }
-                      ],
-                      "address": "0x100000b30",
-                      "size_bytes": 4,
-                      "mnemonic": "str",
-                      "raw": "str x8,[x9, #0x50]",
-                      "source": "ghidra",
-                      "opcode": "str"
-                    },
-                    {
-                      "operands": [
-                        {
-                          "kind": "register",
-                          "value": "x0"
-                        },
-                        {
-                          "size_bytes": null,
-                          "offset": -24,
-                          "kind": "memory",
-                          "base": "x29"
-                        }
-                      ],
-                      "address": "0x100000b34",
-                      "size_bytes": 4,
-                      "mnemonic": "ldur",
-                      "raw": "ldur x0,[x29, #-0x18]",
-                      "source": "ghidra",
-                      "opcode": "ldur"
-                    },
-                    {
-                      "operands": [
-                        {
-                          "kind": "register",
-                          "value": "x29"
-                        },
-                        {
-                          "kind": "register",
-                          "value": "x30"
-                        },
-                        {
-                          "size_bytes": null,
-                          "offset": 64,
-                          "kind": "memory",
-                          "base": "sp"
-                        }
-                      ],
-                      "address": "0x100000b38",
-                      "size_bytes": 4,
-                      "mnemonic": "ldp",
-                      "raw": "ldp x29,x30,[sp, #0x40]",
-                      "source": "ghidra",
-                      "opcode": "ldp"
-                    },
-                    {
-                      "operands": [
-                        {
-                          "kind": "register",
-                          "value": "sp"
-                        },
-                        {
-                          "kind": "register",
-                          "value": "sp"
-                        },
-                        {
-                          "kind": "unknown",
-                          "raw": "#"
-                        },
-                        {
-                          "kind": "immediate",
-                          "value": 80
-                        }
-                      ],
-                      "address": "0x100000b3c",
-                      "size_bytes": 4,
-                      "mnemonic": "add",
-                      "raw": "add sp,sp,#0x50",
-                      "source": "ghidra",
-                      "opcode": "add"
-                    },
-                    {
-                      "operands": [],
-                      "address": "0x100000b40",
-                      "size_bytes": 4,
-                      "mnemonic": "ret",
-                      "raw": "ret",
-                      "source": "ghidra",
-                      "opcode": "ret"
-                    }
-                  ],
-                  "size": 36,
-                  "estimated_instructions_count": 10,
-                  "instructions_count": 9,
-                  "id": "0x100000b20"
-                }
-              ],
-              "edges": []
-            },
-            "name": "FUN_100000b20",
-            "local_variables": [],
-            "entry_point": "0x100000b20"
+            "name": "cfg_pressure",
+            "local_variables": [
+              "local_10",
+              "local_18",
+              "local_20",
+              "local_28",
+              "local_30",
+              "local_38",
+              "local_40",
+              "local_48"
+            ],
+            "entry_point": "0x100000880"
           },
           {
             "size_bytes": 388,
-            "calling_convention": "unknown",
+            "calling_convention": "__cdecl",
             "cfg": {
               "nodes": [
                 {
@@ -11331,7 +11286,7 @@
                 }
               ]
             },
-            "name": "_indirect_pressure",
+            "name": "indirect_pressure",
             "local_variables": [
               "local_10",
               "local_18",
@@ -11344,8 +11299,8 @@
             "entry_point": "0x100000b44"
           },
           {
-            "size_bytes": 28,
-            "calling_convention": "unknown",
+            "size_bytes": 908,
+            "calling_convention": "__cdecl",
             "cfg": {
               "nodes": [
                 {
@@ -11505,30 +11460,7 @@
                       "raw": "ldr x8,[x8]",
                       "source": "ghidra",
                       "opcode": "ldr"
-                    }
-                  ],
-                  "size": 28,
-                  "estimated_instructions_count": 8,
-                  "instructions_count": 7,
-                  "id": "0x100000cc8"
-                }
-              ],
-              "edges": []
-            },
-            "name": "_stack_layout_pressure",
-            "local_variables": [
-              "local_10",
-              "local_20"
-            ],
-            "entry_point": "0x100000cc8"
-          },
-          {
-            "size_bytes": 880,
-            "calling_convention": "__cdecl",
-            "cfg": {
-              "nodes": [
-                {
-                  "instructions": [
+                    },
                     {
                       "operands": [
                         {
@@ -11644,10 +11576,10 @@
                       "opcode": "b"
                     }
                   ],
-                  "size": 24,
-                  "estimated_instructions_count": 7,
-                  "instructions_count": 6,
-                  "id": "0x100000ce4"
+                  "size": 52,
+                  "estimated_instructions_count": 14,
+                  "instructions_count": 13,
+                  "id": "0x100000cc8"
                 },
                 {
                   "instructions": [
@@ -16127,13 +16059,13 @@
                       "operands": [
                         {
                           "kind": "symbol",
-                          "name": "0x100001830"
+                          "name": "0x10000183c"
                         }
                       ],
                       "address": "0x10000103c",
                       "size_bytes": 4,
                       "mnemonic": "bl",
-                      "raw": "bl 0x100001830",
+                      "raw": "bl 0x10000183c",
                       "source": "ghidra",
                       "opcode": "bl"
                     }
@@ -16255,7 +16187,7 @@
               ],
               "edges": [
                 {
-                  "source": "0x100000ce4",
+                  "source": "0x100000cc8",
                   "type": "unconditional",
                   "target": "0x100000cfc"
                 },
@@ -16501,13 +16433,26 @@
                 }
               ]
             },
-            "name": "leaf_c",
-            "local_variables": [],
-            "entry_point": "0x100000ce4"
+            "name": "stack_layout_pressure",
+            "local_variables": [
+              "local_10",
+              "local_20",
+              "local_28",
+              "local_3b0",
+              "local_3b8",
+              "local_3bc",
+              "local_3c0",
+              "local_3c4",
+              "local_3c8",
+              "local_3cc",
+              "local_3d0",
+              "local_3d8"
+            ],
+            "entry_point": "0x100000cc8"
           },
           {
             "size_bytes": 460,
-            "calling_convention": "unknown",
+            "calling_convention": "__cdecl",
             "cfg": {
               "nodes": [
                 {
@@ -19129,7 +19074,7 @@
                 }
               ]
             },
-            "name": "_abi_pressure",
+            "name": "abi_pressure",
             "local_variables": [
               "local_10",
               "local_18",
@@ -19147,7 +19092,7 @@
           },
           {
             "size_bytes": 144,
-            "calling_convention": "unknown",
+            "calling_convention": "__cdecl",
             "cfg": {
               "nodes": [
                 {
@@ -20148,7 +20093,7 @@
               ],
               "edges": []
             },
-            "name": "_rotmix",
+            "name": "rotmix",
             "local_variables": [
               "local_8"
             ],
@@ -20156,7 +20101,7 @@
           },
           {
             "size_bytes": 68,
-            "calling_convention": "unknown",
+            "calling_convention": "__cdecl",
             "cfg": {
               "nodes": [
                 {
@@ -20517,7 +20462,7 @@
               ],
               "edges": []
             },
-            "name": "_op_add",
+            "name": "op_add",
             "local_variables": [
               "local_8",
               "local_10",
@@ -20527,7 +20472,7 @@
           },
           {
             "size_bytes": 68,
-            "calling_convention": "unknown",
+            "calling_convention": "__cdecl",
             "cfg": {
               "nodes": [
                 {
@@ -20888,7 +20833,7 @@
               ],
               "edges": []
             },
-            "name": "_op_xor",
+            "name": "op_xor",
             "local_variables": [
               "local_8",
               "local_10",
@@ -20898,7 +20843,7 @@
           },
           {
             "size_bytes": 76,
-            "calling_convention": "unknown",
+            "calling_convention": "__cdecl",
             "cfg": {
               "nodes": [
                 {
@@ -21303,7 +21248,7 @@
               ],
               "edges": []
             },
-            "name": "_op_mul",
+            "name": "op_mul",
             "local_variables": [
               "local_8",
               "local_10",
@@ -21313,7 +21258,7 @@
           },
           {
             "size_bytes": 88,
-            "calling_convention": "unknown",
+            "calling_convention": "__cdecl",
             "cfg": {
               "nodes": [
                 {
@@ -21792,7 +21737,7 @@
               ],
               "edges": []
             },
-            "name": "_op_shift",
+            "name": "op_shift",
             "local_variables": [
               "local_8",
               "local_10",
@@ -21802,7 +21747,7 @@
           },
           {
             "size_bytes": 104,
-            "calling_convention": "unknown",
+            "calling_convention": "__cdecl",
             "cfg": {
               "nodes": [
                 {
@@ -22357,7 +22302,7 @@
               ],
               "edges": []
             },
-            "name": "_op_div",
+            "name": "op_div",
             "local_variables": [
               "local_8",
               "local_10",
@@ -22368,7 +22313,7 @@
           },
           {
             "size_bytes": 84,
-            "calling_convention": "unknown",
+            "calling_convention": "__cdecl",
             "cfg": {
               "nodes": [
                 {
@@ -22837,7 +22782,7 @@
               ],
               "edges": []
             },
-            "name": "_op_logic",
+            "name": "op_logic",
             "local_variables": [
               "local_8",
               "local_10",
@@ -22847,7 +22792,7 @@
           },
           {
             "size_bytes": 200,
-            "calling_convention": "unknown",
+            "calling_convention": "__cdecl",
             "cfg": {
               "nodes": [
                 {
@@ -24075,7 +24020,7 @@
                 }
               ]
             },
-            "name": "_tri_a",
+            "name": "tri_a",
             "local_variables": [
               "local_10",
               "local_18",
@@ -24088,7 +24033,7 @@
           },
           {
             "size_bytes": 232,
-            "calling_convention": "unknown",
+            "calling_convention": "__cdecl",
             "cfg": {
               "nodes": [
                 {
@@ -25414,7 +25359,7 @@
                 }
               ]
             },
-            "name": "_tri_b",
+            "name": "tri_b",
             "local_variables": [
               "local_8",
               "local_10",
@@ -25427,7 +25372,7 @@
           },
           {
             "size_bytes": 488,
-            "calling_convention": "unknown",
+            "calling_convention": "__cdecl",
             "cfg": {
               "nodes": [
                 {
@@ -28460,7 +28405,7 @@
                 }
               ]
             },
-            "name": "_tri_c",
+            "name": "tri_c",
             "local_variables": [
               "local_10",
               "local_18",
@@ -28477,25 +28422,19 @@
           {
             "address": "0x1",
             "visibility": "IMPORTED",
-            "name": "___stack_chk_fail",
+            "name": "_printf",
             "type": "Function"
           },
           {
             "address": "0x2",
             "visibility": "IMPORTED",
-            "name": "_printf",
+            "name": "___stack_chk_fail",
             "type": "Function"
           },
           {
             "address": "0x3",
             "visibility": "IMPORTED",
             "name": "___stack_chk_guard",
-            "type": "Label"
-          },
-          {
-            "address": "0x1",
-            "visibility": "DEFAULT",
-            "name": "DAT_00000001",
             "type": "Label"
           },
           {
@@ -28543,8 +28482,8 @@
           {
             "address": "0x100000580",
             "visibility": "DEFAULT",
-            "name": "FUN_100000580",
-            "type": "Function"
+            "name": "LAB_100000580",
+            "type": "Label"
           },
           {
             "address": "0x10000059c",
@@ -28567,14 +28506,8 @@
           {
             "address": "0x1000005d8",
             "visibility": "DEFAULT",
-            "name": "FUN_1000005d8",
-            "type": "Function"
-          },
-          {
-            "address": "0x1000005dc",
-            "visibility": "IMPORTED",
-            "name": "mega_driver",
-            "type": "Function"
+            "name": "LAB_1000005d8",
+            "type": "Label"
           },
           {
             "address": "0x1000005ec",
@@ -28627,8 +28560,8 @@
           {
             "address": "0x100000668",
             "visibility": "DEFAULT",
-            "name": "FUN_100000668",
-            "type": "Function"
+            "name": "LAB_100000668",
+            "type": "Label"
           },
           {
             "address": "0x100000678",
@@ -28643,12 +28576,6 @@
             "type": "Label"
           },
           {
-            "address": "0x1000006e8",
-            "visibility": "IMPORTED",
-            "name": "driver",
-            "type": "Function"
-          },
-          {
             "address": "0x1000006f4",
             "visibility": "DEFAULT",
             "name": "LAB_1000006f4",
@@ -28658,25 +28585,25 @@
             "address": "0x10000074c",
             "visibility": "IMPORTED",
             "name": "_mixed_driver",
+            "type": "Label"
+          },
+          {
+            "address": "0x10000074c",
+            "visibility": "IMPORTED",
+            "name": "mixed_driver",
             "type": "Function"
           },
           {
             "address": "0x10000076c",
             "visibility": "DEFAULT",
-            "name": "FUN_10000076c",
-            "type": "Function"
+            "name": "LAB_10000076c",
+            "type": "Label"
           },
           {
             "address": "0x10000077c",
             "visibility": "DEFAULT",
             "name": "LAB_10000077c",
             "type": "Label"
-          },
-          {
-            "address": "0x1000007e4",
-            "visibility": "IMPORTED",
-            "name": "leaf_a",
-            "type": "Function"
           },
           {
             "address": "0x100000840",
@@ -28718,13 +28645,19 @@
             "address": "0x100000880",
             "visibility": "IMPORTED",
             "name": "_cfg_pressure",
+            "type": "Label"
+          },
+          {
+            "address": "0x100000880",
+            "visibility": "IMPORTED",
+            "name": "cfg_pressure",
             "type": "Function"
           },
           {
             "address": "0x1000008ac",
             "visibility": "DEFAULT",
-            "name": "FUN_1000008ac",
-            "type": "Function"
+            "name": "LAB_1000008ac",
+            "type": "Label"
           },
           {
             "address": "0x1000008bc",
@@ -28747,8 +28680,8 @@
           {
             "address": "0x1000008f8",
             "visibility": "DEFAULT",
-            "name": "FUN_1000008f8",
-            "type": "Function"
+            "name": "LAB_1000008f8",
+            "type": "Label"
           },
           {
             "address": "0x100000908",
@@ -28761,12 +28694,6 @@
             "visibility": "DEFAULT",
             "name": "LAB_100000934",
             "type": "Label"
-          },
-          {
-            "address": "0x100000940",
-            "visibility": "IMPORTED",
-            "name": "leaf_b",
-            "type": "Function"
           },
           {
             "address": "0x100000944",
@@ -28909,19 +28836,25 @@
           {
             "address": "0x100000b10",
             "visibility": "DEFAULT",
-            "name": "FUN_100000b10",
-            "type": "Function"
+            "name": "LAB_100000b10",
+            "type": "Label"
           },
           {
             "address": "0x100000b20",
             "visibility": "DEFAULT",
-            "name": "FUN_100000b20",
-            "type": "Function"
+            "name": "LAB_100000b20",
+            "type": "Label"
           },
           {
             "address": "0x100000b44",
             "visibility": "IMPORTED",
             "name": "_indirect_pressure",
+            "type": "Label"
+          },
+          {
+            "address": "0x100000b44",
+            "visibility": "IMPORTED",
+            "name": "indirect_pressure",
             "type": "Function"
           },
           {
@@ -28976,12 +28909,12 @@
             "address": "0x100000cc8",
             "visibility": "IMPORTED",
             "name": "_stack_layout_pressure",
-            "type": "Function"
+            "type": "Label"
           },
           {
-            "address": "0x100000ce4",
+            "address": "0x100000cc8",
             "visibility": "IMPORTED",
-            "name": "leaf_c",
+            "name": "stack_layout_pressure",
             "type": "Function"
           },
           {
@@ -29168,6 +29101,12 @@
             "address": "0x100001054",
             "visibility": "IMPORTED",
             "name": "_abi_pressure",
+            "type": "Label"
+          },
+          {
+            "address": "0x100001054",
+            "visibility": "IMPORTED",
+            "name": "abi_pressure",
             "type": "Function"
           },
           {
@@ -29222,48 +29161,96 @@
             "address": "0x100001220",
             "visibility": "IMPORTED",
             "name": "_rotmix",
+            "type": "Label"
+          },
+          {
+            "address": "0x100001220",
+            "visibility": "IMPORTED",
+            "name": "rotmix",
             "type": "Function"
           },
           {
             "address": "0x1000012b0",
             "visibility": "IMPORTED",
             "name": "_op_add",
+            "type": "Label"
+          },
+          {
+            "address": "0x1000012b0",
+            "visibility": "IMPORTED",
+            "name": "op_add",
             "type": "Function"
           },
           {
             "address": "0x1000012f4",
             "visibility": "IMPORTED",
             "name": "_op_xor",
+            "type": "Label"
+          },
+          {
+            "address": "0x1000012f4",
+            "visibility": "IMPORTED",
+            "name": "op_xor",
             "type": "Function"
           },
           {
             "address": "0x100001338",
             "visibility": "IMPORTED",
             "name": "_op_mul",
+            "type": "Label"
+          },
+          {
+            "address": "0x100001338",
+            "visibility": "IMPORTED",
+            "name": "op_mul",
             "type": "Function"
           },
           {
             "address": "0x100001384",
             "visibility": "IMPORTED",
             "name": "_op_shift",
+            "type": "Label"
+          },
+          {
+            "address": "0x100001384",
+            "visibility": "IMPORTED",
+            "name": "op_shift",
             "type": "Function"
           },
           {
             "address": "0x1000013dc",
             "visibility": "IMPORTED",
             "name": "_op_div",
+            "type": "Label"
+          },
+          {
+            "address": "0x1000013dc",
+            "visibility": "IMPORTED",
+            "name": "op_div",
             "type": "Function"
           },
           {
             "address": "0x100001444",
             "visibility": "IMPORTED",
             "name": "_op_logic",
+            "type": "Label"
+          },
+          {
+            "address": "0x100001444",
+            "visibility": "IMPORTED",
+            "name": "op_logic",
             "type": "Function"
           },
           {
             "address": "0x100001498",
             "visibility": "IMPORTED",
             "name": "_tri_a",
+            "type": "Label"
+          },
+          {
+            "address": "0x100001498",
+            "visibility": "IMPORTED",
+            "name": "tri_a",
             "type": "Function"
           },
           {
@@ -29318,6 +29305,12 @@
             "address": "0x100001560",
             "visibility": "IMPORTED",
             "name": "_tri_b",
+            "type": "Label"
+          },
+          {
+            "address": "0x100001560",
+            "visibility": "IMPORTED",
+            "name": "tri_b",
             "type": "Function"
           },
           {
@@ -29372,6 +29365,12 @@
             "address": "0x100001648",
             "visibility": "IMPORTED",
             "name": "_tri_c",
+            "type": "Label"
+          },
+          {
+            "address": "0x100001648",
+            "visibility": "IMPORTED",
+            "name": "tri_c",
             "type": "Function"
           },
           {
@@ -29509,19 +29508,25 @@
           {
             "address": "0x100001830",
             "visibility": "IMPORTED",
-            "name": "___stack_chk_fail",
+            "name": "_printf",
             "type": "Function"
           },
           {
             "address": "0x10000183c",
             "visibility": "IMPORTED",
-            "name": "_printf",
+            "name": "___stack_chk_fail",
             "type": "Function"
+          },
+          {
+            "address": "0x100001848",
+            "visibility": "DEFAULT",
+            "name": "s_%llu_100001848",
+            "type": "Label"
           },
           {
             "address": "0x100004000",
             "visibility": "DEFAULT",
-            "name": "PTR____stack_chk_fail_100004000",
+            "name": "PTR__printf_100004000",
             "type": "Label"
           },
           {
@@ -29533,7 +29538,7 @@
           {
             "address": "0x100004010",
             "visibility": "DEFAULT",
-            "name": "PTR__printf_100004010",
+            "name": "PTR____stack_chk_fail_100004010",
             "type": "Label"
           },
           {
@@ -29545,7 +29550,7 @@
           {
             "address": "0x100008000",
             "visibility": "IMPORTED",
-            "name": "fn_table",
+            "name": "g_guard",
             "type": "Label"
           },
           {
@@ -29555,9 +29560,9 @@
             "type": "Label"
           },
           {
-            "address": "0x100008018",
+            "address": "0x100008008",
             "visibility": "IMPORTED",
-            "name": "sink",
+            "name": "bin_table",
             "type": "Label"
           },
           {
@@ -29567,27 +29572,39 @@
             "type": "Label"
           },
           {
+            "address": "0x100008038",
+            "visibility": "IMPORTED",
+            "name": "tri_table",
+            "type": "Label"
+          },
+          {
             "address": "0x100008050",
             "visibility": "IMPORTED",
             "name": "_g_sink",
             "type": "Label"
           },
           {
+            "address": "0x100008050",
+            "visibility": "IMPORTED",
+            "name": "g_sink",
+            "type": "Label"
+          },
+          {
             "address": "0x10000c075",
             "visibility": "DEFAULT",
-            "name": "s____stack_chk_fail_10000c075",
+            "name": "s__printf_10000c075",
             "type": "Label"
           },
           {
-            "address": "0x10000c087",
+            "address": "0x10000c07d",
             "visibility": "DEFAULT",
-            "name": "s____stack_chk_guard_10000c087",
+            "name": "s____stack_chk_guard_10000c07d",
             "type": "Label"
           },
           {
-            "address": "0x10000c09a",
+            "address": "0x10000c090",
             "visibility": "DEFAULT",
-            "name": "s__printf_10000c09a",
+            "name": "s____stack_chk_fail_10000c090",
             "type": "Label"
           },
           {
@@ -29765,7 +29782,7 @@
       "schema_version": "1.0.0",
       "provenance": {
         "tool_name": "Radare2 Headless Analyser",
-        "timestamp": "2026-06-16T16:00:35-07:00",
+        "timestamp": "2026-06-16T17:15:34-07:00",
         "binary_path": "./t",
         "config": {}
       },
@@ -29778,78 +29795,6 @@
         "functions": [
           {
             "name": "__stack_chk_fail",
-            "entry_point": "0x100001830",
-            "size_bytes": 12,
-            "calling_convention": 1,
-            "local_variables": [],
-            "cfg": {
-              "nodes": [
-                {
-                  "id": "0x100001830",
-                  "size": 12,
-                  "instructions_count": 3,
-                  "estimated_instructions_count": 3,
-                  "instructions": [
-                    {
-                      "address": "0x100001830",
-                      "mnemonic": "adrp",
-                      "opcode": "adrp",
-                      "operands": [
-                        {
-                          "kind": "register",
-                          "value": "x16"
-                        },
-                        {
-                          "kind": "immediate",
-                          "value": 4294983680
-                        }
-                      ],
-                      "size_bytes": 4,
-                      "raw": "adrp x16, reloc.__stack_chk_fail",
-                      "source": "radare2"
-                    },
-                    {
-                      "address": "0x100001834",
-                      "mnemonic": "ldr",
-                      "opcode": "ldr",
-                      "operands": [
-                        {
-                          "kind": "register",
-                          "value": "x16"
-                        },
-                        {
-                          "kind": "memory",
-                          "base": "x16",
-                          "offset": 0,
-                          "size_bytes": null
-                        }
-                      ],
-                      "size_bytes": 4,
-                      "raw": "ldr x16, [x16]",
-                      "source": "radare2"
-                    },
-                    {
-                      "address": "0x100001838",
-                      "mnemonic": "br",
-                      "opcode": "br",
-                      "operands": [
-                        {
-                          "kind": "register",
-                          "value": "x16"
-                        }
-                      ],
-                      "size_bytes": 4,
-                      "raw": "br x16",
-                      "source": "radare2"
-                    }
-                  ]
-                }
-              ],
-              "edges": []
-            }
-          },
-          {
-            "name": "printf",
             "entry_point": "0x10000183c",
             "size_bytes": 16,
             "calling_convention": 1,
@@ -29877,7 +29822,7 @@
                         }
                       ],
                       "size_bytes": 4,
-                      "raw": "adrp x16, reloc.__stack_chk_fail",
+                      "raw": "adrp x16, reloc.printf",
                       "source": "radare2"
                     },
                     {
@@ -29927,6 +29872,84 @@
                 }
               ],
               "edges": []
+            }
+          },
+          {
+            "name": "printf",
+            "entry_point": "0x100001830",
+            "size_bytes": 12,
+            "calling_convention": 0,
+            "local_variables": [],
+            "cfg": {
+              "nodes": [
+                {
+                  "id": "0x100001830",
+                  "size": 12,
+                  "instructions_count": 3,
+                  "estimated_instructions_count": 3,
+                  "instructions": [
+                    {
+                      "address": "0x100001830",
+                      "mnemonic": "adrp",
+                      "opcode": "adrp",
+                      "operands": [
+                        {
+                          "kind": "register",
+                          "value": "x16"
+                        },
+                        {
+                          "kind": "immediate",
+                          "value": 4294983680
+                        }
+                      ],
+                      "size_bytes": 4,
+                      "raw": "adrp x16, reloc.printf",
+                      "source": "radare2"
+                    },
+                    {
+                      "address": "0x100001834",
+                      "mnemonic": "ldr",
+                      "opcode": "ldr",
+                      "operands": [
+                        {
+                          "kind": "register",
+                          "value": "x16"
+                        },
+                        {
+                          "kind": "memory",
+                          "base": "x16",
+                          "offset": 0,
+                          "size_bytes": null
+                        }
+                      ],
+                      "size_bytes": 4,
+                      "raw": "ldr x16, [x16]",
+                      "source": "radare2"
+                    },
+                    {
+                      "address": "0x100001838",
+                      "mnemonic": "br",
+                      "opcode": "br",
+                      "operands": [
+                        {
+                          "kind": "register",
+                          "value": "x16"
+                        }
+                      ],
+                      "size_bytes": 4,
+                      "raw": "br x16",
+                      "source": "radare2"
+                    }
+                  ]
+                }
+              ],
+              "edges": [
+                {
+                  "source": "0x100001830",
+                  "target": "0x10000183c",
+                  "type": "unconditional"
+                }
+              ]
             }
           },
           {
@@ -32429,7 +32452,7 @@
                       "operands": [
                         {
                           "kind": "immediate",
-                          "value": 4294973500
+                          "value": 4294973488
                         }
                       ],
                       "size_bytes": 4,
@@ -40647,7 +40670,7 @@
                         }
                       ],
                       "size_bytes": 4,
-                      "raw": "adrp x8, reloc.__stack_chk_fail",
+                      "raw": "adrp x8, reloc.printf",
                       "source": "radare2"
                     },
                     {
@@ -45019,7 +45042,7 @@
                         }
                       ],
                       "size_bytes": 4,
-                      "raw": "adrp x8, reloc.__stack_chk_fail",
+                      "raw": "adrp x8, reloc.printf",
                       "source": "radare2"
                     },
                     {
@@ -45135,7 +45158,7 @@
                       "operands": [
                         {
                           "kind": "immediate",
-                          "value": 4294973488
+                          "value": 4294973500
                         }
                       ],
                       "size_bytes": 4,
@@ -56630,13 +56653,13 @@
             "visibility": "static"
           },
           {
-            "address": "0x100001830",
+            "address": "0x10000183c",
             "name": "__stack_chk_fail",
             "type": "function",
             "visibility": "static"
           },
           {
-            "address": "0x10000183c",
+            "address": "0x100001830",
             "name": "printf",
             "type": "function",
             "visibility": "static"
@@ -56740,24 +56763,24 @@
         ],
         "call_graph": {
           "nodes": [
-            "_op_shift",
-            "_op_xor",
             "__stack_chk_fail",
-            "_cfg_pressure",
-            "printf",
-            "_stack_layout_pressure",
-            "_op_mul",
             "_op_add",
-            "_rotmix",
-            "_indirect_pressure",
+            "_tri_b",
             "_tri_c",
-            "_tri_a",
-            "_op_div",
-            "_main",
             "_op_logic",
             "_mixed_driver",
-            "_tri_b",
-            "_abi_pressure"
+            "_rotmix",
+            "_abi_pressure",
+            "_tri_a",
+            "_op_mul",
+            "_indirect_pressure",
+            "_op_shift",
+            "_stack_layout_pressure",
+            "_op_xor",
+            "_main",
+            "printf",
+            "_cfg_pressure",
+            "_op_div"
           ],
           "edges": [
             {
