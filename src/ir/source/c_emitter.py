@@ -382,10 +382,15 @@ def _emit_function(
     # End-of-function return — Phase 5.4 strict placement rules
     _emit_fallback_return(fn, replacer, temp_body_lines)
 
+    # Phase 5.7: adapt condition lines
+    from src.ir.source.condition_adapter import adapt_condition_lines
+    adapted_body_lines, adapter_stats = adapt_condition_lines(temp_body_lines)
+    fn.condition_adapter = adapter_stats
+
     # Phase 5.6: run declaration analysis on final emitted body lines
     from src.ir.source.declaration_recovery import analyze_declarations_for_function
     decls_data = analyze_declarations_for_function(
-        fn.name, fn.return_type, fn.parameters, fn.lowered_blocks, fn.structured_regions, emitted_body_lines=temp_body_lines
+        fn.name, fn.return_type, fn.parameters, fn.lowered_blocks, fn.structured_regions, emitted_body_lines=adapted_body_lines
     )
     
     # Store global call helpers if collector is provided
@@ -406,7 +411,7 @@ def _emit_function(
         lines.append("")
 
     # Emit actual body lines
-    lines.extend(temp_body_lines)
+    lines.extend(adapted_body_lines)
 
     lines.append("}")
     lines.append("")
@@ -569,12 +574,37 @@ def emit_recovered_c(
     artifact    : The SourceReconstructionArtifact to emit.
     output_path : Path to write the recovered.c file.
     """
+    # 1. Pre-generate function definition lines and collect call helpers/statistics
+    function_definitions: List[Tuple[ReconstructedFunction, List[str]]] = []
+    global_call_helpers: Set[str] = set()
+    total_adapters_inserted = 0
+    total_evidence_adapters = 0
+    total_unknown_adapters = 0
+
+    for fn in artifact.functions:
+        fn_lines = []
+        _emit_function(fn, fn_lines, global_call_helpers)
+        stats = fn.condition_adapter
+        if stats:
+            total_adapters_inserted += stats.get("condition_adapters_inserted", 0)
+            total_evidence_adapters += stats.get("condition_evidence_adapters", 0)
+            total_unknown_adapters += stats.get("condition_unknown_adapters", 0)
+        function_definitions.append((fn, fn_lines))
+
+    unknown_condition_helpers_emitted = 1 if total_adapters_inserted > 0 else 0
+
+    # Update artifact summary counts
+    artifact.summary["condition_adapters_inserted"] = total_adapters_inserted
+    artifact.summary["condition_evidence_adapters"] = total_evidence_adapters
+    artifact.summary["condition_unknown_adapters"] = total_unknown_adapters
+    artifact.summary["unknown_condition_helpers_emitted"] = unknown_condition_helpers_emitted
+
     lines: List[str] = []
 
     # File header
     timestamp = datetime.now(tz=None).strftime("%Y-%m-%dT%H:%M:%SZ")
     lines.append("/*")
-    lines.append(" * recovered.c — Phase 5.6 Conservative Compile-Shape Reconstruction")
+    lines.append(" * recovered.c — Phase 5.7 Syntax-Safe Conservative Reconstruction")
     lines.append(f" * Schema version: {artifact.schema_version}")
     lines.append(f" * Generated: {timestamp}")
     lines.append(" *")
@@ -597,7 +627,7 @@ def emit_recovered_c(
     lines.append("#include <stdint.h>")
     lines.append("#include <stddef.h>")
     lines.append("")
-    
+
     # Custom type definitions
     lines.append("typedef uint8_t u8;")
     lines.append("typedef uint16_t u16;")
@@ -609,14 +639,19 @@ def emit_recovered_c(
     lines.append("typedef int64_t i64;")
     lines.append("")
 
-    # 1. Pre-generate function definition lines and collect call helpers
-    function_definitions: List[Tuple[ReconstructedFunction, List[str]]] = []
-    global_call_helpers: Set[str] = set()
-    
-    for fn in artifact.functions:
-        fn_lines = []
-        _emit_function(fn, fn_lines, global_call_helpers)
-        function_definitions.append((fn, fn_lines))
+    # Helper function / Macro Design
+    if unknown_condition_helpers_emitted == 1:
+        lines.append("/*")
+        lines.append(" * HEPHAESTUS_UNKNOWN_COND is a syntax adapter for unrecovered branch")
+        lines.append(" * predicates. Its argument preserves low-level evidence. The return value is")
+        lines.append(" * not a recovered program condition and must not be used for behavioral claims.")
+        lines.append(" */")
+        lines.append("static int HEPHAESTUS_UNKNOWN_COND(const char *evidence)")
+        lines.append("{")
+        lines.append("    (void)evidence;")
+        lines.append("    return 0;")
+        lines.append("}")
+        lines.append("")
 
     # Forward declarations
     if artifact.functions:

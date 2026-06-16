@@ -124,14 +124,14 @@ def _make_sem_func(
 # ---------------------------------------------------------------------------
 
 class TestSchemaVersion:
-    def test_schema_version_is_5_6_0(self):
-        assert SCHEMA_VERSION == "5.6.0"
-
+    def test_schema_version_is_5_7_0(self):
+        assert SCHEMA_VERSION == "5.7.0"
+ 
     def test_artifact_schema_version(self):
         artifact = SourceReconstructionArtifact()
-        assert artifact.schema_version == "5.6.0"
+        assert artifact.schema_version == "5.7.0"
         d = artifact.to_dict()
-        assert d["schema_version"] == "5.6.0"
+        assert d["schema_version"] == "5.7.0"
 
 
 # ---------------------------------------------------------------------------
@@ -326,7 +326,7 @@ class TestBuildSourceReconstruction:
         )])
 
         artifact = build_source_reconstruction(ir, regions, sem)
-        assert artifact.schema_version == "5.6.0"
+        assert artifact.schema_version == "5.7.0"
         assert len(artifact.functions) == 1
 
         fn = artifact.functions[0]
@@ -633,7 +633,7 @@ class TestCEmitter:
 
         # All blocks should appear in comments
         assert "block b1" in output
-        assert "if (/* condition unknown: block b2 */)" in output
+        assert 'if (HEPHAESTUS_UNKNOWN_COND("condition unknown: block b2"))' in output
         assert "block b3" in output
         assert "block b4" in output
         assert "block b5" in output
@@ -651,7 +651,7 @@ class TestCEmitter:
         )
         artifact = SourceReconstructionArtifact(functions=[fn])
         output = self._emit_to_string(artifact)
-        assert "while (/* condition unknown: loop header b1 */)" in output
+        assert 'while (HEPHAESTUS_UNKNOWN_COND("condition unknown: loop header b1"))' in output
         assert "block b2" in output
 
     def test_unstructured_region_comments(self):
@@ -822,8 +822,8 @@ class TestEmitter:
             write_source_reconstruction_artifact(artifact, path)
             with open(path, "r") as f:
                 data = json.load(f)
-            assert data["schema_version"] == "5.6.0"
-            assert data["provenance"]["phase"] == "5.6"
+            assert data["schema_version"] == "5.7.0"
+            assert data["provenance"]["phase"] == "5.7"
             assert len(data["data"]["functions"]) == 1
             assert data["data"]["functions"][0]["name"] == "fn1"
             assert data["data"]["functions"][0]["canonical_name"] == "fn1"

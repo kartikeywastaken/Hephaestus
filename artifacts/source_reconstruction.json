@@ -1,8 +1,8 @@
 {
-  "schema_version": "5.6.0",
+  "schema_version": "5.7.0",
   "provenance": {
-    "phase": "5.6",
-    "description": "Conservative source reconstruction with declaration and compile-shape stabilization",
+    "phase": "5.7",
+    "description": "Conservative source reconstruction with syntax-safe unknown condition adapters",
     "source_ir": "unified_ir.json",
     "source_structuring": "structuring_regions.json",
     "source_semantics": "phase4_semantics.json",
@@ -60,7 +60,11 @@
     "call_helpers_declared_total": 5,
     "declarations_total": 79,
     "functions_with_declarations": 8,
-    "compile_shape_warnings_total": 10
+    "compile_shape_warnings_total": 10,
+    "condition_adapters_inserted": 10,
+    "condition_evidence_adapters": 10,
+    "condition_unknown_adapters": 0,
+    "unknown_condition_helpers_emitted": 1
   },
   "data": {
     "functions": [
@@ -5034,17 +5038,17 @@
           "warnings": []
         },
         "declaration_recovery": {
-          "pseudo_registers_declared": 15,
+          "pseudo_registers_declared": 13,
           "pseudo_stack_slots_declared": 11,
           "call_helpers_declared": 4,
-          "declarations_total": 26,
+          "declarations_total": 24,
           "declarations": [
             {
               "name": "tmp_sp",
               "kind": "pseudo_register",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000460",
                 "0x100000468",
@@ -5058,29 +5062,16 @@
               "kind": "pseudo_register",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000004c8",
                 "0x1000004cc",
                 "0x1000004e8",
                 "0x1000004ec",
-                "0x1000004fc",
-                "0x100000510",
                 "0x10000053c",
                 "0x100000540",
-                "0x100000544"
-              ],
-              "warnings": []
-            },
-            {
-              "name": "tmp_x1",
-              "kind": "pseudo_register",
-              "ctype": "u64",
-              "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
-              "evidence": [
-                "0x1000004fc",
-                "0x100000510"
+                "0x100000584",
+                "0x100000840"
               ],
               "warnings": []
             },
@@ -5089,23 +5080,12 @@
               "kind": "pseudo_register",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000004dc",
                 "0x1000004f4",
                 "0x1000004f8",
-                "0x1000004fc"
-              ],
-              "warnings": []
-            },
-            {
-              "name": "tmp_x3",
-              "kind": "pseudo_register",
-              "ctype": "u64",
-              "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
-              "evidence": [
-                "0x1000004fc"
+                "0x100000584"
               ],
               "warnings": []
             },
@@ -5114,7 +5094,7 @@
               "kind": "pseudo_register",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000478",
                 "0x1000004e8",
@@ -5131,7 +5111,7 @@
               "kind": "pseudo_register",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000004ac",
                 "0x1000004b0",
@@ -5148,7 +5128,7 @@
               "kind": "pseudo_register",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000004a8",
                 "0x1000004b0",
@@ -5162,7 +5142,7 @@
               "kind": "pseudo_register",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x10000051c",
                 "0x100000530"
@@ -5174,7 +5154,7 @@
               "kind": "pseudo_register",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000464",
                 "0x100000468",
@@ -5189,7 +5169,7 @@
               "kind": "pseudo_register",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000464",
                 "0x100000578"
@@ -5201,12 +5181,13 @@
               "kind": "pseudo_register",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000500",
                 "0x10000050c",
                 "0x100000514",
-                "0x100000574"
+                "0x100000574",
+                "0x1000006b4"
               ],
               "warnings": []
             },
@@ -5215,11 +5196,12 @@
               "kind": "pseudo_register",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000004d0",
                 "0x1000004d4",
-                "0x1000004e4"
+                "0x1000004e4",
+                "0x100000584"
               ],
               "warnings": []
             },
@@ -5228,7 +5210,7 @@
               "kind": "pseudo_register",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000004a0",
                 "0x1000004b0",
@@ -5250,7 +5232,7 @@
               "kind": "pseudo_register",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x10000049c",
                 "0x1000004a0",
@@ -5264,7 +5246,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000478",
                 "0x100000554"
@@ -5276,7 +5258,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x10000047c"
               ],
@@ -5287,7 +5269,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000004d4",
                 "0x1000004e4"
@@ -5299,7 +5281,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000004cc",
                 "0x1000004ec"
@@ -5311,7 +5293,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000550",
                 "0x100000574"
@@ -5323,7 +5305,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000514",
                 "0x100000548"
@@ -5335,7 +5317,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000500",
                 "0x100000508",
@@ -5348,7 +5330,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000004f0",
                 "0x100000518"
@@ -5360,7 +5342,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000480",
                 "0x1000004a8",
@@ -5376,7 +5358,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000464",
                 "0x100000578"
@@ -5388,7 +5370,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000464",
                 "0x100000578"
@@ -5397,7 +5379,6 @@
             }
           ],
           "warnings": [
-            "declaration_scan_from_lowered_blocks_only",
             "width_conflict_promoted_to_u64:stack_56"
           ],
           "call_helpers": [
@@ -5406,6 +5387,12 @@
             "call_0x100000840",
             "call_0x10000084c"
           ]
+        },
+        "condition_adapter": {
+          "condition_adapters_inserted": 1,
+          "condition_evidence_adapters": 1,
+          "condition_unknown_adapters": 0,
+          "warnings": []
         }
       },
       {
@@ -9484,17 +9471,17 @@
           "warnings": []
         },
         "declaration_recovery": {
-          "pseudo_registers_declared": 12,
+          "pseudo_registers_declared": 10,
           "pseudo_stack_slots_declared": 9,
           "call_helpers_declared": 1,
-          "declarations_total": 21,
+          "declarations_total": 19,
           "declarations": [
             {
               "name": "tmp_sp",
               "kind": "pseudo_register",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000584",
                 "0x10000058c",
@@ -9507,21 +9494,9 @@
               "kind": "pseudo_register",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
-                "0x100000590",
-                "0x1000005fc"
-              ],
-              "warnings": []
-            },
-            {
-              "name": "tmp_x1",
-              "kind": "pseudo_register",
-              "ctype": "u64",
-              "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
-              "evidence": [
-                "0x1000005fc"
+                "0x100000590"
               ],
               "warnings": []
             },
@@ -9530,7 +9505,7 @@
               "kind": "pseudo_register",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000598"
               ],
@@ -9541,23 +9516,9 @@
               "kind": "pseudo_register",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
-                "0x1000005bc",
-                "0x1000005c4",
                 "0x1000005d8"
-              ],
-              "warnings": []
-            },
-            {
-              "name": "tmp_x9",
-              "kind": "pseudo_register",
-              "ctype": "u64",
-              "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
-              "evidence": [
-                "0x1000005c0",
-                "0x1000005c4"
               ],
               "warnings": []
             },
@@ -9566,7 +9527,7 @@
               "kind": "pseudo_register",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000588",
                 "0x10000058c",
@@ -9579,7 +9540,7 @@
               "kind": "pseudo_register",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000588",
                 "0x100000668"
@@ -9591,12 +9552,13 @@
               "kind": "pseudo_register",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000005e8",
                 "0x1000005f8",
                 "0x100000604",
-                "0x100000664"
+                "0x100000664",
+                "0x1000007a8"
               ],
               "warnings": []
             },
@@ -9605,7 +9567,7 @@
               "kind": "pseudo_register",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000594",
                 "0x1000005e0"
@@ -9617,16 +9579,12 @@
               "kind": "pseudo_register",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
-                "0x1000005c4",
-                "0x1000005c8",
-                "0x1000005cc",
                 "0x1000005f4",
                 "0x100000600",
                 "0x100000604",
                 "0x100000614",
-                "0x10000062c",
                 "0x100000644",
                 "0x100000648",
                 "0x10000064c",
@@ -9641,9 +9599,8 @@
               "kind": "pseudo_register",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
-                "0x1000005ac",
                 "0x100000640",
                 "0x100000648"
               ],
@@ -9654,10 +9611,9 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
-                "0x100000590",
-                "0x1000005bc"
+                "0x100000590"
               ],
               "warnings": []
             },
@@ -9666,10 +9622,9 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
-                "0x100000594",
-                "0x1000005ac"
+                "0x100000594"
               ],
               "warnings": []
             },
@@ -9678,7 +9633,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000005f4",
                 "0x100000600"
@@ -9690,10 +9645,8 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
-                "0x1000005c8",
-                "0x1000005cc",
                 "0x1000005e0",
                 "0x1000005f8"
               ],
@@ -9702,26 +9655,23 @@
             {
               "name": "stack_16",
               "kind": "pseudo_stack_slot",
-              "ctype": "u64",
+              "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000005a0",
-                "0x1000005c0",
                 "0x100000640",
                 "0x100000654",
                 "0x10000065c"
               ],
-              "warnings": [
-                "width_conflict_promoted_to_u64"
-              ]
+              "warnings": []
             },
             {
               "name": "stack_20",
               "kind": "pseudo_stack_slot",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x10000059c",
                 "0x1000005e8",
@@ -9736,7 +9686,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000598",
                 "0x1000005d8"
@@ -9748,7 +9698,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000588",
                 "0x100000668"
@@ -9760,7 +9710,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000588",
                 "0x100000668"
@@ -9768,13 +9718,16 @@
               "warnings": []
             }
           ],
-          "warnings": [
-            "declaration_scan_from_lowered_blocks_only",
-            "width_conflict_promoted_to_u64:stack_16"
-          ],
+          "warnings": [],
           "call_helpers": [
             "call_0x1000007a8"
           ]
+        },
+        "condition_adapter": {
+          "condition_adapters_inserted": 3,
+          "condition_evidence_adapters": 3,
+          "condition_unknown_adapters": 0,
+          "warnings": []
         }
       },
       {
@@ -10489,7 +10442,7 @@
               "kind": "pseudo_register",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000674",
                 "0x10000068c"
@@ -10501,7 +10454,7 @@
               "kind": "pseudo_register",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000678",
                 "0x100000688"
@@ -10513,7 +10466,7 @@
               "kind": "pseudo_register",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x10000067c"
               ],
@@ -10524,7 +10477,7 @@
               "kind": "pseudo_register",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000680",
                 "0x100000688"
@@ -10536,7 +10489,7 @@
               "kind": "pseudo_register",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000684",
                 "0x100000688"
@@ -10548,7 +10501,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x10000067c",
                 "0x100000684"
@@ -10560,7 +10513,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000678",
                 "0x100000680"
@@ -10568,10 +10521,14 @@
               "warnings": []
             }
           ],
-          "warnings": [
-            "declaration_scan_from_lowered_blocks_only"
-          ],
+          "warnings": [],
           "call_helpers": []
+        },
+        "condition_adapter": {
+          "condition_adapters_inserted": 0,
+          "condition_evidence_adapters": 0,
+          "condition_unknown_adapters": 0,
+          "warnings": []
         }
       },
       {
@@ -11286,7 +11243,7 @@
               "kind": "pseudo_register",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000694",
                 "0x1000006ac"
@@ -11298,7 +11255,7 @@
               "kind": "pseudo_register",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000698",
                 "0x1000006a8"
@@ -11310,7 +11267,7 @@
               "kind": "pseudo_register",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x10000069c"
               ],
@@ -11321,7 +11278,7 @@
               "kind": "pseudo_register",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000006a0",
                 "0x1000006a8"
@@ -11333,7 +11290,7 @@
               "kind": "pseudo_register",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000006a4",
                 "0x1000006a8"
@@ -11345,7 +11302,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x10000069c",
                 "0x1000006a4"
@@ -11357,7 +11314,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000698",
                 "0x1000006a0"
@@ -11365,10 +11322,14 @@
               "warnings": []
             }
           ],
-          "warnings": [
-            "declaration_scan_from_lowered_blocks_only"
-          ],
+          "warnings": [],
           "call_helpers": []
+        },
+        "condition_adapter": {
+          "condition_adapters_inserted": 0,
+          "condition_evidence_adapters": 0,
+          "condition_unknown_adapters": 0,
+          "warnings": []
         }
       },
       {
@@ -15269,7 +15230,7 @@
               "kind": "pseudo_register",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000006b4",
                 "0x1000007a0"
@@ -15281,7 +15242,7 @@
               "kind": "pseudo_register",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000006b8",
                 "0x10000079c"
@@ -15293,17 +15254,13 @@
               "kind": "pseudo_register",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000006bc",
-                "0x1000006fc",
-                "0x100000708",
-                "0x10000070c",
                 "0x100000720",
                 "0x100000734",
                 "0x100000744",
                 "0x10000074c",
-                "0x100000758",
                 "0x10000076c",
                 "0x100000778",
                 "0x100000780",
@@ -15318,11 +15275,8 @@
               "kind": "pseudo_register",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
-                "0x1000006f8",
-                "0x1000006fc",
-                "0x100000700",
                 "0x100000720",
                 "0x10000072c",
                 "0x100000734"
@@ -15334,10 +15288,8 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
-                "0x100000708",
-                "0x10000070c",
                 "0x10000072c"
               ],
               "warnings": []
@@ -15347,10 +15299,9 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000006dc",
-                "0x100000700",
                 "0x100000744",
                 "0x10000074c"
               ],
@@ -15361,7 +15312,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000006c4",
                 "0x10000078c",
@@ -15374,7 +15325,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000778",
                 "0x100000780",
@@ -15387,7 +15338,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000006b8",
                 "0x1000006bc"
@@ -15395,10 +15346,14 @@
               "warnings": []
             }
           ],
-          "warnings": [
-            "declaration_scan_from_lowered_blocks_only"
-          ],
+          "warnings": [],
           "call_helpers": []
+        },
+        "condition_adapter": {
+          "condition_adapters_inserted": 4,
+          "condition_evidence_adapters": 4,
+          "condition_unknown_adapters": 0,
+          "warnings": []
         }
       },
       {
@@ -17874,7 +17829,7 @@
               "kind": "pseudo_register",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000007a8",
                 "0x100000838"
@@ -17886,7 +17841,7 @@
               "kind": "pseudo_register",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000007ac",
                 "0x100000834"
@@ -17898,12 +17853,9 @@
               "kind": "pseudo_register",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000007b0",
-                "0x1000007d8",
-                "0x1000007e0",
-                "0x1000007ec",
                 "0x100000804",
                 "0x100000810",
                 "0x100000814",
@@ -17919,12 +17871,8 @@
               "kind": "pseudo_register",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
-                "0x1000007d4",
-                "0x1000007d8",
-                "0x1000007dc",
-                "0x1000007e0",
                 "0x100000800",
                 "0x100000804"
               ],
@@ -17935,10 +17883,9 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000007b8",
-                "0x1000007dc",
                 "0x100000824",
                 "0x10000082c"
               ],
@@ -17949,7 +17896,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000810",
                 "0x100000818",
@@ -17962,7 +17909,7 @@
               "kind": "pseudo_stack_slot",
               "ctype": "u32",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x1000007ac",
                 "0x1000007b0"
@@ -17970,10 +17917,14 @@
               "warnings": []
             }
           ],
-          "warnings": [
-            "declaration_scan_from_lowered_blocks_only"
-          ],
+          "warnings": [],
           "call_helpers": []
+        },
+        "condition_adapter": {
+          "condition_adapters_inserted": 2,
+          "condition_evidence_adapters": 2,
+          "condition_unknown_adapters": 0,
+          "warnings": []
         }
       },
       {
@@ -18275,7 +18226,7 @@
               "kind": "pseudo_register",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x10000084c",
                 "0x100000850"
@@ -18283,10 +18234,14 @@
               "warnings": []
             }
           ],
-          "warnings": [
-            "declaration_scan_from_lowered_blocks_only"
-          ],
+          "warnings": [],
           "call_helpers": []
+        },
+        "condition_adapter": {
+          "condition_adapters_inserted": 0,
+          "condition_evidence_adapters": 0,
+          "condition_unknown_adapters": 0,
+          "warnings": []
         }
       },
       {
@@ -18576,7 +18531,7 @@
               "kind": "pseudo_register",
               "ctype": "u64",
               "scope": "function",
-              "source": "identifier_usage_scan_lowered_blocks_only",
+              "source": "identifier_usage_scan",
               "evidence": [
                 "0x100000840",
                 "0x100000844"
@@ -18584,10 +18539,14 @@
               "warnings": []
             }
           ],
-          "warnings": [
-            "declaration_scan_from_lowered_blocks_only"
-          ],
+          "warnings": [],
           "call_helpers": []
+        },
+        "condition_adapter": {
+          "condition_adapters_inserted": 0,
+          "condition_evidence_adapters": 0,
+          "condition_unknown_adapters": 0,
+          "warnings": []
         }
       }
     ],
@@ -18643,7 +18602,11 @@
       "call_helpers_declared_total": 5,
       "declarations_total": 79,
       "functions_with_declarations": 8,
-      "compile_shape_warnings_total": 10
+      "compile_shape_warnings_total": 10,
+      "condition_adapters_inserted": 10,
+      "condition_evidence_adapters": 10,
+      "condition_unknown_adapters": 0,
+      "unknown_condition_helpers_emitted": 1
     }
   }
 }

@@ -209,7 +209,7 @@ class TestReturnCallRefinement:
         )
         artifact = SourceReconstructionArtifact(functions=[fn])
         c_code = self._emit_to_string(artifact)
-        assert "while (/* condition unknown: loop header 0x1000 */) {" in c_code
+        assert 'while (HEPHAESTUS_UNKNOWN_COND("condition unknown: loop header 0x1000")) {' in c_code
         assert "tmp_w8 = tmp_w8 + 1;" in c_code
 
     # 10. No fake conditions
@@ -267,9 +267,9 @@ class TestReturnCallRefinement:
 
     # 12. Schema and summary validation
     def test_12_schema_and_summary_validation(self):
-        assert SCHEMA_VERSION == "5.6.0"
+        assert SCHEMA_VERSION == "5.7.0"
         artifact = SourceReconstructionArtifact()
-        assert artifact.schema_version == "5.6.0"
+        assert artifact.schema_version == "5.7.0"
         s = artifact.summary
         assert "return_sites_total" in s
         assert "return_sites_with_value" in s

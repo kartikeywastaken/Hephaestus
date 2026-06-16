@@ -1,7 +1,7 @@
 /*
- * recovered.c — Phase 5.6 Conservative Compile-Shape Reconstruction
- * Schema version: 5.6.0
- * Generated: 2026-06-16T10:22:43Z
+ * recovered.c — Phase 5.7 Syntax-Safe Conservative Reconstruction
+ * Schema version: 5.7.0
+ * Generated: 2026-06-16T10:40:12Z
  *
  * AUTO-GENERATED — DO NOT EDIT
  *
@@ -22,6 +22,17 @@ typedef int8_t i8;
 typedef int16_t i16;
 typedef int32_t i32;
 typedef int64_t i64;
+
+/*
+ * HEPHAESTUS_UNKNOWN_COND is a syntax adapter for unrecovered branch
+ * predicates. Its argument preserves low-level evidence. The return value is
+ * not a recovered program condition and must not be used for behavioral claims.
+ */
+static int HEPHAESTUS_UNKNOWN_COND(const char *evidence)
+{
+    (void)evidence;
+    return 0;
+}
 
 /* ================================================== */
 /*                 Forward Declarations                */
@@ -100,7 +111,7 @@ int32_t main(int32_t argc, void * argv)
     /* loop kind: while_like */
     /* loop header: 0x100000488 */
     /* loop exits: ['0x1000004c8'] */
-    while (/* condition evidence: b.ge at 0x100000490 after subs at 0x10000048c; target 0x1000004c8; loop polarity inverted */) {
+    while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x100000490 after subs at 0x10000048c; target 0x1000004c8; loop polarity inverted")) {
         /* block 0x100000488 */
         tmp_w8 = stack_56; /* ldr w8,[sp, #0x38] */
         /* 0x10000048c: unsupported instruction: subs w8,w8,#0xa */
@@ -227,10 +238,10 @@ uint64_t reduce_weird(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg_
     /* loop kind: while_like */
     /* loop header: 0x1000005a8 */
     /* loop exits: ['0x100000620', '0x100000664'] */
-    while (/* condition evidence: b.ge at 0x1000005b4 after subs at 0x1000005b0; target 0x100000664; loop polarity inverted */) {
+    while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x1000005b4 after subs at 0x1000005b0; target 0x100000664; loop polarity inverted")) {
         /* if/else condition block: 0x1000005a8 */
         /* merge block: 0x100000610 */
-        if (/* condition evidence: b.ge at 0x1000005b4 after subs at 0x1000005b0; target 0x100000664 */) {
+        if (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x1000005b4 after subs at 0x1000005b0; target 0x100000664")) {
             /* block 0x1000005d4 */
             /* branch to 0x1000005d8 */ /* b 0x1000005d8 */
             /* block 0x1000005d8 */
@@ -260,7 +271,7 @@ uint64_t reduce_weird(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg_
         /* 0x10000061c: unsupported instruction: b.ne 0x100000628 */
         /* if/else condition block: 0x100000628 */
         /* merge block: 0x100000654 */
-        if (/* condition evidence: b.ne at 0x100000634 after subs at 0x100000630; target 0x100000640; polarity inverted */) {
+        if (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ne at 0x100000634 after subs at 0x100000630; target 0x100000640; polarity inverted")) {
             /* block 0x100000638 */
             /* branch to 0x10000063c */ /* b 0x10000063c */
             /* block 0x10000063c */
@@ -388,7 +399,7 @@ uint64_t nested_control(int32_t arg1, int32_t arg_20h)
     /* loop kind: while_like */
     /* loop header: 0x1000006cc */
     /* loop exits: ['0x10000079c'] */
-    while (/* condition evidence: b.ge at 0x1000006d4 after subs at 0x1000006d0; target 0x10000079c; loop polarity inverted */) {
+    while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x1000006d4 after subs at 0x1000006d0; target 0x10000079c; loop polarity inverted")) {
         /* block 0x1000006cc */
         tmp_w8 = stack_20; /* ldr w8,[sp, #0x14] */
         /* 0x1000006d0: unsupported instruction: subs w8,w8,#0x4 */
@@ -401,10 +412,10 @@ uint64_t nested_control(int32_t arg1, int32_t arg_20h)
         /* loop kind: while_like */
         /* loop header: 0x1000006e4 */
         /* loop exits: ['0x100000754'] */
-        while (/* condition evidence: b.ge at 0x1000006ec after subs at 0x1000006e8; target 0x100000754; loop polarity inverted */) {
+        while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x1000006ec after subs at 0x1000006e8; target 0x100000754; loop polarity inverted")) {
             /* if/else condition block: 0x1000006e4 */
             /* merge block: 0x100000740 */
-            if (/* condition evidence: b.ge at 0x1000006ec after subs at 0x1000006e8; target 0x100000754 */) {
+            if (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x1000006ec after subs at 0x1000006e8; target 0x100000754")) {
                 /* block 0x100000714 */
                 /* branch to 0x100000718 */ /* b 0x100000718 */
                 /* block 0x100000718 */
@@ -431,7 +442,7 @@ uint64_t nested_control(int32_t arg1, int32_t arg_20h)
         }
         /* if/else condition block: 0x100000754 */
         /* merge block: 0x100000788 */
-        if (/* condition evidence: b.ne at 0x100000760 after subs at 0x10000075c; target 0x100000778; polarity inverted */) {
+        if (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ne at 0x100000760 after subs at 0x10000075c; target 0x100000778; polarity inverted")) {
             /* block 0x100000764 */
             /* branch to 0x100000768 */ /* b 0x100000768 */
             /* block 0x100000768 */
@@ -491,10 +502,10 @@ uint64_t mix_value(uint64_t arg1, uint64_t arg_10h)
     /* loop kind: while_like */
     /* loop header: 0x1000007c0 */
     /* loop exits: ['0x100000834'] */
-    while (/* condition evidence: b.ge at 0x1000007c8 after subs at 0x1000007c4; target 0x100000834; loop polarity inverted */) {
+    while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x1000007c8 after subs at 0x1000007c4; target 0x100000834; loop polarity inverted")) {
         /* if/else condition block: 0x1000007c0 */
         /* merge block: 0x100000820 */
-        if (/* condition evidence: b.ge at 0x1000007c8 after subs at 0x1000007c4; target 0x100000834 */) {
+        if (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x1000007c8 after subs at 0x1000007c4; target 0x100000834")) {
             /* block 0x1000007f8 */
             /* branch to 0x1000007fc */ /* b 0x1000007fc */
             /* block 0x1000007fc */

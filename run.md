@@ -202,13 +202,13 @@ This reads:
 - `layout_recovery.json` (optional)
 
 And writes:
-- `source_reconstruction.json` — Structured source reconstruction artifact (schema 5.6.0)
-- `recovered.c` — Conservative C function skeletons with structured control flow, return/call refinements, branch predicate annotations, and pseudo declarations.
+- `source_reconstruction.json` — Structured source reconstruction artifact (schema 5.7.0)
+- `recovered.c` — Conservative C function skeletons with structured control flow, return/call refinements, branch predicate annotations, pseudo declarations, and syntax-safe condition adapters.
 
 The command prints a summary:
 ```
 ============================================================
-      PHASE 5.6: CONSERVATIVE DECLARATION & STABILIZATION
+      PHASE 5.7: SYNTAX-SAFE UNKNOWN CONDITION ADAPTER
 ============================================================
 Functions reconstructed:          <N>
   Structured:                     <N>
@@ -256,6 +256,10 @@ Declarations total:               <N>
   Call helpers:                   <N>
   Funcs with declarations:        <N>
 Compile shape warnings total:     <N>
+Condition adapters inserted:      <N>
+  Evidence adapters:              <N>
+  Unknown adapters:               <N>
+  Helper function emitted:        <N>
 ============================================================
 Output: artifacts/source_reconstruction.json
 Output: artifacts/recovered.c
@@ -264,7 +268,7 @@ Output: artifacts/recovered.c
 
 ---
 
-## 10. Full Pipeline Workflow (Phase 1–5.6)
+## 10. Full Pipeline Workflow (Phase 1–5.7)
 
 ```bash
 python3 main.py ./t --ghidra --radare2 --export-ir
@@ -290,5 +294,5 @@ After running the commands above, the output folder will contain:
 - `semantic_recovery.json` — Phase 4B constraint-refined type records per function.
 - `layout_recovery.json` — Phase 4C conservative memory layout candidates.
 - `phase4_semantics.json` — Phase 4D final merged semantic artifact for Phase 5 handoff.
-- `source_reconstruction.json` — Phase 5.6 source reconstruction artifact (schema 5.6.0).
-- `recovered.c` — Phase 5.6 conservative C function skeletons.
+- `source_reconstruction.json` — Phase 5.7 source reconstruction artifact (schema 5.7.0).
+- `recovered.c` — Phase 5.7 conservative C function skeletons.

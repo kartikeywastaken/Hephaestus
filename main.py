@@ -890,18 +890,18 @@ def handle_finalize_semantics(out_dir: str):
 
 def handle_reconstruct_source(out_dir: str):
     """
-    Phase 5.6: Conservative Declaration and Compile-Shape Stabilization
+    Phase 5.7: Syntax-Safe Unknown Condition Adapter
     Reads unified_ir.json, structuring_regions.json, phase4_semantics.json,
     and optionally layout_recovery.json, then writes source_reconstruction.json
     and recovered.c to the output directory.
     """
     from src.utils.run_logging import append_run_log
-    append_run_log(out_dir, "ORCHESTRATION", "Pipeline stage started: Phase 5.6 Source Reconstruction")
+    append_run_log(out_dir, "ORCHESTRATION", "Pipeline stage started: Phase 5.7 Source Reconstruction")
     from src.ir.source.reconstructor import build_source_reconstruction
     from src.ir.source.emitter import write_source_reconstruction_artifact
     from src.ir.source.c_emitter import emit_recovered_c
 
-    logger.info("Executing Phase 5.6 Source Reconstruction...")
+    logger.info("Executing Phase 5.7 Source Reconstruction...")
 
     # Load unified_ir.json (required)
     ir_path = os.path.join(out_dir, "unified_ir.json")
@@ -965,7 +965,12 @@ def handle_reconstruct_source(out_dir: str):
         layout_recovery=layout_recovery,
     )
 
-    # Write source_reconstruction.json
+    # Write recovered.c first (populates condition adapter stats)
+    c_path = os.path.join(out_dir, "recovered.c")
+    emit_recovered_c(artifact, c_path)
+    logger.info("[+] Phase 5.7 recovered C skeleton committed: %s", c_path)
+
+    # Write source_reconstruction.json second
     recon_path = os.path.join(out_dir, "source_reconstruction.json")
     write_source_reconstruction_artifact(
         artifact, recon_path,
@@ -974,23 +979,18 @@ def handle_reconstruct_source(out_dir: str):
         source_semantics=sem_path,
         source_layout=lr_path if layout_recovery else None,
     )
-    logger.info("[+] Phase 5.6 source reconstruction artifact committed: %s", recon_path)
-
-    # Write recovered.c
-    c_path = os.path.join(out_dir, "recovered.c")
-    emit_recovered_c(artifact, c_path)
-    logger.info("[+] Phase 5.6 recovered C skeleton committed: %s", c_path)
+    logger.info("[+] Phase 5.7 source reconstruction artifact committed: %s", recon_path)
 
     append_run_log(
         out_dir, "ORCHESTRATION",
-        f"Pipeline stage completed: Phase 5.6 Source Reconstruction\n"
+        f"Pipeline stage completed: Phase 5.7 Source Reconstruction\n"
         f"Artifacts written: {recon_path}, {c_path}"
     )
 
     # Print summary
     s = artifact.summary
     print("\n============================================================")
-    print("      PHASE 5.6: CONSERVATIVE DECLARATION & STABILIZATION")
+    print("      PHASE 5.7: SYNTAX-SAFE UNKNOWN CONDITION ADAPTER")
     print("============================================================")
     print(f"Functions reconstructed:          {s['functions_total']}")
     print(f"  Structured:                     {s['functions_structured']}")
@@ -1041,6 +1041,11 @@ def handle_reconstruct_source(out_dir: str):
     print(f"  Call helpers:                   {s.get('call_helpers_declared_total', 0)}")
     print(f"  Funcs with declarations:        {s.get('functions_with_declarations', 0)}")
     print(f"Compile shape warnings total:     {s.get('compile_shape_warnings_total', 0)}")
+    # Phase 5.7 condition adapter
+    print(f"Condition adapters inserted:      {s.get('condition_adapters_inserted', 0)}")
+    print(f"  Evidence adapters:              {s.get('condition_evidence_adapters', 0)}")
+    print(f"  Unknown adapters:               {s.get('condition_unknown_adapters', 0)}")
+    print(f"  Helper function emitted:        {s.get('unknown_condition_helpers_emitted', 0)}")
     print("============================================================")
     print(f"Output: {recon_path}")
     print(f"Output: {c_path}")

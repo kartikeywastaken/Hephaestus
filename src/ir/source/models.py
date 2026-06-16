@@ -20,7 +20,7 @@ from typing import Any, Dict, List
 # Schema version
 # ---------------------------------------------------------------------------
 
-SCHEMA_VERSION = "5.6.0"
+SCHEMA_VERSION = "5.7.0"
 
 
 # ---------------------------------------------------------------------------
@@ -96,6 +96,7 @@ class ReconstructedFunction:
     callsite_refinement: Dict[str, Any] = field(default_factory=dict)
     condition_recovery: Dict[str, Any] = field(default_factory=dict)
     declaration_recovery: Dict[str, Any] = field(default_factory=dict)
+    condition_adapter: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -124,6 +125,7 @@ class ReconstructedFunction:
             "callsite_refinement": dict(self.callsite_refinement) if self.callsite_refinement else {},
             "condition_recovery": dict(self.condition_recovery) if self.condition_recovery else {},
             "declaration_recovery": dict(self.declaration_recovery) if self.declaration_recovery else {},
+            "condition_adapter": dict(self.condition_adapter) if self.condition_adapter else {},
         }
 
 
@@ -202,6 +204,11 @@ class SourceReconstructionArtifact:
         "declarations_total": 0,
         "functions_with_declarations": 0,
         "compile_shape_warnings_total": 0,
+        # Phase 5.7 condition adapter
+        "condition_adapters_inserted": 0,
+        "condition_evidence_adapters": 0,
+        "condition_unknown_adapters": 0,
+        "unknown_condition_helpers_emitted": 0,
     })
 
     def to_dict(self) -> Dict[str, Any]:

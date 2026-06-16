@@ -40,9 +40,9 @@ class TestDeclarationStabilization:
 
     # Test 1 — Schema update
     def test_1_schema_update(self):
-        assert SCHEMA_VERSION == "5.6.0"
+        assert SCHEMA_VERSION == "5.7.0"
         artifact = SourceReconstructionArtifact()
-        assert artifact.schema_version == "5.6.0"
+        assert artifact.schema_version == "5.7.0"
 
     # Test 2 — Pseudo-register declarations
     def test_2_pseudo_register_declarations(self):
@@ -233,7 +233,7 @@ class TestDeclarationStabilization:
         c_code = self._emit_to_string(artifact)
         
         # Verify condition annotation still exists and is not executable
-        assert "if (/* condition evidence: cbz w8 at 0x1000 targeting 0x1004; polarity direct */)" in c_code
+        assert 'if (HEPHAESTUS_UNKNOWN_COND("condition evidence: cbz w8 at 0x1000 targeting 0x1004; polarity direct"))' in c_code
 
     # Test 12 — Preserve Phase 5.4 return/call refinements
     def test_12_preserve_phase_5_4_return_call_refinements(self):

@@ -41,9 +41,9 @@ class TestConditionAnnotation:
 
     # Test 1 — Schema update
     def test_1_schema_update(self):
-        assert SCHEMA_VERSION == "5.6.0"
+        assert SCHEMA_VERSION == "5.7.0"
         artifact = SourceReconstructionArtifact()
-        assert artifact.schema_version == "5.6.0"
+        assert artifact.schema_version == "5.7.0"
 
     # Test 2 — Condition expressions remain zero
     def test_2_condition_expressions_remain_zero(self):
@@ -102,13 +102,14 @@ class TestConditionAnnotation:
         c_code = self._emit_to_string(artifact)
         
         # Must contain comment evidence
-        assert "while (/* condition evidence: b.ge at 0x1004 after subs at 0x1000; target 0x1008; loop polarity inverted */)" in c_code
+        assert 'while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x1004 after subs at 0x1000; target 0x1008; loop polarity inverted"))' in c_code
         
         # Executable check
         for line in c_code.splitlines():
             s = line.strip()
             if s.startswith("while ("):
                 exec_part = strip_c_comments(s)
+                exec_part = re.sub(r'HEPHAESTUS_UNKNOWN_COND\(".*?"\)', '', exec_part)
                 assert "tmp_" not in exec_part
                 assert "arg" not in exec_part
 
@@ -152,7 +153,7 @@ class TestConditionAnnotation:
         )
         artifact = SourceReconstructionArtifact(functions=[fn])
         c_code = self._emit_to_string(artifact)
-        assert "if (/* condition evidence: cbz w8 at 0x1000 targeting 0x1004; polarity direct */)" in c_code
+        assert 'if (HEPHAESTUS_UNKNOWN_COND("condition evidence: cbz w8 at 0x1000 targeting 0x1004; polarity direct"))' in c_code
 
     # Test 5 — If-else polarity annotation
     def test_5_if_else_polarity_annotation(self):
@@ -195,7 +196,7 @@ class TestConditionAnnotation:
         )
         artifact = SourceReconstructionArtifact(functions=[fn])
         c_code = self._emit_to_string(artifact)
-        assert "if (/* condition evidence: cbz w8 at 0x1000 targeting 0x1008; polarity inverted */)" in c_code
+        assert 'if (HEPHAESTUS_UNKNOWN_COND("condition evidence: cbz w8 at 0x1000 targeting 0x1008; polarity inverted"))' in c_code
         # Branches order remains direct
         then_idx = c_code.index("block 0x1004")
         else_idx = c_code.index("block 0x1008")
@@ -232,7 +233,7 @@ class TestConditionAnnotation:
         )
         artifact = SourceReconstructionArtifact(functions=[fn])
         c_code = self._emit_to_string(artifact)
-        assert "if (/* condition unknown: block 0x1000 */)" in c_code
+        assert 'if (HEPHAESTUS_UNKNOWN_COND("condition unknown: block 0x1000"))' in c_code
 
     # Test 7 — Unsupported architecture stays unknown
     def test_7_unsupported_architecture_stays_unknown(self):
@@ -397,7 +398,7 @@ class TestConditionAnnotation:
 
         assert "call_0x2000(tmp_x0); /* bl 0x2000; args refined from same-block evidence */" in c_code
         assert "return 1; /* return constant from w0 before ret */" in c_code
-        assert "if (/* condition evidence: b.eq at 0x1004" in c_code
+        assert 'if (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.eq at 0x1004' in c_code
 
     # Test 11 — No fake source variables
     def test_11_no_fake_source_variables(self):
@@ -717,6 +718,7 @@ class TestConditionAnnotation:
             if s.startswith("while (") or s.startswith("if ("):
                 assert "condition unknown" in s or "condition evidence" in s
                 exec_only = strip_c_comments(s)
+                exec_only = re.sub(r'HEPHAESTUS_UNKNOWN_COND\(".*?"\)', '', exec_only)
                 assert "tmp_" not in exec_only
                 assert "arg" not in exec_only
                 assert "stack_" not in exec_only

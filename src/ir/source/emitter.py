@@ -68,8 +68,8 @@ def write_source_reconstruction_artifact(
 
     # Attach provenance to artifact
     artifact.provenance = {
-        "phase": "5.6",
-        "description": "Conservative source reconstruction with declaration and compile-shape stabilization",
+        "phase": "5.7",
+        "description": "Conservative source reconstruction with syntax-safe unknown condition adapters",
         "source_ir": norm_ir,
         "source_structuring": norm_st,
         "source_semantics": norm_sem,

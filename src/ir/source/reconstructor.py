@@ -865,6 +865,11 @@ def build_source_reconstruction(
         "declarations_total": pseudo_registers_declared_total + pseudo_stack_slots_declared_total,
         "functions_with_declarations": functions_with_declarations,
         "compile_shape_warnings_total": compile_shape_warnings_total,
+        # Phase 5.7 condition adapter
+        "condition_adapters_inserted": 0,
+        "condition_evidence_adapters": 0,
+        "condition_unknown_adapters": 0,
+        "unknown_condition_helpers_emitted": 0,
     }
 
     artifact = SourceReconstructionArtifact(

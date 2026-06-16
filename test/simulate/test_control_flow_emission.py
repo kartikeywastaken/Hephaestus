@@ -348,7 +348,7 @@ class TestControlFlowEmission:
         )
         # Verify models schema version matches
         artifact = SourceReconstructionArtifact(schema_version=SCHEMA_VERSION, functions=[fn])
-        assert artifact.schema_version == "5.6.0"
+        assert artifact.schema_version == "5.7.0"
         
         # Populate function stats (mock reconstructor behavior)
         fn.control_flow = analyze_control_flow_regions(fn.structured_regions)
@@ -401,8 +401,8 @@ class TestControlFlowEmission:
                 content = f.read()
             
             # Assert loop and branch shape
-            assert "while (/* condition unknown: loop header 0x1000 */)" in content
-            assert "if (/* condition unknown: block 0x1004 */)" in content
+            assert 'while (HEPHAESTUS_UNKNOWN_COND("condition unknown: loop header 0x1000"))' in content
+            assert 'if (HEPHAESTUS_UNKNOWN_COND("condition unknown: block 0x1004"))' in content
             assert "*(u32 *)(tmp_x9 + (tmp_x10 << 2)) = tmp_w8;" in content
             
             # Assert no fabricated semantic keywords
