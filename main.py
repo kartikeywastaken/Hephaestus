@@ -480,40 +480,17 @@ def handle_analyze_cfg(out_dir: str):
     from src.utils.run_logging import append_run_log
     append_run_log(out_dir, "ORCHESTRATION", "Pipeline stage started: CFG Structuring & Analysis")
     logger.info("Executing Phase 3A CFG Analysis Backbone on canonical IR...")
-    ir_payload = load_unified_ir_data(out_dir)
+    from src.pipeline.runner import run_stage_analyze_cfg, PipelineError
+    try:
+        run_stage_analyze_cfg(out_dir)
+    except PipelineError as e:
+        logger.error(f"[-] {e}")
+        sys.exit(1)
     
-    # Import the structuring functions
-    from src.ir.structuring.analysis import analyze_function
-    from src.ir.structuring.builder import structure_function
-    
-    funcs = ir_payload.get("data", {}).get("functions", [])
-    analysis_reports = []
-    structuring_reports = []
-    
-    for func in funcs:
-        # Phase 3A
-        report = analyze_function(func, logger)
-        analysis_reports.append(report)
-        
-        # Phase 3B
-        structured_tree = structure_function(func, logger)
-        structuring_reports.append({
-            "function_name": func.get("name", "unknown"),
-            "structured_body": structured_tree.to_dict()
-        })
-        
-    # Save Phase 3A output
     structuring_path = os.path.join(out_dir, "structuring_analysis.json")
-    write_json_artifact(structuring_path, analysis_reports)
-        
-    logger.info(f"[+] Output CFG structuring analysis reports committed: {structuring_path}")
-    
-    # Save Phase 3B output
     regions_path = os.path.join(out_dir, "structuring_regions.json")
-    write_json_artifact(regions_path, structuring_reports)
-        
-    logger.info(f"[+] Output structured regions tree committed: {regions_path}")
-    append_run_log(out_dir, "ORCHESTRATION", f"Pipeline stage completed: CFG Structuring & Analysis\nArtifacts written: {structuring_path}, {regions_path}")
+    analysis_reports = load_json_artifact(structuring_path)
+    structuring_reports = load_json_artifact(regions_path)
     
     # Print a summary
     print("\n============================================================")
@@ -534,241 +511,105 @@ def handle_analyze_cfg(out_dir: str):
     sys.exit(0)
 
 def handle_recover_semantics(out_dir: str):
-    """
-    Phase 4A: Signature and Variable Recovery Backbone
-    Reads unified_ir.json (and optionally structuring_regions.json) and writes
-    type_recovery.json to the output directory.
-    """
     from src.utils.run_logging import append_run_log
     append_run_log(out_dir, "ORCHESTRATION", "Pipeline stage started: Phase 4A Signature & Variable Recovery")
-    from src.ir.types.inference import recover_types
-    from src.ir.types.emitter import write_type_recovery_artifact
-
     logger.info("Executing Phase 4A Signature & Variable Recovery on canonical IR...")
-
-    # Load Unified IR
-    ir_path = os.path.join(out_dir, "unified_ir.json")
-    if not os.path.exists(ir_path):
-        logger.error("[-] unified_ir.json not found at %s. Please run extraction first.", ir_path)
-        sys.exit(1)
-
+    
+    from src.pipeline.runner import run_stage_recover_semantics, PipelineError
     try:
-        ir_payload = load_json_artifact(ir_path)
-    except Exception as e:
-        logger.error("[-] Failed to read unified_ir.json at %s: %s", ir_path, e)
+        run_stage_recover_semantics(out_dir)
+    except PipelineError as e:
+        logger.error(f"[-] {e}")
         sys.exit(1)
-
-    # Load structuring regions if available (optional)
-    structuring_regions = None
-    regions_path = os.path.join(out_dir, "structuring_regions.json")
-    if os.path.exists(regions_path):
-        try:
-            structuring_regions = load_json_artifact(regions_path)
-            if not isinstance(structuring_regions, dict):
-                logger.warning("structuring_regions.json exists but is not a dictionary. Continuing with None.")
-                structuring_regions = None
-            else:
-                logger.info("[+] Loaded structuring regions from: %s", regions_path)
-        except Exception as e:
-            logger.warning("Could not load structuring_regions.json: %s. Continuing with None.", e)
-            structuring_regions = None
-
-    # Run Phase 4A recovery
-    functions = recover_types(ir_payload, structuring_regions)
-
-    # Write artifact
+    
     output_path = os.path.join(out_dir, "type_recovery.json")
-    source_ir = os.path.join(out_dir, "unified_ir.json")
-    source_structuring = regions_path if structuring_regions is not None else None
-    write_type_recovery_artifact(functions, output_path, source_ir, source_structuring)
-    logger.info("[+] Phase 4A type recovery artifact committed: %s", output_path)
-    append_run_log(out_dir, "ORCHESTRATION", f"Pipeline stage completed: Phase 4A Signature & Variable Recovery\nArtifact written: {output_path}")
-
+    tr_data = load_json_artifact(output_path)
+    funcs = tr_data.get("recovered_types", {}).get("functions", tr_data.get("functions", []))
+    
     # Print summary
     print("\n============================================================")
     print("            PHASE 4A: SIGNATURE & VARIABLE RECOVERY")
     print("============================================================")
-    print(f"Total functions processed:   {len(functions)}")
+    print(f"Total functions processed:   {len(funcs)}")
     print("------------------------------------------------------------")
-    for fn in functions:
-        sig = fn.signature
-        param_str = ", ".join(p.name for p in sig.parameters) or "void"
-        variadic_str = ", ..." if sig.variadic else ""
-        print(f"  {fn.name}  [{fn.function_kind}]  (entry: {fn.entry_point})")
-        print(f"    return:  {sig.return_type.type_name}  (conf: {sig.return_type.confidence:.2f})")
+    for fn in funcs:
+        sig = fn.get("signature", {})
+        params = sig.get("parameters", [])
+        param_str = ", ".join(p.get("name", "") for p in params) or "void"
+        variadic_str = ", ..." if sig.get("variadic") else ""
+        ret = sig.get("return_type", {})
+        print(f"  {fn.get('name')}  [{fn.get('function_kind')}]  (entry: {fn.get('entry_point')})")
+        print(f"    return:  {ret.get('type_name')}  (conf: {ret.get('confidence', 0.0):.2f})")
         print(f"    params:  {param_str}{variadic_str}")
-        print(f"    vars:    {len(fn.variables)}  |  sig conf: {sig.confidence:.2f}  |  fn conf: {fn.confidence:.2f}")
+        print(f"    vars:    {len(fn.get('variables', []))}  |  sig conf: {sig.get('confidence', 0.0):.2f}  |  fn conf: {fn.get('confidence', 0.0):.2f}")
     print("============================================================")
     print(f"Output: {output_path}")
     print("============================================================")
     sys.exit(0)
 
-
 def handle_refine_semantics(out_dir: str):
-    """
-    Phase 4B: Type Constraint Refinement Engine
-    Reads unified_ir.json and type_recovery.json, applies instruction-level
-    constraint propagation, and writes semantic_recovery.json.
-    """
     from src.utils.run_logging import append_run_log
     append_run_log(out_dir, "ORCHESTRATION", "Pipeline stage started: Phase 4B Type Constraint Refinement")
-    from src.ir.types.refinement_engine import TypeRefinementEngine
-    from src.ir.types.semantic_emitter import write_semantic_recovery_artifact
-
     logger.info("Executing Phase 4B Type Constraint Refinement...")
-
-    # Load Unified IR (required)
-    ir_path = os.path.join(out_dir, "unified_ir.json")
-    if not os.path.exists(ir_path):
-        logger.error(
-            "[-] unified_ir.json not found at %s. Please run extraction first.", ir_path
-        )
-        sys.exit(1)
+    
+    from src.pipeline.runner import run_stage_refine_semantics, PipelineError
     try:
-        unified_ir = load_json_artifact(ir_path)
-    except Exception as e:
-        logger.error("[-] Failed to read unified_ir.json at %s: %s", ir_path, e)
+        run_stage_refine_semantics(out_dir)
+    except PipelineError as e:
+        logger.error(f"[-] {e}")
         sys.exit(1)
-
-    # Load Phase 4A type recovery (required)
-    tr_path = os.path.join(out_dir, "type_recovery.json")
-    if not os.path.exists(tr_path):
-        logger.error(
-            "[-] type_recovery.json not found at %s. "
-            "Please run 'recover-semantics' first.", tr_path
-        )
-        sys.exit(1)
-    try:
-        type_recovery = load_json_artifact(tr_path)
-    except Exception as e:
-        logger.error("[-] Failed to read type_recovery.json at %s: %s", tr_path, e)
-        sys.exit(1)
-
-    # Load structuring regions (optional)
-    structuring_regions = None
-    regions_path = os.path.join(out_dir, "structuring_regions.json")
-    if os.path.exists(regions_path):
-        try:
-            structuring_regions = load_json_artifact(regions_path)
-            if not isinstance(structuring_regions, dict):
-                logger.warning(
-                    "structuring_regions.json is not a dict; continuing with None."
-                )
-                structuring_regions = None
-            else:
-                logger.info("[+] Loaded structuring regions from: %s", regions_path)
-        except Exception as e:
-            logger.warning(
-                "Could not load structuring_regions.json: %s. Continuing with None.", e
-            )
-            structuring_regions = None
-
-    # Load layout recovery (optional — enables Phase 4B.2 parameter-layout linking)
-    layout_recovery = None
-    layout_path = os.path.join(out_dir, "layout_recovery.json")
-    if os.path.exists(layout_path):
-        try:
-            layout_recovery = load_json_artifact(layout_path)
-            if not isinstance(layout_recovery, dict):
-                logger.warning(
-                    "layout_recovery.json is not a dict; continuing with None."
-                )
-                layout_recovery = None
-            else:
-                logger.info("[+] Loaded layout recovery from: %s", layout_path)
-        except Exception as e:
-            logger.warning(
-                "Could not load layout_recovery.json: %s. Continuing with None.", e
-            )
-            layout_recovery = None
-
-    # Run refinement (4B.1 + 4B.2 — engine owns all execution)
-    engine = TypeRefinementEngine()
-    results = engine.refine(
-        unified_ir, type_recovery, structuring_regions,
-        layout_recovery=layout_recovery,
-    )
-
-    # Write artifact
+    
     output_path = os.path.join(out_dir, "semantic_recovery.json")
-    source_structuring = regions_path if structuring_regions is not None else None
-    write_semantic_recovery_artifact(
-        results, output_path,
-        source_ir=ir_path,
-        source_type_recovery=tr_path,
-        source_structuring=source_structuring,
-    )
-    logger.info("[+] Phase 4B semantic recovery artifact committed: %s", output_path)
-    append_run_log(out_dir, "ORCHESTRATION", f"Pipeline stage completed: Phase 4B Type Constraint Refinement\nArtifact written: {output_path}")
-
-    # Compute summary stats
-    total_constraints = sum(r.total_constraints_applied for r in results)
-    no_evidence = sum(1 for r in results if r.total_constraints_applied == 0)
-    total_abi = sum(len(r.abi_argument_bindings) for r in results)
-    total_ple = sum(len(r.parameter_layout_evidence) for r in results)
-
+    sr_data = load_json_artifact(output_path)
+    funcs = sr_data.get("functions", [])
+    
+    total_constraints = sum(fn.get("total_constraints_applied", 0) for fn in funcs)
+    no_evidence = sum(1 for fn in funcs if fn.get("total_constraints_applied", 0) == 0)
+    total_abi = sum(len(fn.get("abi_argument_bindings", [])) for fn in funcs)
+    total_ple = sum(len(fn.get("parameter_layout_evidence", [])) for fn in funcs)
+    
     print("\n============================================================")
     print("          PHASE 4B: TYPE CONSTRAINT REFINEMENT")
     print("============================================================")
-    print(f"Functions processed:              {len(results)}")
+    print(f"Functions processed:              {len(funcs)}")
     print(f"Total constraints applied:        {total_constraints}")
     print(f"Functions with no instr evidence: {no_evidence}")
     print(f"ABI argument bindings (4B.2):     {total_abi}")
     print(f"Parameter-layout evidence (4B.2): {total_ple}")
     print("------------------------------------------------------------")
-    for fn in results:
-        abi_str = f"  abi={len(fn.abi_argument_bindings)}" if fn.abi_argument_bindings else ""
-        ple_str = f"  ple={len(fn.parameter_layout_evidence)}" if fn.parameter_layout_evidence else ""
-        print(f"  {fn.name}  [{fn.function_kind}]  constraints_applied={fn.total_constraints_applied}{abi_str}{ple_str}")
+    for fn in funcs:
+        abi_len = len(fn.get("abi_argument_bindings", []))
+        ple_len = len(fn.get("parameter_layout_evidence", []))
+        abi_str = f"  abi={abi_len}" if abi_len else ""
+        ple_str = f"  ple={ple_len}" if ple_len else ""
+        print(f"  {fn.get('name')}  [{fn.get('function_kind')}]  constraints_applied={fn.get('total_constraints_applied', 0)}{abi_str}{ple_str}")
     print("============================================================")
     print(f"Output: {output_path}")
     print("============================================================")
     sys.exit(0)
 
-
 def handle_recover_layouts(out_dir: str):
-    """
-    Phase 4C: Conservative Data Layout Recovery
-    Reads unified_ir.json, recovers conservative memory layout candidates,
-    and writes layout_recovery.json to the output directory.
-    """
     from src.utils.run_logging import append_run_log
     append_run_log(out_dir, "ORCHESTRATION", "Pipeline stage started: Phase 4C Conservative Data Layout Recovery")
-    from src.ir.types.layout_recovery import LayoutRecoveryEngine
-    from src.ir.types.layout_emitter import write_layout_recovery_artifact
-
     logger.info("Executing Phase 4C Conservative Data Layout Recovery...")
-
-    # Load Unified IR (required)
-    ir_path = os.path.join(out_dir, "unified_ir.json")
-    if not os.path.exists(ir_path):
-        logger.error(
-            "[-] unified_ir.json not found at %s. Please run extraction first.", ir_path
-        )
-        sys.exit(1)
+    
+    from src.pipeline.runner import run_stage_recover_layouts, PipelineError
     try:
-        unified_ir = load_json_artifact(ir_path)
-    except Exception as e:
-        logger.error("[-] Failed to read unified_ir.json at %s: %s", ir_path, e)
+        run_stage_recover_layouts(out_dir)
+    except PipelineError as e:
+        logger.error(f"[-] {e}")
         sys.exit(1)
-
-    # Run layout recovery
-    engine = LayoutRecoveryEngine()
-    candidates, unbound = engine.recover(unified_ir)
-
-    # Write artifact
+    
     output_path = os.path.join(out_dir, "layout_recovery.json")
-    write_layout_recovery_artifact(
-        candidates, unbound, output_path, source_ir=ir_path
-    )
-    logger.info("[+] Phase 4C layout recovery artifact committed: %s", output_path)
-    append_run_log(out_dir, "ORCHESTRATION", f"Pipeline stage completed: Phase 4C Conservative Data Layout Recovery\nArtifact written: {output_path}")
-
-    # Compute kind distribution for summary
-    kind_counts: dict = {}
+    lr_data = load_json_artifact(output_path)
+    candidates = lr_data.get("layout_candidates", [])
+    unbound = lr_data.get("unbound_memory_accesses", [])
+    
+    kind_counts = {}
     for c in candidates:
-        kind_counts[c.layout_kind] = kind_counts.get(c.layout_kind, 0) + 1
-
+        kind = c.get("layout_kind", "unknown")
+        kind_counts[kind] = kind_counts.get(kind, 0) + 1
+        
     print("\n============================================================")
     print("         PHASE 4C: CONSERVATIVE DATA LAYOUT RECOVERY")
     print("============================================================")
@@ -781,241 +622,90 @@ def handle_recover_layouts(out_dir: str):
     print("------------------------------------------------------------")
     for c in candidates:
         print(
-            f"  [{c.layout_kind:<14}] fn={c.function_name!r:30s} "
-            f"base={c.base_id!r:8s} "
-            f"offsets={c.observed_offsets} "
-            f"sizes={c.observed_sizes}"
+            f"  [{c.get('layout_kind', 'unknown'):<14}] fn={c.get('function_name')!r:30s} "
+            f"base={c.get('base_id')!r:8s} "
+            f"offsets={c.get('observed_offsets')} "
+            f"sizes={c.get('observed_sizes')}"
         )
     print("============================================================")
     print(f"Output: {output_path}")
     print("============================================================")
     sys.exit(0)
 
-
 def handle_finalize_semantics(out_dir: str):
-    """
-    Phase 4D: Final Phase 4 Semantic Artifact Merger
-    Reads type_recovery.json, semantic_recovery.json (optional), and
-    layout_recovery.json (optional), merges them, and writes
-    phase4_semantics.json to the output directory.
-    """
     from src.utils.run_logging import append_run_log
     append_run_log(out_dir, "ORCHESTRATION", "Pipeline stage started: Phase 4D Final Semantic Artifact Merger")
-    from src.ir.types.phase4_semantics import build_phase4_semantics
-    from src.ir.types.phase4_emitter import write_phase4_semantics_artifact
-
     logger.info("Executing Phase 4D Final Semantic Artifact Merger...")
-
-    # Load type_recovery.json (required)
-    tr_path = os.path.join(out_dir, "type_recovery.json")
-    if not os.path.exists(tr_path):
-        logger.error(
-            "[-] type_recovery.json not found at %s. "
-            "Please run 'recover-semantics' first.", tr_path
-        )
-        sys.exit(1)
+    
+    from src.pipeline.runner import run_stage_finalize_semantics, PipelineError
     try:
-        type_recovery = load_json_artifact(tr_path)
-    except Exception as e:
-        logger.error("[-] Failed to read type_recovery.json at %s: %s", tr_path, e)
+        run_stage_finalize_semantics(out_dir)
+    except PipelineError as e:
+        logger.error(f"[-] {e}")
         sys.exit(1)
-
-    # Load semantic_recovery.json (optional)
-    semantic_recovery = None
-    sr_path = os.path.join(out_dir, "semantic_recovery.json")
-    if os.path.exists(sr_path):
-        try:
-            semantic_recovery = load_json_artifact(sr_path)
-            logger.info("[+] Loaded semantic recovery from: %s", sr_path)
-        except Exception as e:
-            logger.warning(
-                "Could not load semantic_recovery.json: %s. Continuing without it.", e
-            )
-            semantic_recovery = None
-    else:
-        logger.info("semantic_recovery.json not found; continuing with type-only merge.")
-
-    # Load layout_recovery.json (optional)
-    layout_recovery = None
-    lr_path = os.path.join(out_dir, "layout_recovery.json")
-    if os.path.exists(lr_path):
-        try:
-            layout_recovery = load_json_artifact(lr_path)
-            logger.info("[+] Loaded layout recovery from: %s", lr_path)
-        except Exception as e:
-            logger.warning(
-                "Could not load layout_recovery.json: %s. Continuing without it.", e
-            )
-            layout_recovery = None
-    else:
-        logger.info("layout_recovery.json not found; continuing without layout data.")
-
-    # Build merged artifact
-    artifact = build_phase4_semantics(
-        type_recovery,
-        semantic_recovery=semantic_recovery,
-        layout_recovery=layout_recovery,
-        source_type_recovery=tr_path,
-        source_semantic_recovery=sr_path if semantic_recovery else None,
-        source_layout_recovery=lr_path if layout_recovery else None,
-    )
-
-    # Write artifact
+    
     output_path = os.path.join(out_dir, "phase4_semantics.json")
-    write_phase4_semantics_artifact(
-        artifact, output_path,
-        source_type_recovery=tr_path,
-        source_semantic_recovery=sr_path if semantic_recovery else None,
-        source_layout_recovery=lr_path if layout_recovery else None,
-    )
-    logger.info("[+] Phase 4D semantic artifact committed: %s", output_path)
-    append_run_log(out_dir, "ORCHESTRATION", f"Pipeline stage completed: Phase 4D Final Semantic Artifact Merger\nArtifact written: {output_path}")
-
-    # Print summary
-    s = artifact.summary
+    artifact_data = load_json_artifact(output_path)
+    s = artifact_data.get("summary", {})
+    
     print("\n============================================================")
     print("      PHASE 4D: FINAL SEMANTIC ARTIFACT MERGER")
     print("============================================================")
     print(f"Phase 4D semantic finalization complete")
-    print(f"Functions finalized:         {s['functions_total']}")
-    print(f"Functions with refinement:   {s['functions_with_refinement']}")
-    print(f"Layout candidates attached:  {s['total_layout_candidates']}")
-    print(f"Unbound memory accesses:     {s['total_unbound_memory_accesses']}")
-    print(f"Constraints applied:         {s['total_constraints_applied']}")
+    print(f"Functions finalized:         {s.get('functions_total', 0)}")
+    print(f"Functions with refinement:   {s.get('functions_with_refinement', 0)}")
+    print(f"Layout candidates attached:  {s.get('total_layout_candidates', 0)}")
+    print(f"Unbound memory accesses:     {s.get('total_unbound_memory_accesses', 0)}")
+    print(f"Constraints applied:         {s.get('total_constraints_applied', 0)}")
     print("============================================================")
     print(f"Output: {output_path}")
     print("============================================================")
     sys.exit(0)
 
-
 def handle_reconstruct_source(out_dir: str):
-    """
-    Phase 5.7: Syntax-Safe Unknown Condition Adapter
-    Reads unified_ir.json, structuring_regions.json, phase4_semantics.json,
-    and optionally layout_recovery.json, then writes source_reconstruction.json
-    and recovered.c to the output directory.
-    """
     from src.utils.run_logging import append_run_log
     append_run_log(out_dir, "ORCHESTRATION", "Pipeline stage started: Phase 5.7 Source Reconstruction")
-    from src.ir.source.reconstructor import build_source_reconstruction
-    from src.ir.source.emitter import write_source_reconstruction_artifact
-    from src.ir.source.c_emitter import emit_recovered_c
-
     logger.info("Executing Phase 5.7 Source Reconstruction...")
-
-    # Load unified_ir.json (required)
-    ir_path = os.path.join(out_dir, "unified_ir.json")
-    if not os.path.exists(ir_path):
-        logger.error(
-            "[-] unified_ir.json not found at %s. Please run extraction first.", ir_path
-        )
-        sys.exit(1)
+    
+    from src.pipeline.runner import run_stage_reconstruct_source, PipelineError
     try:
-        unified_ir = load_json_artifact(ir_path)
-    except Exception as e:
-        logger.error("[-] Failed to read unified_ir.json at %s: %s", ir_path, e)
+        run_stage_reconstruct_source(out_dir)
+    except PipelineError as e:
+        logger.error(f"[-] {e}")
         sys.exit(1)
-
-    # Load structuring_regions.json (required)
-    regions_path = os.path.join(out_dir, "structuring_regions.json")
-    if not os.path.exists(regions_path):
-        logger.error(
-            "[-] structuring_regions.json not found at %s. "
-            "Please run 'analyze-cfg' first.", regions_path
-        )
-        sys.exit(1)
-    try:
-        structuring_regions = load_json_artifact(regions_path)
-    except Exception as e:
-        logger.error("[-] Failed to read structuring_regions.json at %s: %s", regions_path, e)
-        sys.exit(1)
-
-    # Load phase4_semantics.json (required)
-    sem_path = os.path.join(out_dir, "phase4_semantics.json")
-    if not os.path.exists(sem_path):
-        logger.error(
-            "[-] phase4_semantics.json not found at %s. "
-            "Please run 'finalize-semantics' first.", sem_path
-        )
-        sys.exit(1)
-    try:
-        phase4_semantics = load_json_artifact(sem_path)
-    except Exception as e:
-        logger.error("[-] Failed to read phase4_semantics.json at %s: %s", sem_path, e)
-        sys.exit(1)
-
-    # Load layout_recovery.json (optional)
-    layout_recovery = None
-    lr_path = os.path.join(out_dir, "layout_recovery.json")
-    if os.path.exists(lr_path):
-        try:
-            layout_recovery = load_json_artifact(lr_path)
-            logger.info("[+] Loaded layout recovery from: %s", lr_path)
-        except Exception as e:
-            logger.warning(
-                "Could not load layout_recovery.json: %s. Continuing without it.", e
-            )
-            layout_recovery = None
-    else:
-        logger.info("layout_recovery.json not found; continuing without layout data.")
-
-    # Build reconstruction
-    artifact = build_source_reconstruction(
-        unified_ir, structuring_regions, phase4_semantics,
-        layout_recovery=layout_recovery,
-    )
-
-    # Write recovered.c first (populates condition adapter stats)
-    c_path = os.path.join(out_dir, "recovered.c")
-    emit_recovered_c(artifact, c_path)
-    logger.info("[+] Phase 5.7 recovered C skeleton committed: %s", c_path)
-
-    # Write source_reconstruction.json second
+    
     recon_path = os.path.join(out_dir, "source_reconstruction.json")
-    write_source_reconstruction_artifact(
-        artifact, recon_path,
-        source_ir=ir_path,
-        source_structuring=regions_path,
-        source_semantics=sem_path,
-        source_layout=lr_path if layout_recovery else None,
-    )
-    logger.info("[+] Phase 5.7 source reconstruction artifact committed: %s", recon_path)
-
-    append_run_log(
-        out_dir, "ORCHESTRATION",
-        f"Pipeline stage completed: Phase 5.7 Source Reconstruction\n"
-        f"Artifacts written: {recon_path}, {c_path}"
-    )
-
-    # Print summary
-    s = artifact.summary
+    c_path = os.path.join(out_dir, "recovered.c")
+    recon_data = load_json_artifact(recon_path)
+    s = recon_data.get("summary", {})
+    
     print("\n============================================================")
     print("      PHASE 5.7: SYNTAX-SAFE UNKNOWN CONDITION ADAPTER")
     print("============================================================")
-    print(f"Functions reconstructed:          {s['functions_total']}")
-    print(f"  Structured:                     {s['functions_structured']}")
-    print(f"  Partially structured:           {s['functions_partially_structured']}")
-    print(f"  Unstructured:                   {s['functions_unstructured']}")
-    print(f"  Missing:                        {s['functions_missing']}")
-    print(f"Functions with warnings:          {s['functions_with_warnings']}")
-    print(f"Functions with region structures: {s['functions_with_structured_regions']}")
-    print(f"Functions with semantic evidence: {s['functions_with_semantic_evidence']}")
-    print(f"Functions with layout evidence:   {s['functions_with_layout_evidence']}")
-    print(f"Functions with param-layout ev:   {s['functions_with_parameter_layout_evidence']}")
-    print(f"Unstructured regions total:       {s['unstructured_regions_total']}")
-    print(f"Instructions total:               {s['instructions_total']}")
-    print(f"Instructions lowered:             {s['instructions_lowered']}")
-    print(f"Instructions commented:           {s['instructions_commented']}")
-    print(f"Lowering coverage percent:        {s['lowering_coverage_percent']}%")
-    print(f"Control-flow regions:             {s['control_flow_regions_total']}")
-    print(f"Control-flow constructs:          {s['control_flow_constructs_emitted']}")
-    print(f"  Loops:                          {s['loops_emitted']}")
-    print(f"  If:                             {s['if_constructs_emitted']}")
-    print(f"  If-Else:                        {s['if_else_constructs_emitted']}")
-    print(f"  Switch:                         {s['switch_constructs_emitted']}")
-    print(f"  Fallback/Unstructured:          {s['fallback_regions']}")
-    print(f"  Duplicate blocks skipped:       {s['duplicate_blocks_skipped']}")
-    print(f"Condition expressions recovered:  {s['condition_expressions_recovered']}")
+    print(f"Functions reconstructed:          {s.get('functions_total', 0)}")
+    print(f"  Structured:                     {s.get('functions_structured', 0)}")
+    print(f"  Partially structured:           {s.get('functions_partially_structured', 0)}")
+    print(f"  Unstructured:                   {s.get('functions_unstructured', 0)}")
+    print(f"  Missing:                        {s.get('functions_missing', 0)}")
+    print(f"Functions with warnings:          {s.get('functions_with_warnings', 0)}")
+    print(f"Functions with region structures: {s.get('functions_with_structured_regions', 0)}")
+    print(f"Functions with semantic evidence: {s.get('functions_with_semantic_evidence', 0)}")
+    print(f"Functions with layout evidence:   {s.get('functions_with_layout_evidence', 0)}")
+    print(f"Functions with param-layout ev:   {s.get('functions_with_parameter_layout_evidence', 0)}")
+    print(f"Unstructured regions total:       {s.get('unstructured_regions_total', 0)}")
+    print(f"Instructions total:               {s.get('instructions_total', 0)}")
+    print(f"Instructions lowered:             {s.get('instructions_lowered', 0)}")
+    print(f"Instructions commented:           {s.get('instructions_commented', 0)}")
+    print(f"Lowering coverage percent:        {s.get('lowering_coverage_percent', 0.0)}%")
+    print(f"Control-flow regions:             {s.get('control_flow_regions_total', 0)}")
+    print(f"Control-flow constructs:          {s.get('control_flow_constructs_emitted', 0)}")
+    print(f"  Loops:                          {s.get('loops_emitted', 0)}")
+    print(f"  If:                             {s.get('if_constructs_emitted', 0)}")
+    print(f"  If-Else:                        {s.get('if_else_constructs_emitted', 0)}")
+    print(f"  Switch:                         {s.get('switch_constructs_emitted', 0)}")
+    print(f"  Fallback/Unstructured:          {s.get('fallback_regions', 0)}")
+    print(f"  Duplicate blocks skipped:       {s.get('duplicate_blocks_skipped', 0)}")
+    print(f"Condition expressions recovered:  {s.get('condition_expressions_recovered', 0)}")
     # Phase 5.4 return/call-site refinement
     print(f"Return sites total:               {s.get('return_sites_total', 0)}")
     print(f"  With value:                     {s.get('return_sites_with_value', 0)}")
@@ -1052,12 +742,88 @@ def handle_reconstruct_source(out_dir: str):
     print("============================================================")
     sys.exit(0)
 
+def handle_run_all_cli():
+    parser = argparse.ArgumentParser(description="Run complete Hephaestus decompiler pipeline end-to-end.")
+    parser.add_argument("binary_path", help="Path to the target binary.")
+    parser.add_argument("--ghidra", action="store_true", help="Run Ghidra extractor stage.")
+    parser.add_argument("--radare2", "--r2", action="store_true", dest="radare2", help="Run Radare2 extractor stage.")
+    parser.add_argument("--out-dir", default="artifacts", help="Output artifacts directory.")
+    parser.add_argument("--clean", action="store_true", help="Clean previously generated Hephaestus artifacts first.")
+    parser.add_argument("--continue-on-error", action="store_true", help="Continue running subsequent stages on non-fatal failures.")
+    parser.add_argument("--no-source", action="store_true", help="Skip source reconstruction and C emission stage.")
+    parser.add_argument("--stop-after", help="Stop after executing the specified stage.")
+    
+    args = parser.parse_args(sys.argv[2:])
+    
+    if not (args.ghidra or args.radare2):
+        print("run-all requires at least one extractor: --ghidra or --radare2")
+        sys.exit(1)
+        
+    from src.pipeline.runner import run_pipeline, PipelineError
+    try:
+        manifest = run_pipeline(
+            binary_path=args.binary_path,
+            out_dir=args.out_dir,
+            use_ghidra=args.ghidra,
+            use_radare2=args.radare2,
+            clean=args.clean,
+            continue_on_error=args.continue_on_error,
+            no_source=args.no_source,
+            stop_after=args.stop_after
+        )
+        if manifest.get("status") in ("failed", "partial"):
+            sys.exit(1)
+        sys.exit(0)
+    except PipelineError as e:
+        print(f"Pipeline error: {e}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"System error: {e}")
+        sys.exit(1)
+
+def handle_stress_test_cli():
+    parser = argparse.ArgumentParser(description="Deterministic stress testing suite for Hephaestus.")
+    parser.add_argument("--profile", default="medium", choices=["small", "medium", "hard", "brutal"], help="Stress test LOC and complexity scale.")
+    parser.add_argument("--out-dir", default="artifacts/stress", help="Output directory for stress artifacts.")
+    parser.add_argument("--clean", action="store_true", help="Clean out-dir first.")
+    parser.add_argument("--seed", type=int, default=1337, help="Seed value for deterministic C generation.")
+    
+    args = parser.parse_args(sys.argv[2:])
+    
+    from src.pipeline.stress import run_stress_test
+    try:
+        report = run_stress_test(
+            profile=args.profile,
+            out_dir=args.out_dir,
+            clean=args.clean,
+            seed=args.seed
+        )
+        if report.get("status") == "failed":
+            print(f"Stress test run FAILED. Check report at: {args.out_dir}/stress_report.json")
+            sys.exit(1)
+        else:
+            print(f"Stress test run SUCCESS. Report written to: {args.out_dir}/stress_report.json")
+            sys.exit(0)
+    except Exception as e:
+        print(f"Stress test harness error: {e}")
+        sys.exit(1)
+
 
 def main():
     # If help flag is present, avoid running setup_logging to prevent creating output directory unnecessarily
     if "--help" in sys.argv or "-h" in sys.argv:
         parse_args()
         return
+
+    # Check for run-all and stress-test subcommands before early logging setup
+    if len(sys.argv) > 1:
+        first_arg = sys.argv[1]
+        if first_arg == "run-all":
+            handle_run_all_cli()
+            return
+        elif first_arg == "stress-test":
+            handle_stress_test_cli()
+            return
 
     # Resolve out_dir from command line arguments before initializing logging
     out_dir = "artifacts"

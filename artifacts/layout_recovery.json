@@ -23,12 +23,11 @@
         "min_offset": 16,
         "max_offset": 48,
         "observed_sizes": [
-          4,
-          8
+          4
         ],
         "access_count": 25,
         "evidence_notes": [
-          "25 memory access(es) observed at base 'sp' in function '_main'; offsets=[16, 28, 32, 36, 40, 48]; sizes=[4, 8]; classification=record_like"
+          "25 memory access(es) observed at base 'sp' in function '_main'; offsets=[16, 28, 32, 36, 40, 48]; sizes=[4]; classification=record_like"
         ],
         "source_instrs": [
           "0x100000590",
@@ -61,8 +60,31 @@
       {
         "function_entry": "0x100000548",
         "function_name": "_main",
+        "base_id": "x8",
+        "layout_kind": "scalar",
+        "observed_offsets": [
+          0
+        ],
+        "min_offset": 0,
+        "max_offset": 0,
+        "observed_sizes": [
+          4
+        ],
+        "access_count": 3,
+        "evidence_notes": [
+          "3 memory access(es) observed at base 'x8' in function '_main'; offsets=[0]; sizes=[4]; classification=scalar"
+        ],
+        "source_instrs": [
+          "0x100000588",
+          "0x1000005c4",
+          "0x1000005e0"
+        ]
+      },
+      {
+        "function_entry": "0x100000548",
+        "function_name": "_main",
         "base_id": "x9",
-        "layout_kind": "record_like",
+        "layout_kind": "array_like",
         "observed_offsets": [
           0,
           80
@@ -70,14 +92,14 @@
         "min_offset": 0,
         "max_offset": 80,
         "observed_sizes": [
-          4,
-          8
+          4
         ],
-        "access_count": 4,
+        "access_count": 5,
         "evidence_notes": [
-          "4 memory access(es) observed at base 'x9' in function '_main'; offsets=[0, 80]; sizes=[4, 8]; classification=record_like"
+          "5 memory access(es) observed at base 'x9' in function '_main'; offsets=[0, 80]; sizes=[4]; classification=array_like"
         ],
         "source_instrs": [
+          "0x100000600",
           "0x100000700",
           "0x10000070c",
           "0x100000718",
@@ -88,7 +110,7 @@
         "function_entry": "0x10000074c",
         "function_name": "_mixed_driver",
         "base_id": "sp",
-        "layout_kind": "record_like",
+        "layout_kind": "array_like",
         "observed_offsets": [
           12,
           16
@@ -96,12 +118,11 @@
         "min_offset": 12,
         "max_offset": 16,
         "observed_sizes": [
-          4,
-          8
+          4
         ],
         "access_count": 27,
         "evidence_notes": [
-          "27 memory access(es) observed at base 'sp' in function '_mixed_driver'; offsets=[12, 16]; sizes=[4, 8]; classification=record_like"
+          "27 memory access(es) observed at base 'sp' in function '_mixed_driver'; offsets=[12, 16]; sizes=[4]; classification=array_like"
         ],
         "source_instrs": [
           "0x100000760",
@@ -147,11 +168,11 @@
         "min_offset": 8,
         "max_offset": 32,
         "observed_sizes": [
-          8
+          4
         ],
         "access_count": 27,
         "evidence_notes": [
-          "27 memory access(es) observed at base 'sp' in function '_cfg_pressure'; offsets=[8, 16, 24, 32]; sizes=[8]; classification=array_like"
+          "27 memory access(es) observed at base 'sp' in function '_cfg_pressure'; offsets=[8, 16, 24, 32]; sizes=[4]; classification=array_like"
         ],
         "source_instrs": [
           "0x1000008a4",
@@ -187,18 +208,18 @@
         "function_entry": "0x100000880",
         "function_name": "_cfg_pressure",
         "base_id": "x9",
-        "layout_kind": "pointer_like",
+        "layout_kind": "scalar",
         "observed_offsets": [
           80
         ],
         "min_offset": 80,
         "max_offset": 80,
         "observed_sizes": [
-          8
+          4
         ],
         "access_count": 2,
         "evidence_notes": [
-          "2 memory access(es) observed at base 'x9' in function '_cfg_pressure'; offsets=[80]; sizes=[8]; classification=pointer_like"
+          "2 memory access(es) observed at base 'x9' in function '_cfg_pressure'; offsets=[80]; sizes=[4]; classification=scalar"
         ],
         "source_instrs": [
           "0x100000b28",
@@ -219,11 +240,11 @@
         "min_offset": 0,
         "max_offset": 24,
         "observed_sizes": [
-          8
+          4
         ],
         "access_count": 15,
         "evidence_notes": [
-          "15 memory access(es) observed at base 'sp' in function '_indirect_pressure'; offsets=[0, 8, 16, 24]; sizes=[8]; classification=array_like"
+          "15 memory access(es) observed at base 'sp' in function '_indirect_pressure'; offsets=[0, 8, 16, 24]; sizes=[4]; classification=array_like"
         ],
         "source_instrs": [
           "0x100000b5c",
@@ -246,19 +267,42 @@
       {
         "function_entry": "0x100000b44",
         "function_name": "_indirect_pressure",
+        "base_id": "x8",
+        "layout_kind": "scalar",
+        "observed_offsets": [
+          0
+        ],
+        "min_offset": 0,
+        "max_offset": 0,
+        "observed_sizes": [
+          4
+        ],
+        "access_count": 3,
+        "evidence_notes": [
+          "3 memory access(es) observed at base 'x8' in function '_indirect_pressure'; offsets=[0]; sizes=[4]; classification=scalar"
+        ],
+        "source_instrs": [
+          "0x100000b98",
+          "0x100000c10",
+          "0x100000c5c"
+        ]
+      },
+      {
+        "function_entry": "0x100000b44",
+        "function_name": "_indirect_pressure",
         "base_id": "x9",
-        "layout_kind": "pointer_like",
+        "layout_kind": "scalar",
         "observed_offsets": [
           80
         ],
         "min_offset": 80,
         "max_offset": 80,
         "observed_sizes": [
-          8
+          4
         ],
         "access_count": 2,
         "evidence_notes": [
-          "2 memory access(es) observed at base 'x9' in function '_indirect_pressure'; offsets=[80]; sizes=[8]; classification=pointer_like"
+          "2 memory access(es) observed at base 'x9' in function '_indirect_pressure'; offsets=[80]; sizes=[4]; classification=scalar"
         ],
         "source_instrs": [
           "0x100000cac",
@@ -284,12 +328,11 @@
         "min_offset": 8,
         "max_offset": 48,
         "observed_sizes": [
-          4,
-          8
+          4
         ],
         "access_count": 70,
         "evidence_notes": [
-          "70 memory access(es) observed at base 'sp' in function '_stack_layout_pressure'; offsets=[8, 16, 20, 24, 28, 32, 36, 40, 48]; sizes=[4, 8]; classification=record_like"
+          "70 memory access(es) observed at base 'sp' in function '_stack_layout_pressure'; offsets=[8, 16, 20, 24, 28, 32, 36, 40, 48]; sizes=[4]; classification=record_like"
         ],
         "source_instrs": [
           "0x100000ce8",
@@ -376,15 +419,24 @@
         "min_offset": 0,
         "max_offset": 8,
         "observed_sizes": [
-          8
+          4
         ],
-        "access_count": 4,
+        "access_count": 13,
         "evidence_notes": [
-          "4 memory access(es) observed at base 'x8' in function '_stack_layout_pressure'; offsets=[0, 8]; sizes=[8]; classification=array_like"
+          "13 memory access(es) observed at base 'x8' in function '_stack_layout_pressure'; offsets=[0, 8]; sizes=[4]; classification=array_like"
         ],
         "source_instrs": [
           "0x100000cdc",
           "0x100000ce0",
+          "0x100000d2c",
+          "0x100000e5c",
+          "0x100000e94",
+          "0x100000ed0",
+          "0x100000f0c",
+          "0x100000f60",
+          "0x100000f7c",
+          "0x100000f9c",
+          "0x100000fbc",
           "0x100001028",
           "0x10000102c"
         ]
@@ -393,20 +445,24 @@
         "function_entry": "0x100000cc8",
         "function_name": "_stack_layout_pressure",
         "base_id": "x9",
-        "layout_kind": "pointer_like",
+        "layout_kind": "array_like",
         "observed_offsets": [
+          0,
           80
         ],
-        "min_offset": 80,
+        "min_offset": 0,
         "max_offset": 80,
         "observed_sizes": [
-          8
+          4
         ],
-        "access_count": 2,
+        "access_count": 5,
         "evidence_notes": [
-          "2 memory access(es) observed at base 'x9' in function '_stack_layout_pressure'; offsets=[80]; sizes=[8]; classification=pointer_like"
+          "5 memory access(es) observed at base 'x9' in function '_stack_layout_pressure'; offsets=[0, 80]; sizes=[4]; classification=array_like"
         ],
         "source_instrs": [
+          "0x100000d78",
+          "0x100000dc4",
+          "0x100000e0c",
           "0x10000100c",
           "0x100001014"
         ]
@@ -427,11 +483,11 @@
         "min_offset": 0,
         "max_offset": 40,
         "observed_sizes": [
-          8
+          4
         ],
         "access_count": 45,
         "evidence_notes": [
-          "45 memory access(es) observed at base 'sp' in function '_abi_pressure'; offsets=[0, 8, 16, 24, 32, 40]; sizes=[8]; classification=array_like"
+          "45 memory access(es) observed at base 'sp' in function '_abi_pressure'; offsets=[0, 8, 16, 24, 32, 40]; sizes=[4]; classification=array_like"
         ],
         "source_instrs": [
           "0x100001070",
@@ -485,18 +541,18 @@
         "function_entry": "0x100001054",
         "function_name": "_abi_pressure",
         "base_id": "x9",
-        "layout_kind": "pointer_like",
+        "layout_kind": "scalar",
         "observed_offsets": [
           80
         ],
         "min_offset": 80,
         "max_offset": 80,
         "observed_sizes": [
-          8
+          4
         ],
         "access_count": 2,
         "evidence_notes": [
-          "2 memory access(es) observed at base 'x9' in function '_abi_pressure'; offsets=[80]; sizes=[8]; classification=pointer_like"
+          "2 memory access(es) observed at base 'x9' in function '_abi_pressure'; offsets=[80]; sizes=[4]; classification=scalar"
         ],
         "source_instrs": [
           "0x100001204",
@@ -507,18 +563,18 @@
         "function_entry": "0x100001220",
         "function_name": "_rotmix",
         "base_id": "sp",
-        "layout_kind": "pointer_like",
+        "layout_kind": "scalar",
         "observed_offsets": [
           8
         ],
         "min_offset": 8,
         "max_offset": 8,
         "observed_sizes": [
-          8
+          4
         ],
         "access_count": 16,
         "evidence_notes": [
-          "16 memory access(es) observed at base 'sp' in function '_rotmix'; offsets=[8]; sizes=[8]; classification=pointer_like"
+          "16 memory access(es) observed at base 'sp' in function '_rotmix'; offsets=[8]; sizes=[4]; classification=scalar"
         ],
         "source_instrs": [
           "0x100001224",
@@ -543,18 +599,18 @@
         "function_entry": "0x100001220",
         "function_name": "_rotmix",
         "base_id": "x9",
-        "layout_kind": "pointer_like",
+        "layout_kind": "scalar",
         "observed_offsets": [
           80
         ],
         "min_offset": 80,
         "max_offset": 80,
         "observed_sizes": [
-          8
+          4
         ],
         "access_count": 2,
         "evidence_notes": [
-          "2 memory access(es) observed at base 'x9' in function '_rotmix'; offsets=[80]; sizes=[8]; classification=pointer_like"
+          "2 memory access(es) observed at base 'x9' in function '_rotmix'; offsets=[80]; sizes=[4]; classification=scalar"
         ],
         "source_instrs": [
           "0x100001298",
@@ -574,11 +630,11 @@
         "min_offset": 8,
         "max_offset": 24,
         "observed_sizes": [
-          8
+          4
         ],
         "access_count": 7,
         "evidence_notes": [
-          "7 memory access(es) observed at base 'sp' in function '_op_add'; offsets=[8, 16, 24]; sizes=[8]; classification=array_like"
+          "7 memory access(es) observed at base 'sp' in function '_op_add'; offsets=[8, 16, 24]; sizes=[4]; classification=array_like"
         ],
         "source_instrs": [
           "0x1000012b4",
@@ -594,18 +650,18 @@
         "function_entry": "0x1000012b0",
         "function_name": "_op_add",
         "base_id": "x9",
-        "layout_kind": "pointer_like",
+        "layout_kind": "scalar",
         "observed_offsets": [
           80
         ],
         "min_offset": 80,
         "max_offset": 80,
         "observed_sizes": [
-          8
+          4
         ],
         "access_count": 2,
         "evidence_notes": [
-          "2 memory access(es) observed at base 'x9' in function '_op_add'; offsets=[80]; sizes=[8]; classification=pointer_like"
+          "2 memory access(es) observed at base 'x9' in function '_op_add'; offsets=[80]; sizes=[4]; classification=scalar"
         ],
         "source_instrs": [
           "0x1000012dc",
@@ -625,11 +681,11 @@
         "min_offset": 8,
         "max_offset": 24,
         "observed_sizes": [
-          8
+          4
         ],
         "access_count": 7,
         "evidence_notes": [
-          "7 memory access(es) observed at base 'sp' in function '_op_xor'; offsets=[8, 16, 24]; sizes=[8]; classification=array_like"
+          "7 memory access(es) observed at base 'sp' in function '_op_xor'; offsets=[8, 16, 24]; sizes=[4]; classification=array_like"
         ],
         "source_instrs": [
           "0x1000012f8",
@@ -645,18 +701,18 @@
         "function_entry": "0x1000012f4",
         "function_name": "_op_xor",
         "base_id": "x9",
-        "layout_kind": "pointer_like",
+        "layout_kind": "scalar",
         "observed_offsets": [
           80
         ],
         "min_offset": 80,
         "max_offset": 80,
         "observed_sizes": [
-          8
+          4
         ],
         "access_count": 2,
         "evidence_notes": [
-          "2 memory access(es) observed at base 'x9' in function '_op_xor'; offsets=[80]; sizes=[8]; classification=pointer_like"
+          "2 memory access(es) observed at base 'x9' in function '_op_xor'; offsets=[80]; sizes=[4]; classification=scalar"
         ],
         "source_instrs": [
           "0x100001320",
@@ -676,11 +732,11 @@
         "min_offset": 8,
         "max_offset": 24,
         "observed_sizes": [
-          8
+          4
         ],
         "access_count": 7,
         "evidence_notes": [
-          "7 memory access(es) observed at base 'sp' in function '_op_mul'; offsets=[8, 16, 24]; sizes=[8]; classification=array_like"
+          "7 memory access(es) observed at base 'sp' in function '_op_mul'; offsets=[8, 16, 24]; sizes=[4]; classification=array_like"
         ],
         "source_instrs": [
           "0x10000133c",
@@ -696,18 +752,18 @@
         "function_entry": "0x100001338",
         "function_name": "_op_mul",
         "base_id": "x9",
-        "layout_kind": "pointer_like",
+        "layout_kind": "scalar",
         "observed_offsets": [
           80
         ],
         "min_offset": 80,
         "max_offset": 80,
         "observed_sizes": [
-          8
+          4
         ],
         "access_count": 2,
         "evidence_notes": [
-          "2 memory access(es) observed at base 'x9' in function '_op_mul'; offsets=[80]; sizes=[8]; classification=pointer_like"
+          "2 memory access(es) observed at base 'x9' in function '_op_mul'; offsets=[80]; sizes=[4]; classification=scalar"
         ],
         "source_instrs": [
           "0x10000136c",
@@ -727,11 +783,11 @@
         "min_offset": 8,
         "max_offset": 24,
         "observed_sizes": [
-          8
+          4
         ],
         "access_count": 9,
         "evidence_notes": [
-          "9 memory access(es) observed at base 'sp' in function '_op_shift'; offsets=[8, 16, 24]; sizes=[8]; classification=array_like"
+          "9 memory access(es) observed at base 'sp' in function '_op_shift'; offsets=[8, 16, 24]; sizes=[4]; classification=array_like"
         ],
         "source_instrs": [
           "0x100001388",
@@ -749,18 +805,18 @@
         "function_entry": "0x100001384",
         "function_name": "_op_shift",
         "base_id": "x9",
-        "layout_kind": "pointer_like",
+        "layout_kind": "scalar",
         "observed_offsets": [
           80
         ],
         "min_offset": 80,
         "max_offset": 80,
         "observed_sizes": [
-          8
+          4
         ],
         "access_count": 2,
         "evidence_notes": [
-          "2 memory access(es) observed at base 'x9' in function '_op_shift'; offsets=[80]; sizes=[8]; classification=pointer_like"
+          "2 memory access(es) observed at base 'x9' in function '_op_shift'; offsets=[80]; sizes=[4]; classification=scalar"
         ],
         "source_instrs": [
           "0x1000013c4",
@@ -781,11 +837,11 @@
         "min_offset": 0,
         "max_offset": 24,
         "observed_sizes": [
-          8
+          4
         ],
         "access_count": 11,
         "evidence_notes": [
-          "11 memory access(es) observed at base 'sp' in function '_op_div'; offsets=[0, 8, 16, 24]; sizes=[8]; classification=array_like"
+          "11 memory access(es) observed at base 'sp' in function '_op_div'; offsets=[0, 8, 16, 24]; sizes=[4]; classification=array_like"
         ],
         "source_instrs": [
           "0x1000013e0",
@@ -805,18 +861,18 @@
         "function_entry": "0x1000013dc",
         "function_name": "_op_div",
         "base_id": "x9",
-        "layout_kind": "pointer_like",
+        "layout_kind": "scalar",
         "observed_offsets": [
           80
         ],
         "min_offset": 80,
         "max_offset": 80,
         "observed_sizes": [
-          8
+          4
         ],
         "access_count": 2,
         "evidence_notes": [
-          "2 memory access(es) observed at base 'x9' in function '_op_div'; offsets=[80]; sizes=[8]; classification=pointer_like"
+          "2 memory access(es) observed at base 'x9' in function '_op_div'; offsets=[80]; sizes=[4]; classification=scalar"
         ],
         "source_instrs": [
           "0x10000142c",
@@ -836,11 +892,11 @@
         "min_offset": 8,
         "max_offset": 24,
         "observed_sizes": [
-          8
+          4
         ],
         "access_count": 9,
         "evidence_notes": [
-          "9 memory access(es) observed at base 'sp' in function '_op_logic'; offsets=[8, 16, 24]; sizes=[8]; classification=array_like"
+          "9 memory access(es) observed at base 'sp' in function '_op_logic'; offsets=[8, 16, 24]; sizes=[4]; classification=array_like"
         ],
         "source_instrs": [
           "0x100001448",
@@ -858,18 +914,18 @@
         "function_entry": "0x100001444",
         "function_name": "_op_logic",
         "base_id": "x9",
-        "layout_kind": "pointer_like",
+        "layout_kind": "scalar",
         "observed_offsets": [
           80
         ],
         "min_offset": 80,
         "max_offset": 80,
         "observed_sizes": [
-          8
+          4
         ],
         "access_count": 2,
         "evidence_notes": [
-          "2 memory access(es) observed at base 'x9' in function '_op_logic'; offsets=[80]; sizes=[8]; classification=pointer_like"
+          "2 memory access(es) observed at base 'x9' in function '_op_logic'; offsets=[80]; sizes=[4]; classification=scalar"
         ],
         "source_instrs": [
           "0x100001480",
@@ -889,12 +945,11 @@
         "min_offset": 12,
         "max_offset": 24,
         "observed_sizes": [
-          4,
-          8
+          4
         ],
         "access_count": 17,
         "evidence_notes": [
-          "17 memory access(es) observed at base 'sp' in function '_tri_a'; offsets=[12, 16, 24]; sizes=[4, 8]; classification=record_like"
+          "17 memory access(es) observed at base 'sp' in function '_tri_a'; offsets=[12, 16, 24]; sizes=[4]; classification=record_like"
         ],
         "source_instrs": [
           "0x1000014ac",
@@ -932,13 +987,11 @@
         "min_offset": 0,
         "max_offset": 40,
         "observed_sizes": [
-          1,
-          4,
-          8
+          4
         ],
         "access_count": 25,
         "evidence_notes": [
-          "25 memory access(es) observed at base 'sp' in function '_tri_b'; offsets=[0, 12, 16, 24, 32, 40]; sizes=[1, 4, 8]; classification=record_like"
+          "25 memory access(es) observed at base 'sp' in function '_tri_b'; offsets=[0, 12, 16, 24, 32, 40]; sizes=[4]; classification=record_like"
         ],
         "source_instrs": [
           "0x100001564",
@@ -972,18 +1025,18 @@
         "function_entry": "0x100001560",
         "function_name": "_tri_b",
         "base_id": "x9",
-        "layout_kind": "pointer_like",
+        "layout_kind": "scalar",
         "observed_offsets": [
           80
         ],
         "min_offset": 80,
         "max_offset": 80,
         "observed_sizes": [
-          8
+          4
         ],
         "access_count": 2,
         "evidence_notes": [
-          "2 memory access(es) observed at base 'x9' in function '_tri_b'; offsets=[80]; sizes=[8]; classification=pointer_like"
+          "2 memory access(es) observed at base 'x9' in function '_tri_b'; offsets=[80]; sizes=[4]; classification=scalar"
         ],
         "source_instrs": [
           "0x100001630",
@@ -1004,12 +1057,11 @@
         "min_offset": 0,
         "max_offset": 24,
         "observed_sizes": [
-          4,
-          8
+          4
         ],
         "access_count": 41,
         "evidence_notes": [
-          "41 memory access(es) observed at base 'sp' in function '_tri_c'; offsets=[0, 12, 16, 24]; sizes=[4, 8]; classification=record_like"
+          "41 memory access(es) observed at base 'sp' in function '_tri_c'; offsets=[0, 12, 16, 24]; sizes=[4]; classification=record_like"
         ],
         "source_instrs": [
           "0x10000165c",

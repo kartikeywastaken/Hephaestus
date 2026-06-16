@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "provenance": {
     "tool_name": "Radare2 Headless Analyser",
-    "timestamp": "2026-06-16T17:15:34-07:00",
+    "timestamp": "2026-06-16T17:43:52-07:00",
     "binary_path": "./t",
     "config": {}
   },
@@ -26983,24 +26983,24 @@
     ],
     "call_graph": {
       "nodes": [
-        "__stack_chk_fail",
-        "_op_add",
-        "_tri_b",
-        "_tri_c",
-        "_op_logic",
-        "_mixed_driver",
-        "_rotmix",
-        "_abi_pressure",
-        "_tri_a",
-        "_op_mul",
-        "_indirect_pressure",
-        "_op_shift",
         "_stack_layout_pressure",
-        "_op_xor",
+        "_op_shift",
+        "_cfg_pressure",
         "_main",
         "printf",
-        "_cfg_pressure",
-        "_op_div"
+        "_rotmix",
+        "_tri_a",
+        "_tri_b",
+        "_op_logic",
+        "_abi_pressure",
+        "_indirect_pressure",
+        "_op_add",
+        "_op_xor",
+        "_op_div",
+        "__stack_chk_fail",
+        "_tri_c",
+        "_op_mul",
+        "_mixed_driver"
       ],
       "edges": [
         {

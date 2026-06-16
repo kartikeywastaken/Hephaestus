@@ -1,0 +1,428 @@
+# -*- coding: utf-8 -*-
+"""
+One-Shot Hephaestus Pipeline Runner
+"""
+
+from __future__ import annotations
+import os
+import json
+import time
+import logging
+from pathlib import Path
+from typing import Any
+
+from src.utils.artifact_io import load_json_artifact, write_json_artifact
+from src.pipeline.manifest import start_manifest, record_stage, finalize_manifest, write_manifest, now_iso
+
+# Pipeline Imports
+from src.engine.orchestrator import PipelineOrchestrator
+from src.ir.assembler import IRAssembler
+from src.ir.validator import IRValidator
+from src.ir.symbols.aliases import apply_function_aliases_to_ir
+from src.ir.structuring.analysis import analyze_function
+from src.ir.structuring.builder import structure_function
+from src.ir.types.inference import recover_types
+from src.ir.types.emitter import write_type_recovery_artifact
+from src.ir.types.refinement_engine import TypeRefinementEngine
+from src.ir.types.semantic_emitter import write_semantic_recovery_artifact
+from src.ir.types.layout_recovery import LayoutRecoveryEngine
+from src.ir.types.layout_emitter import write_layout_recovery_artifact
+from src.ir.types.phase4_semantics import build_phase4_semantics
+from src.ir.types.phase4_emitter import write_phase4_semantics_artifact
+from src.ir.source.reconstructor import build_source_reconstruction
+from src.ir.source.emitter import write_source_reconstruction_artifact
+from src.ir.source.c_emitter import emit_recovered_c
+
+logger = logging.getLogger("reconstruct")
+
+class PipelineError(Exception):
+    """Pipeline execution exception."""
+    pass
+
+def run_stage_extract(binary_path: str, out_dir: str, use_ghidra: bool, use_radare2: bool) -> list[str]:
+    """Execute Phase 1 Extraction and Phase 2 Unified IR Assembly."""
+    if not (use_ghidra or use_radare2):
+        raise PipelineError("At least one extractor: --ghidra or --radare2 must be selected")
+    
+    orchestrator = PipelineOrchestrator(binary_path, out_dir, {})
+    manifest = orchestrator.execute_all(
+        run_ghidra=use_ghidra,
+        run_radare2=use_radare2,
+        run_trace=False
+    )
+    
+    if manifest.get("status") == "failed":
+        errors_str = "; ".join(manifest.get("errors", []))
+        raise PipelineError(f"Extraction failed: {errors_str}")
+        
+    assembler = IRAssembler(binary_path)
+    ghidra_raw = manifest["jobs"].get("ghidra")
+    radare2_raw = manifest["jobs"].get("radare2")
+    
+    unified_ir = assembler.assemble(ghidra_raw, radare2_raw, None)
+    ir_payload = unified_ir.to_dict()
+    apply_function_aliases_to_ir(ir_payload)
+    
+    # Self check validation
+    success, val_msg = IRValidator.validate_payload(ir_payload)
+    if not success:
+        logger.warning(f"Generated IR failed schema de-serialization selfcheck: {val_msg}")
+        
+    ir_path = os.path.join(out_dir, "unified_ir.json")
+    write_json_artifact(ir_path, ir_payload)
+    
+    outputs = ["unified_ir.json"]
+    if use_ghidra:
+        outputs.append("ghidra_extraction.json")
+    if use_radare2:
+        outputs.append("radare2_extraction.json")
+    return outputs
+
+def run_stage_analyze_cfg(out_dir: str) -> list[str]:
+    """Execute Phase 3 CFG Analysis and Region Structuring."""
+    ir_path = os.path.join(out_dir, "unified_ir.json")
+    if not os.path.exists(ir_path):
+        raise PipelineError(f"Missing required input unified_ir.json at {ir_path}")
+        
+    ir_payload = load_json_artifact(ir_path)
+    funcs = ir_payload.get("data", {}).get("functions", [])
+    analysis_reports = []
+    structuring_reports = []
+    
+    for func in funcs:
+        report = analyze_function(func, logger)
+        analysis_reports.append(report)
+        
+        structured_tree = structure_function(func, logger)
+        structuring_reports.append({
+            "function_name": func.get("name", "unknown"),
+            "structured_body": structured_tree.to_dict()
+        })
+        
+    structuring_path = os.path.join(out_dir, "structuring_analysis.json")
+    write_json_artifact(structuring_path, analysis_reports)
+    
+    regions_path = os.path.join(out_dir, "structuring_regions.json")
+    write_json_artifact(regions_path, structuring_reports)
+    
+    return ["structuring_analysis.json", "structuring_regions.json"]
+
+def run_stage_recover_semantics(out_dir: str) -> list[str]:
+    """Execute Phase 4A Signature and Variable Recovery."""
+    ir_path = os.path.join(out_dir, "unified_ir.json")
+    if not os.path.exists(ir_path):
+        raise PipelineError(f"Missing required input unified_ir.json at {ir_path}")
+        
+    ir_payload = load_json_artifact(ir_path)
+    
+    structuring_regions = None
+    regions_path = os.path.join(out_dir, "structuring_regions.json")
+    if os.path.exists(regions_path):
+        try:
+            structuring_regions = load_json_artifact(regions_path)
+            if not isinstance(structuring_regions, list):
+                structuring_regions = None
+        except Exception:
+            structuring_regions = None
+            
+    functions = recover_types(ir_payload, structuring_regions)
+    
+    output_path = os.path.join(out_dir, "type_recovery.json")
+    write_type_recovery_artifact(functions, output_path, ir_path, regions_path if structuring_regions else None)
+    return ["type_recovery.json"]
+
+def run_stage_refine_semantics(out_dir: str) -> list[str]:
+    """Execute Phase 4B Type Constraint Refinement."""
+    ir_path = os.path.join(out_dir, "unified_ir.json")
+    tr_path = os.path.join(out_dir, "type_recovery.json")
+    if not os.path.exists(ir_path) or not os.path.exists(tr_path):
+        raise PipelineError("Missing required inputs unified_ir.json or type_recovery.json")
+        
+    unified_ir = load_json_artifact(ir_path)
+    type_recovery = load_json_artifact(tr_path)
+    
+    structuring_regions = None
+    regions_path = os.path.join(out_dir, "structuring_regions.json")
+    if os.path.exists(regions_path):
+        try:
+            structuring_regions = load_json_artifact(regions_path)
+        except Exception:
+            pass
+            
+    layout_recovery = None
+    layout_path = os.path.join(out_dir, "layout_recovery.json")
+    if os.path.exists(layout_path):
+        try:
+            layout_recovery = load_json_artifact(layout_path)
+        except Exception:
+            pass
+            
+    engine = TypeRefinementEngine()
+    results = engine.refine(
+        unified_ir, type_recovery, structuring_regions,
+        layout_recovery=layout_recovery,
+    )
+    
+    output_path = os.path.join(out_dir, "semantic_recovery.json")
+    write_semantic_recovery_artifact(
+        results, output_path,
+        source_ir=ir_path,
+        source_type_recovery=tr_path,
+        source_structuring=regions_path if structuring_regions else None,
+    )
+    return ["semantic_recovery.json"]
+
+def run_stage_recover_layouts(out_dir: str) -> list[str]:
+    """Execute Phase 4C Conservative Data Layout Recovery."""
+    ir_path = os.path.join(out_dir, "unified_ir.json")
+    if not os.path.exists(ir_path):
+        raise PipelineError(f"Missing required input unified_ir.json at {ir_path}")
+        
+    unified_ir = load_json_artifact(ir_path)
+    
+    engine = LayoutRecoveryEngine()
+    candidates, unbound = engine.recover(unified_ir)
+    
+    output_path = os.path.join(out_dir, "layout_recovery.json")
+    write_layout_recovery_artifact(candidates, unbound, output_path, source_ir=ir_path)
+    return ["layout_recovery.json"]
+
+def run_stage_finalize_semantics(out_dir: str) -> list[str]:
+    """Execute Phase 4D Semantic Artifact Merger."""
+    tr_path = os.path.join(out_dir, "type_recovery.json")
+    if not os.path.exists(tr_path):
+        raise PipelineError(f"Missing required input type_recovery.json at {tr_path}")
+        
+    type_recovery = load_json_artifact(tr_path)
+    
+    semantic_recovery = None
+    sr_path = os.path.join(out_dir, "semantic_recovery.json")
+    if os.path.exists(sr_path):
+        try:
+            semantic_recovery = load_json_artifact(sr_path)
+        except Exception:
+            pass
+            
+    layout_recovery = None
+    lr_path = os.path.join(out_dir, "layout_recovery.json")
+    if os.path.exists(lr_path):
+        try:
+            layout_recovery = load_json_artifact(lr_path)
+        except Exception:
+            pass
+            
+    artifact = build_phase4_semantics(
+        type_recovery,
+        semantic_recovery=semantic_recovery,
+        layout_recovery=layout_recovery,
+        source_type_recovery=tr_path,
+        source_semantic_recovery=sr_path if semantic_recovery else None,
+        source_layout_recovery=lr_path if layout_recovery else None,
+    )
+    
+    output_path = os.path.join(out_dir, "phase4_semantics.json")
+    write_phase4_semantics_artifact(
+        artifact, output_path,
+        source_type_recovery=tr_path,
+        source_semantic_recovery=sr_path if semantic_recovery else None,
+        source_layout_recovery=lr_path if layout_recovery else None,
+    )
+    return ["phase4_semantics.json"]
+
+def run_stage_reconstruct_source(out_dir: str) -> list[str]:
+    """Execute Phase 5 Source Reconstruction."""
+    ir_path = os.path.join(out_dir, "unified_ir.json")
+    regions_path = os.path.join(out_dir, "structuring_regions.json")
+    sem_path = os.path.join(out_dir, "phase4_semantics.json")
+    if not os.path.exists(ir_path) or not os.path.exists(regions_path) or not os.path.exists(sem_path):
+        raise PipelineError("Missing required inputs unified_ir.json, structuring_regions.json, or phase4_semantics.json")
+        
+    unified_ir = load_json_artifact(ir_path)
+    structuring_regions = load_json_artifact(regions_path)
+    phase4_semantics = load_json_artifact(sem_path)
+    
+    layout_recovery = None
+    lr_path = os.path.join(out_dir, "layout_recovery.json")
+    if os.path.exists(lr_path):
+        try:
+            layout_recovery = load_json_artifact(lr_path)
+        except Exception:
+            pass
+            
+    artifact = build_source_reconstruction(
+        unified_ir, structuring_regions, phase4_semantics,
+        layout_recovery=layout_recovery,
+    )
+    
+    c_path = os.path.join(out_dir, "recovered.c")
+    emit_recovered_c(artifact, c_path)
+    
+    recon_path = os.path.join(out_dir, "source_reconstruction.json")
+    write_source_reconstruction_artifact(
+        artifact, recon_path,
+        source_ir=ir_path,
+        source_structuring=regions_path,
+        source_semantics=sem_path,
+        source_layout=lr_path if layout_recovery else None,
+    )
+    return ["source_reconstruction.json", "recovered.c"]
+
+def run_pipeline(
+    binary_path: str,
+    out_dir: str = "artifacts",
+    use_ghidra: bool = False,
+    use_radare2: bool = False,
+    clean: bool = False,
+    continue_on_error: bool = False,
+    no_source: bool = False,
+    stop_after: str | None = None,
+) -> dict:
+    """Run Hephaestus pipeline and return execution manifest."""
+    from src.utils.artifacts import ensure_out_dir, clean_known_artifacts
+    from main import setup_logging
+    
+    # Clean previous run artifacts if requested
+    if clean:
+        clean_known_artifacts(out_dir)
+        
+    ensure_out_dir(out_dir)
+    
+    # Consolidate log file
+    setup_logging(out_dir)
+    logger.info("[run-all] start")
+    
+    manifest = start_manifest(binary_path, out_dir)
+    
+    STAGES = [
+        "extract",
+        "analyze_cfg",
+        "recover_semantics",
+        "refine_semantics",
+        "recover_layouts",
+        "finalize_semantics",
+        "reconstruct_source"
+    ]
+    
+    if stop_after:
+        if stop_after not in STAGES:
+            logger.error(f"[run-all] Invalid stop-after stage name: {stop_after}")
+            raise PipelineError(f"Invalid stop-after stage name: {stop_after}")
+        idx = STAGES.index(stop_after)
+        active_stages = STAGES[:idx+1]
+    else:
+        active_stages = STAGES.copy()
+        
+    if no_source:
+        if "reconstruct_source" in active_stages:
+            active_stages.remove("reconstruct_source")
+            
+    status = "ok"
+    
+    for stage in active_stages:
+        logger.info(f"[stage {stage}] start")
+        started_at = now_iso()
+        start_time = time.perf_counter()
+        stage_status = "ok"
+        outputs = []
+        error_msg = None
+        
+        try:
+            if stage == "extract":
+                outputs = run_stage_extract(binary_path, out_dir, use_ghidra, use_radare2)
+            elif stage == "analyze_cfg":
+                outputs = run_stage_analyze_cfg(out_dir)
+            elif stage == "recover_semantics":
+                outputs = run_stage_recover_semantics(out_dir)
+            elif stage == "refine_semantics":
+                outputs = run_stage_refine_semantics(out_dir)
+            elif stage == "recover_layouts":
+                outputs = run_stage_recover_layouts(out_dir)
+            elif stage == "finalize_semantics":
+                outputs = run_stage_finalize_semantics(out_dir)
+            elif stage == "reconstruct_source":
+                outputs = run_stage_reconstruct_source(out_dir)
+        except Exception as e:
+            stage_status = "failed"
+            error_msg = str(e)
+            logger.error(f"[stage {stage}] failed: {e}")
+            status = "partial" if continue_on_error else "failed"
+            
+        finished_at = now_iso()
+        duration_ms = int((time.perf_counter() - start_time) * 1000)
+        
+        if stage_status == "ok":
+            logger.info(f"[stage {stage}] ok duration_ms={duration_ms}")
+            
+        record_stage(
+            manifest=manifest,
+            name=stage,
+            status=stage_status,
+            outputs=outputs,
+            error=error_msg,
+            metrics={},
+            started_at=started_at,
+            finished_at=finished_at,
+            duration_ms=duration_ms
+        )
+        
+        if stage_status == "failed" and not continue_on_error:
+            break
+            
+    # Gather output artifacts paths
+    final_outputs = {}
+    for key, filename in [
+        ("unified_ir", "unified_ir.json"),
+        ("phase4_semantics", "phase4_semantics.json"),
+        ("source_reconstruction", "source_reconstruction.json"),
+        ("recovered_c", "recovered.c")
+    ]:
+        path = os.path.join(out_dir, filename)
+        if os.path.exists(path):
+            final_outputs[key] = path
+            
+    # Compile summary statistics
+    summary_dict = {
+        "source_schema_version": "5.7.2",
+        "functions_total": 0,
+        "instructions_total": 0,
+        "instructions_lowered": 0,
+        "instructions_commented": 0,
+        "lowering_coverage_percent": 0.0,
+        "condition_expressions_recovered": 0,
+        "declarations_total": 0,
+        "unsupported_instruction_kinds": {}
+    }
+    
+    recon_path = os.path.join(out_dir, "source_reconstruction.json")
+    if os.path.exists(recon_path):
+        try:
+            with open(recon_path, "r", encoding="utf-8") as f:
+                recon_data = json.load(f)
+            summary_dict["source_schema_version"] = recon_data.get("schema_version", "5.7.2")
+            rs = recon_data.get("summary", {})
+            for k in [
+                "instructions_total", "instructions_lowered",
+                "instructions_commented", "condition_expressions_recovered",
+                "functions_total", "lowering_coverage_percent", "declarations_total"
+            ]:
+                # Map functions_total correctly
+                summary_key = k
+                if k == "functions_total" and "functions_total" not in rs:
+                    # fallback to total reconstructed if not present
+                    summary_key = "functions_total"
+                
+                # Check for direct mapping or fallback
+                if k in rs:
+                    summary_dict[summary_key] = rs[k]
+                elif k == "functions_total" and "functions_total" in rs:
+                    summary_dict["functions_total"] = rs["functions_total"]
+            if "unsupported_instruction_kinds" in rs:
+                summary_dict["unsupported_instruction_kinds"] = rs["unsupported_instruction_kinds"]
+        except Exception:
+            pass
+            
+    finalize_manifest(manifest, status, summary_dict, final_outputs)
+    write_manifest(manifest, out_dir)
+    
+    logger.info(f"[run-all] finished status={status}")
+    return manifest

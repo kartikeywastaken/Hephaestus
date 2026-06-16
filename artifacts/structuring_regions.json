@@ -1,5 +1,28 @@
 [
   {
+    "function_name": "__stack_chk_fail",
+    "structured_body": {
+      "type": "block",
+      "id": "0x10000183c"
+    }
+  },
+  {
+    "function_name": "printf",
+    "structured_body": {
+      "type": "sequence",
+      "children": [
+        {
+          "type": "block",
+          "id": "0x100001830"
+        },
+        {
+          "type": "block",
+          "id": "0x10000183c"
+        }
+      ]
+    }
+  },
+  {
     "function_name": "_main",
     "structured_body": {
       "type": "sequence",
@@ -154,18 +177,6 @@
                   },
                   {
                     "type": "block",
-                    "id": "0x100000690"
-                  },
-                  {
-                    "type": "block",
-                    "id": "0x1000006b0"
-                  },
-                  {
-                    "type": "block",
-                    "id": "0x1000006d4"
-                  },
-                  {
-                    "type": "block",
                     "id": "0x1000006e4"
                   }
                 ]
@@ -177,17 +188,8 @@
           ]
         },
         {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x1000006f4"
-            },
-            {
-              "type": "block",
-              "id": "0x100000728"
-            }
-          ]
+          "type": "block",
+          "id": "0x1000006f4"
         }
       ]
     }
@@ -323,17 +325,8 @@
           ]
         },
         {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x100000994"
-            },
-            {
-              "type": "block",
-              "id": "0x1000009a4"
-            }
-          ]
+          "type": "block",
+          "id": "0x100000994"
         },
         {
           "type": "sequence",
@@ -349,17 +342,8 @@
           ]
         },
         {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x1000009b4"
-            },
-            {
-              "type": "block",
-              "id": "0x1000009c4"
-            }
-          ]
+          "type": "block",
+          "id": "0x1000009b4"
         },
         {
           "type": "sequence",
@@ -375,17 +359,8 @@
           ]
         },
         {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x1000009d4"
-            },
-            {
-              "type": "block",
-              "id": "0x100000a04"
-            }
-          ]
+          "type": "block",
+          "id": "0x1000009d4"
         },
         {
           "type": "sequence",
@@ -433,25 +408,12 @@
                   {
                     "type": "block",
                     "id": "0x100000a40"
-                  },
-                  {
-                    "type": "block",
-                    "id": "0x100000a50"
                   }
                 ]
               },
               "else_branch": {
-                "type": "sequence",
-                "children": [
-                  {
-                    "type": "block",
-                    "id": "0x100000a60"
-                  },
-                  {
-                    "type": "block",
-                    "id": "0x100000a70"
-                  }
-                ]
+                "type": "block",
+                "id": "0x100000a60"
               },
               "merge_block": "0x100000a80"
             },
@@ -492,17 +454,8 @@
           ]
         },
         {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x100000a88"
-            },
-            {
-              "type": "block",
-              "id": "0x100000a98"
-            }
-          ]
+          "type": "block",
+          "id": "0x100000a88"
         },
         {
           "type": "sequence",
@@ -622,10 +575,6 @@
                       {
                         "type": "block",
                         "id": "0x100000b74"
-                      },
-                      {
-                        "type": "block",
-                        "id": "0x100000bb8"
                       }
                     ]
                   },
@@ -649,21 +598,8 @@
                           ]
                         },
                         "else_branch": {
-                          "type": "sequence",
-                          "children": [
-                            {
-                              "type": "block",
-                              "id": "0x100000bf0"
-                            },
-                            {
-                              "type": "block",
-                              "id": "0x100000c2c"
-                            },
-                            {
-                              "type": "block",
-                              "id": "0x100000c84"
-                            }
-                          ]
+                          "type": "block",
+                          "id": "0x100000bf0"
                         },
                         "merge_block": "0x100000c94"
                       },
@@ -732,10 +668,6 @@
                   {
                     "type": "block",
                     "id": "0x100000d0c"
-                  },
-                  {
-                    "type": "block",
-                    "id": "0x100000d24"
                   },
                   {
                     "type": "block",
@@ -969,30 +901,6 @@
               "id": "0x100001054"
             },
             {
-              "type": "block",
-              "id": "0x1000010ac"
-            },
-            {
-              "type": "block",
-              "id": "0x1000010c4"
-            },
-            {
-              "type": "block",
-              "id": "0x1000010dc"
-            },
-            {
-              "type": "block",
-              "id": "0x1000010f4"
-            },
-            {
-              "type": "block",
-              "id": "0x100001114"
-            },
-            {
-              "type": "block",
-              "id": "0x10000112c"
-            },
-            {
               "type": "loop",
               "kind": "while_like",
               "header_block": "0x100001140",
@@ -1155,17 +1063,8 @@
                           "id": "0x10000150c"
                         },
                         {
-                          "type": "sequence",
-                          "children": [
-                            {
-                              "type": "block",
-                              "id": "0x100001524"
-                            },
-                            {
-                              "type": "block",
-                              "id": "0x100001530"
-                            }
-                          ]
+                          "type": "block",
+                          "id": "0x100001524"
                         }
                       ]
                     },
@@ -1447,17 +1346,8 @@
           ]
         },
         {
-          "type": "sequence",
-          "children": [
-            {
-              "type": "block",
-              "id": "0x1000017cc"
-            },
-            {
-              "type": "block",
-              "id": "0x1000017dc"
-            }
-          ]
+          "type": "block",
+          "id": "0x1000017cc"
         },
         {
           "type": "sequence",
@@ -1483,29 +1373,6 @@
       ],
       "reason": "irreducible_cfg",
       "region_kind": "cyclic"
-    }
-  },
-  {
-    "function_name": "__stack_chk_fail",
-    "structured_body": {
-      "type": "block",
-      "id": "0x10000183c"
-    }
-  },
-  {
-    "function_name": "printf",
-    "structured_body": {
-      "type": "sequence",
-      "children": [
-        {
-          "type": "block",
-          "id": "0x100001830"
-        },
-        {
-          "type": "block",
-          "id": "0x10000183c"
-        }
-      ]
     }
   }
 ]
