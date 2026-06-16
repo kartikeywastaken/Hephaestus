@@ -329,6 +329,129 @@ def parse_raw_mem_operand(raw_str: str) -> tuple[str, int] | None:
     return base, offset
 
 
+VALID_ARM64_CONDITIONS = {
+    "eq", "ne",
+    "cs", "hs",
+    "cc", "lo",
+    "mi", "pl",
+    "vs", "vc",
+    "hi", "ls",
+    "ge", "lt",
+    "gt", "le",
+    "al", "nv",
+}
+
+def parse_cset_operands(instr: dict) -> tuple[str | None, str | None]:
+    """
+    Return (dst_register, condition_code).
+
+    Accept structured operands first.
+    Fallback to raw string parse:
+      cset <dst>, <cond>
+    Normalize condition to lowercase.
+    Strip commas/spaces.
+    Validate condition code against VALID_ARM64_CONDITIONS.
+    """
+    ops = instr.get("operands", [])
+    if not ops:
+        raw = instr.get("raw", "")
+        if raw:
+            import re
+            m = re.match(r"^\s*cset\s+([a-zA-Z0-9_]+)\s*,\s*([a-zA-Z0-9_]+)\s*$", raw, re.IGNORECASE)
+            if m:
+                dst = m.group(1).strip()
+                cond = m.group(2).lower().strip()
+                if cond in VALID_ARM64_CONDITIONS:
+                    return dst, cond
+        return None, None
+        
+    dst = ops[0]
+    dst_val = dst.get("value") or dst.get("raw") or dst.get("name")
+    if not dst_val:
+        return None, None
+        
+    # Join subsequent operands to handle split condition code tokens
+    cond_parts = []
+    for op in ops[1:]:
+        val = op.get("value") or op.get("raw") or op.get("name")
+        if val is not None:
+            cond_parts.append(str(val).strip())
+    cond_code = "".join(cond_parts).lower().strip()
+    
+    # If the joined cond_code is not in VALID_ARM64_CONDITIONS, try raw parsing
+    if cond_code not in VALID_ARM64_CONDITIONS:
+        raw = instr.get("raw", "")
+        if raw:
+            import re
+            m = re.match(r"^\s*cset\s+([a-zA-Z0-9_]+)\s*,\s*([a-zA-Z0-9_]+)\s*$", raw, re.IGNORECASE)
+            if m:
+                dst_val = m.group(1).strip()
+                cond_code = m.group(2).lower().strip()
+                
+    if cond_code in VALID_ARM64_CONDITIONS:
+        return str(dst_val), cond_code
+        
+    return None, None
+
+
+def parse_ldp_raw(raw: str) -> tuple[str, str, str, int, bool] | None:
+    """
+    Parses a raw ldp instruction string.
+    Returns (reg1, reg2, base, offset, is_post_index) or None.
+    """
+    import re
+    raw = raw.strip()
+    
+    # Pattern 1: Normal offset / pre-index offset
+    # Examples: ldp x29, x30, [sp, #0x60]
+    #           ldp x8,x9,[x29,#-0x20]
+    #           ldp x29,x30,[sp]
+    m1 = re.match(r"^\s*ldp\s+([a-zA-Z0-9_]+)\s*,\s*([a-zA-Z0-9_]+)\s*,\s*\[\s*([a-zA-Z0-9_]+)\s*(?:,\s*#?(-?0x[0-9a-fA-F]+|-?[0-9]+))?\s*\]\s*!?\s*$", raw, re.IGNORECASE)
+    if m1:
+        reg1 = m1.group(1)
+        reg2 = m1.group(2)
+        base = m1.group(3)
+        off_str = m1.group(4)
+        offset = 0
+        if off_str:
+            try:
+                if "0x" in off_str:
+                    sign = -1 if off_str.startswith("-") else 1
+                    val = int(off_str.replace("-", "").replace("0x", ""), 16)
+                    offset = sign * val
+                else:
+                    offset = int(off_str)
+            except ValueError:
+                return None
+        return reg1, reg2, base, offset, False
+
+    # Pattern 2: Post-index offset
+    # Examples: ldp x28,x27,[sp], #0x20
+    #           ldp x28,x27,[sp],#0x20
+    #           ldp x29,x30,[sp], #0x10
+    m2 = re.match(r"^\s*ldp\s+([a-zA-Z0-9_]+)\s*,\s*([a-zA-Z0-9_]+)\s*,\s*\[\s*([a-zA-Z0-9_]+)\s*\]\s*,\s*#?(-?0x[0-9a-fA-F]+|-?[0-9]+)\s*$", raw, re.IGNORECASE)
+    if m2:
+        reg1 = m2.group(1)
+        reg2 = m2.group(2)
+        base = m2.group(3)
+        off_str = m2.group(4)
+        offset = 0
+        if off_str:
+            try:
+                if "0x" in off_str:
+                    sign = -1 if off_str.startswith("-") else 1
+                    val = int(off_str.replace("-", "").replace("0x", ""), 16)
+                    offset = sign * val
+                else:
+                    offset = int(off_str)
+            except ValueError:
+                return None
+        return reg1, reg2, base, 0, True
+        
+    return None
+
+
+
 def assert_no_raw_bracket_memory_expr(expr: str) -> None:
     stripped = expr.strip()
     if stripped.startswith("[") or " = [" in stripped or " =  [" in stripped or "=[" in stripped:
@@ -755,16 +878,16 @@ def lower_arm64_instructions(
                 stmt_kind = "binary_op"
                 is_lowered = True
 
-            elif mnemonic == "cset" and len(ops) >= 2:
-                dst, cond_op = ops[0], ops[1]
-                dst_expr = operand_to_expr(dst, reg_to_arg, warnings=warnings)
-                cond_val = str(cond_op.get("value") or cond_op.get("name") or cond_op.get("raw") or "").lower().strip()
-                escaped_cond = cond_val.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t")
-                
-                lowered_text_list.append(f"{dst_expr} = HEPHAESTUS_CSET(\"{escaped_cond}\"); /* cset {dst.get('value', '')},{cond_val}; flags not modeled */")
-                stmt_kind = "binary_op"
-                is_lowered = True
-                custom_comment = True
+            elif mnemonic == "cset":
+                dst_reg, cond_code = parse_cset_operands(ins)
+                if dst_reg and cond_code:
+                    dst_expr = c_temp_for_register(dst_reg, reg_to_arg)
+                    escaped_cond = cond_code.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t")
+                    
+                    lowered_text_list.append(f"{dst_expr} = HEPHAESTUS_CSET(\"{escaped_cond}\"); /* cset {dst_reg},{cond_code}; flags not modeled */")
+                    stmt_kind = "binary_op"
+                    is_lowered = True
+                    custom_comment = True
 
             elif mnemonic in {"ldr", "ldur", "ldrb", "ldrh", "ldurb", "ldurh", "ldrsw", "ldursw"} and len(ops) >= 2:
                 dst, mem = ops[0], ops[1]
@@ -902,30 +1025,43 @@ def lower_arm64_instructions(
                 stmt_kind = "return_comment"
                 is_lowered = True
 
-            elif mnemonic in {"stp", "ldp"} and len(ops) >= 3:
-                reg1, reg2, mem = ops[0], ops[1], ops[2]
-                reg1_expr = operand_to_expr(reg1, reg_to_arg, warnings=warnings)
-                reg2_expr = operand_to_expr(reg2, reg_to_arg, warnings=warnings)
-
-                # Resolve base and offset
-                base, offset = "", 0
+            elif mnemonic in {"stp", "ldp"}:
                 resolved = False
-                if mem.get("kind") == "memory":
-                    base = mem.get("base") or ""
-                    raw_offset = mem.get("offset")
-                    try:
-                        offset = int(raw_offset) if raw_offset is not None else 0
-                        resolved = True
-                    except (ValueError, TypeError):
-                        pass
-                elif mem.get("kind") == "unknown":
-                    parsed = parse_raw_mem_operand(mem.get("raw") or "")
+                # If it is ldp, try raw parsing first to ensure we get post-indexed and exact offsets
+                if mnemonic == "ldp":
+                    parsed = parse_ldp_raw(raw)
                     if parsed:
-                        base, offset = parsed
+                        reg1_name, reg2_name, base, offset, is_post_index = parsed
+                        reg1_expr = c_temp_for_register(reg1_name, reg_to_arg)
+                        reg2_expr = c_temp_for_register(reg2_name, reg_to_arg)
+                        reg1_val = reg1_name.lower().strip()
                         resolved = True
+                
+                # Try standard structured parsing if not resolved yet
+                if not resolved and len(ops) >= 3:
+                    reg1, reg2, mem = ops[0], ops[1], ops[2]
+                    try:
+                        reg1_expr = operand_to_expr(reg1, reg_to_arg, warnings=warnings)
+                        reg2_expr = operand_to_expr(reg2, reg_to_arg, warnings=warnings)
+                        if mem.get("kind") == "memory":
+                            base = mem.get("base") or ""
+                            raw_offset = mem.get("offset")
+                            try:
+                                offset = int(raw_offset) if raw_offset is not None else 0
+                                resolved = True
+                            except (ValueError, TypeError):
+                                pass
+                        elif mem.get("kind") == "unknown":
+                            parsed = parse_raw_mem_operand(mem.get("raw") or "")
+                            if parsed:
+                                base, offset = parsed
+                                resolved = True
+                        is_post_index = False
+                        reg1_val = str(reg1.get("value") or "").lower()
+                    except Exception:
+                        pass
 
                 if resolved:
-                    reg1_val = str(reg1.get("value") or "").lower()
                     size = 4 if reg1_val.startswith("w") else 8
                     
                     if mnemonic == "stp":
@@ -944,8 +1080,15 @@ def lower_arm64_instructions(
                         stmt1_text = f"{reg1_expr} = {mem1};"
                         stmt2_text = f"{reg2_expr} = {mem2};"
                         
+                        if is_post_index:
+                            stmt1_text += f" /* {raw}; post-index writeback not modeled */"
+                            stmt2_text += f" /* paired load second register inferred offset +{size} */"
+                            custom_comment = True
+                        else:
+                            stmt2_text += f" /* paired load second register inferred offset +{size} */"
+                            
                         lowered_text_list.append(stmt1_text)
-                        lowered_text_list.append(f"{stmt2_text} /* paired load second register inferred offset +{size} */")
+                        lowered_text_list.append(stmt2_text)
                     stmt_kind = "store" if mnemonic == "stp" else "load"
                     is_lowered = True
 
@@ -992,6 +1135,8 @@ def lower_arm64_instructions(
                 fallback_text = f"/* unsupported indexed memory load: {raw} */"
             elif mnemonic == "ldp":
                 fallback_text = f"/* unsupported paired load: {raw} */"
+            elif mnemonic == "cset":
+                fallback_text = f"/* unsupported cset: {raw} */"
             else:
                 fallback_text = f"/* {addr}: unsupported instruction: {raw} */"
 

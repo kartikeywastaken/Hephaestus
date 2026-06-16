@@ -58,17 +58,31 @@ def test_clean_known_artifacts():
         binary = out_dir / "target_bin"
         binary.write_bytes(b"\x00\x01\x02")
         
+        # Create a known directory
+        known_dir = out_dir / "ghidra_temp_proj"
+        known_dir.mkdir()
+        (known_dir / "dummy.txt").write_text("dummy", encoding="utf-8")
+        
+        # Create an unrelated directory
+        unrelated_dir = out_dir / "user_dir"
+        unrelated_dir.mkdir()
+        (unrelated_dir / "dummy2.txt").write_text("dummy2", encoding="utf-8")
+
         # Run cleanup
         deleted = clean_known_artifacts(out_dir)
         
         # Assert deleted names list
         assert "recovered.c" in deleted
         assert "unified_ir.json" in deleted
+        assert "ghidra_temp_proj" in deleted
         assert "user_source.c" not in deleted
         assert "target_bin" not in deleted
+        assert "user_dir" not in deleted
         
-        # Check files on disk
+        # Check files and directories on disk
         assert not known1.exists()
         assert not known2.exists()
+        assert not known_dir.exists()
         assert unrelated.exists()
         assert binary.exists()
+        assert unrelated_dir.exists()

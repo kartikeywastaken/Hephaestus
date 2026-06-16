@@ -295,9 +295,82 @@ class TestArm64RemainingLowering:
         # invalid SHOULD be unsupported
         assert "invalid" in global_unsupported
         assert global_unsupported["invalid"] == 1
+        
+    # Test 16 — cset raw fallback and splitting variants
+    def test_16_cset_raw_variants(self):
+        # cset w8,eq
+        ins1 = _make_ins("cset", [_reg("w8"), _unknown("eq")], raw="cset w8,eq")
+        stmts1, _ = lower_function_instructions(_make_ir_func(basic_blocks=[_make_bb(instructions=[ins1])]), unified_ir=_make_ir())
+        assert stmts1[0].text == 'tmp_w8 = HEPHAESTUS_CSET("eq"); /* cset w8,eq; flags not modeled */'
 
-    # Test 16 — Ultimate torture regression check
-    def test_16_ultimate_torture_regression(self):
+        # cset w8, eq
+        ins2 = _make_ins("cset", [_reg("w8"), _unknown("eq")], raw="cset w8, eq")
+        stmts2, _ = lower_function_instructions(_make_ir_func(basic_blocks=[_make_bb(instructions=[ins2])]), unified_ir=_make_ir())
+        assert stmts2[0].text == 'tmp_w8 = HEPHAESTUS_CSET("eq"); /* cset w8,eq; flags not modeled */'
+
+        # CSET W8, EQ
+        ins3 = _make_ins("cset", [_reg("w8"), _unknown("eq")], raw="CSET W8, EQ")
+        stmts3, _ = lower_function_instructions(_make_ir_func(basic_blocks=[_make_bb(instructions=[ins3])]), unified_ir=_make_ir())
+        assert stmts3[0].text == 'tmp_w8 = HEPHAESTUS_CSET("eq"); /* cset w8,eq; flags not modeled */'
+
+        # Split operands (e.g. l and t from Ghidra)
+        ins4 = _make_ins("cset", [_reg("w8"), _unknown("l"), _unknown("t")], raw="cset w8,lt")
+        stmts4, _ = lower_function_instructions(_make_ir_func(basic_blocks=[_make_bb(instructions=[ins4])]), unified_ir=_make_ir())
+        assert stmts4[0].text == 'tmp_w8 = HEPHAESTUS_CSET("lt"); /* cset w8,lt; flags not modeled */'
+
+    # Test 17 — cset invalid condition remains unsupported
+    def test_17_cset_invalid(self):
+        ins = _make_ins("cset", [_reg("w8"), _unknown("???")], raw="cset w8,???")
+        stmts, _ = lower_function_instructions(_make_ir_func(basic_blocks=[_make_bb(instructions=[ins])]), unified_ir=_make_ir())
+        assert stmts[0].lowered is False
+        assert stmts[0].text == "/* unsupported cset: cset w8,??? */"
+
+    # Test 18 — ldp variants
+    def test_18_ldp_variants(self):
+        # 1. ldp compact raw: ldp x29,x30,[sp,#0x60]
+        ins1 = _make_ins("ldp", [_reg("x29"), _reg("x30"), _unknown("[sp,#0x60]")], raw="ldp x29,x30,[sp,#0x60]")
+        stmts1, _ = lower_function_instructions(_make_ir_func(basic_blocks=[_make_bb(instructions=[ins1])]), unified_ir=_make_ir())
+        assert len(stmts1) == 2
+        assert stmts1[0].text == "tmp_fp = stack_96; /* ldp x29,x30,[sp,#0x60] */"
+        assert stmts1[1].text == "tmp_lr = stack_104; /* paired load second register inferred offset +8 */"
+
+        # 2. ldp spaced raw: ldp x29, x30, [sp, #0x60]
+        ins2 = _make_ins("ldp", [_reg("x29"), _reg("x30"), _unknown("[sp, #0x60]")], raw="ldp x29, x30, [sp, #0x60]")
+        stmts2, _ = lower_function_instructions(_make_ir_func(basic_blocks=[_make_bb(instructions=[ins2])]), unified_ir=_make_ir())
+        assert len(stmts2) == 2
+        assert stmts2[0].text == "tmp_fp = stack_96; /* ldp x29, x30, [sp, #0x60] */"
+        assert stmts2[1].text == "tmp_lr = stack_104; /* paired load second register inferred offset +8 */"
+
+        # 3. ldp post-index: ldp x29,x30,[sp],#0x10
+        ins3 = _make_ins("ldp", [_reg("x29"), _reg("x30"), _unknown("[sp]")], raw="ldp x29,x30,[sp],#0x10")
+        stmts3, _ = lower_function_instructions(_make_ir_func(basic_blocks=[_make_bb(instructions=[ins3])]), unified_ir=_make_ir())
+        assert len(stmts3) == 2
+        assert stmts3[0].text == "tmp_fp = stack_0; /* ldp x29,x30,[sp],#0x10; post-index writeback not modeled */"
+        assert stmts3[1].text == "tmp_lr = stack_8; /* paired load second register inferred offset +8 */"
+
+        # 4. ldp negative frame offset: ldp x8,x9,[x29,#-0x20]
+        ins4 = _make_ins("ldp", [_reg("x8"), _reg("x9"), _unknown("[x29,#-0x20]")], raw="ldp x8,x9,[x29,#-0x20]")
+        stmts4, _ = lower_function_instructions(_make_ir_func(basic_blocks=[_make_bb(instructions=[ins4])]), unified_ir=_make_ir())
+        assert len(stmts4) == 2
+        assert stmts4[0].text == "tmp_x8 = stack_m32; /* ldp x8,x9,[x29,#-0x20] */"
+        assert stmts4[1].text == "tmp_x9 = stack_m24; /* paired load second register inferred offset +8 */"
+
+        # 5. ldp non-stack base: ldp x8,x9,[x10,#0x10]
+        ins5 = _make_ins("ldp", [_reg("x8"), _reg("x9"), _unknown("[x10,#0x10]")], raw="ldp x8,x9,[x10,#0x10]")
+        stmts5, _ = lower_function_instructions(_make_ir_func(basic_blocks=[_make_bb(instructions=[ins5])]), unified_ir=_make_ir())
+        assert len(stmts5) == 2
+        assert stmts5[0].text == "tmp_x8 = *(u64 *)(tmp_x10 + 16); /* ldp x8,x9,[x10,#0x10] */"
+        assert stmts5[1].text == "tmp_x9 = *(u64 *)(tmp_x10 + 24); /* paired load second register inferred offset +8 */"
+
+        # 6. ldp w-register pair: ldp w8,w9,[x10,#0x10]
+        ins6 = _make_ins("ldp", [_reg("w8"), _reg("w9"), _unknown("[x10,#0x10]")], raw="ldp w8,w9,[x10,#0x10]")
+        stmts6, _ = lower_function_instructions(_make_ir_func(basic_blocks=[_make_bb(instructions=[ins6])]), unified_ir=_make_ir())
+        assert len(stmts6) == 2
+        assert stmts6[0].text == "tmp_w8 = *(u32 *)(tmp_x10 + 16); /* ldp w8,w9,[x10,#0x10] */"
+        assert stmts6[1].text == "tmp_w9 = *(u32 *)(tmp_x10 + 20); /* paired load second register inferred offset +4 */"
+
+    # Test 19 — Ultimate torture regression check
+    def test_19_ultimate_torture_regression(self):
         artifact = SourceReconstructionArtifact()
         assert artifact.summary["condition_expressions_recovered"] == 0
 
