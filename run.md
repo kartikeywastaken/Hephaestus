@@ -4,6 +4,32 @@ This document lists the commands to compile, extract, and analyze real binaries 
 
 ---
 
+## Quickstart
+
+### Compile target program
+```bash
+clang -O0 -g t.c -o t
+```
+
+### Run Full Pipeline
+```bash
+python3 main.py run-all ./t \
+  --ghidra \
+  --radare2 \
+  --out-dir artifacts \
+  --clean
+```
+
+### Run Stress Tests
+```bash
+python3 main.py stress-test \
+  --profile hard \
+  --out-dir artifacts/stress/hard \
+  --clean
+```
+
+---
+
 ## 1. Compilation (Preparing Target Binaries)
 
 To preserve the natural control-flow structures of the binary without compiler optimizations, compile with `-O0`:

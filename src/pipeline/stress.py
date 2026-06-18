@@ -13,6 +13,7 @@ from typing import Any
 
 from src.pipeline.runner import run_pipeline
 from src.pipeline.checks import run_artifact_checks
+from src.pipeline.clang import clang_available, run_clang_syntax_check
 
 def generate_stress_c(profile: str, out_path: Path, seed: int = 1337) -> dict:
     """Generate deterministic C stress input based on seed and profile."""
@@ -192,7 +193,7 @@ def generate_stress_c(profile: str, out_path: Path, seed: int = 1337) -> dict:
 
 def compile_stress_source(source_path: Path, binary_path: Path) -> dict:
     """Compile generated stress source with clang -O0 -g."""
-    if not shutil.which("clang"):
+    if not clang_available():
         return {
             "path": str(binary_path),
             "compiled": False,
@@ -224,43 +225,7 @@ def compile_stress_source(source_path: Path, binary_path: Path) -> dict:
             "compile_error": str(e)
         }
 
-def run_clang_syntax_check(recovered_c_path: Path) -> dict:
-    """Perform syntax-only clang diagnostics compilation check on recovered.c."""
-    if not shutil.which("clang"):
-        return {
-            "clang_syntax_check_attempted": False,
-            "clang_syntax_check_status": "skipped",
-            "clang_syntax_errors": 0,
-            "clang_syntax_warnings": 0
-        }
-    try:
-        res = subprocess.run(
-            ["clang", "-fsyntax-only", str(recovered_c_path)],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True
-        )
-        errors = 0
-        warnings = 0
-        for line in res.stderr.splitlines():
-            if ": error:" in line:
-                errors += 1
-            elif ": warning:" in line:
-                warnings += 1
-        status = "ok" if res.returncode == 0 and errors == 0 else "failed"
-        return {
-            "clang_syntax_check_attempted": True,
-            "clang_syntax_check_status": status,
-            "clang_syntax_errors": errors,
-            "clang_syntax_warnings": warnings
-        }
-    except Exception:
-        return {
-            "clang_syntax_check_attempted": False,
-            "clang_syntax_check_status": "error",
-            "clang_syntax_errors": 0,
-            "clang_syntax_warnings": 0
-        }
+# (run_clang_syntax_check is now imported from src.pipeline.clang)
 
 def run_stress_test(
     profile: str,
@@ -319,7 +284,16 @@ def run_stress_test(
         
         # 5. Clang syntax diagnostic checks
         recovered_c = out_dir_path / "recovered.c"
-        diagnostics_info = run_clang_syntax_check(recovered_c)
+        clang_res = run_clang_syntax_check(recovered_c)
+        if "attempted" in clang_res:
+            diagnostics_info = {
+                "clang_syntax_check_attempted": clang_res["attempted"],
+                "clang_syntax_check_status": clang_res["status"],
+                "clang_syntax_errors": clang_res["errors"],
+                "clang_syntax_warnings": clang_res["warnings"]
+            }
+        else:
+            diagnostics_info = clang_res
         
         # 6. Extract summary metrics
         metrics_info = manifest.get("summary", {})

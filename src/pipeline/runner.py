@@ -13,6 +13,7 @@ from typing import Any
 
 from src.utils.artifact_io import load_json_artifact, write_json_artifact
 from src.pipeline.manifest import start_manifest, record_stage, finalize_manifest, write_manifest, now_iso
+from src.pipeline.stage_defs import PIPELINE_STAGES
 
 # Pipeline Imports
 from src.engine.orchestrator import PipelineOrchestrator
@@ -293,15 +294,7 @@ def run_pipeline(
     
     manifest = start_manifest(binary_path, out_dir)
     
-    STAGES = [
-        "extract",
-        "analyze_cfg",
-        "recover_semantics",
-        "refine_semantics",
-        "recover_layouts",
-        "finalize_semantics",
-        "reconstruct_source"
-    ]
+    STAGES = PIPELINE_STAGES
     
     if stop_after:
         if stop_after not in STAGES:

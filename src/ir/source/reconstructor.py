@@ -25,48 +25,13 @@ from src.ir.source.models import (
     SourceReconstructionArtifact,
 )
 from src.ir.utils.addressing import normalize_address
+from src.ir.source.names import sanitize_c_identifier, function_c_name
+from src.ir.source.summary import default_source_summary, finalize_source_summary
 
 logger = logging.getLogger(__name__)
 
 
-# ---------------------------------------------------------------------------
-# C identifier sanitization
-# ---------------------------------------------------------------------------
-
-_C_IDENT_RE = re.compile(r"[^a-zA-Z0-9_]")
-
-
-def sanitize_c_identifier(name: str) -> str:
-    """
-    Convert an arbitrary string into a valid C identifier.
-
-    Rules:
-    - Replace non-alphanumeric/underscore chars with '_'
-    - Prefix with 'fn_' if starts with a digit
-    - Ensure non-empty (fallback: 'fn_unknown')
-    - Collapse consecutive underscores
-    - Strip trailing underscores
-    """
-    if not name or not name.strip():
-        return "fn_unknown"
-
-    sanitized = _C_IDENT_RE.sub("_", name.strip())
-
-    # Collapse consecutive underscores
-    while "__" in sanitized:
-        sanitized = sanitized.replace("__", "_")
-
-    # Strip leading/trailing underscores
-    sanitized = sanitized.strip("_")
-
-    if not sanitized:
-        return "fn_unknown"
-
-    # Prefix with 'fn_' if starts with digit
-    if sanitized[0].isdigit():
-        sanitized = f"fn_{sanitized}"
-
-    return sanitized
+# (sanitize_c_identifier is now imported from src.ir.source.names)
 
 
 # ---------------------------------------------------------------------------
@@ -578,7 +543,7 @@ def build_source_reconstruction(
         canonical_name = alias_map.get(ep_norm, name)
 
         # Sanitized C identifier
-        c_name = sanitize_c_identifier(canonical_name)
+        c_name = function_c_name(canonical_name, ep_norm)
 
         # Match Phase 4D semantics
         sem = _match_semantics(ep_norm, name, sem_by_entry, sem_by_name)
@@ -826,7 +791,8 @@ def build_source_reconstruction(
             global_unsupported_kinds[mnem] = global_unsupported_kinds.get(mnem, 0) + count
 
     # Build summary
-    summary = {
+    summary = default_source_summary()
+    summary.update({
         "functions_total": len(reconstructed),
         "functions_emitted": len(reconstructed),
         "functions_structured": n_structured,
@@ -848,7 +814,6 @@ def build_source_reconstruction(
         "instructions_total": total_instrs,
         "instructions_lowered": total_lowered,
         "instructions_commented": total_commented,
-        "lowering_coverage_percent": round((total_lowered / total_instrs) * 100, 2) if total_instrs else 0.0,
         # Phase 5.3 statistics
         "control_flow_regions_total": control_flow_regions_total,
         "control_flow_constructs_emitted": control_flow_constructs_emitted,
@@ -894,7 +859,8 @@ def build_source_reconstruction(
         "cset_helper_emitted": 0,
         # Phase 5.7.1 unsupported instruction kinds
         "unsupported_instruction_kinds": {k: v for k, v in sorted(global_unsupported_kinds.items())},
-    }
+    })
+    summary = finalize_source_summary(summary)
 
     artifact = SourceReconstructionArtifact(
         schema_version=SCHEMA_VERSION,

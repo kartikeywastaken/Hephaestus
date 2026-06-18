@@ -678,53 +678,59 @@ markers =
 
 ---
 
-## Roadmap
+---
 
-### Phase 4C — Conservative Data Layout Recovery
+## Safety Policy
 
-Planned focus:
+Hephaestus operates under a strict safety policy:
 
-* observed memory-access grouping
-* base-object candidates
-* offset and size facts
-* array/pointer layout hints
-* conservative layout candidates
+> **Missing evidence is acceptable. Fabricated evidence is not.**
 
-Phase 4C should emit layout facts and candidates, not final C structs.
-
-### Phase 5 — Source Reconstruction
-
-Planned focus:
-
-* AST construction
-* structured code emission
-* uncertainty annotations
-* source-level placeholder comments where evidence is incomplete
-
-### Phase 6 — Validation & Repair
-
-Planned focus:
-
-* compile generated code
-* detect structural mismatches
-* compare recovered behavior against evidence
-* feed corrections back into the pipeline
+- **Allowed outputs**: Pseudo registers (e.g., `tmp_x0`), pseudo stack slots (e.g., `stack_0`), call target helpers (e.g., `call_0x100000abc()`), syntax adapters (`HEPHAESTUS_UNKNOWN_COND`, `HEPHAESTUS_CSET`), unsupported comments, and layout candidates.
+- **Forbidden outputs**: Fake source variables, fake structs, fake fields, fake arrays, fake executable conditions, and fake flag variables.
 
 ---
 
-## Notes
+## Limitations
 
-Hephaestus is under active development.
+- **ARM64-Focused**: Instruction lowering and semantic constraints currently assume ARM64 architecture.
+- **Syntax-Safe, Not Semantic Equivalence**: Emitted C code compiles syntax-safely under `clang -fsyntax-only` but is a conservative outline, not a direct semantic equivalent.
+- **No Real Condition Recovery**: Control-flow condition expressions are represented as unknown condition helpers rather than executable boolean checks.
+- **No Struct/Field/Array Recovery**: Structured types and layout offsets are not dynamically fabricated.
+- **Unsupported Instructions Preserved**: Instructions without lowering rules are explicitly emitted as comments.
+- **External Dependencies**: Requires Ghidra and Radare2 backends installed and in path for full metadata extraction.
 
-The current milestone is a stable staged reconstruction backbone through Phase 4B.1:
+---
 
-```text
-Extraction
-→ Canonical IR
-→ CFG structuring
-→ Initial type recovery
-→ Instruction-backed semantic refinement
-→ Conservative operand binding
+## Quickstart
+
+### Compile target program
+```bash
+clang -O0 -g t.c -o t
 ```
 
-The next major milestone is Phase 4C: conservative data-layout recovery.
+### Run Full Pipeline
+```bash
+python3 main.py run-all ./t \
+  --ghidra \
+  --radare2 \
+  --out-dir artifacts \
+  --clean
+```
+
+### Run Stress Tests
+To stress test Hephaestus against generated C programs:
+```bash
+python3 main.py stress-test \
+  --profile hard \
+  --out-dir artifacts/stress/hard \
+  --clean
+```
+
+---
+
+## Roadmap
+
+### Phase 6 — Validation & Repair (Future Work)
+- Compile generated C code, capture syntactic mismatches, and feed repairs back into decompiler semantics.
+

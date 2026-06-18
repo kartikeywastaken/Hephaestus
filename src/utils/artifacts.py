@@ -23,7 +23,6 @@ KNOWN_ARTIFACT_FILES = {
     "source_reconstruction.json",
     "recovered.c",
     "stress_report.json",
-    "stress_manifest.json",
 }
 
 KNOWN_ARTIFACT_DIRS = {
@@ -64,26 +63,35 @@ def clean_known_artifacts(out_dir: str | Path) -> list[str]:
     deleted = []
     if not base.exists():
         return deleted
+    
+    # Strictly reject path traversal or cleaning system folders
+    if base == Path("/").resolve() or base == Path.home().resolve():
+        raise ValueError("Cannot clean root or home directory")
+        
     for name in KNOWN_ARTIFACT_FILES:
-        file_path = base / name
-        if file_path.is_file() or file_path.is_symlink():
-            try:
-                # Security sanity check
-                file_path.resolve().relative_to(base)
+        if "/" in name or "\\" in name or ".." in name:
+            continue
+        file_path = (base / name).resolve()
+        try:
+            # Check path traversal
+            file_path.relative_to(base)
+            if file_path.is_file() or file_path.is_symlink():
                 file_path.unlink()
                 deleted.append(name)
-            except Exception:
-                pass
+        except Exception:
+            pass
                 
     for dir_name in KNOWN_ARTIFACT_DIRS:
-        dir_path = base / dir_name
-        if dir_path.is_dir() and not dir_path.is_symlink():
-            try:
-                # Security sanity check
-                dir_path.resolve().relative_to(base)
+        if "/" in dir_name or "\\" in dir_name or ".." in dir_name:
+            continue
+        dir_path = (base / dir_name).resolve()
+        try:
+            # Check path traversal
+            dir_path.relative_to(base)
+            if dir_path.is_dir() and not dir_path.is_symlink():
                 shutil.rmtree(dir_path)
                 deleted.append(dir_name)
-            except Exception:
-                pass
+        except Exception:
+            pass
                 
     return sorted(deleted)

@@ -25,6 +25,12 @@ from src.ir.source.models import (
     ReconstructedFunction,
     SourceReconstructionArtifact,
 )
+from src.ir.source.c_helpers import (
+    RESERVED_HELPERS,
+    emit_typedefs,
+    emit_unknown_cond_helper,
+    emit_cset_helper,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -642,41 +648,16 @@ def emit_recovered_c(
     lines.append("")
 
     # Custom type definitions
-    lines.append("typedef uint8_t u8;")
-    lines.append("typedef uint16_t u16;")
-    lines.append("typedef uint32_t u32;")
-    lines.append("typedef uint64_t u64;")
-    lines.append("typedef int8_t i8;")
-    lines.append("typedef int16_t i16;")
-    lines.append("typedef int32_t i32;")
-    lines.append("typedef int64_t i64;")
+    lines.extend(emit_typedefs())
     lines.append("")
 
     # Helper function / Macro Design
     if unknown_condition_helpers_emitted == 1:
-        lines.append("/*")
-        lines.append(" * HEPHAESTUS_UNKNOWN_COND is a syntax adapter for unrecovered branch")
-        lines.append(" * predicates. Its argument preserves low-level evidence. The return value is")
-        lines.append(" * not a recovered program condition and must not be used for behavioral claims.")
-        lines.append(" */")
-        lines.append("static int HEPHAESTUS_UNKNOWN_COND(const char *evidence)")
-        lines.append("{")
-        lines.append("    (void)evidence;")
-        lines.append("    return 0;")
-        lines.append("}")
+        lines.extend(emit_unknown_cond_helper())
         lines.append("")
 
     if cset_helper_emitted == 1:
-        lines.append("/*")
-        lines.append(" * HEPHAESTUS_CSET is a syntax adapter for ARM64 cset instructions.")
-        lines.append(" * Its argument preserves the ARM64 condition code. The return value is not a")
-        lines.append(" * recovered high-level condition.")
-        lines.append(" */")
-        lines.append("static u64 HEPHAESTUS_CSET(const char *condition)")
-        lines.append("{")
-        lines.append("    (void)condition;")
-        lines.append("    return 0;")
-        lines.append("}")
+        lines.extend(emit_cset_helper())
         lines.append("")
 
     # Forward declarations
@@ -708,6 +689,7 @@ def emit_recovered_c(
         existing_fn_names.add(fn.name)
         existing_fn_names.add(fn.canonical_name)
     existing_fn_names.update({"printf", "stack_chk_fail", "main"})
+    existing_fn_names.update(RESERVED_HELPERS)
 
     filtered_helpers = []
     for helper in global_call_helpers:
