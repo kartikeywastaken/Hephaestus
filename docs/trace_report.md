@@ -156,3 +156,16 @@ The report payload conforms to the schema `trace-report-1.0`:
   "diagnostics": []
 }
 ```
+
+---
+
+## Downstream Consumption: Phase 6.4 Quality Gate
+
+The `trace_report.json` is a primary input consumed by the Phase 6.4 Quality Gate to determine readability readiness for Phase 7:
+1. **Critical Safety Check**: If `trace_report.json` is missing or contains an invalid schema, the Quality Gate evaluates to `blocked`.
+2. **Readiness & Traceability Scoring**: The Quality Gate computes:
+   - **`evidence_coverage_score`**: Checks statements marked as `evidence_backed`.
+   - **`traceability_score`**: Checks statements that have known confidence labels (`evidence_backed`, `generated_scaffold`, `syntax_adapter`, `commentary_only`).
+3. **Risk Scoring**: The `risk_score` increases (+10 each) if the trace report contains `true_unsupported_statements > 0`, `high_attention_lines > 0`, or `unattached_validation_findings > 0`.
+4. **Gate Status Escalation**: If the trace report reveals any `true_unsupported_statements > 0`, `high_attention_lines > 0`, or if there are `unattached_validation_findings`, the Quality Gate escalates the final status to `review` (if not already `blocked`).
+

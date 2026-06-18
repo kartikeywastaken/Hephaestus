@@ -81,7 +81,6 @@ def check_manifest(artifacts: ValidationArtifacts, report: dict) -> None:
         message="Pipeline manifest status is ok." if status_ok else f"Pipeline manifest status is '{manifest_status}'."
     )
     
-    # 3. Check: pipeline_manifest_stage_order_valid
     expected_order = [
         "extract",
         "analyze_cfg",
@@ -89,7 +88,11 @@ def check_manifest(artifacts: ValidationArtifacts, report: dict) -> None:
         "refine_semantics",
         "recover_layouts",
         "finalize_semantics",
-        "reconstruct_source"
+        "reconstruct_source",
+        "build_evidence_index",
+        "validate",
+        "build_trace_report",
+        "quality_gate"
     ]
     stages = manifest.get("stages", [])
     executed_names = [s.get("name") for s in stages if s.get("name")]

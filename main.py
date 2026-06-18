@@ -758,6 +758,7 @@ def handle_run_all_cli():
     parser.add_argument("--require-evidence-index", action="store_true", help="Fail validation if evidence_index.json is missing.")
     parser.add_argument("--trace-report", action="store_true", help="Generate trace report artifact.")
     parser.add_argument("--require-trace-report", action="store_true", help="Fail validation if trace_report.json is missing.")
+    parser.add_argument("--quality-gate", action="store_true", help="Run quality gate readiness check.")
     
     args = parser.parse_args(sys.argv[2:])
     
@@ -782,6 +783,7 @@ def handle_run_all_cli():
             require_evidence_index=args.require_evidence_index,
             trace_report=args.trace_report,
             require_trace_report=args.require_trace_report,
+            quality_gate=args.quality_gate,
         )
 
 
@@ -849,6 +851,10 @@ def main():
     	elif first_arg == "build-trace-report":
             from src.validation.trace_report.cli import run_build_trace_report_cli
             code = run_build_trace_report_cli(sys.argv[2:])
+            sys.exit(code)
+    	elif first_arg == "quality-gate":
+            from src.validation.quality_gate.cli import run_quality_gate_cli
+            code = run_quality_gate_cli(sys.argv[2:])
             sys.exit(code)
 
 

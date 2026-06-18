@@ -17,6 +17,7 @@ OPTIONAL_PIPELINE_STAGES = [
     "build_evidence_index",
     "validate",
     "build_trace_report",
+    "quality_gate",
 ]
 
 STAGE_OUTPUTS = {
@@ -54,6 +55,10 @@ STAGE_OUTPUTS = {
     "build_trace_report": [
         "trace_report.json",
         "trace_report.md",
+    ],
+    "quality_gate": [
+        "quality_gate.json",
+        "quality_gate.md",
     ],
 }
 

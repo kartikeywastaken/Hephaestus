@@ -28,6 +28,8 @@ KNOWN_ARTIFACT_FILES = {
     "evidence_index.json",
     "trace_report.json",
     "trace_report.md",
+    "quality_gate.json",
+    "quality_gate.md",
 }
 
 

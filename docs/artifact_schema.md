@@ -17,3 +17,6 @@ Hephaestus uses standard JSON structures to store state between stages. This ens
 | `stress_report.json` | stress-test | `stress-1.0` | Compilation, correctness, and decompiler status for stress binaries. |
 | `validation_report.json` | validate | `validation-1.0` | Validation checks run, errors/warnings count, and detailed findings list. |
 | `validation.log` | validate | (plain text log) | Logs of validation execution steps, check results, and failures. |
+| `evidence_index.json` | build_evidence_index | `evidence-index-1.0` | Classification category and confidence per emitted C line. |
+| `trace_report.json` | build_trace_report | `trace-report-1.0` | Map of statements, confidence categories, validation findings, and attention levels. |
+| `quality_gate.json` | quality_gate | `quality-gate-1.0` | Readability readiness scoring, blocked/review/ready status, and Phase 7 hints. |

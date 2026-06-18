@@ -283,9 +283,15 @@ def run_pipeline(
     require_evidence_index: bool = False,
     trace_report: bool = False,
     require_trace_report: bool = False,
+    quality_gate: bool = False,
 ) -> dict:
     """Run Hephaestus pipeline and return execution manifest."""
     from src.utils.artifacts import ensure_out_dir, clean_known_artifacts
+    
+    if quality_gate:
+        evidence_index = True
+        validate = True
+        trace_report = True
     from main import setup_logging
     from src.pipeline.stage_defs import OPTIONAL_PIPELINE_STAGES
     
@@ -313,12 +319,14 @@ def run_pipeline(
             raise PipelineError(f"Invalid stop-after stage name: {stop_after}")
             
         combined_stages = PIPELINE_STAGES.copy()
-        if stop_after == "build_evidence_index" or (evidence_index or validate or validate_strict or trace_report):
+        if stop_after == "build_evidence_index" or (evidence_index or validate or validate_strict or trace_report or quality_gate):
             combined_stages.append("build_evidence_index")
-        if stop_after == "validate" or (validate or validate_strict):
+        if stop_after == "validate" or (validate or validate_strict or quality_gate):
             combined_stages.append("validate")
-        if stop_after == "build_trace_report" or trace_report:
+        if stop_after == "build_trace_report" or trace_report or quality_gate:
             combined_stages.append("build_trace_report")
+        if stop_after == "quality_gate" or quality_gate:
+            combined_stages.append("quality_gate")
             
         if stop_after in combined_stages:
             idx = combined_stages.index(stop_after)
@@ -583,6 +591,65 @@ def run_pipeline(
         record_stage(
             manifest=manifest,
             name="build_trace_report",
+            status=stage_status,
+            outputs=outputs,
+            error=error_msg,
+            metrics={},
+            started_at=started_at,
+            finished_at=finished_at,
+            duration_ms=duration_ms
+        )
+        write_manifest(manifest, out_dir)
+
+    # Check quality gate after trace report generation has completed
+    if quality_gate and (not stop_after or "quality_gate" in active_stages):
+        logger.info("[run-all] running quality gate stage")
+        started_at = now_iso()
+        start_time = time.perf_counter()
+        stage_status = "ok"
+        error_msg = None
+        outputs = []
+        
+        from src.validation.quality_gate import build_quality_gate
+        
+        try:
+            build_quality_gate(
+                out_dir=out_dir,
+                markdown_mode=True,
+                strict=validate_strict
+            )
+            
+            json_path = os.path.join(out_dir, "quality_gate.json")
+            md_path = os.path.join(out_dir, "quality_gate.md")
+            if os.path.exists(json_path):
+                outputs.append("quality_gate.json")
+                manifest["final_outputs"]["quality_gate"] = json_path
+                
+                # Check status inside quality_gate.json to block pipeline status if blocked
+                import json
+                with open(json_path, "r", encoding="utf-8") as f:
+                    qg_data = json.load(f)
+                if qg_data.get("status") == "blocked":
+                    logger.error("[run-all] quality gate blocked Phase 7 execution")
+                    status = "failed"
+                    manifest["status"] = "failed"
+            if os.path.exists(md_path):
+                outputs.append("quality_gate.md")
+                manifest["final_outputs"]["quality_gate_markdown"] = md_path
+                
+        except Exception as e:
+            logger.exception("[run-all] quality gate stage crashed: %s", e)
+            stage_status = "failed"
+            error_msg = str(e)
+            status = "failed"
+            manifest["status"] = "failed"
+            
+        finished_at = now_iso()
+        duration_ms = int((time.perf_counter() - start_time) * 1000)
+        
+        record_stage(
+            manifest=manifest,
+            name="quality_gate",
             status=stage_status,
             outputs=outputs,
             error=error_msg,

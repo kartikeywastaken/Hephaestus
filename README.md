@@ -45,20 +45,22 @@ Hephaestus does not insert mock instructions, fake variables, fake types, fake s
 * Phase 4D: Final Phase 4 semantic artifact merger
 * Phase 5: Conservative source reconstruction (AST emission, `recovered.c` C skeleton)
 * Phase 5.8: Artifact consolidation, one-shot pipeline runner, and stress testing harness
+* Phase 6.1 - 6.3: Static validator, evidence indexes, and trace reports
+* Phase 6.4: Readability readiness quality gate
 
 ### Current Test Status
 
 ```text
-627 passed
+722 passed
 1 xfailed
 0 failures
 ```
 
-The adversarial and simulation test suites include cases for instruction validation, assembler stability, CFG structuring, operand binding, type constraints, semantic refinement, layout recovery, artifact merging, integration behavior, regression invariants, manifest generation, safe path utilities, and stress generation.
+The adversarial and simulation test suites include cases for instruction validation, assembler stability, CFG structuring, operand binding, type constraints, semantic refinement, layout recovery, artifact merging, integration behavior, regression invariants, manifest generation, safe path utilities, stress generation, and quality gate scores/rules evaluation.
 
 ### Next
 
-* Phase 6: Validation, compilation, and repair loop
+* Phase 7: Static readability reconstruction
 
 ---
 
@@ -719,11 +721,28 @@ python3 main.py run-all ./t \
   --validate
 ```
 
+### Run Full Pipeline with Quality Gate
+```bash
+python3 main.py run-all ./t \
+  --ghidra \
+  --radare2 \
+  --out-dir artifacts \
+  --clean \
+  --quality-gate
+```
+
 ### Run Validation Standalone
 ```bash
 python3 main.py validate \
   --out-dir artifacts \
   --strict
+```
+
+### Run Quality Gate Standalone
+```bash
+python3 main.py quality-gate \
+  --out-dir artifacts \
+  --markdown
 ```
 
 ### Run Stress Tests

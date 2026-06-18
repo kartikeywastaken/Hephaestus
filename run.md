@@ -450,3 +450,35 @@ To enforce that the validation phase requires the presence of a trace report:
 ```bash
 python3 main.py run-all ./target_binary --ghidra --radare2 --out-dir artifacts --clean --validate --trace-report --require-trace-report
 ```
+
+---
+
+## 17. Readability Readiness Quality Gate (Phase 6.4)
+
+Evaluate decompiler output readiness for Phase 7 readability transformations using scoring and safety decision logic.
+
+```bash
+python3 main.py quality-gate --out-dir artifacts --markdown
+```
+
+### Options:
+- `--out-dir DIR`: Directory containing Hephaestus output artifacts (defaults to `artifacts`).
+- `--markdown`: Generate human-readable quality summary to `quality_gate.md`.
+- `--json`: Prints a compact single-line JSON summary to stdout.
+- `--strict`: Enforce strict decision criteria.
+
+### Standalone Exit Codes:
+- `0`: Status is `ready` or `review` (safe to proceed).
+  - **`ready`**: Safe to proceed.
+  - **`review`**: Compiler warnings only or validation warnings present. Phase 7 may proceed, but the output `recovered_readable.c` should be marked as lower confidence or requiring manual review.
+- `1`: Status is `blocked` (do not proceed). Triggered by compilation/syntax errors, missing critical files, validation safety/policy errors, non-zero condition expressions recovered, or hash mutations.
+- `2`: Internal CLI usage error or crash.
+
+> **Note on Blocker Invariance**: Strict validation policy failures (like strict accounting mismatches) do not automatically block Phase 7 unless they correspond to a hard blocker category.
+
+### Integrated Quality Gate:
+Run quality gate checks automatically at the end of `run-all`:
+```bash
+python3 main.py run-all ./target_binary --ghidra --radare2 --out-dir artifacts --clean --quality-gate
+```
+

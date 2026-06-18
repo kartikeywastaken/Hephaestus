@@ -138,3 +138,9 @@ In Phase 6.2, this approximate check is resolved and bypassed when a statement-l
 
 This enables a precise validation check (`evidence_index_unsupported_accounting`) to verify that the `true_unsupported` count matches `unsupported_instruction_kinds` perfectly, without false positives.
 
+---
+
+## Readability Readiness Quality Gate Integration (Phase 6.4)
+
+The Quality Gate (`src/validation/quality_gate/`) consumes `validation_report.json` to evaluate validation health and risk indices. If the validation report contains errors, the gate evaluates to `blocked`, preventing the execution of Phase 7 static readability reconstruction.
+

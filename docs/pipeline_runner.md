@@ -24,3 +24,6 @@ Run `main.py run-all <binary>`:
 - `--stop-after`: Execute stages up to and including the specified stage name.
 - `--validate`: Run the static validation suite after the reconstruct_source stage.
 - `--validate-strict`: Run the strict validation suite after the reconstruct_source stage, marking the pipeline status failed if validation checks return error findings.
+- `--evidence-index`: Generate statement-level evidence classification registry (`evidence_index.json`).
+- `--trace-report`: Generate detailed explainability report (`trace_report.json` and `trace_report.md`).
+- `--quality-gate`: Evaluate readability readiness gate (`quality_gate.json` and `quality_gate.md`). Automatically schedules evidence index, validation, and trace report stages.
