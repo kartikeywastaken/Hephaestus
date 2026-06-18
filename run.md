@@ -482,3 +482,34 @@ Run quality gate checks automatically at the end of `run-all`:
 python3 main.py run-all ./target_binary --ghidra --radare2 --out-dir artifacts --clean --quality-gate
 ```
 
+---
+
+## Phase 7.1 — Human-Readable C Output
+
+Phase 7.1 introduces a best-effort, human-readable decompilation skeleton `recovered_readable.c` that replaces simple `HEPHAESTUS_UNKNOWN_COND` adapters with statically inferred C boolean expressions.
+
+### Standalone CLI Command
+```bash
+python3 main.py build-readable --out-dir artifacts --markdown
+```
+
+### Options:
+- `--out-dir DIR`: Directory containing output artifacts (defaults to `artifacts`).
+- `--markdown`: Generates human-readable summary report to `readability_report.md`.
+- `--json`: Prints a compact single-line JSON summary to stdout.
+- `--require-quality-gate`: Aborts and fails if `quality_gate.json` is missing.
+- `--ignore-quality-gate`: Force proceed even if quality gate is blocked or missing (records warning).
+- `--allow-review`: Accepted for compatibility (review is allowed by default).
+
+### Standalone Exit Codes:
+- `0`: Built successfully.
+- `1`: Blocked by quality gate, required file missing, input hash mutated, or clang syntax error.
+- `2`: Internal CLI usage error or crash.
+
+### Integrated Pipeline:
+Generate the readable skeleton automatically at the end of the decompiler pipeline:
+```bash
+python3 main.py run-all ./target_binary --ghidra --radare2 --out-dir artifacts --clean --readable
+```
+
+

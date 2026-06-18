@@ -759,6 +759,10 @@ def handle_run_all_cli():
     parser.add_argument("--trace-report", action="store_true", help="Generate trace report artifact.")
     parser.add_argument("--require-trace-report", action="store_true", help="Fail validation if trace_report.json is missing.")
     parser.add_argument("--quality-gate", action="store_true", help="Run quality gate readiness check.")
+    parser.add_argument("--readable", action="store_true", help="Build human-readable C output.")
+    parser.add_argument("--promote-symbols", action="store_true", dest="promote_symbols", default=True, help="Enable Phase 7.2 symbol promotion (default).")
+    parser.add_argument("--no-promote-symbols", action="store_false", dest="promote_symbols", help="Disable Phase 7.2 symbol promotion.")
+    parser.add_argument("--promote-temps", action="store_true", dest="promote_temps", default=False, help="Enable temporary registers promotion (default disabled).")
     
     args = parser.parse_args(sys.argv[2:])
     
@@ -784,6 +788,9 @@ def handle_run_all_cli():
             trace_report=args.trace_report,
             require_trace_report=args.require_trace_report,
             quality_gate=args.quality_gate,
+            readable=args.readable,
+            promote_symbols=args.promote_symbols,
+            promote_temps=args.promote_temps,
         )
 
 
@@ -855,6 +862,10 @@ def main():
     	elif first_arg == "quality-gate":
             from src.validation.quality_gate.cli import run_quality_gate_cli
             code = run_quality_gate_cli(sys.argv[2:])
+            sys.exit(code)
+    	elif first_arg == "build-readable":
+            from src.readability.cli import run_build_readable_cli
+            code = run_build_readable_cli(sys.argv[2:])
             sys.exit(code)
 
 

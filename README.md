@@ -47,6 +47,8 @@ Hephaestus does not insert mock instructions, fake variables, fake types, fake s
 * Phase 5.8: Artifact consolidation, one-shot pipeline runner, and stress testing harness
 * Phase 6.1 - 6.3: Static validator, evidence indexes, and trace reports
 * Phase 6.4: Readability readiness quality gate
+* Phase 7.1: Static predicate recovery for human-readable C
+
 
 ### Current Test Status
 
@@ -60,7 +62,7 @@ The adversarial and simulation test suites include cases for instruction validat
 
 ### Next
 
-* Phase 7: Static readability reconstruction
+* Phase 7.2: Named local variable promotion and expression simplification
 
 ---
 

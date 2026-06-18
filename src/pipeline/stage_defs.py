@@ -18,6 +18,7 @@ OPTIONAL_PIPELINE_STAGES = [
     "validate",
     "build_trace_report",
     "quality_gate",
+    "build_readable",
 ]
 
 STAGE_OUTPUTS = {
@@ -59,6 +60,11 @@ STAGE_OUTPUTS = {
     "quality_gate": [
         "quality_gate.json",
         "quality_gate.md",
+    ],
+    "build_readable": [
+        "recovered_readable.c",
+        "readability_report.json",
+        "readability_report.md",
     ],
 }
 

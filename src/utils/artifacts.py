@@ -30,6 +30,9 @@ KNOWN_ARTIFACT_FILES = {
     "trace_report.md",
     "quality_gate.json",
     "quality_gate.md",
+    "recovered_readable.c",
+    "readability_report.json",
+    "readability_report.md",
 }
 
 

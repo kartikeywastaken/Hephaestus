@@ -27,3 +27,5 @@ Run `main.py run-all <binary>`:
 - `--evidence-index`: Generate statement-level evidence classification registry (`evidence_index.json`).
 - `--trace-report`: Generate detailed explainability report (`trace_report.json` and `trace_report.md`).
 - `--quality-gate`: Evaluate readability readiness gate (`quality_gate.json` and `quality_gate.md`). Automatically schedules evidence index, validation, and trace report stages.
+- `--readable`: Build human-readable skeleton (`recovered_readable.c` and `readability_report.json`). Executed after the quality gate checks.
+

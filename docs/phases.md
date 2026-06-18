@@ -17,4 +17,7 @@ This document lists the history of developmental milestones for the Hephaestus f
   - **Phase 6.2: Statement-Level Evidence Traceability**: Categorizes and normalizes emitted code lines in `recovered.c` into 13 primary categories to resolve approximate comment accounting mismatches.
   - **Phase 6.3: Evidence Trace Reports**: Generates machine-readable `trace_report.json` and human-readable `trace_report.md` explaining line-by-line statement classification, confidence levels, and validation findings mapping.
   - **Phase 6.4: Readability Readiness Quality Gate**: Evaluates readiness status (`ready`/`review`/`blocked`) using scoring and blocking rules on coverage, health, traceability, and risk.
-- **Phase 7: Static Readability Reconstruction (Future)**: Enhancing C skeleton readability using structured control flow transforms, predicate recovery, and variable binding refinements.
+- **Phase 7: Static Readability Reconstruction**:
+  - **Phase 7.1: Static Predicate Recovery (Complete)**: Replaces simple conditional adapters (`HEPHAESTUS_UNKNOWN_COND`) with statically recovered boolean relation expressions (`tmp_w8 < 10`, etc.) using local disassembly evidence and polarity indicators.
+  - **Phase 7.2: Named Local Variable Promotion (Future)**: Promotion of pseudo-registers to semantic source variables and expression simplification.
+

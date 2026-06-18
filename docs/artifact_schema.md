@@ -20,3 +20,7 @@ Hephaestus uses standard JSON structures to store state between stages. This ens
 | `evidence_index.json` | build_evidence_index | `evidence-index-1.0` | Classification category and confidence per emitted C line. |
 | `trace_report.json` | build_trace_report | `trace-report-1.0` | Map of statements, confidence categories, validation findings, and attention levels. |
 | `quality_gate.json` | quality_gate | `quality-gate-1.0` | Readability readiness scoring, blocked/review/ready status, and Phase 7 hints. |
+| `recovered_readable.c` | build_readable | (executable C code) | Best-effort, human-readable decompilation skeleton approximation. |
+| `readability_report.json` | build_readable | `readability-1.0` | Report of recovered predicates, skipped sites, diagnostics, and compiler syntax checks. |
+| `readability_report.md` | build_readable | (markdown summary) | Human-readable markdown report of static predicate recovery. |
+

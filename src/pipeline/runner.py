@@ -284,6 +284,9 @@ def run_pipeline(
     trace_report: bool = False,
     require_trace_report: bool = False,
     quality_gate: bool = False,
+    readable: bool = False,
+    promote_symbols: bool = True,
+    promote_temps: bool = False,
 ) -> dict:
     """Run Hephaestus pipeline and return execution manifest."""
     from src.utils.artifacts import ensure_out_dir, clean_known_artifacts
@@ -327,6 +330,8 @@ def run_pipeline(
             combined_stages.append("build_trace_report")
         if stop_after == "quality_gate" or quality_gate:
             combined_stages.append("quality_gate")
+        if stop_after == "build_readable" or readable:
+            combined_stages.append("build_readable")
             
         if stop_after in combined_stages:
             idx = combined_stages.index(stop_after)
@@ -650,6 +655,79 @@ def run_pipeline(
         record_stage(
             manifest=manifest,
             name="quality_gate",
+            status=stage_status,
+            outputs=outputs,
+            error=error_msg,
+            metrics={},
+            started_at=started_at,
+            finished_at=finished_at,
+            duration_ms=duration_ms
+        )
+        write_manifest(manifest, out_dir)
+
+    # Check readable generation after quality gate has completed
+    if readable and (not stop_after or "build_readable" in active_stages):
+        logger.info("[run-all] running build_readable stage")
+        started_at = now_iso()
+        start_time = time.perf_counter()
+        stage_status = "ok"
+        error_msg = None
+        outputs = []
+        
+        # Check if quality gate failed/blocked
+        qg_blocked = False
+        qg_path = os.path.join(out_dir, "quality_gate.json")
+        if os.path.exists(qg_path):
+            try:
+                with open(qg_path, "r", encoding="utf-8") as f:
+                    qg_data = json.load(f)
+                if qg_data.get("status") == "blocked" or not qg_data.get("decision", {}).get("safe_to_use_for_phase7", True):
+                    qg_blocked = True
+            except Exception:
+                pass
+                
+        if qg_blocked:
+            stage_status = "failed"
+            error_msg = "Blocked by quality gate"
+            logger.error("[run-all] build_readable blocked by quality gate")
+            status = "failed"
+            manifest["status"] = "failed"
+        else:
+            from src.readability.cli import run_build_readable_cli
+            argv = ["--out-dir", out_dir, "--markdown"]
+            if not promote_symbols:
+                argv.append("--no-promote-symbols")
+            if promote_temps:
+                argv.append("--promote-temps")
+            
+            try:
+                code = run_build_readable_cli(argv)
+                if code != 0:
+                    stage_status = "failed"
+                    error_msg = f"build-readable CLI returned {code}"
+                    status = "failed"
+                    manifest["status"] = "failed"
+                else:
+                    for filename in ["recovered_readable.c", "readability_report.json", "readability_report.md"]:
+                        p = os.path.join(out_dir, filename)
+                        if os.path.exists(p):
+                            outputs.append(filename)
+                            # Map keys
+                            key = filename.replace(".", "_")
+                            manifest["final_outputs"][key] = p
+            except Exception as e:
+                logger.exception("[run-all] build_readable stage crashed: %s", e)
+                stage_status = "failed"
+                error_msg = str(e)
+                status = "failed"
+                manifest["status"] = "failed"
+                
+        finished_at = now_iso()
+        duration_ms = int((time.perf_counter() - start_time) * 1000)
+        
+        record_stage(
+            manifest=manifest,
+            name="build_readable",
             status=stage_status,
             outputs=outputs,
             error=error_msg,
