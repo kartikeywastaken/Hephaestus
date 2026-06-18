@@ -225,7 +225,7 @@ int32_t main(int32_t argc, char ** argv)
 }
 """
     normalized, items, stats = dedupe_and_resolve_forward_declarations(c_input)
-    assert "int32_t main(int32_t argc, char ** argv);" in normalized
+    assert "int32_t main(int32_t argc, char **argv);" in normalized
     assert "int32_t main(void);" not in normalized
     assert stats["forward_declarations_removed"] == 1
     assert stats["forward_declaration_conflicts_resolved"] == 1

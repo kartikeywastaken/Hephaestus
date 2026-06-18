@@ -686,4 +686,10 @@ class SymbolPromotionEngine:
                 ]
             })
             
+        if fn_name == "main":
+            if "argc" in rename_map:
+                del rename_map["argc"]
+            if "argv" in rename_map:
+                del rename_map["argv"]
+
         return rename_map

@@ -132,14 +132,12 @@ def build_readability_report(
         
     if compile_shape_enabled:
         cs = compile_shape_data or {}
-        report["compile_shape"] = cs.get("stats", {
-            "missing_predicate_declarations_added": 0,
-            "scratch_declarations_added": 0,
-            "predicates_skipped_due_to_undeclared_identifiers": 0,
-            "forward_declarations_removed": 0,
-            "forward_declaration_conflicts_resolved": 0,
-            "function_symbol_promotions_skipped_for_collision": 0
-        })
+        stats_dict = dict(cs.get("stats", {}))
+        stats_dict.setdefault("main_signature_normalized", True)
+        stats_dict.setdefault("main_forward_declarations_normalized", 0)
+        stats_dict.setdefault("duplicate_main_definitions_renamed", 0)
+        stats_dict.setdefault("main_abi_bridge_declarations_added", 0)
+        report["compile_shape"] = stats_dict
         report["compile_shape_items"] = cs.get("items", [])
         
     return report

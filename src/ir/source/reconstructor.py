@@ -525,6 +525,58 @@ def build_source_reconstruction(
             existing_fn_names.add(sanitize_c_identifier(canon_n))
     existing_fn_names.update({"printf", "stack_chk_fail", "main"})
 
+    # Detect real main entry point using priority rules
+    real_main_ep = None
+    main_candidates = []
+    for ir_f in ir_functions:
+        if not isinstance(ir_f, dict):
+            continue
+        ep_r = _safe_str(ir_f, "entry_point", "unknown")
+        ep_n = normalize_address(ep_r) or ep_r
+        fn_n = _safe_str(ir_f, "name", "unknown_function")
+        canon_n = alias_map.get(ep_n, fn_n)
+        
+        sem_f = _match_semantics(ep_n, fn_n, sem_by_entry, sem_by_name)
+        f_kind = "unknown"
+        if sem_f is not None:
+            f_kind = _safe_str(sem_f, "function_kind", "unknown")
+        elif ir_f.get("function_kind"):
+            f_kind = str(ir_f["function_kind"])
+            
+        c_n = function_c_name(canon_n, ep_n)
+        is_prov = (fn_n in ("entry", "_main", "entry0") or 
+                   canon_n in ("entry", "_main", "entry0"))
+                   
+        main_candidates.append({
+            "ep": ep_n,
+            "name": fn_n,
+            "c_name": c_n,
+            "function_kind": f_kind,
+            "is_prov_entry": is_prov
+        })
+        
+    p12_cands = [c for c in main_candidates if c["function_kind"] == "entrypoint" and c["is_prov_entry"]]
+    if p12_cands:
+        real_main_ep = p12_cands[0]["ep"]
+    else:
+        p3_cands = [c for c in main_candidates if c["function_kind"] == "entrypoint"]
+        if p3_cands:
+            p3_main_cands = [c for c in p3_cands if c["c_name"] == "main"]
+            if p3_main_cands:
+                p3_prov = [c for c in p3_main_cands if c["is_prov_entry"]]
+                if p3_prov:
+                    real_main_ep = p3_prov[0]["ep"]
+                else:
+                    real_main_ep = p3_main_cands[0]["ep"]
+            else:
+                real_main_ep = p3_cands[0]["ep"]
+        else:
+            p4_cands = [c for c in main_candidates if c["c_name"] == "main"]
+            if p4_cands:
+                real_main_ep = p4_cands[0]["ep"]
+
+    duplicate_main_functions_renamed = 0
+
     # Detect architecture once for the whole IR
     from src.ir.source.lowering import detect_architecture
     arch = detect_architecture(unified_ir)
@@ -544,6 +596,10 @@ def build_source_reconstruction(
 
         # Sanitized C identifier
         c_name = function_c_name(canonical_name, ep_norm)
+        if c_name == "main":
+            if ep_norm != real_main_ep:
+                c_name = f"main_{ep_norm}"
+                duplicate_main_functions_renamed += 1
 
         # Match Phase 4D semantics
         sem = _match_semantics(ep_norm, name, sem_by_entry, sem_by_name)
@@ -857,6 +913,10 @@ def build_source_reconstruction(
         # Phase 5.7.2 cset adapter
         "cset_adapters_inserted": 0,
         "cset_helper_emitted": 0,
+        # Phase 7.2.2 Compile-Shape normalization
+        "main_compile_shape_normalized": True,
+        "duplicate_main_functions_renamed": duplicate_main_functions_renamed,
+        "main_abi_bridges_inserted": 0,
         # Phase 5.7.1 unsupported instruction kinds
         "unsupported_instruction_kinds": {k: v for k, v in sorted(global_unsupported_kinds.items())},
     })

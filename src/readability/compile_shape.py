@@ -207,7 +207,10 @@ def insert_declarations_into_function(
     new_lines.append("\n")
     new_lines.append("    /* Readability compile-shape declarations: */\n")
     for type_name, var_name, comment in decls:
-        new_lines.append(f"    {type_name} {var_name} = 0; /* {comment} */\n")
+        if "=" in var_name:
+            new_lines.append(f"    {type_name} {var_name}; /* {comment} */\n")
+        else:
+            new_lines.append(f"    {type_name} {var_name} = 0; /* {comment} */\n")
         
     result = list(func_lines)
     result[insert_idx:insert_idx] = new_lines
@@ -309,7 +312,8 @@ def harden_compile_shape_functions(
     report_items = []
     stats = {
         "missing_predicate_declarations_added": 0,
-        "scratch_declarations_added": 0
+        "scratch_declarations_added": 0,
+        "main_abi_bridge_declarations_added": 0
     }
     
     for b in blocks:
@@ -358,17 +362,35 @@ def harden_compile_shape_functions(
             res = get_completion_declaration(name, promote_map, orig_types)
             if res:
                 type_name, reason = res
-                scratch_decls_to_add.append((type_name, name, "added for readable compile-shape"))
+                if fn_name == "main" and name in {"arg0", "arg1", "param_0", "param_1"}:
+                    if name in {"arg0", "param_0"}:
+                        init_val = "(u64)argc"
+                        comment = "main ABI bridge: argc"
+                    else:
+                        init_val = "(u64)(uintptr_t)argv"
+                        comment = "main ABI bridge: argv"
+                    scratch_decls_to_add.append((type_name, f"{name} = {init_val}", comment))
+                    stats["main_abi_bridge_declarations_added"] += 1
+                    report_items.append({
+                        "kind": "main_abi_bridge_added",
+                        "function": "main",
+                        "name": name,
+                        "type": type_name,
+                        "initializer": init_val,
+                        "reason": "preserve ABI-style body identifier after hosted main normalization"
+                    })
+                else:
+                    scratch_decls_to_add.append((type_name, name, "added for readable compile-shape"))
+                    stats["scratch_declarations_added"] += 1
+                    report_items.append({
+                        "kind": "declaration_added",
+                        "function": fn_name,
+                        "name": name,
+                        "type": type_name,
+                        "reason": "body scratch compile-shape",
+                        "confidence": "syntax_backed"
+                    })
                 declared_ids.add(name)
-                stats["scratch_declarations_added"] += 1
-                report_items.append({
-                    "kind": "declaration_added",
-                    "function": fn_name,
-                    "name": name,
-                    "type": type_name,
-                    "reason": "body scratch compile-shape",
-                    "confidence": "syntax_backed"
-                })
                 
         # Insert scratch declarations
         b["lines"] = insert_declarations_into_function(b["lines"], scratch_decls_to_add)
@@ -393,7 +415,9 @@ def dedupe_and_resolve_forward_declarations(
     report_items = []
     stats = {
         "forward_declarations_removed": 0,
-        "forward_declaration_conflicts_resolved": 0
+        "forward_declaration_conflicts_resolved": 0,
+        "duplicate_main_definitions_renamed": 0,
+        "main_forward_declarations_normalized": 0
     }
     
     # 1. Rename duplicate function definitions to avoid compile conflicts (Fix 3 Special Case & Definition safety)
@@ -432,6 +456,8 @@ def dedupe_and_resolve_forward_declarations(
                 def_params = get_param_types(header_text)
                 
                 b["name"] = new_name
+                if fn_name == "main":
+                    stats["duplicate_main_definitions_renamed"] += 1
                 
                 # Rename the matching forward declaration in global blocks
                 for gb in blocks:
@@ -484,6 +510,24 @@ def dedupe_and_resolve_forward_declarations(
             
         resolved_fds = {}
         for fn_name, lines_list in by_func.items():
+            if fn_name == "main":
+                resolved_fds[fn_name] = "int32_t main(int32_t argc, char **argv);\n"
+                stats["main_forward_declarations_normalized"] += len(lines_list)
+                stats["forward_declarations_removed"] += len(lines_list) - 1
+                if len(lines_list) > 1:
+                    stats["forward_declaration_conflicts_resolved"] += len(lines_list) - 1
+                for line in lines_list:
+                    norm = normalize_sig(line)
+                    if norm != "int32_t main(int32_t argc, char **argv)":
+                        report_items.append({
+                            "kind": "main_signature_normalized",
+                            "function": "main",
+                            "old_signature": line.strip(),
+                            "new_signature": "int32_t main(int32_t argc, char **argv)",
+                            "reason": "hosted C compile-shape"
+                        })
+                continue
+
             if len(lines_list) == 1:
                 resolved_fds[fn_name] = lines_list[0]
                 continue
@@ -544,12 +588,9 @@ def dedupe_and_resolve_forward_declarations(
             m = forward_decl_regex.match(line.strip())
             if m:
                 fn_name = m.group(1)
-                kept = resolved_fds[fn_name]
-                if line == kept and fn_name not in seen_emitted:
-                    new_lines.append(line)
+                if fn_name not in seen_emitted:
+                    new_lines.append(resolved_fds[fn_name])
                     seen_emitted.add(fn_name)
-                else:
-                    pass
             else:
                 new_lines.append(line)
                 

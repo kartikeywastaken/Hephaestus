@@ -80,8 +80,8 @@ def test_main_signature_and_helpers_emission():
         
         c_content = c_path.read_text(encoding="utf-8")
         
-        # Verify main signature remains int32_t main(int32_t argc, char ** argv)
-        assert "int32_t main(int32_t argc, char ** argv)" in c_content
+        # Verify main signature remains int32_t main(int32_t argc, char **argv)
+        assert "int32_t main(int32_t argc, char **argv)" in c_content
         
         # Verify HEPHAESTUS_CSET helper is emitted
         assert "HEPHAESTUS_CSET" in c_content

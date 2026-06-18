@@ -85,6 +85,17 @@ def analyze_declarations_for_function(
     Returns metadata dict.
     """
     param_names = {p.get("name") for p in parameters if isinstance(p, dict) and p.get("name")}
+    
+    # Rule 6 hosted main bridge verification rule
+    if function_name in ("main", "_main"):
+        bridges_declared = set()
+        if emitted_body_lines is not None:
+            for line in emitted_body_lines:
+                m = re.match(r'^\s*u64\s+(arg0|arg1|param_0|param_1)\s*=', line.strip())
+                if m:
+                    bridges_declared.add(m.group(1))
+        param_names.update(bridges_declared)
+        
     warnings = []
     
     # 1. Collect all usage lines/statements

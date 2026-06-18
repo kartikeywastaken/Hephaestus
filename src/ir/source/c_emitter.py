@@ -246,17 +246,19 @@ def _emit_function(
     fn: ReconstructedFunction,
     lines: List[str],
     global_call_helpers: Set[str] | None = None,
-) -> None:
+) -> int:
     """Emit a single function skeleton."""
-    # Return type
-    c_ret = _map_c_type(fn.return_type)
-
-    # Parameter list
-    if fn.parameters:
-        param_strs = [_format_param(p, is_main=(fn.c_name == "main")) for p in fn.parameters]
-        param_list = ", ".join(param_strs)
+    # Return type and parameter list
+    if fn.c_name == "main":
+        c_ret = "int32_t"
+        param_list = "int32_t argc, char **argv"
     else:
-        param_list = "void"
+        c_ret = _map_c_type(fn.return_type)
+        if fn.parameters:
+            param_strs = [_format_param(p, is_main=False) for p in fn.parameters]
+            param_list = ", ".join(param_strs)
+        else:
+            param_list = "void"
 
     # Signature
     lines.append(f"{c_ret} {fn.c_name}({param_list})")
@@ -396,6 +398,27 @@ def _emit_function(
     adapted_body_lines, adapter_stats = adapt_condition_lines(temp_body_lines)
     fn.condition_adapter = adapter_stats
 
+    # Phase 7.2.2 ABI bridge injection for main
+    import re
+    bridges_added_count = 0
+    if fn.c_name == "main":
+        body_text = "\n".join(adapted_body_lines)
+        bridge_lines = []
+        if re.search(r'\barg0\b', body_text):
+            bridge_lines.append("    u64 arg0 = (u64)argc;                  /* main ABI bridge: argc */")
+            bridges_added_count += 1
+        if re.search(r'\barg1\b', body_text):
+            bridge_lines.append("    u64 arg1 = (u64)(uintptr_t)argv;       /* main ABI bridge: argv */")
+            bridges_added_count += 1
+        if re.search(r'\bparam_0\b', body_text):
+            bridge_lines.append("    u64 param_0 = (u64)argc;               /* main ABI bridge: argc */")
+            bridges_added_count += 1
+        if re.search(r'\bparam_1\b', body_text):
+            bridge_lines.append("    u64 param_1 = (u64)(uintptr_t)argv;    /* main ABI bridge: argv */")
+            bridges_added_count += 1
+        if bridge_lines:
+            adapted_body_lines = bridge_lines + [""] + adapted_body_lines
+
     # Phase 5.6: run declaration analysis on final emitted body lines
     from src.ir.source.declaration_recovery import analyze_declarations_for_function
     decls_data = analyze_declarations_for_function(
@@ -424,6 +447,7 @@ def _emit_function(
 
     lines.append("}")
     lines.append("")
+    return bridges_added_count
 
 
 def _postprocess_body_lines(
@@ -591,9 +615,11 @@ def emit_recovered_c(
     total_unknown_adapters = 0
     total_cset_adapters_inserted = 0
 
+    total_bridges_added = 0
     for fn in artifact.functions:
         fn_lines = []
-        _emit_function(fn, fn_lines, global_call_helpers)
+        bridges_count = _emit_function(fn, fn_lines, global_call_helpers)
+        total_bridges_added += bridges_count
         stats = fn.condition_adapter
         if stats:
             total_adapters_inserted += stats.get("condition_adapters_inserted", 0)
@@ -617,6 +643,7 @@ def emit_recovered_c(
     artifact.summary["unknown_condition_helpers_emitted"] = unknown_condition_helpers_emitted
     artifact.summary["cset_adapters_inserted"] = total_cset_adapters_inserted
     artifact.summary["cset_helper_emitted"] = cset_helper_emitted
+    artifact.summary["main_abi_bridges_inserted"] = total_bridges_added
 
     lines: List[str] = []
 
@@ -673,12 +700,16 @@ def emit_recovered_c(
         )
         lines.append("")
         for fn in artifact.functions:
-            c_ret = _map_c_type(fn.return_type)
-            if fn.parameters:
-                param_strs = [_format_param(p, is_main=(fn.c_name == "main")) for p in fn.parameters]
-                param_list = ", ".join(param_strs)
+            if fn.c_name == "main":
+                c_ret = "int32_t"
+                param_list = "int32_t argc, char **argv"
             else:
-                param_list = "void"
+                c_ret = _map_c_type(fn.return_type)
+                if fn.parameters:
+                    param_strs = [_format_param(p, is_main=False) for p in fn.parameters]
+                    param_list = ", ".join(param_strs)
+                else:
+                    param_list = "void"
             lines.append(f"{c_ret} {fn.c_name}({param_list});")
         lines.append("")
 

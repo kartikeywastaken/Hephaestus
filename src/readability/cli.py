@@ -329,6 +329,8 @@ def run_build_readable_cli(argv: List[str]) -> int:
         compile_shape_items.extend(resolved_items)
         compile_shape_stats["forward_declarations_removed"] += resolved_stats["forward_declarations_removed"]
         compile_shape_stats["forward_declaration_conflicts_resolved"] += resolved_stats["forward_declaration_conflicts_resolved"]
+        compile_shape_stats["duplicate_main_definitions_renamed"] = resolved_stats.get("duplicate_main_definitions_renamed", 0) + source_recon.get("summary", {}).get("duplicate_main_functions_renamed", 0)
+        compile_shape_stats["main_forward_declarations_normalized"] = resolved_stats.get("main_forward_declarations_normalized", 0)
         
         # 2. Harden local declarations (Fix 1 & Fix 2)
         readable_c, added_items, added_stats = harden_compile_shape_functions(
@@ -341,6 +343,7 @@ def run_build_readable_cli(argv: List[str]) -> int:
         compile_shape_items.extend(added_items)
         compile_shape_stats["missing_predicate_declarations_added"] += added_stats["missing_predicate_declarations_added"]
         compile_shape_stats["scratch_declarations_added"] += added_stats["scratch_declarations_added"]
+        compile_shape_stats["main_abi_bridge_declarations_added"] = added_stats.get("main_abi_bridge_declarations_added", 0) + source_recon.get("summary", {}).get("main_abi_bridges_inserted", 0)
         
     readable_c_path = out_dir / "recovered_readable.c"
     
