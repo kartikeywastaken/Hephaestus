@@ -281,6 +281,8 @@ def run_pipeline(
     validate_strict: bool = False,
     evidence_index: bool = False,
     require_evidence_index: bool = False,
+    trace_report: bool = False,
+    require_trace_report: bool = False,
 ) -> dict:
     """Run Hephaestus pipeline and return execution manifest."""
     from src.utils.artifacts import ensure_out_dir, clean_known_artifacts
@@ -302,7 +304,7 @@ def run_pipeline(
     STAGES = PIPELINE_STAGES.copy()
     
     # Include build_evidence_index stage in PIPELINE_STAGES copy if requested
-    if (evidence_index or validate or validate_strict) and "build_evidence_index" not in STAGES:
+    if (evidence_index or validate or validate_strict or trace_report) and "build_evidence_index" not in STAGES:
         STAGES.append("build_evidence_index")
         
     if stop_after:
@@ -311,10 +313,12 @@ def run_pipeline(
             raise PipelineError(f"Invalid stop-after stage name: {stop_after}")
             
         combined_stages = PIPELINE_STAGES.copy()
-        if stop_after == "build_evidence_index" or (evidence_index or validate or validate_strict):
+        if stop_after == "build_evidence_index" or (evidence_index or validate or validate_strict or trace_report):
             combined_stages.append("build_evidence_index")
         if stop_after == "validate" or (validate or validate_strict):
             combined_stages.append("validate")
+        if stop_after == "build_trace_report" or trace_report:
+            combined_stages.append("build_trace_report")
             
         if stop_after in combined_stages:
             idx = combined_stages.index(stop_after)
@@ -469,10 +473,15 @@ def run_pipeline(
         try:
             artifacts = load_validation_artifacts(out_dir)
             report = new_report(out_dir, strict=validate_strict)
+            # If trace report is enabled, bypass require-trace-report check on this initial run
+            # as the trace report has not been generated yet. It will be verified and link-injected
+            # in the post-trace validation update block.
+            first_run_require_trace_report = False if trace_report else require_trace_report
             run_all_validation_checks(
                 artifacts,
                 report,
-                require_evidence_index=require_evidence_index
+                require_evidence_index=require_evidence_index,
+                require_trace_report=first_run_require_trace_report
             )
             write_report(report, out_dir)
             outputs = ["validation_report.json"]
@@ -507,6 +516,83 @@ def run_pipeline(
         )
         write_manifest(manifest, out_dir)
     
+    # Check trace report generation after pipeline validation has completed
+    if trace_report and (not stop_after or "build_trace_report" in active_stages):
+        logger.info("[run-all] running trace report generation stage")
+        started_at = now_iso()
+        start_time = time.perf_counter()
+        stage_status = "ok"
+        error_msg = None
+        outputs = []
+        
+        from src.validation.trace_report import build_trace_report
+        
+        try:
+            build_trace_report(
+                out_dir=out_dir,
+                markdown_mode=True,
+                require_validation=False,
+                require_evidence_index=require_evidence_index
+            )
+            
+            json_path = os.path.join(out_dir, "trace_report.json")
+            md_path = os.path.join(out_dir, "trace_report.md")
+            if os.path.exists(json_path):
+                outputs.append("trace_report.json")
+                manifest["final_outputs"]["trace_report"] = json_path
+            if os.path.exists(md_path):
+                outputs.append("trace_report.md")
+                manifest["final_outputs"]["trace_report_markdown"] = md_path
+                
+            # If validation is also enabled, re-run validation checks to include the new trace report
+            if validate or validate_strict:
+                logger.info("[run-all] updating validation report with trace report metadata")
+                from src.validation.loader import load_validation_artifacts
+                from src.validation.report import new_report, write_report
+                from src.validation.checks import run_all_validation_checks
+                
+                artifacts = load_validation_artifacts(out_dir)
+                report = new_report(out_dir, strict=validate_strict)
+                if artifacts.trace_report is not None:
+                    report["trace_report"] = "trace_report.json"
+                run_all_validation_checks(
+                    artifacts,
+                    report,
+                    require_evidence_index=require_evidence_index,
+                    require_trace_report=require_trace_report
+                )
+                write_report(report, out_dir)
+                
+                # Update manifest outputs and status if strict mode fails now
+                manifest["final_outputs"]["validation_report"] = os.path.join(out_dir, "validation_report.json")
+                if report.get("status") == "failed" and validate_strict:
+                    logger.error("[run-all] validation failed in strict mode after trace report generation")
+                    manifest["status"] = "failed"
+                    status = "failed"
+                
+        except Exception as e:
+            logger.exception("[run-all] trace report generation crashed: %s", e)
+            stage_status = "failed"
+            error_msg = str(e)
+            status = "failed"
+            manifest["status"] = "failed"
+            
+        finished_at = now_iso()
+        duration_ms = int((time.perf_counter() - start_time) * 1000)
+        
+        record_stage(
+            manifest=manifest,
+            name="build_trace_report",
+            status=stage_status,
+            outputs=outputs,
+            error=error_msg,
+            metrics={},
+            started_at=started_at,
+            finished_at=finished_at,
+            duration_ms=duration_ms
+        )
+        write_manifest(manifest, out_dir)
+
     logger.info(f"[run-all] finished status={status}")
     return manifest
 

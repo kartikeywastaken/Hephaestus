@@ -20,6 +20,7 @@ def test_validation_loader_all_present():
         ir_data = {"schema_version": "2.0.0"}
         sem_data = {"schema_version": "4D.1.0"}
         evidence_index_data = {"schema_version": "evidence-index-1.0"}
+        trace_report_data = {"schema_version": "trace-report-1.0"}
         
         with open(out_dir / "source_reconstruction.json", "w") as f:
             json.dump(recon_data, f)
@@ -33,6 +34,8 @@ def test_validation_loader_all_present():
             json.dump(sem_data, f)
         with open(out_dir / "evidence_index.json", "w") as f:
             json.dump(evidence_index_data, f)
+        with open(out_dir / "trace_report.json", "w") as f:
+            json.dump(trace_report_data, f)
             
         # Load
         artifacts = load_validation_artifacts(out_dir)
@@ -42,6 +45,7 @@ def test_validation_loader_all_present():
         assert artifacts.unified_ir == ir_data
         assert artifacts.phase4_semantics == sem_data
         assert artifacts.evidence_index == evidence_index_data
+        assert artifacts.trace_report == trace_report_data
         assert len(artifacts.missing) == 0
 
 def test_validation_loader_missing_recommended():
@@ -64,7 +68,7 @@ def test_validation_loader_missing_recommended():
         assert artifacts.unified_ir is None
         assert artifacts.phase4_semantics is None
         assert sorted(artifacts.missing) == sorted([
-            "pipeline_manifest.json", "unified_ir.json", "phase4_semantics.json", "evidence_index.json"
+            "pipeline_manifest.json", "unified_ir.json", "phase4_semantics.json", "evidence_index.json", "trace_report.json"
         ])
 
 def test_validation_loader_missing_required():
@@ -81,6 +85,7 @@ def test_validation_loader_missing_required():
         assert artifacts.recovered_c is None
         assert artifacts.pipeline_manifest == manifest_data
         assert sorted(artifacts.missing) == sorted([
-            "source_reconstruction.json", "recovered.c", "unified_ir.json", "phase4_semantics.json", "evidence_index.json"
+            "source_reconstruction.json", "recovered.c", "unified_ir.json", "phase4_semantics.json", "evidence_index.json", "trace_report.json"
         ])
+
 

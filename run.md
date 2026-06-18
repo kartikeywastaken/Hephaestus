@@ -423,3 +423,30 @@ Run evidence indexing automatically at the end of `run-all` before validation:
 python3 main.py run-all ./target_binary --ghidra --radare2 --out-dir artifacts --clean --evidence-index
 ```
 Note: If `--validate` or `--validate-strict` is used in `run-all`, the evidence index is built automatically.
+
+---
+
+## 16. Evidence Trace Reports and Validation Explainability (Phase 6.3)
+
+To generate a human-readable and machine-readable trace report correlating statements to confidence categories and validation findings, run the `build-trace-report` subcommand:
+
+```bash
+python3 main.py build-trace-report --out-dir artifacts --markdown
+```
+
+### Options:
+- `--out-dir DIR`: Directory containing Hephaestus output artifacts (defaults to `artifacts`).
+- `--markdown`: Generate a human-readable trace summary to `trace_report.md`.
+- `--json`: Prints a compact single-line JSON summary to stdout.
+- `--require-validation`: Fail if `validation_report.json` is missing.
+- `--no-require-evidence-index`: Do not fail if `evidence_index.json` is missing.
+
+### Integrated Trace Reporting:
+Run trace report generation automatically at the end of `run-all`:
+```bash
+python3 main.py run-all ./target_binary --ghidra --radare2 --out-dir artifacts --clean --trace-report
+```
+To enforce that the validation phase requires the presence of a trace report:
+```bash
+python3 main.py run-all ./target_binary --ghidra --radare2 --out-dir artifacts --clean --validate --trace-report --require-trace-report
+```

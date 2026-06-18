@@ -17,4 +17,6 @@ class ValidationArtifacts:
     phase4_semantics: dict | None
     missing: list[str]
     evidence_index: dict | None = None
+    trace_report: dict | None = None
+
 

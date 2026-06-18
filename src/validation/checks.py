@@ -358,7 +358,44 @@ def check_evidence_index(artifacts: ValidationArtifacts, report: dict, require_e
         message=unknown_msg
     )
 
-def run_all_validation_checks(artifacts: ValidationArtifacts, report: dict, no_clang: bool = False, require_evidence_index: bool = False) -> dict:
+def check_trace_report_presence(artifacts: ValidationArtifacts, report: dict, require_trace_report: bool = False) -> None:
+    """Check presence of trace_report.json if required."""
+    if artifacts.trace_report is None:
+        if require_trace_report:
+            status = "failed"
+            add_finding(
+                report=report,
+                finding_id="VAL-EVID-028",
+                severity="error",
+                category="evidence_consistency",
+                title="Required trace report is missing",
+                message="trace_report.json is required but missing from the output directory.",
+                artifact="trace_report.json",
+                recommendation="Run the build-trace-report tool or run the pipeline with --trace-report."
+            )
+            add_check(
+                report=report,
+                name="trace_report_present",
+                status=status,
+                severity="error",
+                message="trace_report.json is missing."
+            )
+    else:
+        add_check(
+            report=report,
+            name="trace_report_present",
+            status="ok",
+            severity="error",
+            message="trace_report.json is present."
+        )
+
+def run_all_validation_checks(
+    artifacts: ValidationArtifacts,
+    report: dict,
+    no_clang: bool = False,
+    require_evidence_index: bool = False,
+    require_trace_report: bool = False
+) -> dict:
     """Run all static checks end-to-end and finalize the report."""
     # 1. Check artifact presence
     check_artifact_presence(artifacts, report)
@@ -381,6 +418,9 @@ def run_all_validation_checks(artifacts: ValidationArtifacts, report: dict, no_c
     # 6.5 Evidence index checks (new in Phase 6.2)
     check_evidence_index(artifacts, report, require_evidence_index=require_evidence_index)
     
+    # 6.6 Trace report checks (new in Phase 6.3)
+    check_trace_report_presence(artifacts, report, require_trace_report=require_trace_report)
+    
     # 7. Pipeline manifest checks (requires pipeline_manifest.json)
     check_manifest(artifacts, report)
     
@@ -390,4 +430,5 @@ def run_all_validation_checks(artifacts: ValidationArtifacts, report: dict, no_c
     # 9. Finalize summary statistics and overall status
     finalize_report(report)
     return report
+
 

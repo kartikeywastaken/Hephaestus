@@ -29,6 +29,8 @@ def run_validate_cli(args_list: list[str]) -> int:
     parser.add_argument("--no-clang", action="store_true", help="Skip Clang syntax check.")
     parser.add_argument("--json", action="store_true", help="Print compact JSON summary to stdout.")
     parser.add_argument("--require-evidence-index", action="store_true", help="Fail validation if evidence_index.json is missing.")
+    parser.add_argument("--require-trace-report", action="store_true", help="Fail validation if trace_report.json is missing.")
+
     
     try:
         args = parser.parse_args(args_list)
@@ -72,6 +74,8 @@ def run_validate_cli(args_list: list[str]) -> int:
     try:
         artifacts = load_validation_artifacts(out_dir)
         report = new_report(out_dir, args.strict)
+        if artifacts.trace_report is not None:
+            report["trace_report"] = "trace_report.json"
     except Exception as e:
         logger.exception("Failed to load artifacts or initialize report: %s", e)
         return 2
@@ -83,14 +87,16 @@ def run_validate_cli(args_list: list[str]) -> int:
                 artifacts,
                 report,
                 no_clang=args.no_clang,
-                require_evidence_index=args.require_evidence_index
+                require_evidence_index=args.require_evidence_index,
+                require_trace_report=args.require_trace_report
             )
         except TypeError as te:
-            if "require_evidence_index" in str(te):
+            if "require_trace_report" in str(te) or "require_evidence_index" in str(te):
                 run_all_validation_checks(artifacts, report, no_clang=args.no_clang)
             else:
                 raise te
     except Exception as e:
+
 
 
         logger.exception("Validator execution crashed: %s", e)

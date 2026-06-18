@@ -756,6 +756,8 @@ def handle_run_all_cli():
     parser.add_argument("--validate-strict", action="store_true", help="Run validation checks in strict mode.")
     parser.add_argument("--evidence-index", action="store_true", help="Generate statement-level evidence index.")
     parser.add_argument("--require-evidence-index", action="store_true", help="Fail validation if evidence_index.json is missing.")
+    parser.add_argument("--trace-report", action="store_true", help="Generate trace report artifact.")
+    parser.add_argument("--require-trace-report", action="store_true", help="Fail validation if trace_report.json is missing.")
     
     args = parser.parse_args(sys.argv[2:])
     
@@ -778,7 +780,10 @@ def handle_run_all_cli():
             validate_strict=args.validate_strict,
             evidence_index=args.evidence_index,
             require_evidence_index=args.require_evidence_index,
+            trace_report=args.trace_report,
+            require_trace_report=args.require_trace_report,
         )
+
 
         if manifest.get("status") in ("failed", "partial"):
             sys.exit(1)
@@ -841,6 +846,11 @@ def main():
             from src.validation.evidence_index.cli import run_build_evidence_index_cli
             code = run_build_evidence_index_cli(sys.argv[2:])
             sys.exit(code)
+    	elif first_arg == "build-trace-report":
+            from src.validation.trace_report.cli import run_build_trace_report_cli
+            code = run_build_trace_report_cli(sys.argv[2:])
+            sys.exit(code)
+
 
 
     # Resolve out_dir from command line arguments before initializing logging

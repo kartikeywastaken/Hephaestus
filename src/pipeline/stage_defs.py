@@ -16,6 +16,7 @@ PIPELINE_STAGES = [
 OPTIONAL_PIPELINE_STAGES = [
     "build_evidence_index",
     "validate",
+    "build_trace_report",
 ]
 
 STAGE_OUTPUTS = {
@@ -50,4 +51,9 @@ STAGE_OUTPUTS = {
     "validate": [
         "validation_report.json",
     ],
+    "build_trace_report": [
+        "trace_report.json",
+        "trace_report.md",
+    ],
 }
+

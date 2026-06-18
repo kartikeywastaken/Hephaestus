@@ -26,7 +26,10 @@ KNOWN_ARTIFACT_FILES = {
     "validation_report.json",
     "validation.log",
     "evidence_index.json",
+    "trace_report.json",
+    "trace_report.md",
 }
+
 
 KNOWN_ARTIFACT_DIRS = {
     "ghidra_temp_proj",

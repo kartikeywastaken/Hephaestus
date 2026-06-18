@@ -86,6 +86,17 @@ def load_validation_artifacts(out_dir: str | Path) -> ValidationArtifacts:
     else:
         missing.append("evidence_index.json")
         
+    trace_report = None
+    tr_file = out_path / "trace_report.json"
+    if tr_file.exists():
+        try:
+            with open(tr_file, "r", encoding="utf-8") as f:
+                trace_report = json.load(f)
+        except Exception:
+            missing.append("trace_report.json")
+    else:
+        missing.append("trace_report.json")
+        
     return ValidationArtifacts(
         out_dir=out_path,
         source_reconstruction=source_reconstruction,
@@ -94,6 +105,8 @@ def load_validation_artifacts(out_dir: str | Path) -> ValidationArtifacts:
         unified_ir=unified_ir,
         phase4_semantics=phase4_semantics,
         missing=missing,
-        evidence_index=evidence_index
+        evidence_index=evidence_index,
+        trace_report=trace_report
     )
+
 

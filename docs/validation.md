@@ -26,6 +26,7 @@ python3 main.py validate --out-dir artifacts
 - `--no-clang`: Skip executing the system's `clang -fsyntax-only` check.
 - `--json`: Output a compact single-line JSON summary to `stdout` instead of regular logs.
 - `--require-evidence-index`: Fail validation if `evidence_index.json` is missing.
+- `--require-trace-report`: Fail validation if `trace_report.json` is missing.
 
 ---
 
@@ -55,8 +56,9 @@ All checks fall into the following modules:
 4. **Helper Consistency (`helpers.py`)**: Verifies correct usage and definitions for internal helpers `HEPHAESTUS_UNKNOWN_COND` and `HEPHAESTUS_CSET`.
 5. **Evidence Checks (`evidence.py`)**: Validates consistency between metadata summary and function-level direct/indirect call and return site logs.
 6. **Evidence Index Checks (`checks.py`)**: Validates presence, schema-version `evidence-index-1.0`, summary key sums, precise unsupported instruction accounting, and checks for unknown categories in `evidence_index.json`.
-7. **Pipeline Manifest (`manifest_checks.py`)**: Checks stage ordering sequence and checks stage outputs on disk.
-8. **Clang syntax check (`clang_check.py`)**: Performs compilation verification on `recovered.c`.
+7. **Trace Report Checks (`checks.py`)**: Validates presence of `trace_report.json` if required (`VAL-EVID-028`).
+8. **Pipeline Manifest (`manifest_checks.py`)**: Checks stage ordering sequence and checks stage outputs on disk.
+9. **Clang syntax check (`clang_check.py`)**: Performs compilation verification on `recovered.c`.
 
 
 ---
