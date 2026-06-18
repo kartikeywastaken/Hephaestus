@@ -17,9 +17,11 @@ def build_readability_report(
     warnings: List[str],
     diagnostics: List[str],
     promote_symbols_enabled: bool = False,
-    symbol_promotion_data: Dict[str, Any] = None
+    symbol_promotion_data: Dict[str, Any] = None,
+    compile_shape_enabled: bool = False,
+    compile_shape_data: Dict[str, Any] = None
 ) -> Dict[str, Any]:
-    """Compile readability data into the standard readability-1.1/1.0 JSON format."""
+    """Compile readability data into the standard readability JSON format."""
     total = len(sites) + len(skipped_sites)
     recovered = len(sites)
     skipped = len(skipped_sites)
@@ -42,9 +44,15 @@ def build_readability_report(
     if clang_syntax_status == "failed":
         global_status = "failed"
         
-    schema_version = "readability-1.1" if promote_symbols_enabled else "readability-1.0"
-    phase = "7.2" if promote_symbols_enabled else "7.1"
-    mode = "static_predicate_and_symbol_promotion" if promote_symbols_enabled else "static_predicate_recovery_only"
+    if compile_shape_enabled and promote_symbols_enabled:
+        schema_version = "readability-1.2"
+        phase = "7.2.1"
+        mode = "static_predicate_symbol_promotion_compile_shape_hardening"
+    else:
+        compile_shape_enabled = False
+        schema_version = "readability-1.1" if promote_symbols_enabled else "readability-1.0"
+        phase = "7.2" if promote_symbols_enabled else "7.1"
+        mode = "static_predicate_and_symbol_promotion" if promote_symbols_enabled else "static_predicate_recovery_only"
     
     summary = {
         "unknown_condition_sites_total": total,
@@ -121,6 +129,18 @@ def build_readability_report(
         summary["temps_promoted"] = 0
         summary["function_symbols_promoted"] = 0
         summary["promotion_skipped"] = 0
+        
+    if compile_shape_enabled:
+        cs = compile_shape_data or {}
+        report["compile_shape"] = cs.get("stats", {
+            "missing_predicate_declarations_added": 0,
+            "scratch_declarations_added": 0,
+            "predicates_skipped_due_to_undeclared_identifiers": 0,
+            "forward_declarations_removed": 0,
+            "forward_declaration_conflicts_resolved": 0,
+            "function_symbol_promotions_skipped_for_collision": 0
+        })
+        report["compile_shape_items"] = cs.get("items", [])
         
     return report
 
@@ -208,6 +228,20 @@ def generate_readability_report_md(report: Dict[str, Any], out_dir: Path) -> Pat
     else:
         md.append("*No promotions skipped.*")
     md.append("")
+    
+    if "compile_shape" in report:
+        cs = report["compile_shape"]
+        md.append("## Compile-Shape Hardening")
+        md.append("")
+        md.append("| Hardening Metric | Value |")
+        md.append("| --- | --- |")
+        md.append(f"| Missing Predicate Declarations Added | {cs.get('missing_predicate_declarations_added', 0)} |")
+        md.append(f"| Scratch Declarations Added | {cs.get('scratch_declarations_added', 0)} |")
+        md.append(f"| Predicates Skipped (Undeclared) | {cs.get('predicates_skipped_due_to_undeclared_identifiers', 0)} |")
+        md.append(f"| Forward Declarations Removed | {cs.get('forward_declarations_removed', 0)} |")
+        md.append(f"| Forward Declaration Conflicts Resolved | {cs.get('forward_declaration_conflicts_resolved', 0)} |")
+        md.append(f"| Function Symbol Promotions Skipped for Collision | {cs.get('function_symbol_promotions_skipped_for_collision', 0)} |")
+        md.append("")
     
     with open(path, "w", encoding="utf-8") as f:
         f.write("\n".join(md) + "\n")

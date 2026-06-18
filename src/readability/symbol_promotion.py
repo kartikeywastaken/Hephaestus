@@ -382,9 +382,19 @@ class SymbolPromotionEngine:
         """
         blocks = parse_c_into_functions(c_content)
         
+        # Collect original declaration types before renaming
+        self.original_types_by_func = {}
+        for b in blocks:
+            if b["type"] == "function":
+                from src.readability.compile_shape import collect_original_declaration_types
+                self.original_types_by_func[b["name"]] = collect_original_declaration_types(b)
+        
         # 1. Step: Build global function renaming map
         global_fn_rename = {}
         all_identifiers = extract_identifiers_from_block(c_content.splitlines(keepends=True))
+        
+        from src.readability.compile_shape import collect_all_function_declarations, is_global_function_collision
+        all_decls = collect_all_function_declarations(c_content)
         
         for name in all_identifiers:
             hex_part = None
@@ -402,6 +412,21 @@ class SymbolPromotionEngine:
                     # Verify no collision with helpers, keywords, or existing identifiers
                     if proposed in C_KEYWORDS:
                         continue
+                        
+                    old_decl = all_decls.get(name, ["u64 " + name + "();"])[0]
+                    if is_global_function_collision(proposed, old_decl, all_decls):
+                        self.skipped_list.append({
+                            "promotion_id": self.get_next_promo_id(),
+                            "function": "global",
+                            "old_name": name,
+                            "proposed_new_name": proposed,
+                            "kind": "function",
+                            "reason": "global function collision",
+                            "confidence": "artifact_backed",
+                            "evidence": {
+                                "entry_point": hex_norm
+                            }
+                        })
                     elif proposed in all_identifiers:
                         self.skipped_list.append({
                             "promotion_id": self.get_next_promo_id(),
@@ -440,6 +465,11 @@ class SymbolPromotionEngine:
                 rename_map = self._resolve_function_promotions(fn_name, existing_ids)
                 func_param_renames[fn_name] = {k: v for k, v in rename_map.items() if k.startswith("arg")}
                 b["rename_map"] = rename_map
+                
+        self.function_promotions = {}
+        for b in blocks:
+            if b["type"] == "function":
+                self.function_promotions[b["name"]] = b.get("rename_map", {})
                 
         for b in blocks:
             if b["type"] == "global":
@@ -545,12 +575,17 @@ class SymbolPromotionEngine:
             if p_name and p_name in existing_ids:
                 mapped = map_parameter_name(p_name)
                 if mapped:
+                    p_type = param.get("type", "u64")
+                    if isinstance(p_type, dict):
+                        p_type_str = p_type.get("type", "u64")
+                    else:
+                        p_type_str = str(p_type)
                     proposed[p_name] = (
                         mapped,
                         "parameter",
                         "artifact_backed",
                         "source_reconstruction_parameter" if self.source_recon else "type_recovery_parameter",
-                        {"index": param.get("index", 0), "type": param.get("type", {}).get("type", "u64")}
+                        {"index": param.get("index", 0), "type": p_type_str}
                     )
                     
         # 1b. Propose Stack slot promotions

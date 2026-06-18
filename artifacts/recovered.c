@@ -1,7 +1,7 @@
 /*
  * recovered.c — Phase 5.7.2 Conservative ARM64 Coverage Cleanup
  * Schema version: 5.7.2
- * Generated: 2026-06-16T19:09:13Z
+ * Generated: 2026-06-18T18:56:57Z
  *
  * AUTO-GENERATED — DO NOT EDIT
  *
@@ -34,60 +34,40 @@ static int HEPHAESTUS_UNKNOWN_COND(const char *evidence)
     return 0;
 }
 
-/*
- * HEPHAESTUS_CSET is a syntax adapter for ARM64 cset instructions.
- * Its argument preserves the ARM64 condition code. The return value is not a
- * recovered high-level condition.
- */
-static u64 HEPHAESTUS_CSET(const char *condition)
-{
-    (void)condition;
-    return 0;
-}
-
 /* ================================================== */
 /*                 Forward Declarations                */
 /* ================================================== */
 
 int32_t main(int32_t argc, char ** argv);
-uint64_t mixed_driver(uint64_t arg1, uint64_t arg_30h);
-uint64_t cfg_pressure(uint64_t arg1, uint64_t arg2, uint64_t arg_50h);
-uint64_t indirect_pressure(uint64_t arg1, uint64_t arg_40h);
-uint64_t byte_halfword_pressure(uint64_t arg1);
-uint64_t stack_layout_pressure(uint64_t arg1);
-uint64_t abi_pressure(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg4, uint64_t arg5, uint64_t arg6, uint64_t arg7, uint64_t arg8, uint64_t arg_60h);
-uint64_t rotmix(uint64_t arg1, uint64_t arg_10h);
-uint64_t op_add(uint64_t arg1, uint64_t arg2, uint64_t arg_20h);
-uint64_t op_xor(uint64_t arg1, uint64_t arg2, uint64_t arg_20h);
-uint64_t op_mul(uint64_t arg1, uint64_t arg2, uint64_t arg_20h);
-uint64_t op_shift(uint64_t arg1, uint64_t arg2, uint64_t arg_20h);
-uint64_t op_div(uint64_t arg1, uint64_t arg2, uint64_t arg_20h);
-uint64_t op_logic(uint64_t arg1, uint64_t arg2, uint64_t arg_20h);
-uint64_t tri_a(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg_40h);
-uint64_t tri_b(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg_30h);
-uint64_t tri_c(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg_40h);
+uint64_t FUN_1000004cc(void);
+int32_t main(void);
+uint64_t scan_items(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg_50h);
+uint64_t mixed_driver(void);
+uint64_t FUN_1000007a0(void);
+uint64_t cfg_pressure(void);
+uint64_t FUN_100000998(void);
+uint64_t nested_control(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg_20h);
+uint64_t pointer_walk(int32_t arg1, uint64_t arg2, uint64_t arg3, int32_t arg_30h);
+uint64_t indirect_pressure(void);
+uint64_t FUN_100000c48(void);
+uint64_t mix_score(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg_10h);
+uint64_t byte_halfword_pressure(void);
+uint64_t rotl32(int32_t arg1, uint64_t arg2, uint64_t arg_10h);
 uint64_t stack_chk_fail(void);
 int32_t printf(void * format);
+int32_t puts(void * s);
+uint64_t strlen(void * s);
 
 /* Conservative call target helpers */
-u64 call_0x100000768();
-u64 call_0x1000008b8();
-u64 call_0x100000b7c();
-u64 call_0x100000d00();
-u64 call_0x100000f50();
-u64 call_0x1000012dc();
-u64 call_0x1000014a8();
-u64 call_0x100001538();
-u64 call_0x10000157c();
-u64 call_0x1000015c0();
-u64 call_0x10000160c();
-u64 call_0x100001664();
-u64 call_0x1000016cc();
-u64 call_0x100001720();
-u64 call_0x1000017e8();
-u64 call_0x1000018d0();
-u64 call_0x100001ab8();
-u64 call_0x100001ac4();
+u64 call_0x100000740();
+u64 call_0x1000009a8();
+u64 call_0x100000ad8();
+u64 call_0x100000c54();
+u64 call_0x100000d4c();
+u64 call_0x100000d94();
+u64 call_0x100000da0();
+u64 call_0x100000dac();
+u64 call_0x100000db8();
 
 /* ================================================== */
 /*                 Function Definitions                */
@@ -95,1476 +75,301 @@ u64 call_0x100001ac4();
 
 int32_t main(int32_t argc, char ** argv)
 {
-    /* Entry: 0x100000548 */
+    /* Entry: 0x100000460 */
     /* Body status: structured */
-    /* 30 basic block(s), 136 instruction(s) */
+    /* 29 basic block(s), 184 instruction(s) */
+
+    /* ABI argument bindings: */
+    /*   ? => param 1 (stack_save_restore) */
 
     /* Layout candidates: */
-    /*   base=sp, kind=record_like, offsets=[16, 28, 32, 36, 40, 48], sizes=[4, 8] */
-    /*   base=x9, kind=record_like, offsets=[0, 80], sizes=[4, 8] */
+    /*   base=sp, kind=record_like, offsets=[20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 64, 68, 74, 124, 156], sizes=[4] */
+    /*   base=x10, kind=record_like, offsets=[4, 8, 9], sizes=[4] */
+    /*   base=x8, kind=array_like, offsets=[0, 8], sizes=[4] */
+    /*   base=x9, kind=array_like, offsets=[0, 10], sizes=[4] */
 
     /* Conservative pseudo declarations: */
     u64 tmp_sp = 0;
     u64 tmp_x0 = 0;
-    u64 tmp_x1 = 0;
-    u64 tmp_x8 = 0;
     u64 tmp_x9 = 0;
     u64 tmp_x10 = 0;
-    u32 tmp_w8 = 0;
+    u64 tmp_x11 = 0;
+    u64 tmp_x12 = 0;
+    u32 tmp_w0 = 0;
     u32 tmp_w9 = 0;
-    u64 tmp_fp = 0;
-    u64 tmp_lr = 0;
-    u64 stack_m16 = 0;
-    u64 stack_m24 = 0;
-    u64 stack_m32 = 0;
-    u64 stack_m36 = 0;
-    u64 stack_16 = 0;
-    u32 stack_28 = 0;
-    u64 stack_32 = 0;
-    u32 stack_36 = 0;
-    u64 stack_40 = 0;
-    u64 stack_48 = 0;
-    u64 stack_96 = 0;
-    u64 stack_104 = 0;
-
-    /* Control flow structure: */
-    /* if condition block: 0x100000548 */
-    /* merge block: 0x100000660 */
-    if (HEPHAESTUS_UNKNOWN_COND("condition evidence: cbz x8 at 0x100000570 targeting 0x100000660")) {
-        /* block 0x100000574 */
-        /* branch to 0x100000578 */ /* b 0x100000578 */
-        /* block 0x100000578 */
-        stack_m36 = 0; /* stur wzr,[x29, #-0x24] */
-        /* branch to 0x100000580 */ /* b 0x100000580 */
-        /* loop kind: while_like */
-        /* loop header: 0x100000580 */
-        /* loop exits: ['0x10000065c'] */
-        while (HEPHAESTUS_UNKNOWN_COND("condition evidence: cbz x8 at 0x100000594 targeting 0x1000005b0")) {
-            /* if condition block: 0x100000580 */
-            /* merge block: 0x1000005b0 */
-            if (HEPHAESTUS_UNKNOWN_COND("condition evidence: cbz x8 at 0x100000594 targeting 0x1000005b0")) {
-                /* block 0x100000598 */
-                /* branch to 0x10000059c */ /* b 0x10000059c */
-                /* block 0x10000059c */
-                tmp_w8 = stack_m36; /* ldur w8,[x29, #-0x24] */
-                tmp_w8 = tmp_w8 - 8; /* subs w8,w8,#0x8; flags updated */
-                tmp_w8 = HEPHAESTUS_CSET("lt"); /* cset w8,lt; flags not modeled */
-                stack_28 = tmp_w8; /* str w8,[sp, #0x1c] */
-                /* branch to 0x1000005b0 */ /* b 0x1000005b0 */
-            }
-            /* block 0x1000005b0 */
-            tmp_w8 = stack_28; /* ldr w8,[sp, #0x1c] */
-            /* tbz tmp_w8 bit 0 -> 0x10000065c */
-            /* block 0x1000005b8 */
-            /* branch to 0x1000005bc */ /* b 0x1000005bc */
-            /* block 0x1000005bc */
-            tmp_x8 = stack_m16; /* ldur x8,[x29, #-0x10] */
-            tmp_x9 = (i64)(i32)stack_m36; /* ldursw x9,[x29, #-0x24] */
-            tmp_x8 = *(u64 *)(tmp_x8 + (tmp_x9 << 3)); /* ldr x8,[x8, x9, LSL #0x3] */
-            stack_48 = tmp_x8; /* str x8,[sp, #0x30] */
-            stack_40 = 0; /* str xzr,[sp, #0x28] */
-            stack_36 = 0; /* str wzr,[sp, #0x24] */
-            /* branch to 0x1000005d8 */ /* b 0x1000005d8 */
-            /* loop kind: while_like */
-            /* loop header: 0x1000005d8 */
-            /* loop exits: ['0x100000638'] */
-            while (HEPHAESTUS_UNKNOWN_COND("condition evidence: cbz w8 at 0x1000005e4 targeting 0x100000638; loop polarity inverted")) {
-                /* if/else condition block: 0x1000005d8 */
-                /* merge block: 0x100000628 */
-                if (HEPHAESTUS_UNKNOWN_COND("condition evidence: cbz w8 at 0x1000005e4 targeting 0x100000638")) {
-                    /* block 0x10000061c */
-                    /* branch to 0x100000620 */ /* b 0x100000620 */
-                    /* block 0x100000620 */
-                    /* branch to 0x100000628 */ /* b 0x100000628 */
-                } else {
-                    /* block 0x100000624 */
-                    /* branch to 0x100000628 */ /* b 0x100000628 */
-                }
-                /* block 0x100000628 */
-                tmp_w8 = stack_36; /* ldr w8,[sp, #0x24] */
-                tmp_w8 = tmp_w8 + 1; /* add w8,w8,#0x1 */
-                stack_36 = tmp_w8; /* str w8,[sp, #0x24] */
-                /* branch to 0x1000005d8 */ /* b 0x1000005d8 */
-            }
-            /* block 0x100000638 */
-            tmp_x9 = stack_40; /* ldr x9,[sp, #0x28] */
-            tmp_x8 = stack_m32; /* ldur x8,[x29, #-0x20] */
-            tmp_x8 = tmp_x8 ^ tmp_x9; /* eor x8,x8,x9 */
-            stack_m32 = tmp_x8; /* stur x8,[x29, #-0x20] */
-            /* branch to 0x10000064c */ /* b 0x10000064c */
-            /* block 0x10000064c */
-            tmp_w8 = stack_m36; /* ldur w8,[x29, #-0x24] */
-            tmp_w8 = tmp_w8 + 1; /* add w8,w8,#0x1 */
-            stack_m36 = tmp_w8; /* stur w8,[x29, #-0x24] */
-            /* branch to 0x100000580 */ /* b 0x100000580 */
-        }
-        /* block 0x10000065c */
-        /* branch to 0x100000660 */ /* b 0x100000660 */
-    }
-    /* block 0x100000660 */
-    stack_32 = 0; /* str wzr,[sp, #0x20] */
-    /* branch to 0x100000668 */ /* b 0x100000668 */
-    /* loop kind: while_like */
-    /* loop header: 0x100000668 */
-    /* loop exits: ['0x100000710'] */
-    while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x100000670 after subs at 0x10000066c; target 0x100000710; loop polarity inverted")) {
-        /* block 0x100000668 */
-        tmp_w8 = stack_32; /* ldr w8,[sp, #0x20] */
-        tmp_w8 = tmp_w8 - 18; /* subs w8,w8,#0x12; flags updated */
-        /* conditional branch b.ge -> 0x100000710 */
-        /* block 0x100000674 */
-        /* branch to 0x100000678 */ /* b 0x100000678 */
-        /* block 0x100000678 */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x9 = stack_m32; /* ldur x9,[x29, #-0x20] */
-        tmp_x8 = tmp_x8 + tmp_x9; /* add x8,x8,x9 */
-        tmp_x9 = (i64)(i32)stack_32; /* ldrsw x9,[sp, #0x20] */
-        tmp_x0 = tmp_x8 + tmp_x9; /* add x0,x8,x9 */
-        call_0x100000768(tmp_x0); /* bl 0x100000768; args refined from same-block evidence */
-        /* block 0x100000690 */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x8 = tmp_x8 ^ tmp_x0; /* eor x8,x8,x0 */
-        stack_m24 = tmp_x8; /* stur x8,[x29, #-0x18] */
-        tmp_x0 = stack_m24; /* ldur x0,[x29, #-0x18] */
-        tmp_x8 = stack_m32; /* ldur x8,[x29, #-0x20] */
-        tmp_x9 = (i64)(i32)stack_32; /* ldrsw x9,[sp, #0x20] */
-        tmp_x1 = tmp_x8 ^ tmp_x9; /* eor x1,x8,x9 */
-        call_0x1000008b8(tmp_x0, tmp_x1); /* bl 0x1000008b8; args refined from same-block evidence */
-        /* block 0x1000006b0 */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x8 = tmp_x8 + tmp_x0; /* add x8,x8,x0 */
-        stack_m24 = tmp_x8; /* stur x8,[x29, #-0x18] */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x9 = (i64)(i32)stack_32; /* ldrsw x9,[sp, #0x20] */
-        tmp_x10 = 9; /* mov x10,#0x9 */
-        tmp_x9 = tmp_x9 * tmp_x10; /* mul x9,x9,x10 */
-        tmp_x0 = tmp_x8 + tmp_x9; /* add x0,x8,x9 */
-        call_0x100000b7c(tmp_x0); /* bl 0x100000b7c; args refined from same-block evidence */
-        /* block 0x1000006d4 */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x8 = tmp_x8 ^ tmp_x0; /* eor x8,x8,x0 */
-        stack_m24 = tmp_x8; /* stur x8,[x29, #-0x18] */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x9 = (i64)(i32)stack_32; /* ldrsw x9,[sp, #0x20] */
-        tmp_x0 = tmp_x8 ^ tmp_x9; /* eor x0,x8,x9 */
-        call_0x100000d00(tmp_x0); /* bl 0x100000d00; args refined from same-block evidence */
-        /* block 0x1000006f0 */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x8 = tmp_x8 + tmp_x0; /* add x8,x8,x0 */
-        stack_m24 = tmp_x8; /* stur x8,[x29, #-0x18] */
-        /* branch to 0x100000700 */ /* b 0x100000700 */
-        /* block 0x100000700 */
-        tmp_w8 = stack_32; /* ldr w8,[sp, #0x20] */
-        tmp_w8 = tmp_w8 + 1; /* add w8,w8,#0x1 */
-        stack_32 = tmp_w8; /* str w8,[sp, #0x20] */
-        /* branch to 0x100000668 */ /* b 0x100000668 */
-    }
-    /* block 0x100000710 */
-    tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-    tmp_x9 = 0x100008000; /* adrp x9,0x100008000 */
-    stack_16 = tmp_x9; /* str x9,[sp, #0x10] */
-    tmp_x9 = *(u64 *)(tmp_x9 + 80); /* ldr x9,[x9, #0x50] */
-    tmp_x8 = tmp_x8 ^ tmp_x9; /* eor x8,x8,x9 */
-    tmp_x9 = 0x100008000; /* adrp x9,0x100008000 */
-    tmp_w9 = *(u32 *)(tmp_x9); /* ldr w9,[x9] */
-    tmp_x8 = tmp_x8 ^ tmp_x9; /* eor x8,x8,x9 */
-    tmp_x9 = tmp_sp; /* mov x9,sp */
-    *(u64 *)(tmp_x9) = tmp_x8; /* str x8,[x9] */
-    tmp_x0 = 0x100001000; /* adrp x0,0x100001000 */
-    tmp_x0 = tmp_x0 + 2768; /* add x0,x0,#0xad0 */
-    call_0x100001ab8(tmp_x0); /* bl 0x100001ab8; args refined from same-block evidence */
-    /* block 0x100000744 */
-    tmp_x9 = stack_16; /* ldr x9,[sp, #0x10] */
-    tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-    tmp_x9 = *(u64 *)(tmp_x9 + 80); /* ldr x9,[x9, #0x50] */
-    tmp_x8 = tmp_x8 ^ tmp_x9; /* eor x8,x8,x9 */
-    tmp_x8 = tmp_x8 & 255; /* and x8,x8,#0xff */
-    tmp_x0 = tmp_x8; /* mov x0,x8 */
-    tmp_fp = stack_96; /* ldp x29,x30,[sp, #0x60] */
-    tmp_lr = stack_104; /* paired load second register inferred offset +8 */
-    tmp_sp = tmp_sp + 112; /* add sp,sp,#0x70 */
-    return tmp_x0; /* return value from x0 before ret */
-
-}
-
-uint64_t mixed_driver(uint64_t arg1, uint64_t arg_30h)
-{
-    /* Entry: 0x100000768 */
-    /* Body status: structured */
-    /* 17 basic block(s), 84 instruction(s) */
-    /* WARNING: unknown_return_type_defaulted_to_u64 */
-
-    /* Layout candidates: */
-    /*   base=sp, kind=record_like, offsets=[12, 16], sizes=[4, 8] */
-
-    /* Conservative pseudo declarations: */
-    u64 tmp_sp = 0;
-    u64 tmp_x0 = 0;
-    u64 tmp_x8 = 0;
-    u32 tmp_w8 = 0;
+    u32 tmp_w10 = 0;
+    u32 tmp_w11 = 0;
     u64 tmp_fp = 0;
     u64 tmp_lr = 0;
     u64 stack_m8 = 0;
-    u32 stack_12 = 0;
-    u64 stack_16 = 0;
-    u64 stack_32 = 0;
-    u64 stack_40 = 0;
-
-    /* Control flow structure: */
-    /* block 0x100000768 */
-    tmp_sp = tmp_sp - 48; /* sub sp,sp,#0x30 */
-    stack_32 = tmp_fp; /* stp x29,x30,[sp, #0x20] */
-    stack_40 = tmp_lr; /* paired store second register inferred offset +8 */
-    tmp_fp = tmp_sp + 32; /* add x29,sp,#0x20 */
-    stack_m8 = tmp_x0; /* stur x0,[x29, #-0x8] */
-    tmp_x8 = stack_m8; /* ldur x8,[x29, #-0x8] */
-    stack_16 = tmp_x8; /* str x8,[sp, #0x10] */
-    stack_12 = 0; /* str wzr,[sp, #0xc] */
-    /* branch to 0x100000788 */ /* b 0x100000788 */
-    /* loop kind: while_like */
-    /* loop header: 0x100000788 */
-    /* loop exits: ['0x10000088c', '0x1000008a8'] */
-    while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x100000790 after subs at 0x10000078c; target 0x1000008a8; loop polarity inverted")) {
-        /* if/else condition block: 0x100000788 */
-        /* merge block: 0x100000898 */
-        if (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x100000790 after subs at 0x10000078c; target 0x1000008a8")) {
-            /* block 0x100000874 */
-            /* branch to 0x100000878 */ /* b 0x100000878 */
-            /* block 0x100000878 */
-            /* branch to 0x100000898 */ /* b 0x100000898 */
-        } else {
-            /* block 0x10000087c */
-            tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
-            tmp_x8 = tmp_x8 & 4095; /* and x8,x8,#0xfff */
-            tmp_x8 = tmp_x8 - 1911; /* subs x8,x8,#0x777; flags updated */
-            /* conditional branch b.ne -> 0x100000894 */
-            /* block 0x100000894 */
-            /* branch to 0x100000898 */ /* b 0x100000898 */
-        }
-        /* block 0x100000898 */
-        tmp_w8 = stack_12; /* ldr w8,[sp, #0xc] */
-        tmp_w8 = tmp_w8 + 1; /* add w8,w8,#0x1 */
-        stack_12 = tmp_w8; /* str w8,[sp, #0xc] */
-        /* branch to 0x100000788 */ /* b 0x100000788 */
-    }
-    /* block 0x10000088c */
-    /* branch to 0x100000890 */ /* b 0x100000890 */
-    /* block 0x100000890 */
-    /* branch to 0x1000008a8 */ /* b 0x1000008a8 */
-    /* block 0x1000008a8 */
-    tmp_x0 = stack_16; /* ldr x0,[sp, #0x10] */
-    tmp_fp = stack_32; /* ldp x29,x30,[sp, #0x20] */
-    tmp_lr = stack_40; /* paired load second register inferred offset +8 */
-    tmp_sp = tmp_sp + 48; /* add sp,sp,#0x30 */
-    return tmp_x0; /* return value from x0 before ret */
-
-}
-
-uint64_t cfg_pressure(uint64_t arg1, uint64_t arg2, uint64_t arg_50h)
-{
-    /* Entry: 0x1000008b8 */
-    /* Body status: unstructured */
-    /* 52 basic block(s), 177 instruction(s) */
-    /* WARNING: unknown_return_type_defaulted_to_u64 */
-
-    /* Layout candidates: */
-    /*   base=sp, kind=array_like, offsets=[8, 16, 24, 32], sizes=[8] */
-    /*   base=x9, kind=pointer_like, offsets=[80], sizes=[8] */
-
-    /* Conservative pseudo declarations: */
-    u64 tmp_sp = 0;
-    u64 tmp_x0 = 0;
-    u64 tmp_x1 = 0;
-    u64 tmp_x2 = 0;
-    u64 tmp_x3 = 0;
-    u64 tmp_x4 = 0;
-    u64 tmp_x5 = 0;
-    u64 tmp_x6 = 0;
-    u64 tmp_x7 = 0;
-    u64 tmp_x8 = 0;
-    u64 tmp_x9 = 0;
-    u64 tmp_x10 = 0;
-    u32 tmp_w8 = 0;
-    u64 tmp_fp = 0;
-    u64 tmp_lr = 0;
-    u64 stack_m8 = 0;
-    u64 stack_m16 = 0;
-    u64 stack_m24 = 0;
-    u64 stack_8 = 0;
-    u64 stack_16 = 0;
+    u32 stack_20 = 0;
     u64 stack_24 = 0;
-    u64 stack_32 = 0;
-    u64 stack_64 = 0;
-    u64 stack_72 = 0;
-
-    /* Control flow structure: */
-    /* unstructured region begin */
-    /* reason: multi_exit_loop */
-    {
-        /* block 0x1000008b8 */
-        tmp_sp = tmp_sp - 80; /* sub sp,sp,#0x50 */
-        stack_64 = tmp_fp; /* stp x29,x30,[sp, #0x40] */
-        stack_72 = tmp_lr; /* paired store second register inferred offset +8 */
-        tmp_fp = tmp_sp + 64; /* add x29,sp,#0x40 */
-        stack_m8 = tmp_x0; /* stur x0,[x29, #-0x8] */
-        stack_m16 = tmp_x1; /* stur x1,[x29, #-0x10] */
-        tmp_x8 = stack_m8; /* ldur x8,[x29, #-0x8] */
-        tmp_x9 = stack_m16; /* ldur x9,[x29, #-0x10] */
-        tmp_x8 = tmp_x8 ^ tmp_x9; /* eor x8,x8,x9 */
-        stack_m24 = tmp_x8; /* stur x8,[x29, #-0x18] */
-        stack_32 = 0; /* str xzr,[sp, #0x20] */
-        /* branch to 0x1000008e4 */ /* b 0x1000008e4 */
-        /* block 0x1000008e4 */
-        tmp_x8 = stack_32; /* ldr x8,[sp, #0x20] */
-        tmp_x8 = tmp_x8 - 80; /* subs x8,x8,#0x50; flags updated */
-        /* conditional branch b.cs -> 0x100000b58 */
-        /* block 0x1000008f0 */
-        /* branch to 0x1000008f4 */ /* b 0x1000008f4 */
-        /* block 0x1000008f4 */
-        tmp_x8 = stack_32; /* ldr x8,[sp, #0x20] */
-        tmp_x9 = 50855; /* mov x9,#0xc6a7 */
-        /* 0x1000008fc: unsupported instruction: movk x9,#0x4e67, LSL #16 */
-        tmp_x9 = tmp_x8 * tmp_x9; /* mul x9,x8,x9 */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x8 = tmp_x8 ^ tmp_x9; /* eor x8,x8,x9 */
-        stack_m24 = tmp_x8; /* stur x8,[x29, #-0x18] */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x8 = tmp_x8 & 15; /* and x8,x8,#0xf */
-        tmp_x8 = tmp_x8 - 9; /* subs x8,x8,#0x9; flags updated */
-        /* conditional branch b.ne -> 0x100000928 */
-        /* block 0x100000920 */
-        /* branch to 0x100000924 */ /* b 0x100000924 */
-        /* block 0x100000924 */
-        /* branch to 0x100000b48 */ /* b 0x100000b48 */
-        /* block 0x100000928 */
-        stack_24 = 0; /* str xzr,[sp, #0x18] */
-        /* branch to 0x100000930 */ /* b 0x100000930 */
-        /* block 0x100000930 */
-        tmp_x8 = stack_24; /* ldr x8,[sp, #0x18] */
-        tmp_x8 = tmp_x8 - 32; /* subs x8,x8,#0x20; flags updated */
-        /* conditional branch b.cs -> 0x100000b2c */
-        /* block 0x10000093c */
-        /* branch to 0x100000940 */ /* b 0x100000940 */
-        /* block 0x100000940 */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x9 = stack_32; /* ldr x9,[sp, #0x20] */
-        tmp_x8 = tmp_x8 + tmp_x9; /* add x8,x8,x9 */
-        tmp_x9 = stack_24; /* ldr x9,[sp, #0x18] */
-        tmp_x8 = tmp_x8 + tmp_x9; /* add x8,x8,x9 */
-        tmp_x8 = tmp_x8 & 7; /* and x8,x8,#0x7 */
-        stack_16 = tmp_x8; /* str x8,[sp, #0x10] */
-        tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
-        stack_8 = tmp_x8; /* str x8,[sp, #0x8] */
-        /* cbz tmp_x8 -> 0x1000009cc */
-        /* block 0x100000968 */
-        /* branch to 0x10000096c */ /* b 0x10000096c */
-        /* block 0x10000096c */
-        tmp_x8 = stack_8; /* ldr x8,[sp, #0x8] */
-        tmp_x8 = tmp_x8 - 1; /* subs x8,x8,#0x1; flags updated */
-        /* conditional branch b.eq -> 0x1000009ec */
-        /* block 0x100000978 */
-        /* branch to 0x10000097c */ /* b 0x10000097c */
-        /* block 0x10000097c */
-        tmp_x8 = stack_8; /* ldr x8,[sp, #0x8] */
-        tmp_x8 = tmp_x8 - 2; /* subs x8,x8,#0x2; flags updated */
-        /* conditional branch b.eq -> 0x100000a0c */
-        /* block 0x100000988 */
-        /* branch to 0x10000098c */ /* b 0x10000098c */
-        /* block 0x10000098c */
-        tmp_x8 = stack_8; /* ldr x8,[sp, #0x8] */
-        tmp_x8 = tmp_x8 - 3; /* subs x8,x8,#0x3; flags updated */
-        /* conditional branch b.eq -> 0x100000a4c */
-        /* block 0x100000998 */
-        /* branch to 0x10000099c */ /* b 0x10000099c */
-        /* block 0x10000099c */
-        tmp_x8 = stack_8; /* ldr x8,[sp, #0x8] */
-        tmp_x8 = tmp_x8 - 4; /* subs x8,x8,#0x4; flags updated */
-        /* conditional branch b.eq -> 0x100000a6c */
-        /* block 0x1000009a8 */
-        /* branch to 0x1000009ac */ /* b 0x1000009ac */
-        /* block 0x1000009ac */
-        tmp_x8 = stack_8; /* ldr x8,[sp, #0x8] */
-        tmp_x8 = tmp_x8 - 5; /* subs x8,x8,#0x5; flags updated */
-        /* conditional branch b.eq -> 0x100000abc */
-        /* block 0x1000009b8 */
-        /* branch to 0x1000009bc */ /* b 0x1000009bc */
-        /* block 0x1000009bc */
-        tmp_x8 = stack_8; /* ldr x8,[sp, #0x8] */
-        tmp_x8 = tmp_x8 - 6; /* subs x8,x8,#0x6; flags updated */
-        /* conditional branch b.eq -> 0x100000ac0 */
-        /* block 0x1000009c8 */
-        /* branch to 0x100000ae0 */ /* b 0x100000ae0 */
-        /* block 0x1000009cc */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x9 = stack_24; /* ldr x9,[sp, #0x18] */
-        tmp_x0 = tmp_x8 + tmp_x9; /* add x0,x8,x9 */
-        call_0x100000f50(tmp_x0); /* bl 0x100000f50; args refined from same-block evidence */
-        /* block 0x1000009dc */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x8 = tmp_x8 ^ tmp_x0; /* eor x8,x8,x0 */
-        stack_m24 = tmp_x8; /* stur x8,[x29, #-0x18] */
-        /* branch to 0x100000b00 */ /* b 0x100000b00 */
-        /* block 0x1000009ec */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x9 = stack_24; /* ldr x9,[sp, #0x18] */
-        tmp_x0 = tmp_x8 ^ tmp_x9; /* eor x0,x8,x9 */
-        call_0x100000b7c(tmp_x0); /* bl 0x100000b7c; args refined from same-block evidence */
-        /* block 0x1000009fc */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x8 = tmp_x8 + tmp_x0; /* add x8,x8,x0 */
-        stack_m24 = tmp_x8; /* stur x8,[x29, #-0x18] */
-        /* branch to 0x100000b00 */ /* b 0x100000b00 */
-        /* block 0x100000a0c */
-        tmp_x0 = stack_m24; /* ldur x0,[x29, #-0x18] */
-        tmp_x1 = stack_m8; /* ldur x1,[x29, #-0x8] */
-        tmp_x2 = stack_m16; /* ldur x2,[x29, #-0x10] */
-        tmp_x3 = stack_32; /* ldr x3,[sp, #0x20] */
-        tmp_x4 = stack_24; /* ldr x4,[sp, #0x18] */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x5 = tmp_x8 >> 3; /* lsr x5,x8,#0x3 */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x6 = tmp_x8 << 2; /* lsl x6,x8,#0x2 */
-        tmp_x7 = 64206; /* mov x7,#0xface */
-        /* 0x100000a34: unsupported instruction: movk x7,#0xfeed, LSL #16 */
-        call_0x1000012dc(tmp_x0, tmp_x1, tmp_x2, tmp_x3, tmp_x4, tmp_x5, tmp_x6, tmp_x7); /* bl 0x1000012dc; args refined from same-block evidence */
-        /* block 0x100000a3c */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x8 = tmp_x8 ^ tmp_x0; /* eor x8,x8,x0 */
-        stack_m24 = tmp_x8; /* stur x8,[x29, #-0x18] */
-        /* branch to 0x100000b00 */ /* b 0x100000b00 */
-        /* block 0x100000a4c */
-        tmp_x9 = stack_m24; /* ldur x9,[x29, #-0x18] */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x8 = tmp_x8 >> 5; /* lsr x8,x8,#0x5 */
-        tmp_x8 = tmp_x8 ^ (tmp_x9 << 3); /* eor x8,x8,x9, LSL #0x3 */
-        tmp_x9 = stack_24; /* ldr x9,[sp, #0x18] */
-        tmp_x8 = tmp_x8 ^ tmp_x9; /* eor x8,x8,x9 */
-        stack_m24 = tmp_x8; /* stur x8,[x29, #-0x18] */
-        /* branch to 0x100000b00 */ /* b 0x100000b00 */
-        /* block 0x100000a6c */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        /* tbz tmp_w8 bit 0 -> 0x100000a98 */
-        /* block 0x100000a74 */
-        /* branch to 0x100000a78 */ /* b 0x100000a78 */
-        /* block 0x100000a78 */
-        tmp_x0 = stack_m24; /* ldur x0,[x29, #-0x18] */
-        tmp_x1 = stack_m8; /* ldur x1,[x29, #-0x8] */
-        tmp_x2 = stack_m16; /* ldur x2,[x29, #-0x10] */
-        call_0x100001720(tmp_x0, tmp_x1, tmp_x2); /* bl 0x100001720; args refined from same-block evidence */
-        /* block 0x100000a88 */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x8 = tmp_x8 + tmp_x0; /* add x8,x8,x0 */
-        stack_m24 = tmp_x8; /* stur x8,[x29, #-0x18] */
-        /* branch to 0x100000ab8 */ /* b 0x100000ab8 */
-        /* block 0x100000a98 */
-        tmp_x0 = stack_m24; /* ldur x0,[x29, #-0x18] */
-        tmp_x1 = stack_m16; /* ldur x1,[x29, #-0x10] */
-        tmp_x2 = stack_m8; /* ldur x2,[x29, #-0x8] */
-        call_0x1000017e8(tmp_x0, tmp_x1, tmp_x2); /* bl 0x1000017e8; args refined from same-block evidence */
-        /* block 0x100000aa8 */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x8 = tmp_x8 ^ tmp_x0; /* eor x8,x8,x0 */
-        stack_m24 = tmp_x8; /* stur x8,[x29, #-0x18] */
-        /* branch to 0x100000ab8 */ /* b 0x100000ab8 */
-        /* block 0x100000ab8 */
-        /* branch to 0x100000b00 */ /* b 0x100000b00 */
-        /* block 0x100000abc */
-        /* branch to 0x100000b1c */ /* b 0x100000b1c */
-        /* block 0x100000ac0 */
-        tmp_x0 = stack_m24; /* ldur x0,[x29, #-0x18] */
-        tmp_x1 = stack_32; /* ldr x1,[sp, #0x20] */
-        tmp_x2 = stack_24; /* ldr x2,[sp, #0x18] */
-        call_0x1000018d0(tmp_x0, tmp_x1, tmp_x2); /* bl 0x1000018d0; args refined from same-block evidence */
-        /* block 0x100000ad0 */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x8 = tmp_x8 + tmp_x0; /* add x8,x8,x0 */
-        stack_m24 = tmp_x8; /* stur x8,[x29, #-0x18] */
-        /* branch to 0x100000b00 */ /* b 0x100000b00 */
-        /* block 0x100000ae0 */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x9 = 30864; /* mov x9,#0x7890 */
-        /* 0x100000ae8: unsupported instruction: movk x9,#0x3456, LSL #16 */
-        /* 0x100000aec: unsupported instruction: movk x9,#0xef12, LSL #32 */
-        /* 0x100000af0: unsupported instruction: movk x9,#0xabcd, LSL #48 */
-        tmp_x8 = tmp_x8 ^ tmp_x9; /* eor x8,x8,x9 */
-        stack_m24 = tmp_x8; /* stur x8,[x29, #-0x18] */
-        /* branch to 0x100000b00 */ /* b 0x100000b00 */
-        /* block 0x100000b00 */
-        tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-        tmp_x8 = tmp_x8 & 1023; /* and x8,x8,#0x3ff */
-        tmp_x8 = tmp_x8 - 341; /* subs x8,x8,#0x155; flags updated */
-        /* conditional branch b.ne -> 0x100000b18 */
-        /* block 0x100000b10 */
-        /* branch to 0x100000b14 */ /* b 0x100000b14 */
-        /* block 0x100000b14 */
-        /* branch to 0x100000b2c */ /* b 0x100000b2c */
-        /* block 0x100000b18 */
-        /* branch to 0x100000b1c */ /* b 0x100000b1c */
-        /* block 0x100000b1c */
-        tmp_x8 = stack_24; /* ldr x8,[sp, #0x18] */
-        tmp_x8 = tmp_x8 + 1; /* add x8,x8,#0x1 */
-        stack_24 = tmp_x8; /* str x8,[sp, #0x18] */
-        /* branch to 0x100000930 */ /* b 0x100000930 */
-        /* block 0x100000b2c */
-        tmp_w8 = stack_m24; /* ldurh w8,[x29, #-0x18] */
-        tmp_x9 = 48879; /* mov x9,#0xbeef */
-        tmp_x8 = tmp_x8 - tmp_x9; /* subs x8,x8,x9; flags updated */
-        /* conditional branch b.ne -> 0x100000b44 */
-        /* block 0x100000b3c */
-        /* branch to 0x100000b40 */ /* b 0x100000b40 */
-        /* block 0x100000b40 */
-        /* branch to 0x100000b58 */ /* b 0x100000b58 */
-        /* block 0x100000b44 */
-        /* branch to 0x100000b48 */ /* b 0x100000b48 */
-        /* block 0x100000b48 */
-        tmp_x8 = stack_32; /* ldr x8,[sp, #0x20] */
-        tmp_x8 = tmp_x8 + 1; /* add x8,x8,#0x1 */
-        stack_32 = tmp_x8; /* str x8,[sp, #0x20] */
-        /* branch to 0x1000008e4 */ /* b 0x1000008e4 */
-        /* block 0x100000b58 */
-        tmp_x10 = stack_m24; /* ldur x10,[x29, #-0x18] */
-        tmp_x9 = 0x100008000; /* adrp x9,0x100008000 */
-        tmp_x8 = *(u64 *)(tmp_x9 + 80); /* ldr x8,[x9, #0x50] */
-        tmp_x8 = tmp_x8 ^ tmp_x10; /* eor x8,x8,x10 */
-        *(u64 *)(tmp_x9 + 80) = tmp_x8; /* str x8,[x9, #0x50] */
-        tmp_x0 = stack_m24; /* ldur x0,[x29, #-0x18] */
-        tmp_fp = stack_64; /* ldp x29,x30,[sp, #0x40] */
-        tmp_lr = stack_72; /* paired load second register inferred offset +8 */
-        tmp_sp = tmp_sp + 80; /* add sp,sp,#0x50 */
-        return tmp_x0; /* return value from x0 before ret */
-    }
-    /* unstructured region end */
-
-}
-
-uint64_t indirect_pressure(uint64_t arg1, uint64_t arg_40h)
-{
-    /* Entry: 0x100000b7c */
-    /* Body status: structured */
-    /* 15 basic block(s), 97 instruction(s) */
-    /* WARNING: unknown_return_type_defaulted_to_u64 */
-
-    /* Layout candidates: */
-    /*   base=sp, kind=array_like, offsets=[0, 8, 16, 24], sizes=[8] */
-    /*   base=x9, kind=pointer_like, offsets=[80], sizes=[8] */
-
-    /* Conservative pseudo declarations: */
-    u64 tmp_sp = 0;
-    u64 tmp_x0 = 0;
-    u64 tmp_x1 = 0;
-    u64 tmp_x2 = 0;
-    u64 tmp_x8 = 0;
-    u64 tmp_x9 = 0;
-    u64 tmp_x10 = 0;
-    u32 tmp_w8 = 0;
-    u64 tmp_fp = 0;
-    u64 tmp_lr = 0;
-    u64 stack_m8 = 0;
-    u64 stack_m16 = 0;
-    u64 stack_0 = 0;
-    u64 stack_8 = 0;
-    u64 stack_16 = 0;
-    u64 stack_24 = 0;
+    u64 stack_28 = 0;
+    u64 stack_44 = 0;
     u64 stack_48 = 0;
+    u32 stack_52 = 0;
     u64 stack_56 = 0;
+    u64 stack_124 = 0;
+    u64 stack_156 = 0;
+    u64 stack_192 = 0;
+    u64 stack_200 = 0;
 
     /* Control flow structure: */
-    /* block 0x100000b7c */
-    tmp_sp = tmp_sp - 64; /* sub sp,sp,#0x40 */
-    stack_48 = tmp_fp; /* stp x29,x30,[sp, #0x30] */
-    stack_56 = tmp_lr; /* paired store second register inferred offset +8 */
-    tmp_fp = tmp_sp + 48; /* add x29,sp,#0x30 */
-    stack_m8 = tmp_x0; /* stur x0,[x29, #-0x8] */
-    tmp_x8 = stack_m8; /* ldur x8,[x29, #-0x8] */
-    stack_m16 = tmp_x8; /* stur x8,[x29, #-0x10] */
-    stack_24 = 0; /* str xzr,[sp, #0x18] */
-    /* branch to 0x100000b9c */ /* b 0x100000b9c */
+    /* if condition block: 0x100000460 */
+    /* merge block: 0x1000004c4 */
+    if (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.le at 0x10000049c after subs at 0x100000498; target 0x1000004c4")) {
+        /* block 0x1000004a0 */
+        /* branch to 0x1000004a4 */ /* b 0x1000004a4 */
+        /* block 0x1000004a4 */
+        arg1 = stack_56; /* ldr x8, [sp + var_38h] */
+        tmp_x0 = *(u64 *)(arg1 + 8); /* ldr x0, [x8, 8] */
+        call_0x100000db8(tmp_x0); /* bl sym.imp.strlen; args refined from same-block evidence */
+        tmp_x9 = tmp_x0; /* mov x9, x0 */
+        arg1 = stack_52; /* ldr w8, [sp + var_34h] */
+        arg1 = arg1 ^ tmp_w9; /* eor w8, w8, w9 */
+        stack_52 = arg1; /* str w8, [sp + var_34h] */
+        /* branch to 0x1000004c4 */ /* b 0x1000004c4 */
+    }
+    /* block 0x1000004c4 */
+    stack_48 = 0; /* str wzr, [sp + var_30h] */
+    /* branch to 0x1000004cc */ /* b 0x1000004cc */
     /* loop kind: while_like */
-    /* loop header: 0x100000b9c */
-    /* loop exits: ['0x100000c08', '0x100000cdc'] */
-    while (HEPHAESTUS_UNKNOWN_COND("condition unknown: loop header 0x100000b9c")) {
-        /* block 0x100000b9c */
-        tmp_x8 = stack_24; /* ldr x8,[sp, #0x18] */
-        tmp_x8 = tmp_x8 - 96; /* subs x8,x8,#0x60; flags updated */
-        /* conditional branch b.cs -> 0x100000cdc */
-        /* block 0x100000ba8 */
-        /* branch to 0x100000bac */ /* b 0x100000bac */
-        /* block 0x100000bac */
-        tmp_x8 = stack_m16; /* ldur x8,[x29, #-0x10] */
-        tmp_x9 = stack_24; /* ldr x9,[sp, #0x18] */
-        tmp_x8 = tmp_x8 + tmp_x9; /* add x8,x8,x9 */
-        tmp_x10 = 6; /* mov x10,#0x6 */
-        tmp_x9 = tmp_x8 / tmp_x10; /* udiv x9,x8,x10 */
-        tmp_x9 = tmp_x9 * tmp_x10; /* mul x9,x9,x10 */
-        tmp_x9 = tmp_x8 - tmp_x9; /* subs x9,x8,x9; flags updated */
-        tmp_x8 = 0x100008000; /* adrp x8,0x100008000 */
-        tmp_x8 = tmp_x8 + 8; /* add x8,x8,#0x8 */
-        tmp_x8 = *(u64 *)(tmp_x8 + (tmp_x9 << 3)); /* ldr x8,[x8, x9, LSL #0x3] */
-        stack_16 = tmp_x8; /* str x8,[sp, #0x10] */
-        tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
-        tmp_x0 = stack_m16; /* ldur x0,[x29, #-0x10] */
-        tmp_x9 = stack_24; /* ldr x9,[sp, #0x18] */
-        tmp_x10 = stack_m8; /* ldur x10,[x29, #-0x8] */
-        tmp_x1 = tmp_x9 + tmp_x10; /* add x1,x9,x10 */
-        /* indirect call through tmp_x8 with args: tmp_x0, tmp_x1 */ /* blr x8 */
-        /* block 0x100000bf0 */
-        tmp_x8 = stack_m16; /* ldur x8,[x29, #-0x10] */
-        tmp_x8 = tmp_x8 ^ tmp_x0; /* eor x8,x8,x0 */
-        stack_m16 = tmp_x8; /* stur x8,[x29, #-0x10] */
-        tmp_w8 = stack_m16; /* ldurb w8,[x29, #-0x10] */
-        tmp_x8 = tmp_x8 - 66; /* subs x8,x8,#0x42; flags updated */
-        /* conditional branch b.ne -> 0x100000c10 */
-        /* if/else condition block: 0x100000c10 */
-        /* merge block: 0x100000ccc */
-        if (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ne at 0x100000c1c after subs at 0x100000c18; target 0x100000c28; polarity inverted")) {
-            /* block 0x100000c20 */
-            /* branch to 0x100000c24 */ /* b 0x100000c24 */
-            /* block 0x100000c24 */
-            /* branch to 0x100000ccc */ /* b 0x100000ccc */
+    /* loop header: 0x1000004cc */
+    /* loop exits: ['0x1000005dc'] */
+    while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x1000004d4 after subs at 0x1000004d0; target 0x1000005dc; loop polarity inverted")) {
+        /* if/else condition block: 0x1000004cc */
+        /* merge block: 0x100000544 */
+        if (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x1000004d4 after subs at 0x1000004d0; target 0x1000005dc")) {
+            /* block 0x100000518 */
+            /* branch to 0x10000051c */ /* b 0x10000051c */
+            /* block 0x10000051c */
+            arg1 = stack_48; /* ldr w8, [sp + var_30h] */
+            tmp_w9 = 11; /* mov w9, 0xb */
+            arg1 = arg1 * tmp_w9; /* mul w8, w8, w9 */
+            stack_24 = arg1; /* str w8, [sp + var_0h_2] */
+            /* branch to 0x100000544 */ /* b 0x100000544 */
         } else {
-            /* block 0x100000c28 */
-            tmp_x8 = stack_m16; /* ldur x8,[x29, #-0x10] */
-            tmp_x10 = 3; /* mov x10,#0x3 */
-            tmp_x8 = tmp_x8 >> 3; /* lsr x8,x8,#0x3 */
-            tmp_x9 = tmp_x8 / tmp_x10; /* udiv x9,x8,x10 */
-            tmp_x9 = tmp_x9 * tmp_x10; /* mul x9,x9,x10 */
-            tmp_x9 = tmp_x8 - tmp_x9; /* subs x9,x8,x9; flags updated */
-            tmp_x8 = 0x100008000; /* adrp x8,0x100008000 */
-            tmp_x8 = tmp_x8 + 56; /* add x8,x8,#0x38 */
-            tmp_x8 = *(u64 *)(tmp_x8 + (tmp_x9 << 3)); /* ldr x8,[x8, x9, LSL #0x3] */
-            stack_8 = tmp_x8; /* str x8,[sp, #0x8] */
-            tmp_x8 = stack_8; /* ldr x8,[sp, #0x8] */
-            tmp_x0 = stack_m16; /* ldur x0,[x29, #-0x10] */
-            tmp_x1 = stack_m8; /* ldur x1,[x29, #-0x8] */
-            tmp_x2 = stack_24; /* ldr x2,[sp, #0x18] */
-            /* indirect call through tmp_x8 with args: tmp_x0, tmp_x1 */ /* blr x8 */
-            /* block 0x100000c64 */
-            tmp_x8 = stack_m16; /* ldur x8,[x29, #-0x10] */
-            tmp_x8 = tmp_x8 + tmp_x0; /* add x8,x8,x0 */
-            stack_m16 = tmp_x8; /* stur x8,[x29, #-0x10] */
-            tmp_x9 = stack_m16; /* ldur x9,[x29, #-0x10] */
-            tmp_x8 = stack_24; /* ldr x8,[sp, #0x18] */
-            tmp_x8 = tmp_x8 + (tmp_x9 >> 5); /* add x8,x8,x9, LSR #0x5 */
-            tmp_x10 = 6; /* mov x10,#0x6 */
-            tmp_x9 = tmp_x8 / tmp_x10; /* udiv x9,x8,x10 */
-            tmp_x9 = tmp_x9 * tmp_x10; /* mul x9,x9,x10 */
-            tmp_x9 = tmp_x8 - tmp_x9; /* subs x9,x8,x9; flags updated */
-            tmp_x8 = 0x100008000; /* adrp x8,0x100008000 */
-            tmp_x8 = tmp_x8 + 8; /* add x8,x8,#0x8 */
-            tmp_x8 = *(u64 *)(tmp_x8 + (tmp_x9 << 3)); /* ldr x8,[x8, x9, LSL #0x3] */
-            stack_0 = tmp_x8; /* str x8,[sp] */
-            tmp_x8 = stack_0; /* ldr x8,[sp] */
-            tmp_x9 = stack_m16; /* ldur x9,[x29, #-0x10] */
-            tmp_x10 = stack_m8; /* ldur x10,[x29, #-0x8] */
-            tmp_x0 = tmp_x9 ^ tmp_x10; /* eor x0,x9,x10 */
-            tmp_x9 = stack_m16; /* ldur x9,[x29, #-0x10] */
-            tmp_x10 = stack_24; /* ldr x10,[sp, #0x18] */
-            tmp_x1 = tmp_x9 + tmp_x10; /* add x1,x9,x10 */
-            /* indirect call through tmp_x8 with args: tmp_x0, tmp_x1 */ /* blr x8 */
-            /* block 0x100000cbc */
-            tmp_x8 = stack_m16; /* ldur x8,[x29, #-0x10] */
-            tmp_x8 = tmp_x8 ^ tmp_x0; /* eor x8,x8,x0 */
-            stack_m16 = tmp_x8; /* stur x8,[x29, #-0x10] */
-            /* branch to 0x100000ccc */ /* b 0x100000ccc */
+            /* block 0x100000530 */
+            arg1 = stack_48; /* ldr w8, [sp + var_30h] */
+            tmp_w9 = 7; /* mov w9, 7 */
+            /* 0x100000538: unsupported instruction: mneg w8, w8, w9 */
+            stack_24 = arg1; /* str w8, [sp + var_0h_2] */
+            /* branch to 0x100000544 */ /* b 0x100000544 */
         }
-        /* block 0x100000ccc */
-        tmp_x8 = stack_24; /* ldr x8,[sp, #0x18] */
-        tmp_x8 = tmp_x8 + 1; /* add x8,x8,#0x1 */
-        stack_24 = tmp_x8; /* str x8,[sp, #0x18] */
-        /* branch to 0x100000b9c */ /* b 0x100000b9c */
+        /* block 0x100000544 */
+        arg1 = stack_24; /* ldr w8, [sp + var_0h_2] */
+        tmp_x9 = (i64)(i32)stack_48; /* ldrsw x9, [sp + var_30h] */
+        tmp_x11 = 12; /* mov x11, 0xc */
+        tmp_x12 = tmp_x9 * tmp_x11; /* mul x12, x9, x11 */
+        tmp_x9 = tmp_sp + 88; /* add x9, sp, 0x58 */
+        tmp_x10 = tmp_x9; /* mov x10, x9 */
+        tmp_x10 = tmp_x10 + tmp_x12; /* add x10, x10, x12 */
+        *(u32 *)(tmp_x10 + 4) = arg1; /* str w8, [x10, 4] */
+        arg1 = stack_48; /* ldr w8, [sp + var_30h] */
+        tmp_w10 = 29; /* mov w10, 0x1d */
+        arg1 = arg1 * tmp_w10; /* mul w8, w8, w10 */
+        tmp_w10 = stack_52; /* ldr w10, [sp + var_34h] */
+        arg1 = arg1 ^ tmp_w10; /* eor w8, w8, w10 */
+        tmp_x10 = (i64)(i32)stack_48; /* ldrsw x10, [sp + var_30h] */
+        tmp_x12 = tmp_x10 * tmp_x11; /* mul x12, x10, x11 */
+        tmp_x10 = tmp_x9; /* mov x10, x9 */
+        tmp_x10 = tmp_x10 + tmp_x12; /* add x10, x10, x12 */
+        *(u8 *)(tmp_x10 + 8) = arg1; /* strb w8, [x10, 8] */
+        arg1 = stack_48; /* ldr w8, [sp + var_30h] */
+        arg1 = arg1 & 7; /* and w8, w8, 7 */
+        tmp_x10 = (i64)(i32)stack_48; /* ldrsw x10, [sp + var_30h] */
+        tmp_x12 = tmp_x10 * tmp_x11; /* mul x12, x10, x11 */
+        tmp_x10 = tmp_x9; /* mov x10, x9 */
+        tmp_x10 = tmp_x10 + tmp_x12; /* add x10, x10, x12 */
+        *(u8 *)(tmp_x10 + 9) = arg1; /* strb w8, [x10, 9] */
+        arg1 = stack_48; /* ldr w8, [sp + var_30h] */
+        tmp_w10 = 13; /* mov w10, 0xd */
+        arg1 = arg1 * tmp_w10; /* mul w8, w8, w10 */
+        arg1 = arg1 + 100; /* add w8, w8, 0x64 */
+        tmp_x10 = (i64)(i32)stack_48; /* ldrsw x10, [sp + var_30h] */
+        tmp_x10 = tmp_x10 * tmp_x11; /* mul x10, x10, x11 */
+        tmp_x9 = tmp_x9 + tmp_x10; /* add x9, x9, x10 */
+        *(u16 *)(tmp_x9 + 10) = arg1; /* strh w8, [x9, 0xa] */
+        /* branch to 0x1000005cc */ /* b 0x1000005cc */
+        /* block 0x1000005cc */
+        arg1 = stack_48; /* ldr w8, [sp + var_30h] */
+        arg1 = arg1 + 1; /* add w8, w8, 1 */
+        stack_48 = arg1; /* str w8, [sp + var_30h] */
+        /* branch to 0x1000004cc */ /* b 0x1000004cc */
     }
-    /* block 0x100000c08 */
-    /* branch to 0x100000c0c */ /* b 0x100000c0c */
-    /* block 0x100000c0c */
-    /* branch to 0x100000cdc */ /* b 0x100000cdc */
-    /* block 0x100000cdc */
-    tmp_x10 = stack_m16; /* ldur x10,[x29, #-0x10] */
-    tmp_x9 = 0x100008000; /* adrp x9,0x100008000 */
-    tmp_x8 = *(u64 *)(tmp_x9 + 80); /* ldr x8,[x9, #0x50] */
-    tmp_x8 = tmp_x8 ^ tmp_x10; /* eor x8,x8,x10 */
-    *(u64 *)(tmp_x9 + 80) = tmp_x8; /* str x8,[x9, #0x50] */
-    tmp_x0 = stack_m16; /* ldur x0,[x29, #-0x10] */
-    tmp_fp = stack_48; /* ldp x29,x30,[sp, #0x30] */
-    tmp_lr = stack_56; /* paired load second register inferred offset +8 */
-    tmp_sp = tmp_sp + 64; /* add sp,sp,#0x40 */
-    return tmp_x0; /* return value from x0 before ret */
-
-}
-
-uint64_t byte_halfword_pressure(uint64_t arg1)
-{
-    /* Entry: 0x100000d00 */
-    /* Body status: structured */
-    /* 25 basic block(s), 148 instruction(s) */
-    /* WARNING: unknown_return_type_defaulted_to_u64 */
-
-    /* Layout candidates: */
-    /*   base=sp, kind=record_like, offsets=[0, 8, 10, 11, 12, 16, 20, 24, 28, 32, 40], sizes=[1, 2, 4, 8] */
-    /*   base=x8, kind=record_like, offsets=[0, 8], sizes=[1, 2, 8] */
-    /*   base=x9, kind=record_like, offsets=[0, 80], sizes=[1, 8] */
-
-    /* Conservative pseudo declarations: */
-    u64 tmp_sp = 0;
-    u64 tmp_x0 = 0;
-    u64 tmp_x8 = 0;
-    u64 tmp_x9 = 0;
-    u64 tmp_x10 = 0;
-    u64 tmp_x27 = 0;
-    u64 tmp_x28 = 0;
-    u32 tmp_w8 = 0;
-    u64 tmp_fp = 0;
-    u64 tmp_lr = 0;
-    u64 stack_m24 = 0;
-    u64 stack_m32 = 0;
-    u64 stack_0 = 0;
-    u64 stack_8 = 0;
-    u64 stack_16 = 0;
-    u32 stack_20 = 0;
-    u64 stack_24 = 0;
-    u64 stack_28 = 0;
-    u64 stack_32 = 0;
-    u64 stack_40 = 0;
-
-    /* Control flow structure: */
-    /* block 0x100000d00 */
-    stack_m32 = tmp_x28; /* stp x28,x27,[sp, #-0x20]! */
-    stack_m24 = tmp_x27; /* paired store second register inferred offset +8 */
-    stack_16 = tmp_fp; /* stp x29,x30,[sp, #0x10] */
-    stack_24 = tmp_lr; /* paired store second register inferred offset +8 */
-    tmp_fp = tmp_sp + 16; /* add x29,sp,#0x10 */
-    tmp_sp = tmp_sp - 576; /* sub sp,sp,#0x240 */
-    tmp_x8 = 0x100004000; /* adrp x8,0x100004000 */
-    tmp_x8 = *(u64 *)(tmp_x8 + 8); /* ldr x8,[x8, #0x8] */
-    tmp_x8 = *(u64 *)(tmp_x8); /* ldr x8,[x8] */
-    stack_m24 = tmp_x8; /* stur x8,[x29, #-0x18] */
-    stack_40 = tmp_x0; /* str x0,[sp, #0x28] */
-    tmp_x8 = stack_40; /* ldr x8,[sp, #0x28] */
-    stack_32 = tmp_x8; /* str x8,[sp, #0x20] */
-    stack_28 = 0; /* str wzr,[sp, #0x1c] */
-    /* branch to 0x100000d34 */ /* b 0x100000d34 */
+    /* block 0x1000005dc */
+    stack_124 = 0; /* str wzr, [sp + var_7ch] */
+    arg1 = stack_156; /* ldrb w8, [sp + var_9ch] */
+    arg1 = arg1 | 32; /* orr w8, w8, 0x20 */
+    stack_156 = arg1; /* strb w8, [sp + var_9ch] */
+    stack_44 = 0; /* str wzr, [sp + var_2ch] */
+    /* branch to 0x1000005f4 */ /* b 0x1000005f4 */
     /* loop kind: while_like */
-    /* loop header: 0x100000d34 */
-    /* loop exits: ['0x100000d7c'] */
-    while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x100000d3c after subs at 0x100000d38; target 0x100000d7c; loop polarity inverted")) {
-        /* block 0x100000d34 */
-        tmp_w8 = stack_28; /* ldr w8,[sp, #0x1c] */
-        tmp_w8 = tmp_w8 - 257; /* subs w8,w8,#0x101; flags updated */
-        /* conditional branch b.ge -> 0x100000d7c */
-        /* block 0x100000d40 */
-        /* branch to 0x100000d44 */ /* b 0x100000d44 */
-        /* block 0x100000d44 */
-        tmp_x8 = stack_40; /* ldr x8,[sp, #0x28] */
-        tmp_x9 = (i64)(i32)stack_28; /* ldrsw x9,[sp, #0x1c] */
-        tmp_x10 = 13; /* mov x10,#0xd */
-        tmp_x9 = tmp_x9 * tmp_x10; /* mul x9,x9,x10 */
-        tmp_x8 = tmp_x8 + tmp_x9; /* add x8,x8,x9 */
-        tmp_x8 = tmp_x8 & 255; /* and x8,x8,#0xff */
-        tmp_x10 = (i64)(i32)stack_28; /* ldrsw x10,[sp, #0x1c] */
-        tmp_x9 = tmp_sp + 311; /* add x9,sp,#0x137 */
-        *(u8 *)(tmp_x9 + tmp_x10) = tmp_w8; /* strb w8,[x9, x10, LSL ] */
-        /* branch to 0x100000d6c */ /* b 0x100000d6c */
-        /* block 0x100000d6c */
-        tmp_w8 = stack_28; /* ldr w8,[sp, #0x1c] */
-        tmp_w8 = tmp_w8 + 1; /* add w8,w8,#0x1 */
-        stack_28 = tmp_w8; /* str w8,[sp, #0x1c] */
-        /* branch to 0x100000d34 */ /* b 0x100000d34 */
+    /* loop header: 0x1000005f4 */
+    /* loop exits: ['0x100000650'] */
+    while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x1000005fc after subs at 0x1000005f8; target 0x100000650; loop polarity inverted")) {
+        /* block 0x1000005f4 */
+        arg1 = stack_44; /* ldr w8, [sp + var_2ch] */
+        arg1 = arg1 - 16; /* subs w8, w8, 0x10; flags updated */
+        /* conditional branch b.ge -> 0x100000650 */
+        /* block 0x100000600 */
+        /* branch to 0x100000604 */ /* b 0x100000604 */
+        /* block 0x100000604 */
+        arg1 = stack_52; /* ldr w8, [sp + var_34h] */
+        tmp_w9 = stack_44; /* ldr w9, [sp + var_2ch] */
+        tmp_w11 = 8; /* mov w11, 8 */
+        tmp_w10 = ((i32)tmp_w9) / ((i32)tmp_w11); /* sdiv w10, w9, w11 */
+        tmp_w10 = tmp_w10 * tmp_w11; /* mul w10, w10, w11 */
+        tmp_w9 = tmp_w9 - tmp_w10; /* subs w9, w9, w10; flags updated */
+        arg1 = arg1 >> tmp_w9; /* lsr w8, w8, w9 */
+        tmp_w9 = stack_44; /* ldr w9, [sp + var_2ch] */
+        tmp_w10 = 31; /* mov w10, 0x1f */
+        tmp_w9 = tmp_w9 * tmp_w10; /* mul w9, w9, w10 */
+        arg1 = arg1 ^ tmp_w9; /* eor w8, w8, w9 */
+        tmp_x10 = (i64)(i32)stack_44; /* ldrsw x10, [sp + var_2ch] */
+        tmp_x9 = tmp_sp + 72; /* add x9, sp, 0x48 */
+        *(u8 *)(tmp_x9) = arg1; /* strb w8, [x9, x10] */
+        /* branch to 0x100000640 */ /* b 0x100000640 */
+        /* block 0x100000640 */
+        arg1 = stack_44; /* ldr w8, [sp + var_2ch] */
+        arg1 = arg1 + 1; /* add w8, w8, 1 */
+        stack_44 = arg1; /* str w8, [sp + var_2ch] */
+        /* branch to 0x1000005f4 */ /* b 0x1000005f4 */
     }
-    /* block 0x100000d7c */
-    stack_24 = 0; /* str wzr,[sp, #0x18] */
-    /* branch to 0x100000d84 */ /* b 0x100000d84 */
-    /* loop kind: while_like */
-    /* loop header: 0x100000d84 */
-    /* loop exits: ['0x100000dcc'] */
-    while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x100000d8c after subs at 0x100000d88; target 0x100000dcc; loop polarity inverted")) {
-        /* block 0x100000d84 */
-        tmp_w8 = stack_24; /* ldr w8,[sp, #0x18] */
-        tmp_w8 = tmp_w8 - 129; /* subs w8,w8,#0x81; flags updated */
-        /* conditional branch b.ge -> 0x100000dcc */
-        /* block 0x100000d90 */
-        /* branch to 0x100000d94 */ /* b 0x100000d94 */
-        /* block 0x100000d94 */
-        tmp_x8 = stack_40; /* ldr x8,[sp, #0x28] */
-        tmp_x9 = (i64)(i32)stack_24; /* ldrsw x9,[sp, #0x18] */
-        tmp_x10 = 97; /* mov x10,#0x61 */
-        tmp_x9 = tmp_x9 * tmp_x10; /* mul x9,x9,x10 */
-        tmp_x8 = tmp_x8 ^ tmp_x9; /* eor x8,x8,x9 */
-        tmp_x8 = tmp_x8 & 65535; /* and x8,x8,#0xffff */
-        tmp_x10 = (i64)(i32)stack_24; /* ldrsw x10,[sp, #0x18] */
-        tmp_x9 = tmp_sp + 52; /* add x9,sp,#0x34 */
-        *(u16 *)(tmp_x9 + (tmp_x10 << 1)) = tmp_w8; /* strh w8,[x9, x10, LSL #0x1] */
-        /* branch to 0x100000dbc */ /* b 0x100000dbc */
-        /* block 0x100000dbc */
-        tmp_w8 = stack_24; /* ldr w8,[sp, #0x18] */
-        tmp_w8 = tmp_w8 + 1; /* add w8,w8,#0x1 */
-        stack_24 = tmp_w8; /* str w8,[sp, #0x18] */
-        /* branch to 0x100000d84 */ /* b 0x100000d84 */
-    }
-    /* block 0x100000dcc */
-    stack_20 = 0; /* str wzr,[sp, #0x14] */
-    /* branch to 0x100000dd4 */ /* b 0x100000dd4 */
-    /* loop kind: while_like */
-    /* loop header: 0x100000dd4 */
-    /* loop exits: ['0x100000ee4', '0x100000f00'] */
-    while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x100000ddc after subs at 0x100000dd8; target 0x100000f00; loop polarity inverted")) {
-        /* if/else condition block: 0x100000dd4 */
-        /* merge block: 0x100000ef0 */
-        if (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x100000ddc after subs at 0x100000dd8; target 0x100000f00")) {
-            /* block 0x100000ecc */
-            /* branch to 0x100000ed0 */ /* b 0x100000ed0 */
-            /* block 0x100000ed0 */
-            /* branch to 0x100000ef0 */ /* b 0x100000ef0 */
-        } else {
-            /* block 0x100000ed4 */
-            tmp_x8 = stack_32; /* ldr x8,[sp, #0x20] */
-            tmp_x8 = tmp_x8 & 4095; /* and x8,x8,#0xfff */
-            tmp_x8 = tmp_x8 - 2748; /* subs x8,x8,#0xabc; flags updated */
-            /* conditional branch b.ne -> 0x100000eec */
-            /* block 0x100000eec */
-            /* branch to 0x100000ef0 */ /* b 0x100000ef0 */
-        }
-        /* block 0x100000ef0 */
-        tmp_w8 = stack_20; /* ldr w8,[sp, #0x14] */
-        tmp_w8 = tmp_w8 + 1; /* add w8,w8,#0x1 */
-        stack_20 = tmp_w8; /* str w8,[sp, #0x14] */
-        /* branch to 0x100000dd4 */ /* b 0x100000dd4 */
-    }
-    /* block 0x100000ee4 */
-    /* branch to 0x100000ee8 */ /* b 0x100000ee8 */
-    /* block 0x100000ee8 */
-    /* branch to 0x100000f00 */ /* b 0x100000f00 */
-    /* if/else condition block: 0x100000f00 */
-    if (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.eq at 0x100000f30 after subs at 0x100000f2c; target 0x100000f3c; polarity inverted")) {
-        /* block 0x100000f34 */
-        /* branch to 0x100000f38 */ /* b 0x100000f38 */
-        /* block 0x100000f38 */
-        call_0x100001ac4(); /* bl 0x100001ac4 */
+    /* if/else condition block: 0x100000650 */
+    /* merge block: 0x100000708 */
+    if (HEPHAESTUS_UNKNOWN_COND("condition evidence: cbnz w8 at 0x1000006a8 targeting 0x1000006c0; polarity inverted")) {
+        /* block 0x1000006ac */
+        /* branch to 0x1000006b0 */ /* b 0x1000006b0 */
+        /* block 0x1000006b0 */
+        tmp_x0 = 0x100000000; /* adrp x0, 0x100000000 */
+        tmp_x0 = tmp_x0 + 3524; /* add x0, x0, 0xdc4 */
+        call_0x100000dac(tmp_x0); /* bl sym.imp.puts; args refined from same-block evidence */
+        /* branch to 0x100000708 */ /* b 0x100000708 */
     } else {
-        /* block 0x100000f3c */
-        tmp_x0 = stack_0; /* ldr x0,[sp] */
-        tmp_sp = tmp_sp + 576; /* add sp,sp,#0x240 */
-        tmp_fp = stack_16; /* ldp x29,x30,[sp, #0x10] */
-        tmp_lr = stack_24; /* paired load second register inferred offset +8 */
-        tmp_x28 = stack_0; /* ldp x28,x27,[sp], #0x20; post-index writeback not modeled */
-        tmp_x27 = stack_8; /* paired load second register inferred offset +8 */
-        return tmp_x0; /* return value from x0 before ret */
+        /* if/else condition block: 0x1000006c0 */
+        /* merge block: 0x100000704 */
+        if (HEPHAESTUS_UNKNOWN_COND("condition evidence: tbz w8 bit 0 at 0x1000006c4 targeting 0x1000006e8; polarity inverted")) {
+            /* block 0x1000006c8 */
+            /* branch to 0x1000006cc */ /* b 0x1000006cc */
+            /* block 0x1000006cc */
+            arg1 = stack_28; /* ldr w8, [sp + var_1ch] */
+            tmp_x9 = tmp_sp; /* mov x9, sp */
+            *(u64 *)(tmp_x9) = arg1; /* str x8, [x9] */
+            tmp_x0 = 0x100000000; /* adrp x0, 0x100000000 */
+            tmp_x0 = tmp_x0 + 3529; /* add x0, x0, 0xdc9 */
+            call_0x100000da0(tmp_x0); /* bl sym.imp.printf; args refined from same-block evidence */
+            /* branch to 0x100000704 */ /* b 0x100000704 */
+        } else {
+            /* block 0x1000006e8 */
+            arg1 = stack_28; /* ldr w8, [sp + var_1ch] */
+            tmp_x9 = tmp_sp; /* mov x9, sp */
+            *(u64 *)(tmp_x9) = arg1; /* str x8, [x9] */
+            tmp_x0 = 0x100000000; /* adrp x0, 0x100000000 */
+            tmp_x0 = tmp_x0 + 3542; /* add x0, x0, 0xdd6 */
+            call_0x100000da0(tmp_x0); /* bl sym.imp.printf; args refined from same-block evidence */
+            /* branch to 0x100000704 */ /* b 0x100000704 */
+        }
+        /* block 0x100000704 */
+        /* branch to 0x100000708 */ /* b 0x100000708 */
     }
+    /* block 0x100000708 */
+    arg1 = stack_28; /* ldrb w8, [sp + var_1ch] */
+    stack_20 = arg1; /* str w8, [sp + var_14h] */
+    tmp_x9 = stack_m8; /* ldur x9, [x29, -8] */
+    arg1 = 0x100004000; /* adrp x8, reloc.__stack_chk_fail */
+    arg1 = *(u64 *)(arg1 + 8); /* ldr x8, [x8, 8] */
+    arg1 = *(u64 *)(arg1); /* ldr x8, [x8] */
+    arg1 = arg1 - tmp_x9; /* subs x8, x8, x9; flags updated */
+    /* conditional branch b.eq -> 0x100000730 */
+    /* block 0x100000730 */
+    tmp_w0 = stack_20; /* ldr w0, [sp + var_14h] */
+    tmp_fp = stack_192; /* ldp x29, x30, [sp + var_c0h] */
+    tmp_lr = stack_200; /* paired load second register inferred offset +8 */
+    tmp_sp = tmp_sp + 208; /* add sp, sp, 0xd0 */
+    return tmp_w0; /* return value from w0 before ret */
+    /* block 0x100000728 */
+    /* branch to 0x10000072c */ /* b 0x10000072c */
+    /* block 0x10000072c */
+    call_0x100000d94(); /* bl sym.imp.__stack_chk_fail */
 
 }
 
-uint64_t stack_layout_pressure(uint64_t arg1)
+uint64_t FUN_1000004cc(void)
 {
-    /* Entry: 0x100000f50 */
+    /* Entry: 0x1000004cc */
     /* Body status: structured */
-    /* 42 basic block(s), 227 instruction(s) */
+    /* 7 basic block(s), 31 instruction(s) */
     /* WARNING: unknown_return_type_defaulted_to_u64 */
 
     /* Layout candidates: */
-    /*   base=sp, kind=record_like, offsets=[8, 16, 20, 24, 28, 32, 36, 40, 48], sizes=[4, 8] */
-    /*   base=x8, kind=array_like, offsets=[0, 8], sizes=[8] */
-    /*   base=x9, kind=pointer_like, offsets=[80], sizes=[8] */
+    /*   base=sp, kind=array_like, offsets=[24, 48], sizes=[4] */
 
     /* Conservative pseudo declarations: */
     u64 tmp_sp = 0;
-    u64 tmp_x0 = 0;
-    u64 tmp_x8 = 0;
     u64 tmp_x9 = 0;
     u64 tmp_x10 = 0;
-    u64 tmp_x27 = 0;
-    u64 tmp_x28 = 0;
     u32 tmp_w8 = 0;
     u32 tmp_w9 = 0;
-    u64 tmp_fp = 0;
-    u64 tmp_lr = 0;
-    u64 stack_m24 = 0;
-    u64 stack_m32 = 0;
-    u64 stack_0 = 0;
-    u64 stack_8 = 0;
-    u64 stack_16 = 0;
-    u32 stack_20 = 0;
-    u64 stack_24 = 0;
-    u64 stack_28 = 0;
-    u64 stack_32 = 0;
-    u64 stack_36 = 0;
-    u64 stack_40 = 0;
+    u32 tmp_w10 = 0;
+    u32 stack_24 = 0;
     u64 stack_48 = 0;
 
     /* Control flow structure: */
-    /* block 0x100000f50 */
-    stack_m32 = tmp_x28; /* stp x28,x27,[sp, #-0x20]! */
-    stack_m24 = tmp_x27; /* paired store second register inferred offset +8 */
-    stack_16 = tmp_fp; /* stp x29,x30,[sp, #0x10] */
-    stack_24 = tmp_lr; /* paired store second register inferred offset +8 */
-    tmp_fp = tmp_sp + 16; /* add x29,sp,#0x10 */
-    tmp_sp = tmp_sp - 960; /* sub sp,sp,#0x3c0 */
-    tmp_x8 = 0x100004000; /* adrp x8,0x100004000 */
-    tmp_x8 = *(u64 *)(tmp_x8 + 8); /* ldr x8,[x8, #0x8] */
-    tmp_x8 = *(u64 *)(tmp_x8); /* ldr x8,[x8] */
-    stack_m24 = tmp_x8; /* stur x8,[x29, #-0x18] */
-    stack_48 = tmp_x0; /* str x0,[sp, #0x30] */
-    tmp_x8 = stack_48; /* ldr x8,[sp, #0x30] */
-    stack_40 = tmp_x8; /* str x8,[sp, #0x28] */
-    stack_36 = 0; /* str wzr,[sp, #0x24] */
-    /* branch to 0x100000f84 */ /* b 0x100000f84 */
-    /* loop kind: while_like */
-    /* loop header: 0x100000f84 */
-    /* loop exits: ['0x100000fcc'] */
-    while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x100000f8c after subs at 0x100000f88; target 0x100000fcc; loop polarity inverted")) {
-        /* block 0x100000f84 */
-        tmp_w8 = stack_36; /* ldr w8,[sp, #0x24] */
-        tmp_w8 = tmp_w8 - 40; /* subs w8,w8,#0x28; flags updated */
-        /* conditional branch b.ge -> 0x100000fcc */
-        /* block 0x100000f90 */
-        /* branch to 0x100000f94 */ /* b 0x100000f94 */
-        /* block 0x100000f94 */
-        tmp_x8 = stack_40; /* ldr x8,[sp, #0x28] */
-        tmp_x9 = (i64)(i32)stack_36; /* ldrsw x9,[sp, #0x24] */
-        tmp_x10 = 17; /* mov x10,#0x11 */
-        tmp_x9 = tmp_x9 * tmp_x10; /* mul x9,x9,x10 */
-        tmp_x0 = tmp_x8 + tmp_x9; /* add x0,x8,x9 */
-        call_0x1000014a8(tmp_x0); /* bl 0x1000014a8; args refined from same-block evidence */
-        /* block 0x100000fac */
-        tmp_x9 = (i64)(i32)stack_36; /* ldrsw x9,[sp, #0x24] */
-        tmp_x8 = tmp_sp + 632; /* add x8,sp,#0x278 */
-        *(u64 *)(tmp_x8 + (tmp_x9 << 3)) = tmp_x0; /* str x0,[x8, x9, LSL #0x3] */
-        /* branch to 0x100000fbc */ /* b 0x100000fbc */
-        /* block 0x100000fbc */
-        tmp_w8 = stack_36; /* ldr w8,[sp, #0x24] */
-        tmp_w8 = tmp_w8 + 1; /* add w8,w8,#0x1 */
-        stack_36 = tmp_w8; /* str w8,[sp, #0x24] */
-        /* branch to 0x100000f84 */ /* b 0x100000f84 */
-    }
-    /* block 0x100000fcc */
-    stack_32 = 0; /* str wzr,[sp, #0x20] */
-    /* branch to 0x100000fd4 */ /* b 0x100000fd4 */
-    /* loop kind: while_like */
-    /* loop header: 0x100000fd4 */
-    /* loop exits: ['0x100001018'] */
-    while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x100000fdc after subs at 0x100000fd8; target 0x100001018; loop polarity inverted")) {
-        /* block 0x100000fd4 */
-        tmp_w8 = stack_32; /* ldr w8,[sp, #0x20] */
-        tmp_w8 = tmp_w8 - 80; /* subs w8,w8,#0x50; flags updated */
-        /* conditional branch b.ge -> 0x100001018 */
-        /* block 0x100000fe0 */
-        /* branch to 0x100000fe4 */ /* b 0x100000fe4 */
-        /* block 0x100000fe4 */
-        tmp_x8 = stack_40; /* ldr x8,[sp, #0x28] */
-        tmp_x9 = (i64)(i32)stack_32; /* ldrsw x9,[sp, #0x20] */
-        tmp_x10 = 33; /* mov x10,#0x21 */
-        tmp_x9 = tmp_x9 * tmp_x10; /* mul x9,x9,x10 */
-        tmp_x8 = tmp_x8 ^ tmp_x9; /* eor x8,x8,x9 */
-        tmp_x10 = (i64)(i32)stack_32; /* ldrsw x10,[sp, #0x20] */
-        tmp_x9 = tmp_sp + 312; /* add x9,sp,#0x138 */
-        *(u32 *)(tmp_x9 + (tmp_x10 << 2)) = tmp_w8; /* str w8,[x9, x10, LSL #0x2] */
-        /* branch to 0x100001008 */ /* b 0x100001008 */
-        /* block 0x100001008 */
-        tmp_w8 = stack_32; /* ldr w8,[sp, #0x20] */
-        tmp_w8 = tmp_w8 + 1; /* add w8,w8,#0x1 */
-        stack_32 = tmp_w8; /* str w8,[sp, #0x20] */
-        /* branch to 0x100000fd4 */ /* b 0x100000fd4 */
-    }
-    /* block 0x100001018 */
-    stack_28 = 0; /* str wzr,[sp, #0x1c] */
-    /* branch to 0x100001020 */ /* b 0x100001020 */
-    /* loop kind: while_like */
-    /* loop header: 0x100001020 */
-    /* loop exits: ['0x100001064'] */
-    while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x100001028 after subs at 0x100001024; target 0x100001064; loop polarity inverted")) {
-        /* block 0x100001020 */
-        tmp_w8 = stack_28; /* ldr w8,[sp, #0x1c] */
-        tmp_w8 = tmp_w8 - 64; /* subs w8,w8,#0x40; flags updated */
-        /* conditional branch b.ge -> 0x100001064 */
-        /* block 0x10000102c */
-        /* branch to 0x100001030 */ /* b 0x100001030 */
-        /* block 0x100001030 */
-        tmp_x8 = stack_40; /* ldr x8,[sp, #0x28] */
-        tmp_x9 = (i64)(i32)stack_28; /* ldrsw x9,[sp, #0x1c] */
-        tmp_x10 = 11; /* mov x10,#0xb */
-        tmp_x9 = tmp_x9 * tmp_x10; /* mul x9,x9,x10 */
-        tmp_x8 = tmp_x8 + tmp_x9; /* add x8,x8,x9 */
-        tmp_x10 = (i64)(i32)stack_28; /* ldrsw x10,[sp, #0x1c] */
-        tmp_x9 = tmp_sp + 184; /* add x9,sp,#0xb8 */
-        *(u16 *)(tmp_x9 + (tmp_x10 << 1)) = tmp_w8; /* strh w8,[x9, x10, LSL #0x1] */
-        /* branch to 0x100001054 */ /* b 0x100001054 */
-        /* block 0x100001054 */
-        tmp_w8 = stack_28; /* ldr w8,[sp, #0x1c] */
-        tmp_w8 = tmp_w8 + 1; /* add w8,w8,#0x1 */
-        stack_28 = tmp_w8; /* str w8,[sp, #0x1c] */
-        /* branch to 0x100001020 */ /* b 0x100001020 */
-    }
-    /* block 0x100001064 */
-    stack_24 = 0; /* str wzr,[sp, #0x18] */
-    /* branch to 0x10000106c */ /* b 0x10000106c */
-    /* loop kind: while_like */
-    /* loop header: 0x10000106c */
-    /* loop exits: ['0x1000010ac'] */
-    while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x100001074 after subs at 0x100001070; target 0x1000010ac; loop polarity inverted")) {
-        /* block 0x10000106c */
-        tmp_w8 = stack_24; /* ldr w8,[sp, #0x18] */
-        tmp_w8 = tmp_w8 - 128; /* subs w8,w8,#0x80; flags updated */
-        /* conditional branch b.ge -> 0x1000010ac */
-        /* block 0x100001078 */
-        /* branch to 0x10000107c */ /* b 0x10000107c */
-        /* block 0x10000107c */
-        tmp_x8 = stack_40; /* ldr x8,[sp, #0x28] */
-        tmp_w9 = stack_24; /* ldr w9,[sp, #0x18] */
-        tmp_w9 = tmp_w9 & 7; /* and w9,w9,#0x7 */
-        tmp_x8 = tmp_x8 >> tmp_x9; /* lsr x8,x8,x9 */
-        tmp_x10 = (i64)(i32)stack_24; /* ldrsw x10,[sp, #0x18] */
-        tmp_x9 = tmp_sp + 56; /* add x9,sp,#0x38 */
-        *(u8 *)(tmp_x9 + tmp_x10) = tmp_w8; /* strb w8,[x9, x10, LSL ] */
-        /* branch to 0x10000109c */ /* b 0x10000109c */
-        /* block 0x10000109c */
-        tmp_w8 = stack_24; /* ldr w8,[sp, #0x18] */
-        tmp_w8 = tmp_w8 + 1; /* add w8,w8,#0x1 */
-        stack_24 = tmp_w8; /* str w8,[sp, #0x18] */
-        /* branch to 0x10000106c */ /* b 0x10000106c */
-    }
-    /* block 0x1000010ac */
-    stack_20 = 0; /* str wzr,[sp, #0x14] */
-    /* branch to 0x1000010b4 */ /* b 0x1000010b4 */
-    /* loop kind: while_like */
-    /* loop header: 0x1000010b4 */
-    /* loop exits: ['0x10000128c'] */
-    while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x1000010bc after subs at 0x1000010b8; target 0x10000128c; loop polarity inverted")) {
-        /* if condition block: 0x1000010b4 */
-        /* merge block: 0x100001278 */
-        if (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x1000010bc after subs at 0x1000010b8; target 0x10000128c")) {
-            /* block 0x1000011d0 */
-            /* branch to 0x1000011d4 */ /* b 0x1000011d4 */
-            /* block 0x1000011d4 */
-            /* branch to 0x100001278 */ /* b 0x100001278 */
-        }
-        /* block 0x100001278 */
-        /* branch to 0x10000127c */ /* b 0x10000127c */
-        /* block 0x10000127c */
-        tmp_w8 = stack_20; /* ldr w8,[sp, #0x14] */
-        tmp_w8 = tmp_w8 + 1; /* add w8,w8,#0x1 */
-        stack_20 = tmp_w8; /* str w8,[sp, #0x14] */
-        /* branch to 0x1000010b4 */ /* b 0x1000010b4 */
-    }
-    /* if/else condition block: 0x10000128c */
-    if (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.eq at 0x1000012bc after subs at 0x1000012b8; target 0x1000012c8; polarity inverted")) {
-        /* block 0x1000012c0 */
-        /* branch to 0x1000012c4 */ /* b 0x1000012c4 */
-        /* block 0x1000012c4 */
-        call_0x100001ac4(); /* bl 0x100001ac4 */
-    } else {
-        /* block 0x1000012c8 */
-        tmp_x0 = stack_8; /* ldr x0,[sp, #0x8] */
-        tmp_sp = tmp_sp + 960; /* add sp,sp,#0x3c0 */
-        tmp_fp = stack_16; /* ldp x29,x30,[sp, #0x10] */
-        tmp_lr = stack_24; /* paired load second register inferred offset +8 */
-        tmp_x28 = stack_0; /* ldp x28,x27,[sp], #0x20; post-index writeback not modeled */
-        tmp_x27 = stack_8; /* paired load second register inferred offset +8 */
-        return tmp_x0; /* return value from x0 before ret */
-    }
+    /* block 0x1000004cc */
+    tmp_w8 = stack_48; /* ldr w8,[sp, #0x30] */
+    tmp_w8 = tmp_w8 - 8; /* subs w8,w8,#0x8; flags updated */
+    /* conditional branch b.ge -> 0x1000005dc */
+    /* block 0x1000004d8 */
+    /* branch to 0x1000004dc */ /* b 0x1000004dc */
+    /* block 0x1000004dc */
+    tmp_w8 = stack_48; /* ldr w8,[sp, #0x30] */
+    tmp_w9 = 17; /* mov w9,#0x11 */
+    tmp_w8 = tmp_w8 * tmp_w9; /* mul w8,w8,w9 */
+    tmp_w8 = tmp_w8 + 3; /* add w8,w8,#0x3 */
+    tmp_x9 = (i64)(i32)stack_48; /* ldrsw x9,[sp, #0x30] */
+    tmp_x10 = 12; /* mov x10,#0xc */
+    tmp_x10 = tmp_x9 * tmp_x10; /* mul x10,x9,x10 */
+    tmp_x9 = tmp_sp + 88; /* add x9,sp,#0x58 */
+    *(u32 *)(tmp_x9 + tmp_x10) = tmp_w8; /* str w8,[x9, x10, LSL #0x0] */
+    tmp_w8 = stack_48; /* ldr w8,[sp, #0x30] */
+    tmp_w10 = 2; /* mov w10,#0x2 */
+    tmp_w9 = ((i32)tmp_w8) / ((i32)tmp_w10); /* sdiv w9,w8,w10 */
+    tmp_w9 = tmp_w9 * tmp_w10; /* mul w9,w9,w10 */
+    tmp_w8 = tmp_w8 - tmp_w9; /* subs w8,w8,w9; flags updated */
+    /* cbnz tmp_w8 -> 0x100000530 */
+    /* block 0x100000530 */
+    tmp_w8 = stack_48; /* ldr w8,[sp, #0x30] */
+    tmp_w9 = 7; /* mov w9,#0x7 */
+    /* 0x100000538: unsupported instruction: mneg w8,w8,w9 */
+    stack_24 = tmp_w8; /* str w8,[sp, #0x18] */
+    /* branch to 0x100000544 */ /* b 0x100000544 */
+    /* block 0x100000518 */
+    /* branch to 0x10000051c */ /* b 0x10000051c */
+    /* block 0x10000051c */
+    tmp_w8 = stack_48; /* ldr w8,[sp, #0x30] */
+    tmp_w9 = 11; /* mov w9,#0xb */
+    tmp_w8 = tmp_w8 * tmp_w9; /* mul w8,w8,w9 */
+    stack_24 = tmp_w8; /* str w8,[sp, #0x18] */
+    /* branch to 0x100000544 */ /* b 0x100000544 */
+    /* block 0x100000544 */
+    tmp_w8 = stack_24; /* ldr w8,[sp, #0x18] */
 
+    /* return value unknown */
+    return 0;
 }
 
-uint64_t abi_pressure(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg4, uint64_t arg5, uint64_t arg6, uint64_t arg7, uint64_t arg8, uint64_t arg_60h)
+int32_t main(void)
 {
-    /* Entry: 0x1000012dc */
-    /* Body status: structured */
-    /* 18 basic block(s), 115 instruction(s) */
-    /* WARNING: unknown_return_type_defaulted_to_u64 */
+    /* Entry: 0x100000548 */
+    /* Body status: unstructured */
+    /* 25 basic block(s), 126 instruction(s) */
 
     /* Layout candidates: */
-    /*   base=sp, kind=array_like, offsets=[0, 8, 16, 24, 32, 40], sizes=[8] */
-    /*   base=x9, kind=pointer_like, offsets=[80], sizes=[8] */
-
-    /* Conservative pseudo declarations: */
-    u64 tmp_sp = 0;
-    u64 tmp_x0 = 0;
-    u64 tmp_x1 = 0;
-    u64 tmp_x2 = 0;
-    u64 tmp_x3 = 0;
-    u64 tmp_x4 = 0;
-    u64 tmp_x5 = 0;
-    u64 tmp_x6 = 0;
-    u64 tmp_x7 = 0;
-    u64 tmp_x8 = 0;
-    u64 tmp_x9 = 0;
-    u64 tmp_x10 = 0;
-    u64 tmp_fp = 0;
-    u64 tmp_lr = 0;
-    u64 stack_m8 = 0;
-    u64 stack_m16 = 0;
-    u64 stack_m24 = 0;
-    u64 stack_m32 = 0;
-    u64 stack_0 = 0;
-    u64 stack_8 = 0;
-    u64 stack_16 = 0;
-    u64 stack_24 = 0;
-    u64 stack_32 = 0;
-    u64 stack_40 = 0;
-    u64 stack_80 = 0;
-    u64 stack_88 = 0;
-
-    /* Control flow structure: */
-    /* block 0x1000012dc */
-    tmp_sp = tmp_sp - 96; /* sub sp,sp,#0x60 */
-    stack_80 = tmp_fp; /* stp x29,x30,[sp, #0x50] */
-    stack_88 = tmp_lr; /* paired store second register inferred offset +8 */
-    tmp_fp = tmp_sp + 80; /* add x29,sp,#0x50 */
-    stack_m8 = tmp_x0; /* stur x0,[x29, #-0x8] */
-    stack_m16 = tmp_x1; /* stur x1,[x29, #-0x10] */
-    stack_m24 = tmp_x2; /* stur x2,[x29, #-0x18] */
-    stack_m32 = tmp_x3; /* stur x3,[x29, #-0x20] */
-    stack_40 = tmp_x4; /* str x4,[sp, #0x28] */
-    stack_32 = tmp_x5; /* str x5,[sp, #0x20] */
-    stack_24 = tmp_x6; /* str x6,[sp, #0x18] */
-    stack_16 = tmp_x7; /* str x7,[sp, #0x10] */
-    tmp_x8 = stack_m8; /* ldur x8,[x29, #-0x8] */
-    tmp_x9 = stack_m16; /* ldur x9,[x29, #-0x10] */
-    tmp_x8 = tmp_x8 ^ (tmp_x9 << 1); /* eor x8,x8,x9, LSL #0x1 */
-    tmp_x9 = stack_m24; /* ldur x9,[x29, #-0x18] */
-    tmp_x8 = tmp_x8 ^ (tmp_x9 >> 1); /* eor x8,x8,x9, LSR #0x1 */
-    tmp_x9 = stack_m32; /* ldur x9,[x29, #-0x20] */
-    tmp_x8 = tmp_x8 ^ tmp_x9; /* eor x8,x8,x9 */
-    stack_8 = tmp_x8; /* str x8,[sp, #0x8] */
-    tmp_x0 = stack_40; /* ldr x0,[sp, #0x28] */
-    tmp_x1 = stack_32; /* ldr x1,[sp, #0x20] */
-    call_0x100001538(tmp_x0, tmp_x1); /* bl 0x100001538; args refined from same-block evidence */
-    /* block 0x100001334 */
-    tmp_x8 = stack_8; /* ldr x8,[sp, #0x8] */
-    tmp_x8 = tmp_x8 + tmp_x0; /* add x8,x8,x0 */
-    stack_8 = tmp_x8; /* str x8,[sp, #0x8] */
-    tmp_x0 = stack_24; /* ldr x0,[sp, #0x18] */
-    tmp_x1 = stack_16; /* ldr x1,[sp, #0x10] */
-    call_0x10000157c(tmp_x0, tmp_x1); /* bl 0x10000157c; args refined from same-block evidence */
-    /* block 0x10000134c */
-    tmp_x8 = stack_8; /* ldr x8,[sp, #0x8] */
-    tmp_x8 = tmp_x8 ^ tmp_x0; /* eor x8,x8,x0 */
-    stack_8 = tmp_x8; /* str x8,[sp, #0x8] */
-    tmp_x0 = stack_8; /* ldr x0,[sp, #0x8] */
-    tmp_x1 = stack_m8; /* ldur x1,[x29, #-0x8] */
-    call_0x1000015c0(tmp_x0, tmp_x1); /* bl 0x1000015c0; args refined from same-block evidence */
-    /* block 0x100001364 */
-    tmp_x8 = stack_8; /* ldr x8,[sp, #0x8] */
-    tmp_x8 = tmp_x8 + tmp_x0; /* add x8,x8,x0 */
-    stack_8 = tmp_x8; /* str x8,[sp, #0x8] */
-    tmp_x0 = stack_m16; /* ldur x0,[x29, #-0x10] */
-    tmp_x1 = stack_8; /* ldr x1,[sp, #0x8] */
-    call_0x10000160c(tmp_x0, tmp_x1); /* bl 0x10000160c; args refined from same-block evidence */
-    /* block 0x10000137c */
-    tmp_x8 = stack_8; /* ldr x8,[sp, #0x8] */
-    tmp_x8 = tmp_x8 ^ tmp_x0; /* eor x8,x8,x0 */
-    stack_8 = tmp_x8; /* str x8,[sp, #0x8] */
-    tmp_x8 = stack_8; /* ldr x8,[sp, #0x8] */
-    tmp_x0 = tmp_x8 + 17; /* add x0,x8,#0x11 */
-    tmp_x8 = stack_m24; /* ldur x8,[x29, #-0x18] */
-    tmp_x1 = tmp_x8 | 1; /* orr x1,x8,#0x1 */
-    call_0x100001664(tmp_x0, tmp_x1); /* bl 0x100001664; args refined from same-block evidence */
-    /* block 0x10000139c */
-    tmp_x8 = stack_8; /* ldr x8,[sp, #0x8] */
-    tmp_x8 = tmp_x8 + tmp_x0; /* add x8,x8,x0 */
-    stack_8 = tmp_x8; /* str x8,[sp, #0x8] */
-    tmp_x0 = stack_m32; /* ldur x0,[x29, #-0x20] */
-    tmp_x1 = stack_40; /* ldr x1,[sp, #0x28] */
-    call_0x1000016cc(tmp_x0, tmp_x1); /* bl 0x1000016cc; args refined from same-block evidence */
-    /* block 0x1000013b4 */
-    tmp_x8 = stack_8; /* ldr x8,[sp, #0x8] */
-    tmp_x8 = tmp_x8 ^ tmp_x0; /* eor x8,x8,x0 */
-    stack_8 = tmp_x8; /* str x8,[sp, #0x8] */
-    stack_0 = 0; /* str xzr,[sp] */
-    /* branch to 0x1000013c8 */ /* b 0x1000013c8 */
-    /* loop kind: while_like */
-    /* loop header: 0x1000013c8 */
-    /* loop exits: ['0x100001468', '0x100001484'] */
-    while (HEPHAESTUS_UNKNOWN_COND("condition unknown: loop header 0x1000013c8")) {
-        /* if/else condition block: 0x1000013c8 */
-        /* merge block: 0x100001474 */
-        if (HEPHAESTUS_UNKNOWN_COND("condition unknown: block 0x1000013c8")) {
-            /* block 0x100001450 */
-            /* branch to 0x100001454 */ /* b 0x100001454 */
-            /* block 0x100001454 */
-            /* branch to 0x100001474 */ /* b 0x100001474 */
-        } else {
-            /* block 0x100001458 */
-            tmp_x8 = stack_8; /* ldr x8,[sp, #0x8] */
-            tmp_x8 = tmp_x8 & 127; /* and x8,x8,#0x7f */
-            tmp_x8 = tmp_x8 - 99; /* subs x8,x8,#0x63; flags updated */
-            /* conditional branch b.ne -> 0x100001470 */
-            /* block 0x100001470 */
-            /* branch to 0x100001474 */ /* b 0x100001474 */
-        }
-        /* block 0x100001474 */
-        tmp_x8 = stack_0; /* ldr x8,[sp] */
-        tmp_x8 = tmp_x8 + 1; /* add x8,x8,#0x1 */
-        stack_0 = tmp_x8; /* str x8,[sp] */
-        /* branch to 0x1000013c8 */ /* b 0x1000013c8 */
-    }
-    /* block 0x100001468 */
-    /* branch to 0x10000146c */ /* b 0x10000146c */
-    /* block 0x10000146c */
-    /* branch to 0x100001484 */ /* b 0x100001484 */
-    /* block 0x100001484 */
-    tmp_x10 = stack_8; /* ldr x10,[sp, #0x8] */
-    tmp_x9 = 0x100008000; /* adrp x9,0x100008000 */
-    tmp_x8 = *(u64 *)(tmp_x9 + 80); /* ldr x8,[x9, #0x50] */
-    tmp_x8 = tmp_x8 ^ tmp_x10; /* eor x8,x8,x10 */
-    *(u64 *)(tmp_x9 + 80) = tmp_x8; /* str x8,[x9, #0x50] */
-    tmp_x0 = stack_8; /* ldr x0,[sp, #0x8] */
-    tmp_fp = stack_80; /* ldp x29,x30,[sp, #0x50] */
-    tmp_lr = stack_88; /* paired load second register inferred offset +8 */
-    tmp_sp = tmp_sp + 96; /* add sp,sp,#0x60 */
-    return tmp_x0; /* return value from x0 before ret */
-
-}
-
-uint64_t rotmix(uint64_t arg1, uint64_t arg_10h)
-{
-    /* Entry: 0x1000014a8 */
-    /* Body status: partially_structured */
-    /* 1 basic block(s), 36 instruction(s) */
-    /* WARNING: unknown_return_type_defaulted_to_u64 */
-
-    /* Layout candidates: */
-    /*   base=sp, kind=pointer_like, offsets=[8], sizes=[8] */
-    /*   base=x9, kind=pointer_like, offsets=[80], sizes=[8] */
-
-    /* Conservative pseudo declarations: */
-    u64 tmp_sp = 0;
-    u64 tmp_x0 = 0;
-    u64 tmp_x8 = 0;
-    u64 tmp_x9 = 0;
-    u64 tmp_x10 = 0;
-    u64 stack_8 = 0;
-
-    /* Control flow structure: */
-    /* block 0x1000014a8 */
-    tmp_sp = tmp_sp - 16; /* sub sp,sp,#0x10 */
-    stack_8 = tmp_x0; /* str x0,[sp, #0x8] */
-    tmp_x9 = stack_8; /* ldr x9,[sp, #0x8] */
-    tmp_x8 = stack_8; /* ldr x8,[sp, #0x8] */
-    tmp_x8 = tmp_x8 ^ (tmp_x9 >> 33); /* eor x8,x8,x9, LSR #0x21 */
-    stack_8 = tmp_x8; /* str x8,[sp, #0x8] */
-    tmp_x8 = stack_8; /* ldr x8,[sp, #0x8] */
-    tmp_x9 = 36045; /* mov x9,#0x8ccd */
-    /* 0x1000014c8: unsupported instruction: movk x9,#0xed55, LSL #16 */
-    /* 0x1000014cc: unsupported instruction: movk x9,#0xafd7, LSL #32 */
-    /* 0x1000014d0: unsupported instruction: movk x9,#0xff51, LSL #48 */
-    tmp_x8 = tmp_x8 * tmp_x9; /* mul x8,x8,x9 */
-    stack_8 = tmp_x8; /* str x8,[sp, #0x8] */
-    tmp_x9 = stack_8; /* ldr x9,[sp, #0x8] */
-    tmp_x8 = stack_8; /* ldr x8,[sp, #0x8] */
-    tmp_x8 = tmp_x8 ^ (tmp_x9 >> 29); /* eor x8,x8,x9, LSR #0x1d */
-    stack_8 = tmp_x8; /* str x8,[sp, #0x8] */
-    tmp_x8 = stack_8; /* ldr x8,[sp, #0x8] */
-    tmp_x9 = 60499; /* mov x9,#0xec53 */
-    /* 0x1000014f4: unsupported instruction: movk x9,#0x1a85, LSL #16 */
-    /* 0x1000014f8: unsupported instruction: movk x9,#0xb9fe, LSL #32 */
-    /* 0x1000014fc: unsupported instruction: movk x9,#0xc4ce, LSL #48 */
-    tmp_x8 = tmp_x8 * tmp_x9; /* mul x8,x8,x9 */
-    stack_8 = tmp_x8; /* str x8,[sp, #0x8] */
-    tmp_x9 = stack_8; /* ldr x9,[sp, #0x8] */
-    tmp_x8 = stack_8; /* ldr x8,[sp, #0x8] */
-    tmp_x8 = tmp_x8 ^ (tmp_x9 >> 32); /* eor x8,x8,x9, LSR #0x20 */
-    stack_8 = tmp_x8; /* str x8,[sp, #0x8] */
-    tmp_x10 = stack_8; /* ldr x10,[sp, #0x8] */
-    tmp_x9 = 0x100008000; /* adrp x9,0x100008000 */
-    tmp_x8 = *(u64 *)(tmp_x9 + 80); /* ldr x8,[x9, #0x50] */
-    tmp_x8 = tmp_x8 ^ tmp_x10; /* eor x8,x8,x10 */
-    *(u64 *)(tmp_x9 + 80) = tmp_x8; /* str x8,[x9, #0x50] */
-    tmp_x0 = stack_8; /* ldr x0,[sp, #0x8] */
-    tmp_sp = tmp_sp + 16; /* add sp,sp,#0x10 */
-    return tmp_x0; /* return value from x0 before ret */
-
-}
-
-uint64_t op_add(uint64_t arg1, uint64_t arg2, uint64_t arg_20h)
-{
-    /* Entry: 0x100001538 */
-    /* Body status: partially_structured */
-    /* 1 basic block(s), 17 instruction(s) */
-    /* WARNING: unknown_return_type_defaulted_to_u64 */
-
-    /* Layout candidates: */
-    /*   base=sp, kind=array_like, offsets=[8, 16, 24], sizes=[8] */
-    /*   base=x9, kind=pointer_like, offsets=[80], sizes=[8] */
-
-    /* Conservative pseudo declarations: */
-    u64 tmp_sp = 0;
-    u64 tmp_x0 = 0;
-    u64 tmp_x1 = 0;
-    u64 tmp_x8 = 0;
-    u64 tmp_x9 = 0;
-    u64 tmp_x10 = 0;
-    u64 stack_8 = 0;
-    u64 stack_16 = 0;
-    u64 stack_24 = 0;
-
-    /* Control flow structure: */
-    /* block 0x100001538 */
-    tmp_sp = tmp_sp - 32; /* sub sp,sp,#0x20 */
-    stack_24 = tmp_x0; /* str x0,[sp, #0x18] */
-    stack_16 = tmp_x1; /* str x1,[sp, #0x10] */
-    tmp_x8 = stack_24; /* ldr x8,[sp, #0x18] */
-    tmp_x9 = stack_16; /* ldr x9,[sp, #0x10] */
-    tmp_x8 = tmp_x8 + tmp_x9; /* add x8,x8,x9 */
-    tmp_x9 = 4369; /* mov x9,#0x1111 */
-    tmp_x8 = tmp_x8 + tmp_x9; /* add x8,x8,x9 */
-    stack_8 = tmp_x8; /* str x8,[sp, #0x8] */
-    tmp_x10 = stack_8; /* ldr x10,[sp, #0x8] */
-    tmp_x9 = 0x100008000; /* adrp x9,0x100008000 */
-    tmp_x8 = *(u64 *)(tmp_x9 + 80); /* ldr x8,[x9, #0x50] */
-    tmp_x8 = tmp_x8 ^ tmp_x10; /* eor x8,x8,x10 */
-    *(u64 *)(tmp_x9 + 80) = tmp_x8; /* str x8,[x9, #0x50] */
-    tmp_x0 = stack_8; /* ldr x0,[sp, #0x8] */
-    tmp_sp = tmp_sp + 32; /* add sp,sp,#0x20 */
-    return tmp_x0; /* return value from x0 before ret */
-
-}
-
-uint64_t op_xor(uint64_t arg1, uint64_t arg2, uint64_t arg_20h)
-{
-    /* Entry: 0x10000157c */
-    /* Body status: partially_structured */
-    /* 1 basic block(s), 17 instruction(s) */
-    /* WARNING: unknown_return_type_defaulted_to_u64 */
-
-    /* Layout candidates: */
-    /*   base=sp, kind=array_like, offsets=[8, 16, 24], sizes=[8] */
-    /*   base=x9, kind=pointer_like, offsets=[80], sizes=[8] */
-
-    /* Conservative pseudo declarations: */
-    u64 tmp_sp = 0;
-    u64 tmp_x0 = 0;
-    u64 tmp_x1 = 0;
-    u64 tmp_x8 = 0;
-    u64 tmp_x9 = 0;
-    u64 tmp_x10 = 0;
-    u64 stack_8 = 0;
-    u64 stack_16 = 0;
-    u64 stack_24 = 0;
-
-    /* Control flow structure: */
-    /* block 0x10000157c */
-    tmp_sp = tmp_sp - 32; /* sub sp,sp,#0x20 */
-    stack_24 = tmp_x0; /* str x0,[sp, #0x18] */
-    stack_16 = tmp_x1; /* str x1,[sp, #0x10] */
-    tmp_x8 = stack_24; /* ldr x8,[sp, #0x18] */
-    tmp_x9 = stack_16; /* ldr x9,[sp, #0x10] */
-    tmp_x8 = tmp_x8 ^ tmp_x9; /* eor x8,x8,x9 */
-    tmp_x9 = 8738; /* mov x9,#0x2222 */
-    tmp_x8 = tmp_x8 + tmp_x9; /* add x8,x8,x9 */
-    stack_8 = tmp_x8; /* str x8,[sp, #0x8] */
-    tmp_x10 = stack_8; /* ldr x10,[sp, #0x8] */
-    tmp_x9 = 0x100008000; /* adrp x9,0x100008000 */
-    tmp_x8 = *(u64 *)(tmp_x9 + 80); /* ldr x8,[x9, #0x50] */
-    tmp_x8 = tmp_x8 ^ tmp_x10; /* eor x8,x8,x10 */
-    *(u64 *)(tmp_x9 + 80) = tmp_x8; /* str x8,[x9, #0x50] */
-    tmp_x0 = stack_8; /* ldr x0,[sp, #0x8] */
-    tmp_sp = tmp_sp + 32; /* add sp,sp,#0x20 */
-    return tmp_x0; /* return value from x0 before ret */
-
-}
-
-uint64_t op_mul(uint64_t arg1, uint64_t arg2, uint64_t arg_20h)
-{
-    /* Entry: 0x1000015c0 */
-    /* Body status: partially_structured */
-    /* 1 basic block(s), 19 instruction(s) */
-    /* WARNING: unknown_return_type_defaulted_to_u64 */
-
-    /* Layout candidates: */
-    /*   base=sp, kind=array_like, offsets=[8, 16, 24], sizes=[8] */
-    /*   base=x9, kind=pointer_like, offsets=[80], sizes=[8] */
-
-    /* Conservative pseudo declarations: */
-    u64 tmp_sp = 0;
-    u64 tmp_x0 = 0;
-    u64 tmp_x1 = 0;
-    u64 tmp_x8 = 0;
-    u64 tmp_x9 = 0;
-    u64 tmp_x10 = 0;
-    u64 stack_8 = 0;
-    u64 stack_16 = 0;
-    u64 stack_24 = 0;
-
-    /* Control flow structure: */
-    /* block 0x1000015c0 */
-    tmp_sp = tmp_sp - 32; /* sub sp,sp,#0x20 */
-    stack_24 = tmp_x0; /* str x0,[sp, #0x18] */
-    stack_16 = tmp_x1; /* str x1,[sp, #0x10] */
-    tmp_x8 = stack_24; /* ldr x8,[sp, #0x18] */
-    tmp_x9 = 33; /* mov x9,#0x21 */
-    tmp_x8 = tmp_x8 * tmp_x9; /* mul x8,x8,x9 */
-    tmp_x9 = stack_16; /* ldr x9,[sp, #0x10] */
-    tmp_x10 = 13107; /* mov x10,#0x3333 */
-    tmp_x9 = tmp_x9 + tmp_x10; /* add x9,x9,x10 */
-    tmp_x8 = tmp_x8 ^ tmp_x9; /* eor x8,x8,x9 */
-    stack_8 = tmp_x8; /* str x8,[sp, #0x8] */
-    tmp_x10 = stack_8; /* ldr x10,[sp, #0x8] */
-    tmp_x9 = 0x100008000; /* adrp x9,0x100008000 */
-    tmp_x8 = *(u64 *)(tmp_x9 + 80); /* ldr x8,[x9, #0x50] */
-    tmp_x8 = tmp_x8 ^ tmp_x10; /* eor x8,x8,x10 */
-    *(u64 *)(tmp_x9 + 80) = tmp_x8; /* str x8,[x9, #0x50] */
-    tmp_x0 = stack_8; /* ldr x0,[sp, #0x8] */
-    tmp_sp = tmp_sp + 32; /* add sp,sp,#0x20 */
-    return tmp_x0; /* return value from x0 before ret */
-
-}
-
-uint64_t op_shift(uint64_t arg1, uint64_t arg2, uint64_t arg_20h)
-{
-    /* Entry: 0x10000160c */
-    /* Body status: partially_structured */
-    /* 1 basic block(s), 22 instruction(s) */
-    /* WARNING: unknown_return_type_defaulted_to_u64 */
-
-    /* Layout candidates: */
-    /*   base=sp, kind=array_like, offsets=[8, 16, 24], sizes=[8] */
-    /*   base=x9, kind=pointer_like, offsets=[80], sizes=[8] */
-
-    /* Conservative pseudo declarations: */
-    u64 tmp_sp = 0;
-    u64 tmp_x0 = 0;
-    u64 tmp_x1 = 0;
-    u64 tmp_x8 = 0;
-    u64 tmp_x9 = 0;
-    u64 tmp_x10 = 0;
-    u64 stack_8 = 0;
-    u64 stack_16 = 0;
-    u64 stack_24 = 0;
-
-    /* Control flow structure: */
-    /* block 0x10000160c */
-    tmp_sp = tmp_sp - 32; /* sub sp,sp,#0x20 */
-    stack_24 = tmp_x0; /* str x0,[sp, #0x18] */
-    stack_16 = tmp_x1; /* str x1,[sp, #0x10] */
-    tmp_x8 = stack_24; /* ldr x8,[sp, #0x18] */
-    tmp_x9 = stack_16; /* ldr x9,[sp, #0x10] */
-    tmp_x9 = tmp_x9 & 7; /* and x9,x9,#0x7 */
-    tmp_x8 = tmp_x8 << tmp_x9; /* lsl x8,x8,x9 */
-    tmp_x9 = stack_16; /* ldr x9,[sp, #0x10] */
-    tmp_x10 = stack_24; /* ldr x10,[sp, #0x18] */
-    tmp_x10 = tmp_x10 & 3; /* and x10,x10,#0x3 */
-    tmp_x10 = tmp_x10 + 1; /* add x10,x10,#0x1 */
-    tmp_x9 = tmp_x9 >> tmp_x10; /* lsr x9,x9,x10 */
-    tmp_x8 = tmp_x8 ^ tmp_x9; /* eor x8,x8,x9 */
-    stack_8 = tmp_x8; /* str x8,[sp, #0x8] */
-    tmp_x10 = stack_8; /* ldr x10,[sp, #0x8] */
-    tmp_x9 = 0x100008000; /* adrp x9,0x100008000 */
-    tmp_x8 = *(u64 *)(tmp_x9 + 80); /* ldr x8,[x9, #0x50] */
-    tmp_x8 = tmp_x8 ^ tmp_x10; /* eor x8,x8,x10 */
-    *(u64 *)(tmp_x9 + 80) = tmp_x8; /* str x8,[x9, #0x50] */
-    tmp_x0 = stack_8; /* ldr x0,[sp, #0x8] */
-    tmp_sp = tmp_sp + 32; /* add sp,sp,#0x20 */
-    return tmp_x0; /* return value from x0 before ret */
-
-}
-
-uint64_t op_div(uint64_t arg1, uint64_t arg2, uint64_t arg_20h)
-{
-    /* Entry: 0x100001664 */
-    /* Body status: partially_structured */
-    /* 1 basic block(s), 26 instruction(s) */
-    /* WARNING: unknown_return_type_defaulted_to_u64 */
-
-    /* Layout candidates: */
-    /*   base=sp, kind=array_like, offsets=[0, 8, 16, 24], sizes=[8] */
-    /*   base=x9, kind=pointer_like, offsets=[80], sizes=[8] */
+    /*   base=sp, kind=record_like, offsets=[20, 28, 32, 36, 40, 44, 48, 52, 74, 124, 156], sizes=[1, 4] */
+    /*   base=x10, kind=record_like, offsets=[4, 8, 9], sizes=[1, 4] */
+    /*   base=x8, kind=array_like, offsets=[0, 8], sizes=[8] */
+    /*   base=x9, kind=record_like, offsets=[0, 10], sizes=[2, 8] */
 
     /* Conservative pseudo declarations: */
     u64 tmp_sp = 0;
@@ -1574,487 +379,1130 @@ uint64_t op_div(uint64_t arg1, uint64_t arg2, uint64_t arg_20h)
     u64 tmp_x9 = 0;
     u64 tmp_x10 = 0;
     u64 tmp_x11 = 0;
-    u64 stack_0 = 0;
-    u64 stack_8 = 0;
-    u64 stack_16 = 0;
-    u64 stack_24 = 0;
-
-    /* Control flow structure: */
-    /* block 0x100001664 */
-    tmp_sp = tmp_sp - 32; /* sub sp,sp,#0x20 */
-    stack_24 = tmp_x0; /* str x0,[sp, #0x18] */
-    stack_16 = tmp_x1; /* str x1,[sp, #0x10] */
-    tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
-    tmp_x8 = tmp_x8 | 1; /* orr x8,x8,#0x1 */
-    stack_8 = tmp_x8; /* str x8,[sp, #0x8] */
-    tmp_x8 = stack_24; /* ldr x8,[sp, #0x18] */
-    tmp_x9 = stack_8; /* ldr x9,[sp, #0x8] */
-    tmp_x8 = tmp_x8 / tmp_x9; /* udiv x8,x8,x9 */
-    tmp_x9 = stack_24; /* ldr x9,[sp, #0x18] */
-    tmp_x11 = stack_8; /* ldr x11,[sp, #0x8] */
-    tmp_x10 = tmp_x9 / tmp_x11; /* udiv x10,x9,x11 */
-    tmp_x10 = tmp_x10 * tmp_x11; /* mul x10,x10,x11 */
-    tmp_x9 = tmp_x9 - tmp_x10; /* subs x9,x9,x10; flags updated */
-    tmp_x8 = tmp_x8 + tmp_x9; /* add x8,x8,x9 */
-    tmp_x9 = 17476; /* mov x9,#0x4444 */
-    tmp_x8 = tmp_x8 + tmp_x9; /* add x8,x8,x9 */
-    stack_0 = tmp_x8; /* str x8,[sp] */
-    tmp_x10 = stack_0; /* ldr x10,[sp] */
-    tmp_x9 = 0x100008000; /* adrp x9,0x100008000 */
-    tmp_x8 = *(u64 *)(tmp_x9 + 80); /* ldr x8,[x9, #0x50] */
-    tmp_x8 = tmp_x8 ^ tmp_x10; /* eor x8,x8,x10 */
-    *(u64 *)(tmp_x9 + 80) = tmp_x8; /* str x8,[x9, #0x50] */
-    tmp_x0 = stack_0; /* ldr x0,[sp] */
-    tmp_sp = tmp_sp + 32; /* add sp,sp,#0x20 */
-    return tmp_x0; /* return value from x0 before ret */
-
-}
-
-uint64_t op_logic(uint64_t arg1, uint64_t arg2, uint64_t arg_20h)
-{
-    /* Entry: 0x1000016cc */
-    /* Body status: partially_structured */
-    /* 1 basic block(s), 21 instruction(s) */
-    /* WARNING: unknown_return_type_defaulted_to_u64 */
-
-    /* Layout candidates: */
-    /*   base=sp, kind=array_like, offsets=[8, 16, 24], sizes=[8] */
-    /*   base=x9, kind=pointer_like, offsets=[80], sizes=[8] */
-
-    /* Conservative pseudo declarations: */
-    u64 tmp_sp = 0;
-    u64 tmp_x0 = 0;
-    u64 tmp_x1 = 0;
-    u64 tmp_x8 = 0;
-    u64 tmp_x9 = 0;
-    u64 tmp_x10 = 0;
-    u64 stack_8 = 0;
-    u64 stack_16 = 0;
-    u64 stack_24 = 0;
-
-    /* Control flow structure: */
-    /* block 0x1000016cc */
-    tmp_sp = tmp_sp - 32; /* sub sp,sp,#0x20 */
-    stack_24 = tmp_x0; /* str x0,[sp, #0x18] */
-    stack_16 = tmp_x1; /* str x1,[sp, #0x10] */
-    tmp_x8 = stack_24; /* ldr x8,[sp, #0x18] */
-    tmp_x9 = stack_16; /* ldr x9,[sp, #0x10] */
-    tmp_x8 = tmp_x8 & tmp_x9; /* and x8,x8,x9 */
-    tmp_x9 = stack_24; /* ldr x9,[sp, #0x18] */
-    tmp_x10 = stack_16; /* ldr x10,[sp, #0x10] */
-    tmp_x9 = tmp_x9 ^ (tmp_x10 << 2); /* eor x9,x9,x10, LSL #0x2 */
-    tmp_x8 = tmp_x8 | tmp_x9; /* orr x8,x8,x9 */
-    tmp_x9 = 21845; /* mov x9,#0x5555 */
-    tmp_x8 = tmp_x8 + tmp_x9; /* add x8,x8,x9 */
-    stack_8 = tmp_x8; /* str x8,[sp, #0x8] */
-    tmp_x10 = stack_8; /* ldr x10,[sp, #0x8] */
-    tmp_x9 = 0x100008000; /* adrp x9,0x100008000 */
-    tmp_x8 = *(u64 *)(tmp_x9 + 80); /* ldr x8,[x9, #0x50] */
-    tmp_x8 = tmp_x8 ^ tmp_x10; /* eor x8,x8,x10 */
-    *(u64 *)(tmp_x9 + 80) = tmp_x8; /* str x8,[x9, #0x50] */
-    tmp_x0 = stack_8; /* ldr x0,[sp, #0x8] */
-    tmp_sp = tmp_sp + 32; /* add sp,sp,#0x20 */
-    return tmp_x0; /* return value from x0 before ret */
-
-}
-
-uint64_t tri_a(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg_40h)
-{
-    /* Entry: 0x100001720 */
-    /* Body status: structured */
-    /* 14 basic block(s), 50 instruction(s) */
-    /* WARNING: unknown_return_type_defaulted_to_u64 */
-
-    /* Layout candidates: */
-    /*   base=sp, kind=record_like, offsets=[12, 16, 24], sizes=[4, 8] */
-
-    /* Conservative pseudo declarations: */
-    u64 tmp_sp = 0;
-    u64 tmp_x0 = 0;
-    u64 tmp_x1 = 0;
-    u64 tmp_x2 = 0;
-    u64 tmp_x8 = 0;
-    u64 tmp_x9 = 0;
+    u64 tmp_x12 = 0;
+    u32 tmp_w0 = 0;
+    u32 tmp_w1 = 0;
+    u32 tmp_w2 = 0;
     u32 tmp_w8 = 0;
+    u32 tmp_w9 = 0;
+    u32 tmp_w10 = 0;
+    u32 tmp_w11 = 0;
     u64 tmp_fp = 0;
     u64 tmp_lr = 0;
     u64 stack_m8 = 0;
-    u64 stack_m16 = 0;
-    u64 stack_12 = 0;
-    u64 stack_16 = 0;
-    u64 stack_24 = 0;
+    u32 stack_20 = 0;
+    u32 stack_28 = 0;
+    u32 stack_32 = 0;
+    u32 stack_36 = 0;
+    u32 stack_40 = 0;
+    u64 stack_44 = 0;
     u64 stack_48 = 0;
-    u64 stack_56 = 0;
-
-    /* Control flow structure: */
-    /* block 0x100001720 */
-    tmp_sp = tmp_sp - 64; /* sub sp,sp,#0x40 */
-    stack_48 = tmp_fp; /* stp x29,x30,[sp, #0x30] */
-    stack_56 = tmp_lr; /* paired store second register inferred offset +8 */
-    tmp_fp = tmp_sp + 48; /* add x29,sp,#0x30 */
-    stack_m8 = tmp_x0; /* stur x0,[x29, #-0x8] */
-    stack_m16 = tmp_x1; /* stur x1,[x29, #-0x10] */
-    stack_24 = tmp_x2; /* str x2,[sp, #0x18] */
-    tmp_x8 = stack_m8; /* ldur x8,[x29, #-0x8] */
-    tmp_x9 = stack_m16; /* ldur x9,[x29, #-0x10] */
-    tmp_x8 = tmp_x8 ^ (tmp_x9 << 1); /* eor x8,x8,x9, LSL #0x1 */
-    tmp_x9 = stack_24; /* ldr x9,[sp, #0x18] */
-    tmp_x8 = tmp_x8 ^ (tmp_x9 >> 1); /* eor x8,x8,x9, LSR #0x1 */
-    stack_16 = tmp_x8; /* str x8,[sp, #0x10] */
-    stack_12 = 0; /* str wzr,[sp, #0xc] */
-    /* branch to 0x100001758 */ /* b 0x100001758 */
-    /* loop kind: while_like */
-    /* loop header: 0x100001758 */
-    /* loop exits: ['0x1000017a4', '0x1000017d8'] */
-    while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x100001760 after subs at 0x10000175c; target 0x1000017d8; loop polarity inverted")) {
-        /* if/else condition block: 0x100001758 */
-        /* merge block: 0x1000017c8 */
-        if (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x100001760 after subs at 0x10000175c; target 0x1000017d8")) {
-            /* block 0x10000178c */
-            /* branch to 0x100001790 */ /* b 0x100001790 */
-            /* block 0x100001790 */
-            /* branch to 0x1000017c8 */ /* b 0x1000017c8 */
-        } else {
-            /* block 0x100001794 */
-            tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
-            tmp_x8 = tmp_x8 & 63; /* and x8,x8,#0x3f */
-            tmp_x8 = tmp_x8 - 41; /* subs x8,x8,#0x29; flags updated */
-            /* conditional branch b.ne -> 0x1000017ac */
-            /* block 0x1000017ac */
-            tmp_x0 = stack_16; /* ldr x0,[sp, #0x10] */
-            tmp_x1 = (i64)(i32)stack_12; /* ldrsw x1,[sp, #0xc] */
-            call_0x100001538(tmp_x0, tmp_x1); /* bl 0x100001538; args refined from same-block evidence */
-            /* block 0x1000017b8 */
-            tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
-            tmp_x8 = tmp_x8 ^ tmp_x0; /* eor x8,x8,x0 */
-            stack_16 = tmp_x8; /* str x8,[sp, #0x10] */
-            /* branch to 0x1000017c8 */ /* b 0x1000017c8 */
-        }
-        /* block 0x1000017c8 */
-        tmp_w8 = stack_12; /* ldr w8,[sp, #0xc] */
-        tmp_w8 = tmp_w8 + 1; /* add w8,w8,#0x1 */
-        stack_12 = tmp_w8; /* str w8,[sp, #0xc] */
-        /* branch to 0x100001758 */ /* b 0x100001758 */
-    }
-    /* block 0x1000017a4 */
-    /* branch to 0x1000017a8 */ /* b 0x1000017a8 */
-    /* block 0x1000017a8 */
-    /* branch to 0x1000017d8 */ /* b 0x1000017d8 */
-    /* block 0x1000017d8 */
-    tmp_x0 = stack_16; /* ldr x0,[sp, #0x10] */
-    tmp_fp = stack_48; /* ldp x29,x30,[sp, #0x30] */
-    tmp_lr = stack_56; /* paired load second register inferred offset +8 */
-    tmp_sp = tmp_sp + 64; /* add sp,sp,#0x40 */
-    return tmp_x0; /* return value from x0 before ret */
-
-}
-
-uint64_t tri_b(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg_30h)
-{
-    /* Entry: 0x1000017e8 */
-    /* Body status: structured */
-    /* 12 basic block(s), 58 instruction(s) */
-    /* WARNING: unknown_return_type_defaulted_to_u64 */
-
-    /* Layout candidates: */
-    /*   base=sp, kind=record_like, offsets=[0, 12, 16, 24, 32, 40], sizes=[1, 4, 8] */
-    /*   base=x9, kind=pointer_like, offsets=[80], sizes=[8] */
-
-    /* Conservative pseudo declarations: */
-    u64 tmp_sp = 0;
-    u64 tmp_x0 = 0;
-    u64 tmp_x1 = 0;
-    u64 tmp_x2 = 0;
-    u64 tmp_x8 = 0;
-    u64 tmp_x9 = 0;
-    u64 tmp_x10 = 0;
-    u32 tmp_w8 = 0;
-    u32 stack_12 = 0;
-    u64 stack_16 = 0;
-    u64 stack_24 = 0;
-    u64 stack_32 = 0;
-    u64 stack_40 = 0;
-
-    /* Control flow structure: */
-    /* block 0x1000017e8 */
-    tmp_sp = tmp_sp - 48; /* sub sp,sp,#0x30 */
-    stack_40 = tmp_x0; /* str x0,[sp, #0x28] */
-    stack_32 = tmp_x1; /* str x1,[sp, #0x20] */
-    stack_24 = tmp_x2; /* str x2,[sp, #0x18] */
-    tmp_x8 = stack_40; /* ldr x8,[sp, #0x28] */
-    tmp_x9 = stack_32; /* ldr x9,[sp, #0x20] */
-    tmp_x8 = tmp_x8 + tmp_x9; /* add x8,x8,x9 */
-    tmp_x9 = stack_24; /* ldr x9,[sp, #0x18] */
-    tmp_x8 = tmp_x8 + tmp_x9; /* add x8,x8,x9 */
-    stack_16 = tmp_x8; /* str x8,[sp, #0x10] */
-    stack_12 = 0; /* str wzr,[sp, #0xc] */
-    /* branch to 0x100001818 */ /* b 0x100001818 */
-    /* loop kind: while_like */
-    /* loop header: 0x100001818 */
-    /* loop exits: ['0x100001894', '0x1000018b0'] */
-    while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x100001820 after subs at 0x10000181c; target 0x1000018b0; loop polarity inverted")) {
-        /* if/else condition block: 0x100001818 */
-        /* merge block: 0x1000018a0 */
-        if (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x100001820 after subs at 0x10000181c; target 0x1000018b0")) {
-            /* block 0x100001880 */
-            /* branch to 0x100001884 */ /* b 0x100001884 */
-            /* block 0x100001884 */
-            /* branch to 0x1000018a0 */ /* b 0x1000018a0 */
-        } else {
-            /* block 0x100001888 */
-            tmp_w8 = stack_16; /* ldrb w8,[sp, #0x10] */
-            tmp_x8 = tmp_x8 - 165; /* subs x8,x8,#0xa5; flags updated */
-            /* conditional branch b.ne -> 0x10000189c */
-            /* block 0x10000189c */
-            /* branch to 0x1000018a0 */ /* b 0x1000018a0 */
-        }
-        /* block 0x1000018a0 */
-        tmp_w8 = stack_12; /* ldr w8,[sp, #0xc] */
-        tmp_w8 = tmp_w8 + 1; /* add w8,w8,#0x1 */
-        stack_12 = tmp_w8; /* str w8,[sp, #0xc] */
-        /* branch to 0x100001818 */ /* b 0x100001818 */
-    }
-    /* block 0x100001894 */
-    /* branch to 0x100001898 */ /* b 0x100001898 */
-    /* block 0x100001898 */
-    /* branch to 0x1000018b0 */ /* b 0x1000018b0 */
-    /* block 0x1000018b0 */
-    tmp_x10 = stack_16; /* ldr x10,[sp, #0x10] */
-    tmp_x9 = 0x100008000; /* adrp x9,0x100008000 */
-    tmp_x8 = *(u64 *)(tmp_x9 + 80); /* ldr x8,[x9, #0x50] */
-    tmp_x8 = tmp_x8 ^ tmp_x10; /* eor x8,x8,x10 */
-    *(u64 *)(tmp_x9 + 80) = tmp_x8; /* str x8,[x9, #0x50] */
-    tmp_x0 = stack_16; /* ldr x0,[sp, #0x10] */
-    tmp_sp = tmp_sp + 48; /* add sp,sp,#0x30 */
-    return tmp_x0; /* return value from x0 before ret */
-
-}
-
-uint64_t tri_c(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg_40h)
-{
-    /* Entry: 0x1000018d0 */
-    /* Body status: unstructured */
-    /* 33 basic block(s), 122 instruction(s) */
-    /* WARNING: unknown_return_type_defaulted_to_u64 */
-
-    /* Layout candidates: */
-    /*   base=sp, kind=record_like, offsets=[0, 12, 16, 24], sizes=[4, 8] */
-
-    /* Conservative pseudo declarations: */
-    u64 tmp_sp = 0;
-    u64 tmp_x0 = 0;
-    u64 tmp_x1 = 0;
-    u64 tmp_x2 = 0;
-    u64 tmp_x8 = 0;
-    u64 tmp_x9 = 0;
-    u64 tmp_x10 = 0;
-    u32 tmp_w8 = 0;
-    u64 tmp_fp = 0;
-    u64 tmp_lr = 0;
-    u64 stack_m8 = 0;
-    u64 stack_m16 = 0;
-    u64 stack_0 = 0;
-    u64 stack_12 = 0;
-    u64 stack_16 = 0;
-    u64 stack_24 = 0;
-    u64 stack_48 = 0;
-    u64 stack_56 = 0;
+    u32 stack_52 = 0;
+    u32 stack_74 = 0;
+    u64 stack_124 = 0;
+    u32 stack_156 = 0;
+    u64 stack_192 = 0;
+    u64 stack_200 = 0;
 
     /* Control flow structure: */
     /* unstructured region begin */
-    /* reason: irreducible_cfg */
+    /* reason: fragmented_loop_body */
     {
-        /* block 0x1000018d0 */
-        tmp_sp = tmp_sp - 64; /* sub sp,sp,#0x40 */
-        stack_48 = tmp_fp; /* stp x29,x30,[sp, #0x30] */
-        stack_56 = tmp_lr; /* paired store second register inferred offset +8 */
-        tmp_fp = tmp_sp + 48; /* add x29,sp,#0x30 */
-        stack_m8 = tmp_x0; /* stur x0,[x29, #-0x8] */
-        stack_m16 = tmp_x1; /* stur x1,[x29, #-0x10] */
-        stack_24 = tmp_x2; /* str x2,[sp, #0x18] */
-        tmp_x8 = stack_m8; /* ldur x8,[x29, #-0x8] */
-        stack_16 = tmp_x8; /* str x8,[sp, #0x10] */
-        stack_12 = 0; /* str wzr,[sp, #0xc] */
-        /* branch to 0x1000018f8 */ /* b 0x1000018f8 */
-        /* block 0x1000018f8 */
-        tmp_w8 = stack_12; /* ldr w8,[sp, #0xc] */
-        tmp_w8 = tmp_w8 - 16; /* subs w8,w8,#0x10; flags updated */
-        /* conditional branch b.ge -> 0x100001aa8 */
-        /* block 0x100001904 */
-        /* branch to 0x100001908 */ /* b 0x100001908 */
-        /* block 0x100001908 */
-        tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
-        tmp_x9 = stack_m16; /* ldur x9,[x29, #-0x10] */
-        tmp_x8 = tmp_x8 + tmp_x9; /* add x8,x8,x9 */
-        tmp_x9 = stack_24; /* ldr x9,[sp, #0x18] */
-        tmp_x8 = tmp_x8 + tmp_x9; /* add x8,x8,x9 */
-        tmp_x9 = (i64)(i32)stack_12; /* ldrsw x9,[sp, #0xc] */
-        tmp_x8 = tmp_x8 + tmp_x9; /* add x8,x8,x9 */
-        tmp_x8 = tmp_x8 & 7; /* and x8,x8,#0x7 */
-        stack_0 = tmp_x8; /* str x8,[sp] */
-        /* cbz tmp_x8 -> 0x100001994 */
-        /* block 0x100001930 */
-        /* branch to 0x100001934 */ /* b 0x100001934 */
-        /* block 0x100001934 */
-        tmp_x8 = stack_0; /* ldr x8,[sp] */
-        tmp_x8 = tmp_x8 - 1; /* subs x8,x8,#0x1; flags updated */
-        /* conditional branch b.eq -> 0x1000019b0 */
-        /* block 0x100001940 */
-        /* branch to 0x100001944 */ /* b 0x100001944 */
-        /* block 0x100001944 */
-        tmp_x8 = stack_0; /* ldr x8,[sp] */
-        tmp_x8 = tmp_x8 - 2; /* subs x8,x8,#0x2; flags updated */
-        /* conditional branch b.eq -> 0x1000019d4 */
-        /* block 0x100001950 */
-        /* branch to 0x100001954 */ /* b 0x100001954 */
-        /* block 0x100001954 */
-        tmp_x8 = stack_0; /* ldr x8,[sp] */
-        tmp_x8 = tmp_x8 - 3; /* subs x8,x8,#0x3; flags updated */
-        /* conditional branch b.eq -> 0x1000019f8 */
-        /* block 0x100001960 */
-        /* branch to 0x100001964 */ /* b 0x100001964 */
-        /* block 0x100001964 */
-        tmp_x8 = stack_0; /* ldr x8,[sp] */
-        tmp_x8 = tmp_x8 - 4; /* subs x8,x8,#0x4; flags updated */
-        /* conditional branch b.eq -> 0x100001a10 */
-        /* block 0x100001970 */
-        /* branch to 0x100001974 */ /* b 0x100001974 */
-        /* block 0x100001974 */
-        tmp_x8 = stack_0; /* ldr x8,[sp] */
-        tmp_x8 = tmp_x8 - 5; /* subs x8,x8,#0x5; flags updated */
-        /* conditional branch b.eq -> 0x100001a50 */
-        /* block 0x100001980 */
-        /* branch to 0x100001984 */ /* b 0x100001984 */
-        /* block 0x100001984 */
-        tmp_x8 = stack_0; /* ldr x8,[sp] */
-        tmp_x8 = tmp_x8 - 6; /* subs x8,x8,#0x6; flags updated */
-        /* conditional branch b.eq -> 0x100001a54 */
-        /* block 0x100001990 */
-        /* branch to 0x100001a74 */ /* b 0x100001a74 */
-        /* block 0x100001994 */
-        tmp_x8 = stack_m8; /* ldur x8,[x29, #-0x8] */
-        tmp_x9 = (i64)(i32)stack_12; /* ldrsw x9,[sp, #0xc] */
-        tmp_x9 = tmp_x8 ^ tmp_x9; /* eor x9,x8,x9 */
-        tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
-        tmp_x8 = tmp_x8 + tmp_x9; /* add x8,x8,x9 */
-        stack_16 = tmp_x8; /* str x8,[sp, #0x10] */
-        /* branch to 0x100001a94 */ /* b 0x100001a94 */
-        /* block 0x1000019b0 */
-        tmp_x8 = stack_m16; /* ldur x8,[x29, #-0x10] */
-        tmp_x9 = (i64)(i32)stack_12; /* ldrsw x9,[sp, #0xc] */
-        tmp_x10 = 3; /* mov x10,#0x3 */
-        tmp_x9 = tmp_x9 * tmp_x10; /* mul x9,x9,x10 */
-        tmp_x9 = tmp_x8 + tmp_x9; /* add x9,x8,x9 */
-        tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
-        tmp_x8 = tmp_x8 ^ tmp_x9; /* eor x8,x8,x9 */
-        stack_16 = tmp_x8; /* str x8,[sp, #0x10] */
-        /* branch to 0x100001a94 */ /* b 0x100001a94 */
-        /* block 0x1000019d4 */
-        tmp_x8 = stack_24; /* ldr x8,[sp, #0x18] */
-        tmp_x9 = (i64)(i32)stack_12; /* ldrsw x9,[sp, #0xc] */
-        tmp_x10 = 5; /* mov x10,#0x5 */
-        tmp_x9 = tmp_x9 * tmp_x10; /* mul x9,x9,x10 */
-        tmp_x9 = tmp_x8 + tmp_x9; /* add x9,x8,x9 */
-        tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
-        tmp_x8 = tmp_x8 - tmp_x9; /* subs x8,x8,x9; flags updated */
-        stack_16 = tmp_x8; /* str x8,[sp, #0x10] */
-        /* branch to 0x100001a94 */ /* b 0x100001a94 */
-        /* block 0x1000019f8 */
-        tmp_x9 = stack_16; /* ldr x9,[sp, #0x10] */
-        tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
-        tmp_x8 = tmp_x8 >> 2; /* lsr x8,x8,#0x2 */
-        tmp_x8 = tmp_x8 ^ (tmp_x9 << 5); /* eor x8,x8,x9, LSL #0x5 */
-        stack_16 = tmp_x8; /* str x8,[sp, #0x10] */
-        /* branch to 0x100001a94 */ /* b 0x100001a94 */
-        /* block 0x100001a10 */
-        tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
-        /* tbz tmp_w8 bit 0 -> 0x100001a34 */
-        /* block 0x100001a18 */
-        /* branch to 0x100001a1c */ /* b 0x100001a1c */
-        /* block 0x100001a1c */
-        tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
-        tmp_x9 = 22136; /* mov x9,#0x5678 */
-        /* 0x100001a24: unsupported instruction: movk x9,#0x1234, LSL #16 */
-        tmp_x8 = tmp_x8 + tmp_x9; /* add x8,x8,x9 */
-        stack_16 = tmp_x8; /* str x8,[sp, #0x10] */
-        /* branch to 0x100001a4c */ /* b 0x100001a4c */
-        /* block 0x100001a34 */
-        tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
-        tmp_x9 = 17185; /* mov x9,#0x4321 */
-        /* 0x100001a3c: unsupported instruction: movk x9,#0x8765, LSL #16 */
-        tmp_x8 = tmp_x8 ^ tmp_x9; /* eor x8,x8,x9 */
-        stack_16 = tmp_x8; /* str x8,[sp, #0x10] */
-        /* branch to 0x100001a4c */ /* b 0x100001a4c */
-        /* block 0x100001a4c */
-        /* branch to 0x100001a94 */ /* b 0x100001a94 */
-        /* block 0x100001a50 */
-        /* branch to 0x100001a98 */ /* b 0x100001a98 */
-        /* block 0x100001a54 */
-        tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
-        tmp_x9 = (i64)(i32)stack_12; /* ldrsw x9,[sp, #0xc] */
-        tmp_x0 = tmp_x8 ^ tmp_x9; /* eor x0,x8,x9 */
-        call_0x1000014a8(tmp_x0); /* bl 0x1000014a8; args refined from same-block evidence */
-        /* block 0x100001a64 */
-        tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
-        tmp_x8 = tmp_x8 + tmp_x0; /* add x8,x8,x0 */
-        stack_16 = tmp_x8; /* str x8,[sp, #0x10] */
-        /* branch to 0x100001a94 */ /* b 0x100001a94 */
-        /* block 0x100001a74 */
-        tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
-        tmp_x9 = 47806; /* mov x9,#0xbabe */
-        /* 0x100001a7c: unsupported instruction: movk x9,#0xcafe, LSL #16 */
-        /* 0x100001a80: unsupported instruction: movk x9,#0xbeef, LSL #32 */
-        /* 0x100001a84: unsupported instruction: movk x9,#0xdead, LSL #48 */
-        tmp_x8 = tmp_x8 ^ tmp_x9; /* eor x8,x8,x9 */
-        stack_16 = tmp_x8; /* str x8,[sp, #0x10] */
-        /* branch to 0x100001a94 */ /* b 0x100001a94 */
-        /* block 0x100001a94 */
-        /* branch to 0x100001a98 */ /* b 0x100001a98 */
-        /* block 0x100001a98 */
-        tmp_w8 = stack_12; /* ldr w8,[sp, #0xc] */
+        /* block 0x100000548 */
+        tmp_x9 = (i64)(i32)stack_48; /* ldrsw x9,[sp, #0x30] */
+        tmp_x11 = 12; /* mov x11,#0xc */
+        tmp_x12 = tmp_x9 * tmp_x11; /* mul x12,x9,x11 */
+        tmp_x9 = tmp_sp + 88; /* add x9,sp,#0x58 */
+        tmp_x10 = tmp_x9; /* mov x10,x9 */
+        tmp_x10 = tmp_x10 + tmp_x12; /* add x10,x10,x12 */
+        *(u32 *)(tmp_x10 + 4) = tmp_w8; /* str w8,[x10, #0x4] */
+        tmp_w8 = stack_48; /* ldr w8,[sp, #0x30] */
+        tmp_w10 = 29; /* mov w10,#0x1d */
+        tmp_w8 = tmp_w8 * tmp_w10; /* mul w8,w8,w10 */
+        tmp_w10 = stack_52; /* ldr w10,[sp, #0x34] */
+        tmp_w8 = tmp_w8 ^ tmp_w10; /* eor w8,w8,w10 */
+        tmp_x10 = (i64)(i32)stack_48; /* ldrsw x10,[sp, #0x30] */
+        tmp_x12 = tmp_x10 * tmp_x11; /* mul x12,x10,x11 */
+        tmp_x10 = tmp_x9; /* mov x10,x9 */
+        tmp_x10 = tmp_x10 + tmp_x12; /* add x10,x10,x12 */
+        *(u8 *)(tmp_x10 + 8) = tmp_w8; /* strb w8,[x10, #0x8] */
+        tmp_w8 = stack_48; /* ldr w8,[sp, #0x30] */
+        tmp_w8 = tmp_w8 & 7; /* and w8,w8,#0x7 */
+        tmp_x10 = (i64)(i32)stack_48; /* ldrsw x10,[sp, #0x30] */
+        tmp_x12 = tmp_x10 * tmp_x11; /* mul x12,x10,x11 */
+        tmp_x10 = tmp_x9; /* mov x10,x9 */
+        tmp_x10 = tmp_x10 + tmp_x12; /* add x10,x10,x12 */
+        *(u8 *)(tmp_x10 + 9) = tmp_w8; /* strb w8,[x10, #0x9] */
+        tmp_w8 = stack_48; /* ldr w8,[sp, #0x30] */
+        tmp_w10 = 13; /* mov w10,#0xd */
+        tmp_w8 = tmp_w8 * tmp_w10; /* mul w8,w8,w10 */
+        tmp_w8 = tmp_w8 + 100; /* add w8,w8,#0x64 */
+        tmp_x10 = (i64)(i32)stack_48; /* ldrsw x10,[sp, #0x30] */
+        tmp_x10 = tmp_x10 * tmp_x11; /* mul x10,x10,x11 */
+        tmp_x9 = tmp_x9 + tmp_x10; /* add x9,x9,x10 */
+        *(u16 *)(tmp_x9 + 10) = tmp_w8; /* strh w8,[x9, #0xa] */
+        /* branch to 0x1000005cc */ /* b 0x1000005cc */
+        /* block 0x1000005cc */
+        tmp_w8 = stack_48; /* ldr w8,[sp, #0x30] */
         tmp_w8 = tmp_w8 + 1; /* add w8,w8,#0x1 */
-        stack_12 = tmp_w8; /* str w8,[sp, #0xc] */
-        /* branch to 0x1000018f8 */ /* b 0x1000018f8 */
-        /* block 0x100001aa8 */
-        tmp_x0 = stack_16; /* ldr x0,[sp, #0x10] */
-        tmp_fp = stack_48; /* ldp x29,x30,[sp, #0x30] */
-        tmp_lr = stack_56; /* paired load second register inferred offset +8 */
-        tmp_sp = tmp_sp + 64; /* add sp,sp,#0x40 */
-        return tmp_x0; /* return value from x0 before ret */
+        stack_48 = tmp_w8; /* str w8,[sp, #0x30] */
+        /* branch to 0x1000004cc */ /* b 0x1000004cc */
+        /* block 0x1000005dc */
+        stack_124 = 0; /* str wzr,[sp, #0x7c] */
+        tmp_w8 = stack_156; /* ldrb w8,[sp, #0x9c] */
+        tmp_w8 = tmp_w8 | 32; /* orr w8,w8,#0x20 */
+        stack_156 = tmp_w8; /* strb w8,[sp, #0x9c] */
+        stack_44 = 0; /* str wzr,[sp, #0x2c] */
+        /* branch to 0x1000005f4 */ /* b 0x1000005f4 */
+        /* block 0x1000005f4 */
+        tmp_w8 = stack_44; /* ldr w8,[sp, #0x2c] */
+        tmp_w8 = tmp_w8 - 16; /* subs w8,w8,#0x10; flags updated */
+        /* conditional branch b.ge -> 0x100000650 */
+        /* block 0x100000600 */
+        /* branch to 0x100000604 */ /* b 0x100000604 */
+        /* block 0x100000604 */
+        tmp_w8 = stack_52; /* ldr w8,[sp, #0x34] */
+        tmp_w9 = stack_44; /* ldr w9,[sp, #0x2c] */
+        tmp_w11 = 8; /* mov w11,#0x8 */
+        tmp_w10 = ((i32)tmp_w9) / ((i32)tmp_w11); /* sdiv w10,w9,w11 */
+        tmp_w10 = tmp_w10 * tmp_w11; /* mul w10,w10,w11 */
+        tmp_w9 = tmp_w9 - tmp_w10; /* subs w9,w9,w10; flags updated */
+        tmp_w8 = tmp_w8 >> tmp_w9; /* lsr w8,w8,w9 */
+        tmp_w9 = stack_44; /* ldr w9,[sp, #0x2c] */
+        tmp_w10 = 31; /* mov w10,#0x1f */
+        tmp_w9 = tmp_w9 * tmp_w10; /* mul w9,w9,w10 */
+        tmp_w8 = tmp_w8 ^ tmp_w9; /* eor w8,w8,w9 */
+        tmp_x10 = (i64)(i32)stack_44; /* ldrsw x10,[sp, #0x2c] */
+        tmp_x9 = tmp_sp + 72; /* add x9,sp,#0x48 */
+        *(u8 *)(tmp_x9 + tmp_x10) = tmp_w8; /* strb w8,[x9, x10, LSL ] */
+        /* branch to 0x100000640 */ /* b 0x100000640 */
+        /* block 0x100000640 */
+        tmp_w8 = stack_44; /* ldr w8,[sp, #0x2c] */
+        tmp_w8 = tmp_w8 + 1; /* add w8,w8,#0x1 */
+        stack_44 = tmp_w8; /* str w8,[sp, #0x2c] */
+        /* branch to 0x1000005f4 */ /* b 0x1000005f4 */
+        /* block 0x100000650 */
+        tmp_w2 = stack_52; /* ldr w2,[sp, #0x34] */
+        tmp_x0 = tmp_sp + 88; /* add x0,sp,#0x58 */
+        tmp_w1 = 8; /* mov w1,#0x8 */
+        call_0x100000740(tmp_x0, tmp_w1, tmp_w2); /* bl 0x100000740; args refined from same-block evidence */
+        /* block 0x100000660 */
+        stack_40 = tmp_w0; /* str w0,[sp, #0x28] */
+        tmp_w0 = 5; /* mov w0,#0x5 */
+        tmp_w1 = 7; /* mov w1,#0x7 */
+        tmp_w2 = 3; /* mov w2,#0x3 */
+        call_0x1000009a8(tmp_w0, tmp_w1, tmp_w2); /* bl 0x1000009a8; args refined from same-block evidence */
+        /* block 0x100000674 */
+        stack_36 = tmp_w0; /* str w0,[sp, #0x24] */
+        tmp_x0 = tmp_sp + 72; /* add x0,sp,#0x48 */
+        tmp_w2 = stack_74; /* ldrb w2,[sp, #0x4a] */
+        tmp_x1 = 16; /* mov x1,#0x10 */
+        call_0x100000ad8(tmp_x0, tmp_x1, tmp_w2); /* bl 0x100000ad8; args refined from same-block evidence */
+        /* block 0x100000688 */
+        stack_32 = tmp_w0; /* str w0,[sp, #0x20] */
+        tmp_w8 = stack_40; /* ldr w8,[sp, #0x28] */
+        tmp_w9 = stack_36; /* ldr w9,[sp, #0x24] */
+        tmp_w8 = tmp_w8 + tmp_w9; /* add w8,w8,w9 */
+        tmp_w9 = stack_32; /* ldr w9,[sp, #0x20] */
+        tmp_w8 = tmp_w8 + tmp_w9; /* add w8,w8,w9 */
+        stack_28 = tmp_w8; /* str w8,[sp, #0x1c] */
+        tmp_w8 = stack_28; /* ldr w8,[sp, #0x1c] */
+        /* cbnz tmp_w8 -> 0x1000006c0 */
+        /* block 0x1000006ac */
+        /* branch to 0x1000006b0 */ /* b 0x1000006b0 */
+        /* block 0x1000006b0 */
+        tmp_x0 = 0x100000000; /* adrp x0,0x100000000 */
+        tmp_x0 = tmp_x0 + 3524; /* add x0,x0,#0xdc4 */
+        call_0x100000dac(tmp_x0); /* bl 0x100000dac; args refined from same-block evidence */
+        /* block 0x1000006bc */
+        /* branch to 0x100000708 */ /* b 0x100000708 */
+        /* block 0x1000006c0 */
+        tmp_w8 = stack_28; /* ldr w8,[sp, #0x1c] */
+        /* tbz tmp_w8 bit 31 -> 0x1000006e8 */
+        /* block 0x1000006c8 */
+        /* branch to 0x1000006cc */ /* b 0x1000006cc */
+        /* block 0x1000006cc */
+        tmp_w8 = stack_28; /* ldr w8,[sp, #0x1c] */
+        tmp_x9 = tmp_sp; /* mov x9,sp */
+        *(u64 *)(tmp_x9) = tmp_x8; /* str x8,[x9] */
+        tmp_x0 = 0x100000000; /* adrp x0,0x100000000 */
+        tmp_x0 = tmp_x0 + 3529; /* add x0,x0,#0xdc9 */
+        call_0x100000da0(tmp_x0); /* bl 0x100000da0; args refined from same-block evidence */
+        /* block 0x1000006e4 */
+        /* branch to 0x100000704 */ /* b 0x100000704 */
+        /* block 0x1000006e8 */
+        tmp_w8 = stack_28; /* ldr w8,[sp, #0x1c] */
+        tmp_x9 = tmp_sp; /* mov x9,sp */
+        *(u64 *)(tmp_x9) = tmp_x8; /* str x8,[x9] */
+        tmp_x0 = 0x100000000; /* adrp x0,0x100000000 */
+        tmp_x0 = tmp_x0 + 3542; /* add x0,x0,#0xdd6 */
+        call_0x100000da0(tmp_x0); /* bl 0x100000da0; args refined from same-block evidence */
+        /* block 0x100000700 */
+        /* branch to 0x100000704 */ /* b 0x100000704 */
+        /* block 0x100000704 */
+        /* branch to 0x100000708 */ /* b 0x100000708 */
+        /* block 0x100000708 */
+        tmp_w8 = stack_28; /* ldrb w8,[sp, #0x1c] */
+        stack_20 = tmp_w8; /* str w8,[sp, #0x14] */
+        tmp_x9 = stack_m8; /* ldur x9,[x29, #-0x8] */
+        tmp_x8 = 0x100004000; /* adrp x8,0x100004000 */
+        tmp_x8 = *(u64 *)(tmp_x8 + 8); /* ldr x8,[x8, #0x8] */
+        tmp_x8 = *(u64 *)(tmp_x8); /* ldr x8,[x8] */
+        tmp_x8 = tmp_x8 - tmp_x9; /* subs x8,x8,x9; flags updated */
+        /* conditional branch b.eq -> 0x100000730 */
+        /* block 0x100000728 */
+        /* branch to 0x10000072c */ /* b 0x10000072c */
+        /* block 0x10000072c */
+        call_0x100000d94(); /* bl 0x100000d94 */
+        /* block 0x100000730 */
+        tmp_w0 = stack_20; /* ldr w0,[sp, #0x14] */
+        tmp_fp = stack_192; /* ldp x29,x30,[sp, #0xc0] */
+        tmp_lr = stack_200; /* paired load second register inferred offset +8 */
+        tmp_sp = tmp_sp + 208; /* add sp,sp,#0xd0 */
+        return tmp_w0; /* return value from w0 before ret */
     }
     /* unstructured region end */
 
 }
 
-uint64_t stack_chk_fail(void)
+uint64_t scan_items(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg_50h)
 {
-    /* Entry: 0x100001ac4 */
-    /* Body status: partially_structured */
-    /* 1 basic block(s), 4 instruction(s) */
+    /* Entry: 0x100000740 */
+    /* Body status: unstructured */
+    /* 39 basic block(s), 154 instruction(s) */
     /* WARNING: unknown_return_type_defaulted_to_u64 */
 
     /* Layout candidates: */
-    /*   base=x16, kind=scalar, offsets=[16], sizes=[4] */
+    /*   base=sp, kind=record_like, offsets=[12, 16, 28, 32], sizes=[4] */
+    /*   base=x8, kind=record_like, offsets=[0, 4, 8, 9, 10], sizes=[4] */
+    /*   base=x9, kind=scalar, offsets=[0], sizes=[4] */
 
     /* Conservative pseudo declarations: */
-    u64 tmp_x16 = 0;
+    u64 tmp_sp = 0;
+    u64 tmp_x0 = 0;
+    u64 tmp_x8 = 0;
+    u64 tmp_x9 = 0;
+    u32 tmp_w0 = 0;
+    u32 tmp_w1 = 0;
+    u32 tmp_w2 = 0;
+    u32 tmp_w8 = 0;
+    u32 tmp_w9 = 0;
+    u64 tmp_fp = 0;
+    u64 tmp_lr = 0;
+    u32 stack_m4 = 0;
+    u64 stack_m16 = 0;
+    u32 stack_m20 = 0;
+    u32 stack_m24 = 0;
+    u32 stack_m28 = 0;
+    u64 stack_16 = 0;
+    u32 stack_28 = 0;
+    u32 stack_32 = 0;
+    u64 stack_64 = 0;
+    u64 stack_72 = 0;
 
     /* Control flow structure: */
-    /* block 0x100001ac4 */
-    tmp_x16 = 0x100004000; /* adrp x16, reloc.printf */
-    tmp_x16 = *(u64 *)(tmp_x16 + 16); /* ldr x16, [x16, 0x10] */
-    /* branch to tmp_x16 */ /* br x16 */
-    /* 0x100001ad0: unsupported instruction: invalid */
+    /* unstructured region begin */
+    /* reason: switch_candidate */
+    {
+        /* block 0x100000740 */
+        tmp_sp = tmp_sp - 80; /* sub sp, sp, 0x50 */
+        stack_64 = tmp_fp; /* stp x29, x30, [sp + var_40h] */
+        stack_72 = tmp_lr; /* paired store second register inferred offset +8 */
+        tmp_fp = tmp_sp + 64; /* add x29, sp, 0x40 */
+        stack_m16 = tmp_x0; /* stur x0, [x29, -0x10] */
+        stack_m20 = tmp_w1; /* stur w1, [x29, -0x14] */
+        stack_m24 = tmp_w2; /* stur w2, [x29, -0x18] */
+        tmp_x8 = stack_m16; /* ldur x8, [x29, -0x10] */
+        /* cbnz tmp_x8 -> 0x100000770 */
+        /* block 0x100000760 */
+        /* branch to 0x100000764 */ /* b 0x100000764 */
+        /* block 0x100000764 */
+        tmp_w8 = -1000; /* mov w8, -0x3e8 */
+        stack_m4 = tmp_w8; /* stur w8, [x29, -4] */
+        /* branch to 0x100000998 */ /* b 0x100000998 */
+        /* block 0x100000770 */
+        tmp_w8 = stack_m20; /* ldur w8, [x29, -0x14] */
+        tmp_w8 = tmp_w8 - 0; /* subs w8, w8, 0; flags updated */
+        /* conditional branch b.gt -> 0x10000078c */
+        /* block 0x10000077c */
+        /* branch to 0x100000780 */ /* b 0x100000780 */
+        /* block 0x100000780 */
+        tmp_w8 = -2000; /* mov w8, -0x7d0 */
+        stack_m4 = tmp_w8; /* stur w8, [x29, -4] */
+        /* branch to 0x100000998 */ /* b 0x100000998 */
+        /* block 0x10000078c */
+        stack_m28 = 0; /* stur wzr, [x29, -0x1c] */
+        stack_32 = 0; /* str wzr, [sp + var_20h] */
+        tmp_w8 = stack_m24; /* ldur w8, [x29, -0x18] */
+        stack_28 = tmp_w8; /* str w8, [sp + var_1ch] */
+        /* branch to 0x1000007a0 */ /* b 0x1000007a0 */
+        /* block 0x1000007a0 */
+        tmp_w8 = stack_32; /* ldr w8, [sp + var_20h] */
+        tmp_w9 = stack_m20; /* ldur w9, [x29, -0x14] */
+        tmp_w8 = tmp_w8 - tmp_w9; /* subs w8, w8, w9; flags updated */
+        /* conditional branch b.ge -> 0x100000980 */
+        /* block 0x1000007d8 */
+        /* branch to 0x1000007dc */ /* b 0x1000007dc */
+        /* block 0x1000007dc */
+        tmp_w8 = stack_m28; /* ldur w8, [x29, -0x1c] */
+        tmp_w8 = tmp_w8 - 3; /* subs w8, w8, 3; flags updated */
+        stack_m28 = tmp_w8; /* stur w8, [x29, -0x1c] */
+        tmp_w8 = stack_32; /* ldr w8, [sp + var_20h] */
+        tmp_w8 = tmp_w8 + 1; /* add w8, w8, 1 */
+        stack_32 = tmp_w8; /* str w8, [sp + var_20h] */
+        /* branch to 0x1000007a0 */ /* b 0x1000007a0 */
+        /* block 0x1000007f8 */
+        tmp_x8 = stack_16; /* ldr x8, [sp + var_10h] */
+        tmp_w8 = *(u8 *)(tmp_x8 + 8); /* ldrb w8, [x8, 8] */
+        /* tbz tmp_w8 bit 0 -> 0x100000820 */
+        /* block 0x1000008c8 */
+        /* branch to 0x1000008cc */ /* b 0x1000008cc */
+        /* block 0x1000008d8 */
+        /* branch to 0x1000008dc */ /* b 0x1000008dc */
+        /* block 0x1000008e8 */
+        /* branch to 0x10000091c */ /* b 0x10000091c */
+        /* block 0x1000008ec */
+        tmp_w8 = stack_m28; /* ldur w8, [x29, -0x1c] */
+        tmp_w8 = tmp_w8 + 10; /* add w8, w8, 0xa */
+        stack_m28 = tmp_w8; /* stur w8, [x29, -0x1c] */
+        /* branch to 0x100000930 */ /* b 0x100000930 */
+        /* block 0x1000008fc */
+        tmp_w8 = stack_m28; /* ldur w8, [x29, -0x1c] */
+        tmp_w8 = tmp_w8 + 20; /* add w8, w8, 0x14 */
+        stack_m28 = tmp_w8; /* stur w8, [x29, -0x1c] */
+        /* branch to 0x100000930 */ /* b 0x100000930 */
+        /* block 0x10000090c */
+        tmp_w8 = stack_m28; /* ldur w8, [x29, -0x1c] */
+        tmp_w8 = tmp_w8 - 30; /* subs w8, w8, 0x1e; flags updated */
+        stack_m28 = tmp_w8; /* stur w8, [x29, -0x1c] */
+        /* branch to 0x100000930 */ /* b 0x100000930 */
+        /* block 0x10000091c */
+        tmp_w8 = stack_m28; /* ldur w8, [x29, -0x1c] */
+        tmp_w9 = 51; /* mov w9, 0x33 */
+        tmp_w8 = tmp_w8 ^ tmp_w9; /* eor w8, w8, w9 */
+        stack_m28 = tmp_w8; /* stur w8, [x29, -0x1c] */
+        /* branch to 0x100000930 */ /* b 0x100000930 */
+        /* block 0x100000930 */
+        tmp_w8 = stack_28; /* ldr w8, [sp + var_1ch] */
+        tmp_x9 = stack_16; /* ldr x9, [sp + var_10h] */
+        tmp_w9 = *(u32 *)(tmp_x9); /* ldr w9, [x9] */
+        tmp_w8 = tmp_w8 ^ tmp_w9; /* eor w8, w8, w9 */
+        tmp_w9 = stack_m28; /* ldur w9, [x29, -0x1c] */
+        tmp_w0 = tmp_w8 ^ tmp_w9; /* eor w0, w8, w9 */
+        tmp_x8 = stack_16; /* ldr x8, [sp + var_10h] */
+        tmp_w8 = *(u8 *)(tmp_x8 + 9); /* ldrb w8, [x8, 9] */
+        tmp_w1 = tmp_w8 + 1; /* add w1, w8, 1 */
+        call_0x100000d4c(tmp_w0, tmp_w1); /* bl sym._rotl32; args refined from same-block evidence */
+        stack_28 = tmp_w0; /* str w0, [sp + var_1ch] */
+        tmp_w8 = stack_28; /* ldrb w8, [sp + var_1ch] */
+        tmp_w8 = tmp_w8 - 66; /* subs w8, w8, 0x42; flags updated */
+        /* conditional branch b.ne -> 0x100000970 */
+        /* block 0x100000968 */
+        /* branch to 0x10000096c */ /* b 0x10000096c */
+        /* block 0x10000096c */
+        /* branch to 0x100000980 */ /* b 0x100000980 */
+        /* block 0x100000970 */
+        tmp_w8 = stack_32; /* ldr w8, [sp + var_20h] */
+        tmp_w8 = tmp_w8 + 1; /* add w8, w8, 1 */
+        stack_32 = tmp_w8; /* str w8, [sp + var_20h] */
+        /* branch to 0x1000007a0 */ /* b 0x1000007a0 */
+        /* block 0x100000980 */
+        tmp_w8 = stack_m28; /* ldur w8, [x29, -0x1c] */
+        tmp_w9 = stack_28; /* ldr w9, [sp + var_1ch] */
+        tmp_w9 = tmp_w9 & 0x7fffffff; /* and w9, w9, 0x7fffffff */
+        tmp_w8 = tmp_w8 ^ tmp_w9; /* eor w8, w8, w9 */
+        stack_m4 = tmp_w8; /* stur w8, [x29, -4] */
+        /* branch to 0x100000998 */ /* b 0x100000998 */
+        /* block 0x100000998 */
+        tmp_w0 = stack_m4; /* ldur w0, [x29, -4] */
+        tmp_fp = stack_64; /* ldp x29, x30, [sp + var_40h] */
+        tmp_lr = stack_72; /* paired load second register inferred offset +8 */
+        tmp_sp = tmp_sp + 80; /* add sp, sp, 0x50 */
+        return tmp_w0; /* return value from w0 before ret */
+    }
+    /* unstructured region end */
+
+}
+
+uint64_t mixed_driver(void)
+{
+    /* Entry: 0x100000768 */
+    /* Body status: partially_structured */
+    /* 1 basic block(s), 2 instruction(s) */
+    /* WARNING: unknown_return_type_defaulted_to_u64 */
+
+    /* Conservative pseudo declarations: */
+    u32 tmp_w8 = 0;
+    u32 stack_m4 = 0;
+
+    /* Control flow structure: */
+    /* block 0x100000768 */
+    stack_m4 = tmp_w8; /* stur w8,[x29, #-0x4] */
+    /* branch to 0x100000998 */ /* b 0x100000998 */
 
     /* return value unknown */
     return 0;
 }
 
-int32_t printf(void * format)
+uint64_t FUN_1000007a0(void)
 {
-    /* Entry: 0x100001ab8 */
+    /* Entry: 0x1000007a0 */
     /* Body status: structured */
+    /* 18 basic block(s), 70 instruction(s) */
+    /* WARNING: unknown_return_type_defaulted_to_u64 */
+
+    /* Layout candidates: */
+    /*   base=sp, kind=record_like, offsets=[16, 32], sizes=[4, 8] */
+    /*   base=x8, kind=record_like, offsets=[0, 4, 8, 9, 10], sizes=[1, 2, 4] */
+
+    /* Conservative pseudo declarations: */
+    u64 tmp_x8 = 0;
+    u64 tmp_x9 = 0;
+    u64 tmp_x10 = 0;
+    u32 tmp_w0 = 0;
+    u32 tmp_w1 = 0;
+    u32 tmp_w2 = 0;
+    u32 tmp_w8 = 0;
+    u32 tmp_w9 = 0;
+    u64 stack_m16 = 0;
+    u32 stack_m20 = 0;
+    u32 stack_m28 = 0;
+    u64 stack_16 = 0;
+    u64 stack_32 = 0;
+
+    /* Control flow structure: */
+    /* loop kind: while_like */
+    /* loop header: 0x1000007a0 */
+    /* loop exits: ['0x1000007f8'] */
+    while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x1000007ac after subs at 0x1000007a8; target 0x100000980")) {
+        /* block 0x1000007a0 */
+        tmp_w8 = stack_32; /* ldr w8,[sp, #0x20] */
+        tmp_w9 = stack_m20; /* ldur w9,[x29, #-0x14] */
+        tmp_w8 = tmp_w8 - tmp_w9; /* subs w8,w8,w9; flags updated */
+        /* conditional branch b.ge -> 0x100000980 */
+        /* block 0x1000007b0 */
+        /* branch to 0x1000007b4 */ /* b 0x1000007b4 */
+        /* block 0x1000007b4 */
+        tmp_x8 = stack_m16; /* ldur x8,[x29, #-0x10] */
+        tmp_x9 = (i64)(i32)stack_32; /* ldrsw x9,[sp, #0x20] */
+        tmp_x10 = 12; /* mov x10,#0xc */
+        tmp_x9 = tmp_x9 * tmp_x10; /* mul x9,x9,x10 */
+        tmp_x8 = tmp_x8 + tmp_x9; /* add x8,x8,x9 */
+        stack_16 = tmp_x8; /* str x8,[sp, #0x10] */
+        tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
+        tmp_w8 = *(u32 *)(tmp_x8); /* ldr w8,[x8] */
+        /* cbnz tmp_w8 -> 0x1000007f8 */
+        /* block 0x1000007d8 */
+        /* branch to 0x1000007dc */ /* b 0x1000007dc */
+        /* block 0x1000007dc */
+        tmp_w8 = stack_m28; /* ldur w8,[x29, #-0x1c] */
+        tmp_w8 = tmp_w8 - 3; /* subs w8,w8,#0x3; flags updated */
+        stack_m28 = tmp_w8; /* stur w8,[x29, #-0x1c] */
+        tmp_w8 = stack_32; /* ldr w8,[sp, #0x20] */
+        tmp_w8 = tmp_w8 + 1; /* add w8,w8,#0x1 */
+        stack_32 = tmp_w8; /* str w8,[sp, #0x20] */
+        /* branch to 0x1000007a0 */ /* b 0x1000007a0 */
+    }
+    /* if/else condition block: 0x1000007f8 */
+    /* merge block: 0x100000838 */
+    if (HEPHAESTUS_UNKNOWN_COND("condition evidence: tbz w8 bit #0 at 0x100000800 targeting 0x100000820; polarity inverted")) {
+        /* block 0x100000804 */
+        /* branch to 0x100000808 */ /* b 0x100000808 */
+        /* block 0x100000808 */
+        tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
+        tmp_w9 = *(u32 *)(tmp_x8 + 4); /* ldr w9,[x8, #0x4] */
+        tmp_w8 = stack_m28; /* ldur w8,[x29, #-0x1c] */
+        tmp_w8 = tmp_w8 + tmp_w9; /* add w8,w8,w9 */
+        stack_m28 = tmp_w8; /* stur w8,[x29, #-0x1c] */
+        /* branch to 0x100000838 */ /* b 0x100000838 */
+    } else {
+        /* block 0x100000820 */
+        tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
+        tmp_w9 = *(u32 *)(tmp_x8 + 4); /* ldr w9,[x8, #0x4] */
+        tmp_w8 = stack_m28; /* ldur w8,[x29, #-0x1c] */
+        tmp_w8 = tmp_w8 - tmp_w9; /* subs w8,w8,w9; flags updated */
+        stack_m28 = tmp_w8; /* stur w8,[x29, #-0x1c] */
+        /* branch to 0x100000838 */ /* b 0x100000838 */
+    }
+    /* block 0x100000838 */
+    tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
+    tmp_w8 = *(u8 *)(tmp_x8 + 8); /* ldrb w8,[x8, #0x8] */
+    /* tbz tmp_w8 bit 2 -> 0x100000874 */
+    /* block 0x100000844 */
+    /* branch to 0x100000848 */ /* b 0x100000848 */
+    /* block 0x100000848 */
+    tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
+    tmp_w0 = *(u32 *)(tmp_x8 + 4); /* ldr w0,[x8, #0x4] */
+    tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
+    tmp_w1 = *(u8 *)(tmp_x8 + 9); /* ldrb w1,[x8, #0x9] */
+    tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
+    tmp_w2 = *(u8 *)(tmp_x8 + 8); /* ldrb w2,[x8, #0x8] */
+    call_0x100000c54(tmp_w0, tmp_w1, tmp_w2); /* bl 0x100000c54; args refined from same-block evidence */
+    /* block 0x100000864 */
+    tmp_w8 = stack_m28; /* ldur w8,[x29, #-0x1c] */
+    tmp_w8 = tmp_w8 + tmp_w0; /* add w8,w8,w0 */
+    stack_m28 = tmp_w8; /* stur w8,[x29, #-0x1c] */
+    /* branch to 0x100000874 */ /* b 0x100000874 */
+    /* if/else condition block: 0x100000874 */
+    /* merge block: 0x1000008b4 */
+    if (HEPHAESTUS_UNKNOWN_COND("condition evidence: tbnz w8 bit #0 at 0x10000087c targeting 0x10000089c; polarity inverted")) {
+        /* block 0x100000880 */
+        /* branch to 0x100000884 */ /* b 0x100000884 */
+        /* block 0x100000884 */
+        tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
+        tmp_w9 = *(u16 *)(tmp_x8 + 10); /* ldrh w9,[x8, #0xa] */
+        tmp_w8 = stack_m28; /* ldur w8,[x29, #-0x1c] */
+        tmp_w8 = tmp_w8 + tmp_w9; /* add w8,w8,w9 */
+        stack_m28 = tmp_w8; /* stur w8,[x29, #-0x1c] */
+        /* branch to 0x1000008b4 */ /* b 0x1000008b4 */
+    } else {
+        /* block 0x10000089c */
+        tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
+        tmp_w9 = *(u16 *)(tmp_x8 + 10); /* ldrh w9,[x8, #0xa] */
+        tmp_w8 = stack_m28; /* ldur w8,[x29, #-0x1c] */
+        tmp_w8 = tmp_w8 - tmp_w9; /* subs w8,w8,w9; flags updated */
+        stack_m28 = tmp_w8; /* stur w8,[x29, #-0x1c] */
+        /* branch to 0x1000008b4 */ /* b 0x1000008b4 */
+    }
+    /* block 0x1000008b4 */
+    tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
+
+    /* return value unknown */
+    return 0;
+}
+
+uint64_t cfg_pressure(void)
+{
+    /* Entry: 0x1000008b8 */
+    /* Body status: structured */
+    /* 16 basic block(s), 56 instruction(s) */
+    /* WARNING: unknown_return_type_defaulted_to_u64 */
+
+    /* Layout candidates: */
+    /*   base=sp, kind=record_like, offsets=[12, 16, 28, 32], sizes=[1, 4, 8] */
+    /*   base=x8, kind=scalar, offsets=[9], sizes=[1] */
+    /*   base=x9, kind=scalar, offsets=[0], sizes=[4] */
+
+    /* Conservative pseudo declarations: */
+    u64 tmp_x8 = 0;
+    u64 tmp_x9 = 0;
+    u32 tmp_w0 = 0;
+    u32 tmp_w1 = 0;
+    u32 tmp_w8 = 0;
+    u32 tmp_w9 = 0;
+    u32 stack_m4 = 0;
+    u32 stack_m28 = 0;
+    u32 stack_12 = 0;
+    u64 stack_16 = 0;
+    u32 stack_28 = 0;
+    u32 stack_32 = 0;
+
+    /* Control flow structure: */
+    /* block 0x1000008b8 */
+    tmp_w8 = *(u8 *)(tmp_x8 + 9); /* ldrb w8,[x8, #0x9] */
+    tmp_w8 = tmp_w8 & 3; /* and w8,w8,#0x3 */
+    stack_12 = tmp_w8; /* str w8,[sp, #0xc] */
+    /* cbz tmp_w8 -> 0x1000008ec */
+    /* block 0x1000008ec */
+    tmp_w8 = stack_m28; /* ldur w8,[x29, #-0x1c] */
+    tmp_w8 = tmp_w8 + 10; /* add w8,w8,#0xa */
+    stack_m28 = tmp_w8; /* stur w8,[x29, #-0x1c] */
+    /* branch to 0x100000930 */ /* b 0x100000930 */
+    /* block 0x1000008c8 */
+    /* branch to 0x1000008cc */ /* b 0x1000008cc */
+    /* block 0x1000008cc */
+    tmp_w8 = stack_12; /* ldr w8,[sp, #0xc] */
+    tmp_w8 = tmp_w8 - 1; /* subs w8,w8,#0x1; flags updated */
+    /* conditional branch b.eq -> 0x1000008fc */
+    /* block 0x1000008fc */
+    tmp_w8 = stack_m28; /* ldur w8,[x29, #-0x1c] */
+    tmp_w8 = tmp_w8 + 20; /* add w8,w8,#0x14 */
+    stack_m28 = tmp_w8; /* stur w8,[x29, #-0x1c] */
+    /* branch to 0x100000930 */ /* b 0x100000930 */
+    /* block 0x1000008d8 */
+    /* branch to 0x1000008dc */ /* b 0x1000008dc */
+    /* block 0x1000008dc */
+    tmp_w8 = stack_12; /* ldr w8,[sp, #0xc] */
+    tmp_w8 = tmp_w8 - 2; /* subs w8,w8,#0x2; flags updated */
+    /* conditional branch b.eq -> 0x10000090c */
+    /* block 0x10000090c */
+    tmp_w8 = stack_m28; /* ldur w8,[x29, #-0x1c] */
+    tmp_w8 = tmp_w8 - 30; /* subs w8,w8,#0x1e; flags updated */
+    stack_m28 = tmp_w8; /* stur w8,[x29, #-0x1c] */
+    /* branch to 0x100000930 */ /* b 0x100000930 */
+    /* block 0x1000008e8 */
+    /* branch to 0x10000091c */ /* b 0x10000091c */
+    /* block 0x10000091c */
+    tmp_w8 = stack_m28; /* ldur w8,[x29, #-0x1c] */
+    tmp_w9 = 51; /* mov w9,#0x33 */
+    tmp_w8 = tmp_w8 ^ tmp_w9; /* eor w8,w8,w9 */
+    stack_m28 = tmp_w8; /* stur w8,[x29, #-0x1c] */
+    /* branch to 0x100000930 */ /* b 0x100000930 */
+    /* block 0x100000930 */
+    tmp_w8 = stack_28; /* ldr w8,[sp, #0x1c] */
+    tmp_x9 = stack_16; /* ldr x9,[sp, #0x10] */
+    tmp_w9 = *(u32 *)(tmp_x9); /* ldr w9,[x9] */
+    tmp_w8 = tmp_w8 ^ tmp_w9; /* eor w8,w8,w9 */
+    tmp_w9 = stack_m28; /* ldur w9,[x29, #-0x1c] */
+    tmp_w0 = tmp_w8 ^ tmp_w9; /* eor w0,w8,w9 */
+    tmp_x8 = stack_16; /* ldr x8,[sp, #0x10] */
+    tmp_w8 = *(u8 *)(tmp_x8 + 9); /* ldrb w8,[x8, #0x9] */
+    tmp_w1 = tmp_w8 + 1; /* add w1,w8,#0x1 */
+    call_0x100000d4c(tmp_w0, tmp_w1); /* bl 0x100000d4c; args refined from same-block evidence */
+    /* block 0x100000958 */
+    stack_28 = tmp_w0; /* str w0,[sp, #0x1c] */
+    tmp_w8 = stack_28; /* ldrb w8,[sp, #0x1c] */
+    tmp_w8 = tmp_w8 - 66; /* subs w8,w8,#0x42; flags updated */
+    /* conditional branch b.ne -> 0x100000970 */
+    /* block 0x100000970 */
+    tmp_w8 = stack_32; /* ldr w8,[sp, #0x20] */
+    tmp_w8 = tmp_w8 + 1; /* add w8,w8,#0x1 */
+    stack_32 = tmp_w8; /* str w8,[sp, #0x20] */
+    /* branch to 0x1000007a0 */ /* b 0x1000007a0 */
+    /* block 0x100000968 */
+    /* branch to 0x10000096c */ /* b 0x10000096c */
+    /* block 0x10000096c */
+    /* branch to 0x100000980 */ /* b 0x100000980 */
+    /* block 0x100000980 */
+    tmp_w8 = stack_m28; /* ldur w8,[x29, #-0x1c] */
+    tmp_w9 = stack_28; /* ldr w9,[sp, #0x1c] */
+    tmp_w9 = tmp_w9 & 0x7fffffff; /* and w9,w9,#0x7fffffff */
+    tmp_w8 = tmp_w8 ^ tmp_w9; /* eor w8,w8,w9 */
+    stack_m4 = tmp_w8; /* stur w8,[x29, #-0x4] */
+    /* branch to 0x100000998 */ /* b 0x100000998 */
+
+    /* return value unknown */
+    return 0;
+}
+
+uint64_t FUN_100000998(void)
+{
+    /* Entry: 0x100000998 */
+    /* Body status: partially_structured */
+    /* 1 basic block(s), 4 instruction(s) */
+    /* WARNING: unknown_return_type_defaulted_to_u64 */
+
+    /* Conservative pseudo declarations: */
+    u64 tmp_sp = 0;
+    u32 tmp_w0 = 0;
+    u64 tmp_fp = 0;
+    u64 tmp_lr = 0;
+    u32 stack_m4 = 0;
+    u64 stack_64 = 0;
+    u64 stack_72 = 0;
+
+    /* Control flow structure: */
+    /* block 0x100000998 */
+    tmp_w0 = stack_m4; /* ldur w0,[x29, #-0x4] */
+    tmp_fp = stack_64; /* ldp x29,x30,[sp, #0x40] */
+    tmp_lr = stack_72; /* paired load second register inferred offset +8 */
+    tmp_sp = tmp_sp + 80; /* add sp,sp,#0x50 */
+    return tmp_w0; /* return value from w0 before ret */
+
+}
+
+uint64_t nested_control(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg_20h)
+{
+    /* Entry: 0x1000009a8 */
+    /* Body status: structured */
+    /* 23 basic block(s), 76 instruction(s) */
+    /* WARNING: unknown_return_type_defaulted_to_u64 */
+
+    /* Layout candidates: */
+    /*   base=sp, kind=array_like, offsets=[4, 8, 12, 16, 20, 24, 28], sizes=[4] */
+
+    /* Conservative pseudo declarations: */
+    u64 tmp_sp = 0;
+    u32 tmp_w0 = 0;
+    u32 tmp_w1 = 0;
+    u32 tmp_w2 = 0;
+    u32 tmp_w8 = 0;
+    u32 tmp_w9 = 0;
+    u32 stack_4 = 0;
+    u32 stack_8 = 0;
+    u32 stack_12 = 0;
+    u32 stack_16 = 0;
+    u32 stack_20 = 0;
+    u32 stack_24 = 0;
+    u32 stack_28 = 0;
+
+    /* Control flow structure: */
+    /* block 0x1000009a8 */
+    tmp_sp = tmp_sp - 32; /* sub sp,sp,#0x20 */
+    stack_24 = tmp_w0; /* str w0,[sp, #0x18] */
+    stack_20 = tmp_w1; /* str w1,[sp, #0x14] */
+    stack_16 = tmp_w2; /* str w2,[sp, #0x10] */
+    stack_12 = 0; /* str wzr,[sp, #0xc] */
+    stack_8 = 0; /* str wzr,[sp, #0x8] */
+    /* branch to 0x1000009c4 */ /* b 0x1000009c4 */
+    /* loop kind: while_like */
+    /* loop header: 0x1000009c4 */
+    /* loop exits: ['0x100000a8c', '0x100000ac0'] */
+    while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.ge at 0x1000009d0 after subs at 0x1000009cc; target 0x100000ac0; loop polarity inverted")) {
+        /* block 0x1000009c4 */
+        tmp_w8 = stack_8; /* ldr w8,[sp, #0x8] */
+        tmp_w9 = stack_24; /* ldr w9,[sp, #0x18] */
+        tmp_w8 = tmp_w8 - tmp_w9; /* subs w8,w8,w9; flags updated */
+        /* conditional branch b.ge -> 0x100000ac0 */
+        /* block 0x1000009d4 */
+        /* branch to 0x1000009d8 */ /* b 0x1000009d8 */
+        /* block 0x1000009d8 */
+        tmp_w8 = stack_20; /* ldr w8,[sp, #0x14] */
+        stack_4 = tmp_w8; /* str w8,[sp, #0x4] */
+        /* branch to 0x1000009e4 */ /* b 0x1000009e4 */
+        /* loop kind: while_like */
+        /* loop header: 0x1000009e4 */
+        /* loop exits: ['0x100000a8c', '0x100000aac'] */
+        while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.le at 0x1000009ec after subs at 0x1000009e8; target 0x100000aac; loop polarity inverted")) {
+            /* if condition block: 0x1000009e4 */
+            /* merge block: 0x100000a7c */
+            if (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.le at 0x1000009ec after subs at 0x1000009e8; target 0x100000aac")) {
+                /* if condition block: 0x100000a40 */
+                /* merge block: 0x100000a7c */
+                if (HEPHAESTUS_UNKNOWN_COND("condition unknown: block 0x100000a40")) {
+                    /* block 0x100000a5c */
+                    /* branch to 0x100000a60 */ /* b 0x100000a60 */
+                    /* block 0x100000a60 */
+                    tmp_w8 = stack_16; /* ldr w8,[sp, #0x10] */
+                    tmp_w9 = 3; /* mov w9,#0x3 */
+                    tmp_w9 = tmp_w8 * tmp_w9; /* mul w9,w8,w9 */
+                    tmp_w8 = stack_12; /* ldr w8,[sp, #0xc] */
+                    tmp_w8 = tmp_w8 + tmp_w9; /* add w8,w8,w9 */
+                    stack_12 = tmp_w8; /* str w8,[sp, #0xc] */
+                    /* branch to 0x100000a7c */ /* b 0x100000a7c */
+                }
+            }
+            /* block 0x100000a7c */
+            tmp_w8 = stack_12; /* ldr w8,[sp, #0xc] */
+            tmp_w9 = 5000; /* mov w9,#0x1388 */
+            tmp_w8 = tmp_w8 - tmp_w9; /* subs w8,w8,w9; flags updated */
+            /* conditional branch b.le -> 0x100000a9c */
+            /* block 0x100000a9c */
+            tmp_w8 = stack_4; /* ldr w8,[sp, #0x4] */
+            tmp_w8 = tmp_w8 - 1; /* subs w8,w8,#0x1; flags updated */
+            stack_4 = tmp_w8; /* str w8,[sp, #0x4] */
+            /* branch to 0x1000009e4 */ /* b 0x1000009e4 */
+        }
+        /* block 0x100000aac */
+        /* branch to 0x100000ab0 */ /* b 0x100000ab0 */
+        /* block 0x100000ab0 */
+        tmp_w8 = stack_8; /* ldr w8,[sp, #0x8] */
+        tmp_w8 = tmp_w8 + 1; /* add w8,w8,#0x1 */
+        stack_8 = tmp_w8; /* str w8,[sp, #0x8] */
+        /* branch to 0x1000009c4 */ /* b 0x1000009c4 */
+    }
+    /* block 0x100000ac0 */
+    tmp_w8 = stack_12; /* ldr w8,[sp, #0xc] */
+    stack_28 = tmp_w8; /* str w8,[sp, #0x1c] */
+    /* branch to 0x100000acc */ /* b 0x100000acc */
+    /* block 0x100000a8c */
+    /* branch to 0x100000a90 */ /* b 0x100000a90 */
+    /* block 0x100000a90 */
+    tmp_w8 = stack_12; /* ldr w8,[sp, #0xc] */
+    stack_28 = tmp_w8; /* str w8,[sp, #0x1c] */
+    /* branch to 0x100000acc */ /* b 0x100000acc */
+    /* block 0x100000acc */
+    tmp_w0 = stack_28; /* ldr w0,[sp, #0x1c] */
+    tmp_sp = tmp_sp + 32; /* add sp,sp,#0x20 */
+    return tmp_w0; /* return value from w0 before ret */
+
+}
+
+uint64_t pointer_walk(int32_t arg1, uint64_t arg2, uint64_t arg3, int32_t arg_30h)
+{
+    /* Entry: 0x100000ad8 */
+    /* Body status: structured */
+    /* 24 basic block(s), 95 instruction(s) */
+    /* WARNING: unknown_return_type_defaulted_to_u64 */
+
+    /* ABI argument bindings: */
+    /*   ? => param 0 (stack_save_restore) */
+
+    /* Layout candidates: */
+    /*   base=sp, kind=record_like, offsets=[0, 7, 8, 16, 23, 24, 32, 44], sizes=[4] */
+    /*   base=x8, kind=scalar, offsets=[0], sizes=[4] */
+    /*   base=x9, kind=scalar, offsets=[0], sizes=[4] */
+
+    /* Conservative pseudo declarations: */
+    u64 tmp_sp = 0;
+    u32 tmp_w0 = 0;
+    u64 stack_8 = 0;
+    u64 stack_16 = 0;
+    u32 stack_44 = 0;
+
+    /* Control flow structure: */
+    /* if/else condition block: 0x100000ad8 */
+    /* merge block: 0x100000c48 */
+    if (HEPHAESTUS_UNKNOWN_COND("condition evidence: cbnz x8 at 0x100000aec targeting 0x100000b00; polarity inverted")) {
+        /* block 0x100000af0 */
+        /* branch to 0x100000af4 */ /* b 0x100000af4 */
+        /* block 0x100000af4 */
+        arg0 = -1; /* mov w8, -1 */
+        stack_44 = arg0; /* str w8, [sp + var_2ch] */
+        /* branch to 0x100000c48 */ /* b 0x100000c48 */
+    } else {
+        /* block 0x100000b00 */
+        stack_16 = 0; /* str wzr, [sp + var_10h] */
+        stack_8 = 0; /* str xzr, [sp + var_8h] */
+        /* branch to 0x100000b0c */ /* b 0x100000b0c */
+        /* loop kind: while_like */
+        /* loop header: 0x100000b0c */
+        /* loop exits: ['0x100000c3c'] */
+        while (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.hs at 0x100000b18 after subs at 0x100000b14; target 0x100000c3c; loop polarity inverted")) {
+            /* if condition block: 0x100000b0c */
+            /* merge block: 0x100000c2c */
+            if (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.hs at 0x100000b18 after subs at 0x100000b14; target 0x100000c3c")) {
+                /* if condition block: 0x100000ba4 */
+                /* merge block: 0x100000c28 */
+                if (HEPHAESTUS_UNKNOWN_COND("condition unknown: block 0x100000ba4")) {
+                    /* block 0x100000c14 */
+                    /* branch to 0x100000c18 */ /* b 0x100000c18 */
+                    /* block 0x100000c18 */
+                    arg0 = stack_16; /* ldr w8, [sp + var_10h] */
+                    arg0 = arg0 + 9; /* add w8, w8, 9 */
+                    stack_16 = arg0; /* str w8, [sp + var_10h] */
+                    /* branch to 0x100000c28 */ /* b 0x100000c28 */
+                }
+                /* block 0x100000c28 */
+                /* branch to 0x100000c2c */ /* b 0x100000c2c */
+            }
+            /* block 0x100000c2c */
+            arg0 = stack_8; /* ldr x8, [sp + var_8h] */
+            arg0 = arg0 + 1; /* add x8, x8, 1 */
+            stack_8 = arg0; /* str x8, [sp + var_8h] */
+            /* branch to 0x100000b0c */ /* b 0x100000b0c */
+        }
+        /* block 0x100000c3c */
+        arg0 = stack_16; /* ldr w8, [sp + var_10h] */
+        stack_44 = arg0; /* str w8, [sp + var_2ch] */
+        /* branch to 0x100000c48 */ /* b 0x100000c48 */
+    }
+    /* block 0x100000c48 */
+    tmp_w0 = stack_44; /* ldr w0, [sp + var_2ch] */
+    tmp_sp = tmp_sp + 48; /* add sp, sp, 0x30 */
+    return tmp_w0; /* return value from w0 before ret */
+
+}
+
+uint64_t indirect_pressure(void)
+{
+    /* Entry: 0x100000b7c */
+    /* Body status: unstructured */
+    /* 10 basic block(s), 51 instruction(s) */
+    /* WARNING: unknown_return_type_defaulted_to_u64 */
+
+    /* Layout candidates: */
+    /*   base=sp, kind=record_like, offsets=[0, 8, 16, 24, 32, 44], sizes=[4, 8] */
+
+    /* Conservative pseudo declarations: */
+    u64 tmp_x8 = 0;
+    u64 tmp_x9 = 0;
+    u64 tmp_x10 = 0;
+    u32 tmp_w8 = 0;
+    u32 tmp_w9 = 0;
+    u32 stack_0 = 0;
+    u64 stack_8 = 0;
+    u32 stack_16 = 0;
+    u64 stack_24 = 0;
+    u64 stack_32 = 0;
+    u32 stack_44 = 0;
+
+    /* Control flow structure: */
+    /* unstructured region begin */
+    /* reason: fragmented_loop_body */
+    {
+        /* block 0x100000b7c */
+        /* branch to 0x100000b80 */ /* b 0x100000b80 */
+        /* block 0x100000b80 */
+        tmp_w8 = stack_16; /* ldr w8,[sp, #0x10] */
+        tmp_w8 = tmp_w8 - 1; /* subs w8,w8,#0x1; flags updated */
+        stack_16 = tmp_w8; /* str w8,[sp, #0x10] */
+        /* branch to 0x100000b90 */ /* b 0x100000b90 */
+        /* block 0x100000b90 */
+        tmp_x8 = stack_8; /* ldr x8,[sp, #0x8] */
+        tmp_x8 = tmp_x8 + 3; /* add x8,x8,#0x3 */
+        tmp_x9 = stack_24; /* ldr x9,[sp, #0x18] */
+        tmp_x8 = tmp_x8 - tmp_x9; /* subs x8,x8,x9; flags updated */
+        /* conditional branch b.cs -> 0x100000c2c */
+        /* block 0x100000ba4 */
+        /* branch to 0x100000ba8 */ /* b 0x100000ba8 */
+        /* block 0x100000ba8 */
+        tmp_x8 = stack_32; /* ldr x8,[sp, #0x20] */
+        tmp_x9 = stack_8; /* ldr x9,[sp, #0x8] */
+        tmp_w9 = *(u8 *)(tmp_x8 + tmp_x9); /* ldrb w9,[x8, x9, LSL ] */
+        tmp_x8 = stack_32; /* ldr x8,[sp, #0x20] */
+        tmp_x10 = stack_8; /* ldr x10,[sp, #0x8] */
+        tmp_x10 = tmp_x10 + 1; /* add x10,x10,#0x1 */
+        tmp_w8 = *(u8 *)(tmp_x8 + tmp_x10); /* ldrb w8,[x8, x10, LSL ] */
+        tmp_w8 = tmp_w8 << 16; /* lsl w8,w8,#0x10 */
+        tmp_w8 = tmp_w8 | (tmp_w9 << 24); /* orr w8,w8,w9, LSL #0x18 */
+        tmp_x9 = stack_32; /* ldr x9,[sp, #0x20] */
+        tmp_x10 = stack_8; /* ldr x10,[sp, #0x8] */
+        tmp_x10 = tmp_x10 + 2; /* add x10,x10,#0x2 */
+        tmp_w9 = *(u8 *)(tmp_x9 + tmp_x10); /* ldrb w9,[x9, x10, LSL ] */
+        tmp_w8 = tmp_w8 | (tmp_w9 << 8); /* orr w8,w8,w9, LSL #0x8 */
+        tmp_x9 = stack_32; /* ldr x9,[sp, #0x20] */
+        tmp_x10 = stack_8; /* ldr x10,[sp, #0x8] */
+        tmp_x10 = tmp_x10 + 3; /* add x10,x10,#0x3 */
+        tmp_w9 = *(u8 *)(tmp_x9 + tmp_x10); /* ldrb w9,[x9, x10, LSL ] */
+        tmp_w8 = tmp_w8 | tmp_w9; /* orr w8,w8,w9 */
+        stack_0 = tmp_w8; /* str w8,[sp] */
+        tmp_w8 = stack_0; /* ldr w8,[sp] */
+        tmp_w9 = 42405; /* mov w9,#0xa5a5 */
+        /* 0x100000c00: unsupported instruction: movk w9,#0xa5a5, LSL #16 */
+        tmp_w8 = tmp_w8 ^ tmp_w9; /* eor w8,w8,w9 */
+        tmp_w9 = 0x1000000; /* mov w9,#0x1000000 */
+        tmp_w8 = tmp_w8 - tmp_w9; /* subs w8,w8,w9; flags updated */
+        /* conditional branch b.cs -> 0x100000c28 */
+        /* block 0x100000c14 */
+        /* branch to 0x100000c18 */ /* b 0x100000c18 */
+        /* block 0x100000c18 */
+        tmp_w8 = stack_16; /* ldr w8,[sp, #0x10] */
+        tmp_w8 = tmp_w8 + 9; /* add w8,w8,#0x9 */
+        stack_16 = tmp_w8; /* str w8,[sp, #0x10] */
+        /* branch to 0x100000c28 */ /* b 0x100000c28 */
+        /* block 0x100000c28 */
+        /* branch to 0x100000c2c */ /* b 0x100000c2c */
+        /* block 0x100000c2c */
+        tmp_x8 = stack_8; /* ldr x8,[sp, #0x8] */
+        tmp_x8 = tmp_x8 + 1; /* add x8,x8,#0x1 */
+        stack_8 = tmp_x8; /* str x8,[sp, #0x8] */
+        /* branch to 0x100000b0c */ /* b 0x100000b0c */
+        /* block 0x100000c3c */
+        tmp_w8 = stack_16; /* ldr w8,[sp, #0x10] */
+        stack_44 = tmp_w8; /* str w8,[sp, #0x2c] */
+        /* branch to 0x100000c48 */ /* b 0x100000c48 */
+    }
+    /* unstructured region end */
+
+    /* return value unknown */
+    return 0;
+}
+
+uint64_t FUN_100000c48(void)
+{
+    /* Entry: 0x100000c48 */
+    /* Body status: partially_structured */
     /* 1 basic block(s), 3 instruction(s) */
+    /* WARNING: unknown_return_type_defaulted_to_u64 */
+
+    /* Layout candidates: */
+    /*   base=sp, kind=scalar, offsets=[44], sizes=[4] */
+
+    /* Conservative pseudo declarations: */
+    u64 tmp_sp = 0;
+    u32 tmp_w0 = 0;
+    u32 stack_44 = 0;
+
+    /* Control flow structure: */
+    /* block 0x100000c48 */
+    tmp_w0 = stack_44; /* ldr w0,[sp, #0x2c] */
+    tmp_sp = tmp_sp + 48; /* add sp,sp,#0x30 */
+    return tmp_w0; /* return value from w0 before ret */
+
+}
+
+uint64_t mix_score(uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg_10h)
+{
+    /* Entry: 0x100000c54 */
+    /* Body status: structured */
+    /* 19 basic block(s), 62 instruction(s) */
+    /* WARNING: unknown_return_type_defaulted_to_u64 */
+
+    /* Layout candidates: */
+    /*   base=sp, kind=array_like, offsets=[0, 4, 8, 12], sizes=[4] */
+
+    /* Conservative pseudo declarations: */
+    u64 tmp_sp = 0;
+    u32 tmp_w0 = 0;
+    u32 tmp_w8 = 0;
+    u32 tmp_w9 = 0;
+    u32 stack_0 = 0;
+    u32 stack_4 = 0;
+    u32 stack_8 = 0;
+    u32 stack_12 = 0;
+
+    /* Control flow structure: */
+    /* if/else condition block: 0x100000c54 */
+    /* merge block: 0x100000ca0 */
+    if (HEPHAESTUS_UNKNOWN_COND("condition evidence: cbnz w8 at 0x100000c6c targeting 0x100000c84; polarity inverted")) {
+        /* block 0x100000c70 */
+        /* branch to 0x100000c74 */ /* b 0x100000c74 */
+        /* block 0x100000c74 */
+        tmp_w8 = stack_0; /* ldr w8, [sp] */
+        tmp_w8 = tmp_w8 + 11; /* add w8, w8, 0xb */
+        stack_0 = tmp_w8; /* str w8, [sp] */
+        /* branch to 0x100000ca0 */ /* b 0x100000ca0 */
+    } else {
+        /* block 0x100000c84 */
+        tmp_w8 = stack_12; /* ldr w8, [sp + var_ch] */
+        tmp_w9 = 3; /* mov w9, 3 */
+        tmp_w9 = tmp_w8 * tmp_w9; /* mul w9, w8, w9 */
+        tmp_w8 = stack_0; /* ldr w8, [sp] */
+        tmp_w8 = tmp_w8 + tmp_w9; /* add w8, w8, w9 */
+        stack_0 = tmp_w8; /* str w8, [sp] */
+        /* branch to 0x100000ca0 */ /* b 0x100000ca0 */
+    }
+    /* block 0x100000ca0 */
+    tmp_w8 = stack_8; /* ldr w8, [sp + var_8h] */
+    /* cbz tmp_w8 -> 0x100000cc0 */
+    /* block 0x100000cc0 */
+    tmp_w8 = stack_0; /* ldr w8, [sp] */
+    tmp_w8 = tmp_w8 + 7; /* add w8, w8, 7 */
+    stack_0 = tmp_w8; /* str w8, [sp] */
+    /* branch to 0x100000cd0 */ /* b 0x100000cd0 */
+    /* block 0x100000ca8 */
+    /* branch to 0x100000cac */ /* b 0x100000cac */
+    /* block 0x100000cac */
+    tmp_w9 = stack_8; /* ldr w9, [sp + var_8h] */
+    tmp_w8 = stack_0; /* ldr w8, [sp] */
+    tmp_w8 = tmp_w8 - tmp_w9; /* subs w8, w8, w9, lsl 1; flags updated */
+    stack_0 = tmp_w8; /* str w8, [sp] */
+    /* branch to 0x100000cd0 */ /* b 0x100000cd0 */
+    /* if condition block: 0x100000cd0 */
+    /* merge block: 0x100000cf0 */
+    if (HEPHAESTUS_UNKNOWN_COND("condition evidence: tbz w8 bit 3 at 0x100000cd4 targeting 0x100000cf0")) {
+        /* block 0x100000cd8 */
+        /* branch to 0x100000cdc */ /* b 0x100000cdc */
+        /* block 0x100000cdc */
+        tmp_w8 = stack_0; /* ldr w8, [sp] */
+        tmp_w9 = 85; /* mov w9, 0x55 */
+        tmp_w8 = tmp_w8 ^ tmp_w9; /* eor w8, w8, w9 */
+        stack_0 = tmp_w8; /* str w8, [sp] */
+        /* branch to 0x100000cf0 */ /* b 0x100000cf0 */
+    }
+    /* block 0x100000cf0 */
+    tmp_w8 = stack_4; /* ldr w8, [sp + var_4h] */
+    /* tbnz tmp_w8 bit 7 -> 0x100000d0c */
+    /* block 0x100000cf8 */
+    /* branch to 0x100000cfc */ /* b 0x100000cfc */
+    /* block 0x100000cfc */
+    tmp_w8 = stack_0; /* ldr w8, [sp] */
+    tmp_w8 = tmp_w8 + 19; /* add w8, w8, 0x13 */
+    stack_0 = tmp_w8; /* str w8, [sp] */
+    /* branch to 0x100000d0c */ /* b 0x100000d0c */
+    /* if/else condition block: 0x100000d0c */
+    /* merge block: 0x100000d40 */
+    if (HEPHAESTUS_UNKNOWN_COND("condition evidence: b.hs at 0x100000d18 after subs at 0x100000d14; target 0x100000d30; polarity inverted")) {
+        /* block 0x100000d1c */
+        /* branch to 0x100000d20 */ /* b 0x100000d20 */
+        /* block 0x100000d20 */
+        tmp_w8 = stack_0; /* ldr w8, [sp] */
+        tmp_w8 = tmp_w8 + 5; /* add w8, w8, 5 */
+        stack_0 = tmp_w8; /* str w8, [sp] */
+        /* branch to 0x100000d40 */ /* b 0x100000d40 */
+    } else {
+        /* block 0x100000d30 */
+        tmp_w8 = stack_0; /* ldr w8, [sp] */
+        tmp_w8 = tmp_w8 - 5; /* subs w8, w8, 5; flags updated */
+        stack_0 = tmp_w8; /* str w8, [sp] */
+        /* branch to 0x100000d40 */ /* b 0x100000d40 */
+    }
+    /* block 0x100000d40 */
+    tmp_w0 = stack_0; /* ldr w0, [sp] */
+    tmp_sp = tmp_sp + 16; /* add sp, sp, 0x10 */
+    return tmp_w0; /* return value from w0 before ret */
+
+}
+
+uint64_t byte_halfword_pressure(void)
+{
+    /* Entry: 0x100000d00 */
+    /* Body status: structured */
+    /* 6 basic block(s), 19 instruction(s) */
+    /* WARNING: unknown_return_type_defaulted_to_u64 */
+
+    /* Layout candidates: */
+    /*   base=sp, kind=record_like, offsets=[0, 4, 12], sizes=[4] */
+
+    /* Conservative pseudo declarations: */
+    u64 tmp_sp = 0;
+    u32 tmp_w0 = 0;
+    u32 tmp_w8 = 0;
+    u32 tmp_w9 = 0;
+    u32 stack_0 = 0;
+    u32 stack_4 = 0;
+    u32 stack_12 = 0;
+
+    /* Control flow structure: */
+    /* block 0x100000d00 */
+    tmp_w8 = tmp_w8 + 19; /* add w8,w8,#0x13 */
+    stack_0 = tmp_w8; /* str w8,[sp] */
+    /* branch to 0x100000d0c */ /* b 0x100000d0c */
+    /* block 0x100000d0c */
+    tmp_w8 = stack_12; /* ldr w8,[sp, #0xc] */
+    tmp_w9 = stack_4; /* ldr w9,[sp, #0x4] */
+    tmp_w8 = tmp_w8 - tmp_w9; /* subs w8,w8,w9; flags updated */
+    /* conditional branch b.cs -> 0x100000d30 */
+    /* block 0x100000d30 */
+    tmp_w8 = stack_0; /* ldr w8,[sp] */
+    tmp_w8 = tmp_w8 - 5; /* subs w8,w8,#0x5; flags updated */
+    stack_0 = tmp_w8; /* str w8,[sp] */
+    /* branch to 0x100000d40 */ /* b 0x100000d40 */
+    /* block 0x100000d1c */
+    /* branch to 0x100000d20 */ /* b 0x100000d20 */
+    /* block 0x100000d20 */
+    tmp_w8 = stack_0; /* ldr w8,[sp] */
+    tmp_w8 = tmp_w8 + 5; /* add w8,w8,#0x5 */
+    stack_0 = tmp_w8; /* str w8,[sp] */
+    /* branch to 0x100000d40 */ /* b 0x100000d40 */
+    /* block 0x100000d40 */
+    tmp_w0 = stack_0; /* ldr w0,[sp] */
+    tmp_sp = tmp_sp + 16; /* add sp,sp,#0x10 */
+    return tmp_w0; /* return value from w0 before ret */
+
+}
+
+uint64_t rotl32(int32_t arg1, uint64_t arg2, uint64_t arg_10h)
+{
+    /* Entry: 0x100000d4c */
+    /* Body status: partially_structured */
+    /* 1 basic block(s), 18 instruction(s) */
+    /* WARNING: unknown_return_type_defaulted_to_u64 */
+
+    /* Layout candidates: */
+    /*   base=sp, kind=array_like, offsets=[8, 12], sizes=[4] */
+
+    /* Conservative pseudo declarations: */
+    u64 tmp_sp = 0;
+    u32 tmp_w0 = 0;
+    u32 tmp_w1 = 0;
+    u32 tmp_w8 = 0;
+    u32 tmp_w9 = 0;
+    u32 tmp_w10 = 0;
+    u32 tmp_w11 = 0;
+    u32 stack_8 = 0;
+    u32 stack_12 = 0;
+
+    /* Control flow structure: */
+    /* block 0x100000d4c */
+    tmp_sp = tmp_sp - 16; /* sub sp,sp,#0x10 */
+    stack_12 = tmp_w0; /* str w0,[sp, #0xc] */
+    stack_8 = tmp_w1; /* str w1,[sp, #0x8] */
+    tmp_w8 = stack_8; /* ldr w8,[sp, #0x8] */
+    tmp_w8 = tmp_w8 & 31; /* and w8,w8,#0x1f */
+    stack_8 = tmp_w8; /* str w8,[sp, #0x8] */
+    tmp_w8 = stack_12; /* ldr w8,[sp, #0xc] */
+    tmp_w9 = stack_8; /* ldr w9,[sp, #0x8] */
+    tmp_w8 = tmp_w8 << tmp_w9; /* lsl w8,w8,w9 */
+    tmp_w9 = stack_12; /* ldr w9,[sp, #0xc] */
+    tmp_w11 = stack_8; /* ldr w11,[sp, #0x8] */
+    tmp_w10 = 32; /* mov w10,#0x20 */
+    tmp_w10 = tmp_w10 - tmp_w11; /* subs w10,w10,w11; flags updated */
+    tmp_w10 = tmp_w10 & 31; /* and w10,w10,#0x1f */
+    tmp_w9 = tmp_w9 >> tmp_w10; /* lsr w9,w9,w10 */
+    tmp_w0 = tmp_w8 | tmp_w9; /* orr w0,w8,w9 */
+    tmp_sp = tmp_sp + 16; /* add sp,sp,#0x10 */
+    return tmp_w0; /* return value from w0 before ret */
+
+}
+
+uint64_t stack_chk_fail(void)
+{
+    /* Entry: 0x100000d94 */
+    /* Body status: partially_structured */
+    /* 1 basic block(s), 3 instruction(s) */
+    /* WARNING: unknown_return_type_defaulted_to_u64 */
 
     /* Layout candidates: */
     /*   base=x16, kind=scalar, offsets=[0], sizes=[4] */
@@ -2063,11 +1511,78 @@ int32_t printf(void * format)
     u64 tmp_x16 = 0;
 
     /* Control flow structure: */
-    /* block 0x100001ab8 */
-    tmp_x16 = 0x100004000; /* adrp x16, reloc.printf */
+    /* block 0x100000d94 */
+    tmp_x16 = 0x100004000; /* adrp x16, reloc.__stack_chk_fail */
     tmp_x16 = *(u64 *)(tmp_x16); /* ldr x16, [x16] */
     /* branch to tmp_x16 */ /* br x16 */
-    /* block 0x100001ac4: no lowered statements */
+
+    /* return value unknown */
+    return 0;
+}
+
+int32_t printf(void * format)
+{
+    /* Entry: 0x100000da0 */
+    /* Body status: partially_structured */
+    /* 1 basic block(s), 3 instruction(s) */
+
+    /* Layout candidates: */
+    /*   base=x16, kind=scalar, offsets=[16], sizes=[4] */
+
+    /* Conservative pseudo declarations: */
+    u64 tmp_x16 = 0;
+
+    /* Control flow structure: */
+    /* block 0x100000da0 */
+    tmp_x16 = 0x100004000; /* adrp x16, reloc.__stack_chk_fail */
+    tmp_x16 = *(u64 *)(tmp_x16 + 16); /* ldr x16, [x16, 0x10] */
+    /* branch to tmp_x16 */ /* br x16 */
+
+    /* return value unknown */
+    return 0;
+}
+
+int32_t puts(void * s)
+{
+    /* Entry: 0x100000dac */
+    /* Body status: partially_structured */
+    /* 1 basic block(s), 3 instruction(s) */
+
+    /* Layout candidates: */
+    /*   base=x16, kind=scalar, offsets=[24], sizes=[4] */
+
+    /* Conservative pseudo declarations: */
+    u64 tmp_x16 = 0;
+
+    /* Control flow structure: */
+    /* block 0x100000dac */
+    tmp_x16 = 0x100004000; /* adrp x16, reloc.__stack_chk_fail */
+    tmp_x16 = *(u64 *)(tmp_x16 + 24); /* ldr x16, [x16, 0x18] */
+    /* branch to tmp_x16 */ /* br x16 */
+
+    /* return value unknown */
+    return 0;
+}
+
+uint64_t strlen(void * s)
+{
+    /* Entry: 0x100000db8 */
+    /* Body status: partially_structured */
+    /* 1 basic block(s), 5 instruction(s) */
+
+    /* Layout candidates: */
+    /*   base=x16, kind=scalar, offsets=[32], sizes=[4] */
+
+    /* Conservative pseudo declarations: */
+    u64 tmp_x16 = 0;
+
+    /* Control flow structure: */
+    /* block 0x100000db8 */
+    tmp_x16 = 0x100004000; /* adrp x16, reloc.__stack_chk_fail */
+    tmp_x16 = *(u64 *)(tmp_x16 + 32); /* ldr x16, [x16, 0x20] */
+    /* branch to tmp_x16 */ /* br x16 */
+    /* 0x100000dc4: unsupported instruction: sqshlu v26.2d, v11.2d, 0x32 */
+    /* 0x100000dc8: unsupported instruction: invalid */
 
     /* return value unknown */
     return 0;

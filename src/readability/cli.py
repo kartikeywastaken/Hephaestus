@@ -38,6 +38,8 @@ def run_build_readable_cli(argv: List[str]) -> int:
     parser.add_argument("--promote-symbols", action="store_true", dest="promote_symbols", default=True, help="Enable Phase 7.2 symbol promotion (default).")
     parser.add_argument("--no-promote-symbols", action="store_false", dest="promote_symbols", help="Disable Phase 7.2 symbol promotion.")
     parser.add_argument("--promote-temps", action="store_true", dest="promote_temps", default=False, help="Enable temporary registers promotion (default disabled).")
+    parser.add_argument("--no-compile-shape-fix", action="store_true", dest="no_compile_shape_fix", default=False, help="Disable Phase 7.2.1 compile-shape hardening patch.")
+    parser.add_argument("--strict-readable-clang", action="store_true", dest="strict_readable_clang", default=False, help="Enforce that clang syntax warnings cause a non-ok status.")
     
     try:
         args = parser.parse_args(argv)
@@ -149,12 +151,26 @@ def run_build_readable_cli(argv: List[str]) -> int:
                                         if addr not in inst_lookup:
                                             inst_lookup[addr] = inst
                                         
+    # 4.B Step: Collect declared identifiers in the original functions of recovered_c
+    from src.readability.symbol_promotion import parse_c_into_functions
+    from src.readability.compile_shape import collect_declared_identifiers, validate_predicate_condition
+    
+    orig_blocks = parse_c_into_functions(recovered_c)
+    declared_by_func = {}
+    for ob in orig_blocks:
+        if ob["type"] == "function":
+            declared_by_func[ob["name"]] = collect_declared_identifiers(ob)
+
     # 5. Step: Scan candidate sites and recover predicates
     candidates = extract_candidate_sites(recovered_c)
     
     sites = []
     skipped_sites = []
     emitter_mapping = {}
+    
+    # We collect missing registers that were safely validated to declare them later
+    added_decls_from_predicates = {} # func_name -> list of register names
+    predicates_skipped_due_to_undeclared_identifiers = 0
     
     for idx, cand in enumerate(candidates):
         site_id = f"pred_{idx+1:06d}"
@@ -181,26 +197,66 @@ def run_build_readable_cli(argv: List[str]) -> int:
         status, replacement_condition, reason, notes = recover_predicate(parsed, inst_lookup)
         
         if status == "recovered" and replacement_condition:
-            source = parsed["type"]
-            if source in ("cmp_branch_direct", "cmp_branch_indirect"):
-                source = f"cmp/{parsed['branch_cond']}"
+            fn_name = cand["function"]
+            declared_ids = declared_by_func.get(fn_name, set())
+            
+            is_safe = True
+            missing_ids = []
+            if not args.no_compile_shape_fix:
+                is_safe, missing_ids = validate_predicate_condition(
+                    replacement_condition,
+                    declared_ids,
+                    promote_temps_active=args.promote_temps
+                )
                 
-            sites.append({
-                "site_id": site_id,
-                "function": cand["function"],
-                "line_number": cand["line_number"],
-                "kind": cand["kind"],
-                "original_condition": cand["original_condition"],
-                "replacement_condition": replacement_condition,
-                "source": "cmp_conditional_branch" if parsed["type"] in ("cmp_branch_direct", "cmp_branch_indirect") else parsed["type"],
-                "status": "recovered",
-                "confidence": "static_simple",
-                "evidence": {
-                    "raw_evidence": unescaped_adapter
-                },
-                "notes": notes
-            })
-            emitter_mapping[cand["line_number"]] = (replacement_condition, source)
+            if not is_safe:
+                status = "skipped"
+                reason = "undeclared predicate identifier"
+                predicates_skipped_due_to_undeclared_identifiers += 1
+                skipped_sites.append({
+                    "site_id": site_id,
+                    "function": cand["function"],
+                    "line_number": cand["line_number"],
+                    "kind": cand["kind"],
+                    "original_condition": cand["original_condition"],
+                    "status": "skipped",
+                    "reason": reason,
+                    "confidence": "unsafe",
+                    "evidence": {
+                        "raw_evidence": unescaped_adapter
+                    },
+                    "missing_identifiers": missing_ids
+                })
+                continue
+            else:
+                if missing_ids:
+                    # Filter duplicate additions
+                    func_miss = added_decls_from_predicates.setdefault(fn_name, [])
+                    for m_id in missing_ids:
+                        if m_id not in func_miss:
+                            func_miss.append(m_id)
+                    declared_ids.update(missing_ids)
+                    
+                source = parsed["type"]
+                if source in ("cmp_branch_direct", "cmp_branch_indirect"):
+                    source = f"cmp/{parsed['branch_cond']}"
+                    
+                sites.append({
+                    "site_id": site_id,
+                    "function": cand["function"],
+                    "line_number": cand["line_number"],
+                    "kind": cand["kind"],
+                    "original_condition": cand["original_condition"],
+                    "replacement_condition": replacement_condition,
+                    "source": "cmp_conditional_branch" if parsed["type"] in ("cmp_branch_direct", "cmp_branch_indirect") else parsed["type"],
+                    "status": "recovered",
+                    "confidence": "static_simple",
+                    "evidence": {
+                        "raw_evidence": unescaped_adapter
+                    },
+                    "notes": notes
+                })
+                emitter_mapping[cand["line_number"]] = (replacement_condition, source)
         else:
             # skipped
             skipped_sites.append({
@@ -221,6 +277,9 @@ def run_build_readable_cli(argv: List[str]) -> int:
     readable_c = emit_readable_c(recovered_c, emitter_mapping)
     
     symbol_promotion_data = None
+    function_promotions = {}
+    original_types_by_func = {}
+    
     if args.promote_symbols:
         from src.readability.symbol_promotion import SymbolPromotionEngine
         promo_engine = SymbolPromotionEngine(
@@ -231,6 +290,57 @@ def run_build_readable_cli(argv: List[str]) -> int:
             promote_temps=args.promote_temps
         )
         readable_c, symbol_promotion_data = promo_engine.run_symbol_promotion(readable_c)
+        function_promotions = getattr(promo_engine, "function_promotions", {})
+        original_types_by_func = getattr(promo_engine, "original_types_by_func", {})
+    else:
+        from src.readability.compile_shape import collect_original_declaration_types
+        for ob in orig_blocks:
+            if ob["type"] == "function":
+                original_types_by_func[ob["name"]] = collect_original_declaration_types(ob)
+                
+    # Phase 7.2.1 Compile-Shape Hardening post-processing
+    compile_shape_items = []
+    compile_shape_stats = {
+        "missing_predicate_declarations_added": 0,
+        "scratch_declarations_added": 0,
+        "predicates_skipped_due_to_undeclared_identifiers": predicates_skipped_due_to_undeclared_identifiers,
+        "forward_declarations_removed": 0,
+        "forward_declaration_conflicts_resolved": 0,
+        "function_symbol_promotions_skipped_for_collision": 0
+    }
+    
+    if args.promote_symbols and symbol_promotion_data:
+        for sk in symbol_promotion_data.get("skipped_promotions", []):
+            if sk.get("reason") == "global function collision":
+                compile_shape_stats["function_symbol_promotions_skipped_for_collision"] += 1
+                compile_shape_items.append({
+                    "kind": "function_symbol_promotion_skipped_for_collision",
+                    "function": "global",
+                    "old_name": sk.get("old_name"),
+                    "proposed_new_name": sk.get("proposed_new_name"),
+                    "reason": "global function collision"
+                })
+                
+    if not args.no_compile_shape_fix:
+        from src.readability.compile_shape import harden_compile_shape_functions, dedupe_and_resolve_forward_declarations
+        
+        # 1. Dedupe and resolve conflicting forward declarations (Fix 3)
+        readable_c, resolved_items, resolved_stats = dedupe_and_resolve_forward_declarations(readable_c)
+        compile_shape_items.extend(resolved_items)
+        compile_shape_stats["forward_declarations_removed"] += resolved_stats["forward_declarations_removed"]
+        compile_shape_stats["forward_declaration_conflicts_resolved"] += resolved_stats["forward_declaration_conflicts_resolved"]
+        
+        # 2. Harden local declarations (Fix 1 & Fix 2)
+        readable_c, added_items, added_stats = harden_compile_shape_functions(
+            readable_c,
+            promote_temps_active=args.promote_temps,
+            function_promotions=function_promotions,
+            original_types_by_func=original_types_by_func,
+            added_decls_from_predicates=added_decls_from_predicates
+        )
+        compile_shape_items.extend(added_items)
+        compile_shape_stats["missing_predicate_declarations_added"] += added_stats["missing_predicate_declarations_added"]
+        compile_shape_stats["scratch_declarations_added"] += added_stats["scratch_declarations_added"]
         
     readable_c_path = out_dir / "recovered_readable.c"
     
@@ -252,7 +362,11 @@ def run_build_readable_cli(argv: List[str]) -> int:
         res = run_clang_syntax_check(readable_c_path)
         if res.get("status") == "ok":
             if res.get("warnings", 0) > 0:
-                clang_syntax_status = "warning"
+                if args.strict_readable_clang:
+                    clang_syntax_status = "failed"
+                    diagnostics.append(f"Clang syntax check failed on recovered_readable.c with {res.get('warnings')} warnings (strict mode).")
+                else:
+                    clang_syntax_status = "warning"
             else:
                 clang_syntax_status = "ok"
         elif res.get("status") == "failed":
@@ -296,7 +410,9 @@ def run_build_readable_cli(argv: List[str]) -> int:
         warnings=load_warnings,
         diagnostics=diagnostics,
         promote_symbols_enabled=args.promote_symbols,
-        symbol_promotion_data=symbol_promotion_data
+        symbol_promotion_data=symbol_promotion_data,
+        compile_shape_enabled=not args.no_compile_shape_fix,
+        compile_shape_data={"stats": compile_shape_stats, "items": compile_shape_items}
     )
     
     write_readability_report_json(report, out_dir)

@@ -763,6 +763,8 @@ def handle_run_all_cli():
     parser.add_argument("--promote-symbols", action="store_true", dest="promote_symbols", default=True, help="Enable Phase 7.2 symbol promotion (default).")
     parser.add_argument("--no-promote-symbols", action="store_false", dest="promote_symbols", help="Disable Phase 7.2 symbol promotion.")
     parser.add_argument("--promote-temps", action="store_true", dest="promote_temps", default=False, help="Enable temporary registers promotion (default disabled).")
+    parser.add_argument("--no-compile-shape-fix", action="store_true", dest="no_compile_shape_fix", default=False, help="Disable Phase 7.2.1 compile-shape hardening patch.")
+    parser.add_argument("--strict-readable-clang", action="store_true", dest="strict_readable_clang", default=False, help="Enforce that clang syntax warnings cause a non-ok status.")
     
     args = parser.parse_args(sys.argv[2:])
     
@@ -791,6 +793,8 @@ def handle_run_all_cli():
             readable=args.readable,
             promote_symbols=args.promote_symbols,
             promote_temps=args.promote_temps,
+            no_compile_shape_fix=args.no_compile_shape_fix,
+            strict_readable_clang=args.strict_readable_clang,
         )
 
 

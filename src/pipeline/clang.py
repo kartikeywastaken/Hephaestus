@@ -24,7 +24,7 @@ def run_clang_syntax_check(c_path: Path) -> dict:
         }
     try:
         res = subprocess.run(
-            ["clang", "-fsyntax-only", str(c_path)],
+            ["clang", "-fsyntax-only", "-ffreestanding", str(c_path)],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True
