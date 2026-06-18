@@ -23,6 +23,8 @@ KNOWN_ARTIFACT_FILES = {
     "source_reconstruction.json",
     "recovered.c",
     "stress_report.json",
+    "validation_report.json",
+    "validation.log",
 }
 
 KNOWN_ARTIFACT_DIRS = {

@@ -12,4 +12,6 @@ This document lists the history of developmental milestones for the Hephaestus f
   - **Phase 5.7**: Instruction lowering coverage enhancements for ARM64 math and memory instructions.
   - **Phase 5.8**: Integration of run-all orchestrator command, clean artifact folders layout, stress harness.
   - **Phase 5.9**: Refactor and stabilization. Centralizing stages definition, separating helper APIs, and partitioning the ARM64 lowerer.
-- **Phase 6 (Future)**: Code validation, behavior repair, and advanced type synthesis.
+- **Phase 6: Validation & Repair**:
+  - **Phase 6.1: Static Validation and Evidence Consistency Checks** (Current): Read-only validation checking schema versions, source summary metrics, C safety policy, helper consistency, and manifest correctness.
+  - **Phase 6.2 (Future)**: Syntactic repairs and feedback loop compiler feedback integration.

@@ -22,3 +22,5 @@ Run `main.py run-all <binary>`:
 - `--clean`: Clean up existing intermediate artifacts in `out_dir` before starting.
 - `--no-source`: Stop execution before the source reconstruction stage.
 - `--stop-after`: Execute stages up to and including the specified stage name.
+- `--validate`: Run the static validation suite after the reconstruct_source stage.
+- `--validate-strict`: Run the strict validation suite after the reconstruct_source stage, marking the pipeline status failed if validation checks return error findings.

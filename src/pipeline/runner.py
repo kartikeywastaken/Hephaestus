@@ -277,6 +277,8 @@ def run_pipeline(
     continue_on_error: bool = False,
     no_source: bool = False,
     stop_after: str | None = None,
+    validate: bool = False,
+    validate_strict: bool = False,
 ) -> dict:
     """Run Hephaestus pipeline and return execution manifest."""
     from src.utils.artifacts import ensure_out_dir, clean_known_artifacts
@@ -416,6 +418,33 @@ def run_pipeline(
             
     finalize_manifest(manifest, status, summary_dict, final_outputs)
     write_manifest(manifest, out_dir)
+    
+    # Check validation after pipeline manifest has been written to disk
+    if validate or validate_strict:
+        logger.info("[run-all] running validation stage")
+        from src.validation.loader import load_validation_artifacts
+        from src.validation.report import new_report, write_report
+        from src.validation.checks import run_all_validation_checks
+        
+        try:
+            artifacts = load_validation_artifacts(out_dir)
+            report = new_report(out_dir, strict=validate_strict)
+            run_all_validation_checks(artifacts, report)
+            write_report(report, out_dir)
+            
+            # Update manifest final outputs and rewrite
+            manifest["final_outputs"]["validation_report"] = os.path.join(out_dir, "validation_report.json")
+            if report.get("status") == "failed" and validate_strict:
+                logger.error("[run-all] validation failed in strict mode")
+                manifest["status"] = "failed"
+                status = "failed"
+            write_manifest(manifest, out_dir)
+        except Exception as e:
+            logger.exception("[run-all] validation check crashed: %s", e)
+            if validate_strict:
+                status = "failed"
+                manifest["status"] = "failed"
+                write_manifest(manifest, out_dir)
     
     logger.info(f"[run-all] finished status={status}")
     return manifest

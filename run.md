@@ -370,3 +370,37 @@ The harness:
 5. **Checks** syntax validity of the output `recovered.c` using `clang -fsyntax-only`.
 6. **Writes** a comprehensive `stress_report.json` report containing execution logs, metrics, and diagnostics.
 
+---
+
+## 14. Static Validation & Evidence Consistency Checks (Phase 6.1)
+
+To evaluate whether the generated decompiler outputs are internally consistent, policy-compliant, and syntax-safe without modifying the output files, run the standalone validator:
+
+```bash
+python3 main.py validate --out-dir artifacts --strict
+```
+
+### Options:
+- `--out-dir DIR`: Directory containing Hephaestus output artifacts (defaults to `artifacts`).
+- `--strict`: Promotes missing recommended files, schema mismatches, helper metrics mismatches, and large unsupported comments mismatches to errors.
+- `--no-clang`: Skip running `clang -fsyntax-only` check.
+- `--json`: Prints a compact single-line JSON summary to stdout.
+
+### Report Inspection:
+You can inspect the generated validation report in a human-readable format:
+```bash
+python3 scripts/inspect_validation_report.py artifacts/validation_report.json
+```
+
+### Integrated Validation:
+Run validation checks automatically at the end of `run-all`:
+```bash
+python3 main.py run-all ./target_binary --ghidra --radare2 --out-dir artifacts --clean --validate
+```
+
+To fail the pipeline execution (exit non-zero) if validation checks return errors:
+```bash
+python3 main.py run-all ./target_binary --ghidra --radare2 --out-dir artifacts --clean --validate-strict
+```
+
+

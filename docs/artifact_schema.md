@@ -15,3 +15,5 @@ Hephaestus uses standard JSON structures to store state between stages. This ens
 | `recovered.c` | reconstruct_source | (executable C code) | Valid syntax representation of recovered binary functions. |
 | `pipeline_manifest.json` | pipeline | `pipeline-1.0` | Pipeline execution times, outputs, and status. |
 | `stress_report.json` | stress-test | `stress-1.0` | Compilation, correctness, and decompiler status for stress binaries. |
+| `validation_report.json` | validate | `validation-1.0` | Validation checks run, errors/warnings count, and detailed findings list. |
+| `validation.log` | validate | (plain text log) | Logs of validation execution steps, check results, and failures. |

@@ -752,6 +752,8 @@ def handle_run_all_cli():
     parser.add_argument("--continue-on-error", action="store_true", help="Continue running subsequent stages on non-fatal failures.")
     parser.add_argument("--no-source", action="store_true", help="Skip source reconstruction and C emission stage.")
     parser.add_argument("--stop-after", help="Stop after executing the specified stage.")
+    parser.add_argument("--validate", action="store_true", help="Run validation checks after source reconstruction.")
+    parser.add_argument("--validate-strict", action="store_true", help="Run validation checks in strict mode.")
     
     args = parser.parse_args(sys.argv[2:])
     
@@ -769,7 +771,9 @@ def handle_run_all_cli():
             clean=args.clean,
             continue_on_error=args.continue_on_error,
             no_source=args.no_source,
-            stop_after=args.stop_after
+            stop_after=args.stop_after,
+            validate=args.validate,
+            validate_strict=args.validate_strict,
         )
         if manifest.get("status") in ("failed", "partial"):
             sys.exit(1)
@@ -824,6 +828,10 @@ def main():
         elif first_arg == "stress-test":
             handle_stress_test_cli()
             return
+        elif first_arg == "validate":
+            from src.validation.cli import run_validate_cli
+            code = run_validate_cli(sys.argv[2:])
+            sys.exit(code)
 
     # Resolve out_dir from command line arguments before initializing logging
     out_dir = "artifacts"
@@ -857,9 +865,7 @@ def main():
         elif first_arg == "module" and len(sys.argv) > 2:
             handle_module_reconstruct(out_dir, sys.argv[2])
             return
-        elif first_arg == "validate":
-            handle_validate_cli(out_dir)
-            return
+
         elif first_arg == "repair":
             handle_repair_cli(out_dir)
             return

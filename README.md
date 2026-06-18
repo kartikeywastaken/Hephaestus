@@ -709,13 +709,21 @@ Hephaestus operates under a strict safety policy:
 clang -O0 -g t.c -o t
 ```
 
-### Run Full Pipeline
+### Run Full Pipeline with Validation
 ```bash
 python3 main.py run-all ./t \
   --ghidra \
   --radare2 \
   --out-dir artifacts \
-  --clean
+  --clean \
+  --validate
+```
+
+### Run Validation Standalone
+```bash
+python3 main.py validate \
+  --out-dir artifacts \
+  --strict
 ```
 
 ### Run Stress Tests
@@ -731,6 +739,7 @@ python3 main.py stress-test \
 
 ## Roadmap
 
-### Phase 6 — Validation & Repair (Future Work)
-- Compile generated C code, capture syntactic mismatches, and feed repairs back into decompiler semantics.
+### Phase 6 — Validation & Repair
+- **Phase 6.1: Static Validation and Evidence Consistency Checks** (Complete): Add a read-only validator verifying artifact consistency, metrics, helpers, and C safety policy invariants.
+- **Phase 6.2: Repair and Feedback Loop** (Future Work): Compile generated C code, capture syntactic mismatches, and feed repairs back into decompiler semantics.
 
