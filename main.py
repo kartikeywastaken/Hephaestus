@@ -754,6 +754,8 @@ def handle_run_all_cli():
     parser.add_argument("--stop-after", help="Stop after executing the specified stage.")
     parser.add_argument("--validate", action="store_true", help="Run validation checks after source reconstruction.")
     parser.add_argument("--validate-strict", action="store_true", help="Run validation checks in strict mode.")
+    parser.add_argument("--evidence-index", action="store_true", help="Generate statement-level evidence index.")
+    parser.add_argument("--require-evidence-index", action="store_true", help="Fail validation if evidence_index.json is missing.")
     
     args = parser.parse_args(sys.argv[2:])
     
@@ -774,7 +776,10 @@ def handle_run_all_cli():
             stop_after=args.stop_after,
             validate=args.validate,
             validate_strict=args.validate_strict,
+            evidence_index=args.evidence_index,
+            require_evidence_index=args.require_evidence_index,
         )
+
         if manifest.get("status") in ("failed", "partial"):
             sys.exit(1)
         sys.exit(0)
@@ -821,17 +826,22 @@ def main():
 
     # Check for run-all and stress-test subcommands before early logging setup
     if len(sys.argv) > 1:
-        first_arg = sys.argv[1]
-        if first_arg == "run-all":
+    	first_arg = sys.argv[1]
+    	if first_arg == "run-all":
             handle_run_all_cli()
             return
-        elif first_arg == "stress-test":
+    	elif first_arg == "stress-test":
             handle_stress_test_cli()
             return
-        elif first_arg == "validate":
+    	elif first_arg == "validate":
             from src.validation.cli import run_validate_cli
             code = run_validate_cli(sys.argv[2:])
             sys.exit(code)
+    	elif first_arg == "build-evidence-index":
+            from src.validation.evidence_index.cli import run_build_evidence_index_cli
+            code = run_build_evidence_index_cli(sys.argv[2:])
+            sys.exit(code)
+
 
     # Resolve out_dir from command line arguments before initializing logging
     out_dir = "artifacts"

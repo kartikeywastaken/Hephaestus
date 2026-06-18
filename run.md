@@ -403,4 +403,23 @@ To fail the pipeline execution (exit non-zero) if validation checks return error
 python3 main.py run-all ./target_binary --ghidra --radare2 --out-dir artifacts --clean --validate-strict
 ```
 
+---
 
+## 15. Statement-Level Evidence Traceability & Indexing (Phase 6.2)
+
+To generate a statement-level evidence index detailing the classification of emitted C code lines, run the `build-evidence-index` subcommand:
+
+```bash
+python3 main.py build-evidence-index --out-dir artifacts
+```
+
+### Options:
+- `--out-dir DIR`: Directory containing Hephaestus output artifacts (defaults to `artifacts`).
+- `--json`: Prints a compact single-line JSON summary to stdout.
+
+### Integrated Evidence Indexing:
+Run evidence indexing automatically at the end of `run-all` before validation:
+```bash
+python3 main.py run-all ./target_binary --ghidra --radare2 --out-dir artifacts --clean --evidence-index
+```
+Note: If `--validate` or `--validate-strict` is used in `run-all`, the evidence index is built automatically.

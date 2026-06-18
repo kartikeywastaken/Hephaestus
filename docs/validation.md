@@ -25,6 +25,7 @@ python3 main.py validate --out-dir artifacts
 - `--strict`: Enable strict mode, promoting recommended missing files, schema version mismatches, and certain warnings (like cset/ldp commented warnings) to hard errors, failing the overall report status.
 - `--no-clang`: Skip executing the system's `clang -fsyntax-only` check.
 - `--json`: Output a compact single-line JSON summary to `stdout` instead of regular logs.
+- `--require-evidence-index`: Fail validation if `evidence_index.json` is missing.
 
 ---
 
@@ -53,8 +54,10 @@ All checks fall into the following modules:
 3. **C Safety (`c_safety.py`)**: Strips comments and checks for structural safety invariants (`struct`, `->`, empty conditions, raw ARM memory leaks, fake flags, and forbidden `tmp_`/`arg`/`stack_` conditions).
 4. **Helper Consistency (`helpers.py`)**: Verifies correct usage and definitions for internal helpers `HEPHAESTUS_UNKNOWN_COND` and `HEPHAESTUS_CSET`.
 5. **Evidence Checks (`evidence.py`)**: Validates consistency between metadata summary and function-level direct/indirect call and return site logs.
-6. **Pipeline Manifest (`manifest_checks.py`)**: Checks stage ordering sequence and checks stage outputs on disk.
-7. **Clang syntax check (`clang_check.py`)**: Performs compilation verification on `recovered.c`.
+6. **Evidence Index Checks (`checks.py`)**: Validates presence, schema-version `evidence-index-1.0`, summary key sums, precise unsupported instruction accounting, and checks for unknown categories in `evidence_index.json`.
+7. **Pipeline Manifest (`manifest_checks.py`)**: Checks stage ordering sequence and checks stage outputs on disk.
+8. **Clang syntax check (`clang_check.py`)**: Performs compilation verification on `recovered.c`.
+
 
 ---
 
@@ -120,22 +123,16 @@ In strict mode, the validator promotes recommended missing artifacts, schema ver
 
 ---
 
-## Expected Promoted Warnings (VAL-EVID-008)
+## Resolution of VAL-EVID-008 (Phase 6.2 Statement-Level Traceability)
 
-During strict validation, you may encounter a failure on:
-- **`VAL-EVID-008` (Unsupported comment accounting mismatch)**
+In Phase 6.1, strict validation could fail due to **`VAL-EVID-008` (Unsupported comment accounting mismatch)**. This was caused by an approximate evidence-accounting discrepancy because Phase 6.1 could not distinguish true unsupported instructions from conservative comment-lowered statements.
 
-This is caused by an approximate evidence-accounting discrepancy between `unsupported` comments in `recovered.c` and `unsupported_instruction_kinds` in `source_reconstruction.json`. 
+In Phase 6.2, this approximate check is resolved and bypassed when a statement-level `evidence_index.json` is present. The evidence index explicitly categorizes C lines into 13 primary categories, distinguishing:
+- truly unsupported instructions (`true_unsupported`)
+- conservative comment-lowered instructions (`comment_lowered`)
+- branch evidence comments (`branch_evidence`)
+- syntax adapter comments (`syntax_adapter`)
+- helper comments/definitions (`helper`)
 
-In strict mode, approximate evidence-accounting mismatches such as `VAL-EVID-008` may be promoted to errors. This does not mean `recovered.c` is semantically wrong. It means strict policy requires tighter accounting than Phase 6.1 can currently prove. Some emitted unsupported-style comments come from conservative comment-lowering paths, while `unsupported_instruction_kinds` only counts instructions classified as unknown/unsupported by the lowerer.
+This enables a precise validation check (`evidence_index_unsupported_accounting`) to verify that the `true_unsupported` count matches `unsupported_instruction_kinds` perfectly, without false positives.
 
----
-
-## Future Phase 6.2 Statement-Level Traceability
-
-Future Phase 6.2 should introduce explicit statement-level evidence categories so validation can distinguish:
-- truly unsupported instructions
-- conservative comment-lowered instructions
-- branch evidence comments
-- syntax adapter comments
-- helper comments

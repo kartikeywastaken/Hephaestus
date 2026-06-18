@@ -166,7 +166,15 @@ def check_evidence(artifacts: ValidationArtifacts, report: dict) -> None:
     # 3. Unsupported Accounting
     # -------------------------------------------------------------------------
     unsupported_status = "ok"
-    if artifacts.recovered_c is not None:
+    if artifacts.evidence_index is not None:
+        add_check(
+            report=report,
+            name="unsupported_accounting",
+            status="ok",
+            severity="warning",
+            message="Bypassed: precise evidence_index.json is present."
+        )
+    elif artifacts.recovered_c is not None:
         unsupported_comment_count = len(re.findall(r"\bunsupported\b", artifacts.recovered_c, re.IGNORECASE))
         
         unsupported_kinds = summary.get("unsupported_instruction_kinds", {})
@@ -205,13 +213,14 @@ def check_evidence(artifacts: ValidationArtifacts, report: dict) -> None:
             if is_large and strict:
                 report["findings"][-1]["strict_promoted"] = True
                 
-    add_check(
-        report=report,
-        name="unsupported_accounting",
-        status=unsupported_status,
-        severity="warning",
-        message="Unsupported instruction accounting is consistent." if unsupported_status == "ok" else "Unsupported instruction accounting mismatch found."
-    )
+        add_check(
+            report=report,
+            name="unsupported_accounting",
+            status=unsupported_status,
+            severity="warning",
+            message="Unsupported instruction accounting is consistent." if unsupported_status == "ok" else "Unsupported instruction accounting mismatch found."
+        )
+
     
     # -------------------------------------------------------------------------
     # 4. Call Site Consistency

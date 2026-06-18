@@ -13,6 +13,11 @@ PIPELINE_STAGES = [
     "reconstruct_source",
 ]
 
+OPTIONAL_PIPELINE_STAGES = [
+    "build_evidence_index",
+    "validate",
+]
+
 STAGE_OUTPUTS = {
     "extract": [
         "unified_ir.json",
@@ -38,5 +43,11 @@ STAGE_OUTPUTS = {
     "reconstruct_source": [
         "source_reconstruction.json",
         "recovered.c",
+    ],
+    "build_evidence_index": [
+        "evidence_index.json",
+    ],
+    "validate": [
+        "validation_report.json",
     ],
 }

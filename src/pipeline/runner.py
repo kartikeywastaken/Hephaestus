@@ -279,10 +279,13 @@ def run_pipeline(
     stop_after: str | None = None,
     validate: bool = False,
     validate_strict: bool = False,
+    evidence_index: bool = False,
+    require_evidence_index: bool = False,
 ) -> dict:
     """Run Hephaestus pipeline and return execution manifest."""
     from src.utils.artifacts import ensure_out_dir, clean_known_artifacts
     from main import setup_logging
+    from src.pipeline.stage_defs import OPTIONAL_PIPELINE_STAGES
     
     # Clean previous run artifacts if requested
     if clean:
@@ -296,20 +299,36 @@ def run_pipeline(
     
     manifest = start_manifest(binary_path, out_dir)
     
-    STAGES = PIPELINE_STAGES
+    STAGES = PIPELINE_STAGES.copy()
     
+    # Include build_evidence_index stage in PIPELINE_STAGES copy if requested
+    if (evidence_index or validate or validate_strict) and "build_evidence_index" not in STAGES:
+        STAGES.append("build_evidence_index")
+        
     if stop_after:
-        if stop_after not in STAGES:
+        if stop_after not in STAGES and stop_after not in OPTIONAL_PIPELINE_STAGES:
             logger.error(f"[run-all] Invalid stop-after stage name: {stop_after}")
             raise PipelineError(f"Invalid stop-after stage name: {stop_after}")
-        idx = STAGES.index(stop_after)
-        active_stages = STAGES[:idx+1]
+            
+        combined_stages = PIPELINE_STAGES.copy()
+        if stop_after == "build_evidence_index" or (evidence_index or validate or validate_strict):
+            combined_stages.append("build_evidence_index")
+        if stop_after == "validate" or (validate or validate_strict):
+            combined_stages.append("validate")
+            
+        if stop_after in combined_stages:
+            idx = combined_stages.index(stop_after)
+            active_stages = combined_stages[:idx+1]
+        else:
+            active_stages = combined_stages.copy()
     else:
         active_stages = STAGES.copy()
         
     if no_source:
         if "reconstruct_source" in active_stages:
             active_stages.remove("reconstruct_source")
+        if "build_evidence_index" in active_stages:
+            active_stages.remove("build_evidence_index")
             
     status = "ok"
     
@@ -336,6 +355,16 @@ def run_pipeline(
                 outputs = run_stage_finalize_semantics(out_dir)
             elif stage == "reconstruct_source":
                 outputs = run_stage_reconstruct_source(out_dir)
+            elif stage == "build_evidence_index":
+                from src.validation.evidence_index.builder import build_index_payload
+                from src.validation.evidence_index.writer import write_evidence_index
+                try:
+                    payload = build_index_payload(Path(out_dir))
+                    write_evidence_index(payload, Path(out_dir))
+                    outputs = ["evidence_index.json"]
+                except Exception as e:
+                    raise PipelineError(f"Build evidence index failed: {e}")
+
         except Exception as e:
             stage_status = "failed"
             error_msg = str(e)
@@ -374,6 +403,11 @@ def run_pipeline(
         path = os.path.join(out_dir, filename)
         if os.path.exists(path):
             final_outputs[key] = path
+            
+    # Add evidence_index if generated
+    ev_path = os.path.join(out_dir, "evidence_index.json")
+    if os.path.exists(ev_path):
+        final_outputs["evidence_index"] = ev_path
             
     # Compile summary statistics
     summary_dict = {
@@ -422,6 +456,12 @@ def run_pipeline(
     # Check validation after pipeline manifest has been written to disk
     if validate or validate_strict:
         logger.info("[run-all] running validation stage")
+        started_at = now_iso()
+        start_time = time.perf_counter()
+        stage_status = "ok"
+        error_msg = None
+        outputs = []
+        
         from src.validation.loader import load_validation_artifacts
         from src.validation.report import new_report, write_report
         from src.validation.checks import run_all_validation_checks
@@ -429,22 +469,44 @@ def run_pipeline(
         try:
             artifacts = load_validation_artifacts(out_dir)
             report = new_report(out_dir, strict=validate_strict)
-            run_all_validation_checks(artifacts, report)
+            run_all_validation_checks(
+                artifacts,
+                report,
+                require_evidence_index=require_evidence_index
+            )
             write_report(report, out_dir)
+            outputs = ["validation_report.json"]
             
-            # Update manifest final outputs and rewrite
+            # Update manifest final outputs
             manifest["final_outputs"]["validation_report"] = os.path.join(out_dir, "validation_report.json")
             if report.get("status") == "failed" and validate_strict:
                 logger.error("[run-all] validation failed in strict mode")
                 manifest["status"] = "failed"
                 status = "failed"
-            write_manifest(manifest, out_dir)
         except Exception as e:
             logger.exception("[run-all] validation check crashed: %s", e)
+            stage_status = "failed"
+            error_msg = str(e)
             if validate_strict:
                 status = "failed"
                 manifest["status"] = "failed"
-                write_manifest(manifest, out_dir)
+                
+        finished_at = now_iso()
+        duration_ms = int((time.perf_counter() - start_time) * 1000)
+        
+        record_stage(
+            manifest=manifest,
+            name="validate",
+            status=stage_status,
+            outputs=outputs,
+            error=error_msg,
+            metrics={},
+            started_at=started_at,
+            finished_at=finished_at,
+            duration_ms=duration_ms
+        )
+        write_manifest(manifest, out_dir)
     
     logger.info(f"[run-all] finished status={status}")
     return manifest
+

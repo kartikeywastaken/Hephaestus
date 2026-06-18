@@ -25,6 +25,7 @@ KNOWN_ARTIFACT_FILES = {
     "stress_report.json",
     "validation_report.json",
     "validation.log",
+    "evidence_index.json",
 }
 
 KNOWN_ARTIFACT_DIRS = {

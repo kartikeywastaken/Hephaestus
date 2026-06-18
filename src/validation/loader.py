@@ -75,6 +75,17 @@ def load_validation_artifacts(out_dir: str | Path) -> ValidationArtifacts:
     else:
         missing.append("phase4_semantics.json")
         
+    evidence_index = None
+    ev_file = out_path / "evidence_index.json"
+    if ev_file.exists():
+        try:
+            with open(ev_file, "r", encoding="utf-8") as f:
+                evidence_index = json.load(f)
+        except Exception:
+            missing.append("evidence_index.json")
+    else:
+        missing.append("evidence_index.json")
+        
     return ValidationArtifacts(
         out_dir=out_path,
         source_reconstruction=source_reconstruction,
@@ -82,5 +93,7 @@ def load_validation_artifacts(out_dir: str | Path) -> ValidationArtifacts:
         pipeline_manifest=pipeline_manifest,
         unified_ir=unified_ir,
         phase4_semantics=phase4_semantics,
-        missing=missing
+        missing=missing,
+        evidence_index=evidence_index
     )
+

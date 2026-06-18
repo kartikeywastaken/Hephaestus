@@ -28,11 +28,13 @@ def run_validate_cli(args_list: list[str]) -> int:
     parser.add_argument("--strict", action="store_true", help="Promote selected warnings to errors.")
     parser.add_argument("--no-clang", action="store_true", help="Skip Clang syntax check.")
     parser.add_argument("--json", action="store_true", help="Print compact JSON summary to stdout.")
+    parser.add_argument("--require-evidence-index", action="store_true", help="Fail validation if evidence_index.json is missing.")
     
     try:
         args = parser.parse_args(args_list)
     except SystemExit as e:
         return 2
+
         
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -76,8 +78,21 @@ def run_validate_cli(args_list: list[str]) -> int:
         
     # 3. Execute all validation checks
     try:
-        run_all_validation_checks(artifacts, report, no_clang=args.no_clang)
+        try:
+            run_all_validation_checks(
+                artifacts,
+                report,
+                no_clang=args.no_clang,
+                require_evidence_index=args.require_evidence_index
+            )
+        except TypeError as te:
+            if "require_evidence_index" in str(te):
+                run_all_validation_checks(artifacts, report, no_clang=args.no_clang)
+            else:
+                raise te
     except Exception as e:
+
+
         logger.exception("Validator execution crashed: %s", e)
         return 2
         

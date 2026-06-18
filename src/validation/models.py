@@ -16,3 +16,5 @@ class ValidationArtifacts:
     unified_ir: dict | None
     phase4_semantics: dict | None
     missing: list[str]
+    evidence_index: dict | None = None
+
