@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Readability Report Generator
-Builds readability_report.json (readability-1.0) and optionally readability_report.md.
+Builds readability_report.json (readability-1.0 to readability-1.3) and optionally readability_report.md.
 """
 
 import json
@@ -19,7 +19,11 @@ def build_readability_report(
     promote_symbols_enabled: bool = False,
     symbol_promotion_data: Dict[str, Any] = None,
     compile_shape_enabled: bool = False,
-    compile_shape_data: Dict[str, Any] = None
+    compile_shape_data: Dict[str, Any] = None,
+    expression_simplification_enabled: bool = False,
+    expression_simplification_data: Dict[str, Any] = None,
+    expression_simplifications: List[Any] = None,
+    skipped_expression_simplifications: List[Any] = None
 ) -> Dict[str, Any]:
     """Compile readability data into the standard readability JSON format."""
     total = len(sites) + len(skipped_sites)
@@ -44,7 +48,11 @@ def build_readability_report(
     if clang_syntax_status == "failed":
         global_status = "failed"
         
-    if compile_shape_enabled and promote_symbols_enabled:
+    if expression_simplification_enabled and expression_simplification_data and expression_simplification_data.get("status") == "ok":
+        schema_version = "readability-1.3"
+        phase = "7.3"
+        mode = "static_predicate_symbol_promotion_compile_shape_expression_simplification"
+    elif compile_shape_enabled and promote_symbols_enabled:
         schema_version = "readability-1.2"
         phase = "7.2.1"
         mode = "static_predicate_symbol_promotion_compile_shape_hardening"
@@ -69,6 +77,18 @@ def build_readability_report(
         "safe_to_use_for_phase7": safe_to_use_for_phase7,
         "clang_syntax_status": clang_syntax_status,
     }
+    
+    # Populate Expression Simplification summary fields
+    es_data = expression_simplification_data or {}
+    summary["expressions_simplified"] = es_data.get("simplified", 0)
+    summary["expression_simplification_sites_total"] = es_data.get("sites_total", 0)
+    summary["expression_simplifications_skipped"] = es_data.get("skipped", 0)
+    
+    es_cats = es_data.get("categories", {})
+    summary["identity_arithmetic_simplified"] = es_cats.get("identity_arithmetic", 0)
+    summary["parentheses_simplified"] = es_cats.get("redundant_parentheses", 0)
+    summary["assignment_rhs_simplified"] = es_cats.get("assignment_rhs", 0)
+    summary["copy_op_store_simplified"] = es_cats.get("copy_op_store", 0)
     
     # Extra inputs
     input_artifacts = {
@@ -141,6 +161,29 @@ def build_readability_report(
         stats_dict.setdefault("abi_scratch_declarations_inherited", 0)
         report["compile_shape"] = stats_dict
         report["compile_shape_items"] = cs.get("items", [])
+        
+    # Populate Expression Simplification sections
+    if expression_simplification_enabled:
+        report["expression_simplification"] = es_data
+        report["expression_simplifications"] = expression_simplifications or []
+        report["skipped_expression_simplifications"] = skipped_expression_simplifications or []
+    else:
+        report["expression_simplification"] = {
+            "enabled": False,
+            "status": "disabled",
+            "reason": "disabled by --no-simplify-expressions",
+            "sites_total": 0,
+            "simplified": 0,
+            "skipped": 0,
+            "categories": {
+                "identity_arithmetic": 0,
+                "redundant_parentheses": 0,
+                "assignment_rhs": 0,
+                "copy_op_store": 0
+            }
+        }
+        report["expression_simplifications"] = []
+        report["skipped_expression_simplifications"] = []
         
     return report
 
@@ -242,6 +285,49 @@ def generate_readability_report_md(report: Dict[str, Any], out_dir: Path) -> Pat
         md.append(f"| Forward Declaration Conflicts Resolved | {cs.get('forward_declaration_conflicts_resolved', 0)} |")
         md.append(f"| Function Symbol Promotions Skipped for Collision | {cs.get('function_symbol_promotions_skipped_for_collision', 0)} |")
         md.append("")
+        
+    if "expression_simplification" in report:
+        es = report["expression_simplification"]
+        md.append("## Expression Simplification Summary")
+        md.append("")
+        md.append(f"**Enabled**: `{es.get('enabled')}`")
+        md.append(f"**Status**: `{es.get('status', 'ok').upper()}`")
+        if es.get("reason"):
+            md.append(f"**Reason**: {es.get('reason')}")
+        md.append("")
+        md.append("| Metric | Value |")
+        md.append("| --- | --- |")
+        md.append(f"| Total Sites Found | {es.get('sites_total', 0)} |")
+        md.append(f"| Simplified Sites | {es.get('simplified', 0)} |")
+        md.append(f"| Skipped Sites | {es.get('skipped', 0)} |")
+        
+        cats = es.get("categories", {})
+        md.append(f"| Identity Arithmetic Simplified | {cats.get('identity_arithmetic', 0)} |")
+        md.append(f"| Parentheses Simplified | {cats.get('redundant_parentheses', 0)} |")
+        md.append(f"| Assignment RHS Simplified | {cats.get('assignment_rhs', 0)} |")
+        md.append(f"| Copy-Op-Store Simplified | {cats.get('copy_op_store', 0)} |")
+        md.append("")
+
+        # List individual simplifications
+        simplifications = report.get("expression_simplifications", [])
+        if simplifications:
+            md.append("### Simplifications Applied")
+            md.append("")
+            md.append("| Line | Function | Category | Original Text | Simplified Text | Reason |")
+            md.append("| --- | --- | --- | --- | --- | --- |")
+            for s in simplifications:
+                md.append(f"| {s.get('line_number')} | `{s.get('function')}` | `{s.get('category')}` | `{s.get('old_text')}` | `{s.get('new_text')}` | {s.get('reason')} |")
+            md.append("")
+
+        skipped = report.get("skipped_expression_simplifications", [])
+        if skipped:
+            md.append("### Skipped Simplifications")
+            md.append("")
+            md.append("| Category | Status | Reason |")
+            md.append("| --- | --- | --- |")
+            for sk in skipped:
+                md.append(f"| `{sk.get('category')}` | `{sk.get('status')}` | {sk.get('reason')} |")
+            md.append("")
     
     with open(path, "w", encoding="utf-8") as f:
         f.write("\n".join(md) + "\n")

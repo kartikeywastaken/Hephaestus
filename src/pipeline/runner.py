@@ -289,6 +289,8 @@ def run_pipeline(
     promote_temps: bool = False,
     no_compile_shape_fix: bool = False,
     strict_readable_clang: bool = False,
+    simplify_expressions: bool = True,
+    no_copy_op_store_simplification: bool = False,
 ) -> dict:
     """Run Hephaestus pipeline and return execution manifest."""
     from src.utils.artifacts import ensure_out_dir, clean_known_artifacts
@@ -705,6 +707,10 @@ def run_pipeline(
                 argv.append("--no-compile-shape-fix")
             if strict_readable_clang:
                 argv.append("--strict-readable-clang")
+            if not simplify_expressions:
+                argv.append("--no-simplify-expressions")
+            if no_copy_op_store_simplification:
+                argv.append("--no-copy-op-store-simplification")
             
             try:
                 code = run_build_readable_cli(argv)

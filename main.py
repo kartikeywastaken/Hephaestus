@@ -765,6 +765,9 @@ def handle_run_all_cli():
     parser.add_argument("--promote-temps", action="store_true", dest="promote_temps", default=False, help="Enable temporary registers promotion (default disabled).")
     parser.add_argument("--no-compile-shape-fix", action="store_true", dest="no_compile_shape_fix", default=False, help="Disable Phase 7.2.1 compile-shape hardening patch.")
     parser.add_argument("--strict-readable-clang", action="store_true", dest="strict_readable_clang", default=False, help="Enforce that clang syntax warnings cause a non-ok status.")
+    parser.add_argument("--simplify-expressions", action="store_true", dest="simplify_expressions", default=True, help="Enable Phase 7.3 expression simplification (default).")
+    parser.add_argument("--no-simplify-expressions", action="store_false", dest="simplify_expressions", help="Disable Phase 7.3 expression simplification.")
+    parser.add_argument("--no-copy-op-store-simplification", action="store_true", dest="no_copy_op_store_simplification", default=False, help="Disable copy-op-store category of expression simplification.")
     
     args = parser.parse_args(sys.argv[2:])
     
@@ -795,6 +798,8 @@ def handle_run_all_cli():
             promote_temps=args.promote_temps,
             no_compile_shape_fix=args.no_compile_shape_fix,
             strict_readable_clang=args.strict_readable_clang,
+            simplify_expressions=args.simplify_expressions,
+            no_copy_op_store_simplification=args.no_copy_op_store_simplification,
         )
 
 

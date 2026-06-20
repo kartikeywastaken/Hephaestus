@@ -40,6 +40,10 @@ def run_build_readable_cli(argv: List[str]) -> int:
     parser.add_argument("--promote-temps", action="store_true", dest="promote_temps", default=False, help="Enable temporary registers promotion (default disabled).")
     parser.add_argument("--no-compile-shape-fix", action="store_true", dest="no_compile_shape_fix", default=False, help="Disable Phase 7.2.1 compile-shape hardening patch.")
     parser.add_argument("--strict-readable-clang", action="store_true", dest="strict_readable_clang", default=False, help="Enforce that clang syntax warnings cause a non-ok status.")
+    parser.add_argument("--simplify-expressions", action="store_true", dest="simplify_expressions", default=True, help="Enable Phase 7.3 expression simplification (default).")
+    parser.add_argument("--no-simplify-expressions", action="store_false", dest="simplify_expressions", help="Disable Phase 7.3 expression simplification.")
+    parser.add_argument("--no-copy-op-store-simplification", action="store_true", dest="no_copy_op_store_simplification", default=False, help="Disable copy-op-store category of expression simplification.")
+
     
     try:
         args = parser.parse_args(argv)
@@ -349,6 +353,128 @@ def run_build_readable_cli(argv: List[str]) -> int:
         compile_shape_stats["abi_scratch_declarations_added"] += added_stats.get("abi_scratch_declarations_added", 0)
         compile_shape_stats["abi_scratch_declarations_inherited"] = source_recon.get("summary", {}).get("abi_scratch_declarations_inserted", 0)
         
+    expression_simplification_enabled = getattr(args, "simplify_expressions", True) and args.promote_symbols
+    expression_simplification_data = None
+    expression_simplifications = []
+    skipped_expression_simplifications = []
+
+    if expression_simplification_enabled:
+        from src.readability.expression_simplification import simplify_expressions, build_expression_simplification_report_data
+        
+        enable_copy_op_store = not getattr(args, "no_copy_op_store_simplification", False)
+        pre_simplification_c = readable_c
+        
+        # Determine skipped categories for reporting
+        if not enable_copy_op_store:
+            skipped_expression_simplifications.append({
+                "category": "copy_op_store",
+                "status": "disabled",
+                "reason": "disabled by --no-copy-op-store-simplification"
+            })
+            
+        try:
+            # Step 6: Run expression simplification
+            simplified_c, simplifications, skipped_list, expr_stats = simplify_expressions(
+                readable_c,
+                enable_copy_op_store=enable_copy_op_store
+            )
+            expression_simplifications = [
+                {
+                    "site_id": s.site_id,
+                    "function": s.function,
+                    "line_number": s.line_number,
+                    "category": s.category,
+                    "old_text": s.old_text,
+                    "new_text": s.new_text,
+                    "reason": s.reason
+                }
+                for s in simplifications
+            ]
+            
+            # Step 7: Final compile-shape safety pass (post-simplification)
+            if not args.no_compile_shape_fix:
+                from src.readability.compile_shape import harden_compile_shape_functions
+                simplified_c, post_added_items, post_added_stats = harden_compile_shape_functions(
+                    simplified_c,
+                    promote_temps_active=args.promote_temps,
+                    function_promotions=function_promotions,
+                    original_types_by_func=original_types_by_func,
+                    added_decls_from_predicates=added_decls_from_predicates
+                )
+                compile_shape_items.extend(post_added_items)
+                compile_shape_stats["missing_predicate_declarations_added"] += post_added_stats["missing_predicate_declarations_added"]
+                compile_shape_stats["scratch_declarations_added"] += post_added_stats["scratch_declarations_added"]
+                compile_shape_stats["main_abi_bridge_declarations_added"] += post_added_stats.get("main_abi_bridge_declarations_added", 0)
+                compile_shape_stats["abi_scratch_declarations_added"] += post_added_stats.get("abi_scratch_declarations_added", 0)
+            
+            # Write simplified output temporarily to path for validation check
+            readable_c_path = out_dir / "recovered_readable.c"
+            try:
+                with open(readable_c_path, "w", encoding="utf-8") as f:
+                    f.write(simplified_c)
+            except Exception as e:
+                logger.error("Failed to write temporary recovered_readable.c: %s", e)
+                
+            # Clang gate validation
+            clang_ok = True
+            if clang_available():
+                res = run_clang_syntax_check(readable_c_path)
+                if res.get("status") == "failed":
+                    clang_ok = False
+                    logger.warning("Clang syntax check failed on simplified C. Rolling back expression simplification.")
+            
+            if not clang_ok:
+                # Rollback!
+                readable_c = pre_simplification_c
+                # Append rollback status for each category to skipped list
+                for cat in ["identity_arithmetic", "redundant_parentheses", "copy_op_store"]:
+                    if cat == "copy_op_store" and not enable_copy_op_store:
+                        continue
+                    skipped_expression_simplifications.append({
+                        "category": cat,
+                        "status": "rolled_back",
+                        "reason": "clang syntax check failed after simplification"
+                    })
+                    
+                expression_simplification_data = build_expression_simplification_report_data(
+                    [], [], expr_stats, enabled=True, status="rolled_back"
+                )
+                expression_simplification_data["category_statuses"] = skipped_expression_simplifications
+            else:
+                # Simplification succeeded!
+                readable_c = simplified_c
+                expression_simplification_data = build_expression_simplification_report_data(
+                    simplifications, skipped_list, expr_stats, enabled=True, status="ok"
+                )
+                expression_simplification_data["category_statuses"] = skipped_expression_simplifications
+                
+        except Exception as e:
+            logger.exception("Expression simplification crashed: %s", e)
+            readable_c = pre_simplification_c
+            for cat in ["identity_arithmetic", "redundant_parentheses", "copy_op_store"]:
+                if cat == "copy_op_store" and not enable_copy_op_store:
+                    continue
+                skipped_expression_simplifications.append({
+                    "category": cat,
+                    "status": "rolled_back",
+                    "reason": f"simplification engine exception: {e}"
+                })
+            from src.readability.expression_simplification import ExprSimplificationStats
+            expression_simplification_data = build_expression_simplification_report_data(
+                [], [], ExprSimplificationStats(), enabled=True, status="rolled_back"
+            )
+            expression_simplification_data["category_statuses"] = skipped_expression_simplifications
+    else:
+        # Simplification disabled
+        skipped_expression_simplifications = [
+            {
+                "category": cat,
+                "status": "disabled",
+                "reason": "disabled by --no-simplify-expressions"
+            }
+            for cat in ["identity_arithmetic", "redundant_parentheses", "copy_op_store"]
+        ]
+
     readable_c_path = out_dir / "recovered_readable.c"
     
     try:
@@ -419,7 +545,11 @@ def run_build_readable_cli(argv: List[str]) -> int:
         promote_symbols_enabled=args.promote_symbols,
         symbol_promotion_data=symbol_promotion_data,
         compile_shape_enabled=not args.no_compile_shape_fix,
-        compile_shape_data={"stats": compile_shape_stats, "items": compile_shape_items}
+        compile_shape_data={"stats": compile_shape_stats, "items": compile_shape_items},
+        expression_simplification_enabled=expression_simplification_enabled,
+        expression_simplification_data=expression_simplification_data,
+        expression_simplifications=expression_simplifications,
+        skipped_expression_simplifications=skipped_expression_simplifications
     )
     
     write_readability_report_json(report, out_dir)
