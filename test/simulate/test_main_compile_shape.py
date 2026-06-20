@@ -175,3 +175,122 @@ int32_t main(uint64_t arg0)
     normalized, items, stats = dedupe_and_resolve_forward_declarations(c_input)
     assert "int32_t main_0x100000548(uint64_t arg0)" in normalized
     assert stats["duplicate_main_definitions_renamed"] == 1
+
+
+def test_main_void_signature_never_emitted():
+    """
+    A main function must never emit 'int32_t main(void)' or 'main(void)' signatures.
+    The only valid hosted main prototype is int32_t main(int32_t argc, char **argv).
+    """
+    fn = ReconstructedFunction(
+        name="_main",
+        canonical_name="_main",
+        c_name="main",
+        entry_point="0x100000460",
+        function_kind="entrypoint",
+        return_type="i32",
+        parameters=[],  # No parameters — must still emit argc, char **argv
+        local_variables=[],
+        body_status="structured",
+        structured_regions=[],
+        abi_argument_bindings=[],
+        parameter_layout_evidence=[],
+        layout_candidates=[],
+        instruction_count=2,
+        basic_block_count=1,
+        warnings=[],
+        evidence_notes=[],
+        lowered_statements=[],
+        lowered_blocks={},
+        lowering={}
+    )
+
+    lines = []
+    _emit_function(fn, lines)
+    emitted = "\n".join(lines)
+
+    assert "main(void)" not in emitted
+    assert "int32_t main(int32_t argc, char **argv)" in emitted
+
+
+def test_main_uint64_arg_signature_never_emitted():
+    """
+    main must never emit 'int32_t main(uint64_t arg0, ...)' or any uint64_t param variant.
+    ABI normalisation must always convert it to the hosted main prototype.
+    """
+    fn = ReconstructedFunction(
+        name="_main",
+        canonical_name="_main",
+        c_name="main",
+        entry_point="0x100000460",
+        function_kind="entrypoint",
+        return_type="i32",
+        parameters=[
+            {"name": "arg0", "type": "u64"},
+            {"name": "arg1", "type": "u64"},
+        ],
+        local_variables=[],
+        body_status="structured",
+        structured_regions=[],
+        abi_argument_bindings=[],
+        parameter_layout_evidence=[],
+        layout_candidates=[],
+        instruction_count=2,
+        basic_block_count=1,
+        warnings=[],
+        evidence_notes=[],
+        lowered_statements=[],
+        lowered_blocks={},
+        lowering={}
+    )
+
+    lines = []
+    _emit_function(fn, lines)
+    emitted = "\n".join(lines)
+
+    # The signature must not contain uint64_t parameter types
+    assert "uint64_t arg0" not in emitted
+    assert "uint64_t arg1" not in emitted
+    assert "int32_t main(int32_t argc, char **argv)" in emitted
+
+
+def test_non_main_function_not_normalized():
+    """
+    Non-main functions must NOT have their signatures rewritten to the hosted main prototype.
+    """
+    fn = ReconstructedFunction(
+        name="helper_func",
+        canonical_name="helper_func",
+        c_name="helper_func",
+        entry_point="0x100000550",
+        function_kind="user",
+        return_type="u64",
+        parameters=[
+            {"name": "arg0", "type": "u64"},
+            {"name": "arg1", "type": "u64"},
+        ],
+        local_variables=[],
+        body_status="structured",
+        structured_regions=[],
+        abi_argument_bindings=[],
+        parameter_layout_evidence=[],
+        layout_candidates=[],
+        instruction_count=2,
+        basic_block_count=1,
+        warnings=[],
+        evidence_notes=[],
+        lowered_statements=[],
+        lowered_blocks={},
+        lowering={}
+    )
+
+    lines = []
+    _emit_function(fn, lines)
+    emitted = "\n".join(lines)
+
+    # Non-main functions should keep their uint64_t arg0/arg1 params
+    assert "uint64_t arg0" in emitted
+    assert "uint64_t arg1" in emitted
+    # And must NOT get int32_t argc, char **argv
+    assert "argc" not in emitted
+    assert "argv" not in emitted

@@ -9,6 +9,10 @@ from typing import Dict, Any, List, Set, Tuple, Optional
 
 logger = logging.getLogger("readability.symbol_promotion")
 
+# Import the canonical token-safe C line splitter from the shared Phase 5 utility.
+# Phase 7 uses it for identifier scanning during symbol promotion.
+from src.ir.source.c_tokens import split_c_line  # noqa: E402
+
 IDENTIFIER_RE = re.compile(r"^[a-zA-Z_][a-zA-Z0-9_]*$")
 STACK_VAR_RE = re.compile(r"^stack_(m)?([0-9]+)$")
 
@@ -22,86 +26,6 @@ C_KEYWORDS = {
     "uint16_t", "uint32_t", "uint64_t", "int8_t", "int16_t", "int32_t", "int64_t",
     "HEPHAESTUS_UNKNOWN_COND", "HEPHAESTUS_CSET"
 }
-
-def split_c_line(line: str, inside_block_comment: bool) -> Tuple[List[Tuple[str, str]], bool]:
-    """
-    Statefully splits a C line into chunks of code, string literals, and comments.
-    Preserves exact formatting and line endings.
-    """
-    chunks = []
-    n = len(line)
-    i = 0
-    current_chunk = []
-    
-    def flush_code():
-        if current_chunk:
-            chunks.append(("code", "".join(current_chunk)))
-            current_chunk.clear()
-            
-    while i < n:
-        if inside_block_comment:
-            # Looking for end of block comment '*/'
-            if i + 1 < n and line[i:i+2] == "*/":
-                chunks.append(("comment", "*/"))
-                inside_block_comment = False
-                i += 2
-            else:
-                end_idx = line.find("*/", i)
-                if end_idx != -1:
-                    chunks.append(("comment", line[i:end_idx]))
-                    i = end_idx
-                else:
-                    chunks.append(("comment", line[i:]))
-                    i = n
-        else:
-            if i + 1 < n and line[i:i+2] == "/*":
-                flush_code()
-                chunks.append(("comment", "/*"))
-                inside_block_comment = True
-                i += 2
-            elif i + 1 < n and line[i:i+2] == "//":
-                flush_code()
-                chunks.append(("comment", line[i:]))
-                i = n
-            elif line[i] == '"':
-                flush_code()
-                str_chars = ['"']
-                i += 1
-                escaped = False
-                while i < n:
-                    c = line[i]
-                    str_chars.append(c)
-                    if escaped:
-                        escaped = False
-                    elif c == '\\':
-                        escaped = True
-                    elif c == '"':
-                        i += 1
-                        break
-                    i += 1
-                chunks.append(("string", "".join(str_chars)))
-            elif line[i] == "'":
-                flush_code()
-                char_chars = ["'"]
-                i += 1
-                escaped = False
-                while i < n:
-                    c = line[i]
-                    char_chars.append(c)
-                    if escaped:
-                        escaped = False
-                    elif c == '\\':
-                        escaped = True
-                    elif c == "'":
-                        i += 1
-                        break
-                    i += 1
-                chunks.append(("string", "".join(char_chars)))
-            else:
-                current_chunk.append(line[i])
-                i += 1
-    flush_code()
-    return chunks, inside_block_comment
 
 def rewrite_code_chunk(code_text: str, rename_map: Dict[str, str]) -> str:
     """

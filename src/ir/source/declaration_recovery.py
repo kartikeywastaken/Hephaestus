@@ -336,21 +336,11 @@ def collect_used_identifiers(lines: List[str]) -> Set[str]:
     """
     Find all C identifiers inside executable code chunks.
     Avoids comments, string/char literals, and the HEPHAESTUS_UNKNOWN_COND/HEPHAESTUS_CSET helper names.
+
+    Uses the shared c_tokens utility so Phase 5 does not depend on Phase 7 readability code.
     """
-    from src.readability.symbol_promotion import split_c_line
-    
-    used = set()
-    inside_block_comment = False
-    for line in lines:
-        chunks, inside_block_comment = split_c_line(line, inside_block_comment)
-        for chunk_type, content in chunks:
-            if chunk_type == "code":
-                # Find all word-boundary identifiers
-                words = re.findall(r'\b([a-zA-Z_][a-zA-Z0-9_]*)\b', content)
-                for word in words:
-                    if word not in {"HEPHAESTUS_UNKNOWN_COND", "HEPHAESTUS_CSET"}:
-                        used.add(word)
-    return used
+    from src.ir.source.c_tokens import collect_identifiers_from_code_only
+    return collect_identifiers_from_code_only(lines)
 
 
 def analyze_abi_scratch_declarations(

@@ -258,3 +258,155 @@ def test_global_function_collision():
         all_declarations=all_decls
     )
     assert has_collision
+
+
+def test_main_argc_argv_not_promoted():
+    """
+    Symbol promotion must never rename 'argc' or 'argv' in main's signature.
+    The real main must always be: int32_t main(int32_t argc, char **argv)
+    """
+    from src.readability.symbol_promotion import SymbolPromotionEngine
+
+    c_input = """\
+int32_t main(int32_t argc, char **argv);
+
+int32_t main(int32_t argc, char **argv)
+{
+    /* Entry: 0x100000460 */
+    u64 arg0 = (u64)argc;                  /* main ABI bridge: argc */
+    u64 arg1 = (u64)(uintptr_t)argv;       /* main ABI bridge: argv */
+    return 0;
+}
+"""
+    # Build a minimal source_recon dict that has argc/argv as params for main
+    source_recon = {
+        "data": {
+            "functions": [{
+                "c_name": "main",
+                "name": "_main",
+                "canonical_name": "_main",
+                "entry_point": "0x100000460",
+                "parameters": [
+                    {"name": "argc", "type": "i32"},
+                    {"name": "argv", "type": "pointer"}
+                ]
+            }]
+        }
+    }
+
+    engine = SymbolPromotionEngine(
+        source_recon=source_recon,
+        type_recovery={},
+        phase4_semantics={},
+        layout_recovery={},
+        promote_temps=False,
+    )
+    promoted_c, report = engine.run_symbol_promotion(c_input)
+
+    # The main signature must still have argc and argv — never param_0/param_1
+    assert "int32_t main(int32_t argc, char **argv)" in promoted_c
+    assert "param_c" not in promoted_c
+    assert "param_v" not in promoted_c
+    assert "param_0" not in promoted_c or "u64 param_0" in promoted_c  # bridge is ok
+
+
+def test_readable_does_not_duplicate_inherited_scratch_declarations():
+    """
+    If Phase 5 already inserted '/* ABI scratch declarations: */' + 'u64 arg0 = 0;',
+    Phase 7 compile-shape hardening must not insert a second 'u64 arg0 = 0;'.
+    """
+    c_input = """\
+uint64_t recursive_sum(uint64_t arg1, uint64_t arg2, uint64_t arg_30h)
+{
+    /* Entry: 0x10000082c */
+    /* Body status: structured */
+
+    /* Conservative pseudo declarations: */
+    u64 tmp_x0 = 0;
+
+    /* ABI scratch declarations: */
+    u64 arg0 = 0; /* added for ABI scratch compile-shape */
+
+    arg0 = arg1 + arg2;
+    arg0 = arg0 - arg_30h;
+    return arg0;
+}
+"""
+    hardened, items, stats = harden_compile_shape_functions(
+        c_content=c_input,
+        promote_temps_active=False,
+        function_promotions={},
+        original_types_by_func={},
+        added_decls_from_predicates={}
+    )
+
+    # arg0 is already declared via ABI scratch block — must not be duplicated
+    # Count occurrences of "u64 arg0"
+    import re
+    count = len(re.findall(r'\bu64\s+arg0\b', hardened))
+    assert count == 1, f"Expected exactly 1 'u64 arg0' declaration, got {count}"
+
+    # arg1 and arg_30h are parameters — must not be re-declared
+    assert "u64 arg1" not in hardened
+    assert "u64 arg_30h" not in hardened
+
+
+def test_predicate_with_safe_pseudo_register_gets_declaration():
+    """
+    If a predicate recovery introduces tmp_w8 (undeclared but safe pseudo-reg),
+    compile-shape hardening must add a u32 declaration for it.
+    """
+    c_input = """\
+uint64_t test_func(uint64_t arg0)
+{
+    /* Conservative pseudo declarations: */
+    u64 tmp_x0 = 0;
+
+    if (tmp_w8 < 6) {
+        return arg0;
+    }
+    return 0;
+}
+"""
+    added_decls = {"test_func": ["tmp_w8"]}
+    hardened, items, stats = harden_compile_shape_functions(
+        c_content=c_input,
+        promote_temps_active=False,
+        function_promotions={},
+        original_types_by_func={},
+        added_decls_from_predicates=added_decls
+    )
+
+    assert "u32 tmp_w8 = 0;" in hardened
+    assert stats["missing_predicate_declarations_added"] == 1
+
+
+def test_predicate_with_unsafe_identifier_is_skipped():
+    """
+    A predicate that references an identifier like 'some_var' (not a safe
+    pseudo-register and not an ABI scratch identifier) should be left as
+    HEPHAESTUS_UNKNOWN_COND by the predicate recovery layer (not introduced
+    into hardening). Compile-shape hardening should NOT add 'some_var'.
+    """
+    # Simulate what happens if such a predicate slipped through:
+    # compile-shape hardening should not add arbitrary variable names
+    c_input = """\
+uint64_t test_func(uint64_t arg0)
+{
+    /* Conservative pseudo declarations: */
+    u64 tmp_x0 = 0;
+
+    return arg0;
+}
+"""
+    # 'some_var' is NOT in added_decls_from_predicates (it was skipped by predicate recovery)
+    hardened, items, stats = harden_compile_shape_functions(
+        c_content=c_input,
+        promote_temps_active=False,
+        function_promotions={},
+        original_types_by_func={},
+        added_decls_from_predicates={}
+    )
+
+    assert "some_var" not in hardened
+    assert stats["missing_predicate_declarations_added"] == 0
