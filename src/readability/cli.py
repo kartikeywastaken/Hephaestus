@@ -43,6 +43,7 @@ def run_build_readable_cli(argv: List[str]) -> int:
     parser.add_argument("--simplify-expressions", action="store_true", dest="simplify_expressions", default=True, help="Enable Phase 7.3 expression simplification (default).")
     parser.add_argument("--no-simplify-expressions", action="store_false", dest="simplify_expressions", help="Disable Phase 7.3 expression simplification.")
     parser.add_argument("--no-copy-op-store-simplification", action="store_true", dest="no_copy_op_store_simplification", default=False, help="Disable copy-op-store category of expression simplification.")
+    parser.add_argument("--enable-mask-cast-simplification", action="store_true", dest="enable_mask_cast_simplification", default=False, help="Enable Phase 7.3.1 mask-cast simplification (disabled by default).")
 
     
     try:
@@ -372,11 +373,14 @@ def run_build_readable_cli(argv: List[str]) -> int:
                 "reason": "disabled by --no-copy-op-store-simplification"
             })
             
+        enable_mask_cast = getattr(args, "enable_mask_cast_simplification", False)
+
         try:
             # Step 6: Run expression simplification
             simplified_c, simplifications, skipped_list, expr_stats = simplify_expressions(
                 readable_c,
-                enable_copy_op_store=enable_copy_op_store
+                enable_copy_op_store=enable_copy_op_store,
+                enable_mask_cast=enable_mask_cast,
             )
             expression_simplifications = [
                 {
@@ -427,7 +431,14 @@ def run_build_readable_cli(argv: List[str]) -> int:
                 # Rollback!
                 readable_c = pre_simplification_c
                 # Append rollback status for each category to skipped list
-                for cat in ["identity_arithmetic", "redundant_parentheses", "copy_op_store"]:
+                _all_cats = [
+                    "identity_arithmetic", "redundant_parentheses",
+                    "self_assignment", "double_parentheses",
+                    "temp_copy_roundtrip", "copy_op_store",
+                ]
+                if enable_mask_cast:
+                    _all_cats.append("mask_cast")
+                for cat in _all_cats:
                     if cat == "copy_op_store" and not enable_copy_op_store:
                         continue
                     skipped_expression_simplifications.append({
@@ -451,7 +462,14 @@ def run_build_readable_cli(argv: List[str]) -> int:
         except Exception as e:
             logger.exception("Expression simplification crashed: %s", e)
             readable_c = pre_simplification_c
-            for cat in ["identity_arithmetic", "redundant_parentheses", "copy_op_store"]:
+            _all_cats = [
+                "identity_arithmetic", "redundant_parentheses",
+                "self_assignment", "double_parentheses",
+                "temp_copy_roundtrip", "copy_op_store",
+            ]
+            if enable_mask_cast:
+                _all_cats.append("mask_cast")
+            for cat in _all_cats:
                 if cat == "copy_op_store" and not enable_copy_op_store:
                     continue
                 skipped_expression_simplifications.append({
@@ -466,13 +484,18 @@ def run_build_readable_cli(argv: List[str]) -> int:
             expression_simplification_data["category_statuses"] = skipped_expression_simplifications
     else:
         # Simplification disabled
+        _disabled_cats = [
+            "identity_arithmetic", "redundant_parentheses",
+            "self_assignment", "double_parentheses",
+            "temp_copy_roundtrip", "copy_op_store",
+        ]
         skipped_expression_simplifications = [
             {
                 "category": cat,
                 "status": "disabled",
                 "reason": "disabled by --no-simplify-expressions"
             }
-            for cat in ["identity_arithmetic", "redundant_parentheses", "copy_op_store"]
+            for cat in _disabled_cats
         ]
 
     readable_c_path = out_dir / "recovered_readable.c"

@@ -768,6 +768,7 @@ def handle_run_all_cli():
     parser.add_argument("--simplify-expressions", action="store_true", dest="simplify_expressions", default=True, help="Enable Phase 7.3 expression simplification (default).")
     parser.add_argument("--no-simplify-expressions", action="store_false", dest="simplify_expressions", help="Disable Phase 7.3 expression simplification.")
     parser.add_argument("--no-copy-op-store-simplification", action="store_true", dest="no_copy_op_store_simplification", default=False, help="Disable copy-op-store category of expression simplification.")
+    parser.add_argument("--enable-mask-cast-simplification", action="store_true", dest="enable_mask_cast_simplification", default=False, help="Enable Phase 7.3.1 mask-cast simplification (disabled by default).")
     
     args = parser.parse_args(sys.argv[2:])
     
@@ -800,6 +801,7 @@ def handle_run_all_cli():
             strict_readable_clang=args.strict_readable_clang,
             simplify_expressions=args.simplify_expressions,
             no_copy_op_store_simplification=args.no_copy_op_store_simplification,
+            enable_mask_cast_simplification=getattr(args, "enable_mask_cast_simplification", False),
         )
 
 

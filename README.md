@@ -48,21 +48,24 @@ Hephaestus does not insert mock instructions, fake variables, fake types, fake s
 * Phase 6.1 - 6.3: Static validator, evidence indexes, and trace reports
 * Phase 6.4: Readability readiness quality gate
 * Phase 7.1: Static predicate recovery for human-readable C
-
+* Phase 7.2: Named local variable promotion and rename mapping
+* Phase 7.2.1 & 7.2.2: Compile-shape hardening and hosted main signature guardrails
+* Phase 7.3: Static expression simplification (gating, categories A–D, clang gate)
+* Phase 7.3.1: Expression simplification hardening (three-module architecture, categories E–H)
 
 ### Current Test Status
 
 ```text
-722 passed
+820 passed
 1 xfailed
 0 failures
 ```
 
-The adversarial and simulation test suites include cases for instruction validation, assembler stability, CFG structuring, operand binding, type constraints, semantic refinement, layout recovery, artifact merging, integration behavior, regression invariants, manifest generation, safe path utilities, stress generation, and quality gate scores/rules evaluation.
+The adversarial and simulation test suites include cases for instruction validation, assembler stability, CFG structuring, operand binding, type constraints, semantic refinement, layout recovery, artifact merging, integration behavior, regression invariants, manifest generation, safe path utilities, stress generation, readability, expression simplification rules, and quality gate scores/rules evaluation.
 
 ### Next
 
-* Phase 7.2: Named local variable promotion and expression simplification
+* Phase 8: Data-Layout Synthesis & Struct Reconstruction (Future Work)
 
 ---
 
@@ -441,6 +444,19 @@ Each stage is stress-tested with synthetic fixtures, adversarial cases, and comp
 │   │       ├── resolver.py
 │   │       ├── semantic_emitter.py
 │   │       └── signatures.py
+│   ├── pipeline/
+│   │   ├── runner.py
+│   │   ├── clang.py
+│   │   └── manifest.py
+│   ├── readability/
+│   │   ├── cli.py
+│   │   ├── compile_shape.py
+│   │   ├── expression_models.py
+│   │   ├── expression_rules.py
+│   │   ├── expression_simplification.py
+│   │   ├── predicate_recovery.py
+│   │   ├── report.py
+│   │   └── symbol_promotion.py
 │   └── scripts/
 │       └── GhidraExtractorScript.java
 ├── test/
@@ -452,6 +468,7 @@ Each stage is stress-tested with synthetic fixtures, adversarial cases, and comp
 │       ├── test_adversarial_instruction_validation.py
 │       ├── test_adversarial_integration.py
 │       ├── test_engine.py
+│       ├── test_expression_simplification.py
 │       ├── test_instruction_extraction.py
 │       ├── test_ir.py
 │       ├── test_operand_binding.py
@@ -760,7 +777,20 @@ python3 main.py stress-test \
 
 ## Roadmap
 
-### Phase 6 — Validation & Repair
-- **Phase 6.1: Static Validation and Evidence Consistency Checks** (Complete): Add a read-only validator verifying artifact consistency, metrics, helpers, and C safety policy invariants.
-- **Phase 6.2: Repair and Feedback Loop** (Future Work): Compile generated C code, capture syntactic mismatches, and feed repairs back into decompiler semantics.
+### Phase 6 — Validation, Indexing, and Gatekeeping
+- **Phase 6.1: Static Validation and Evidence Consistency Checks** (Complete): Standalone validator for artifact schemas, metrics consistency, and safety policy compliance.
+- **Phase 6.2: Statement-Level Evidence Traceability** (Complete): Traceability indexer mapping emitted source lines to analysis evidence categories.
+- **Phase 6.3: Evidence Trace Reports** (Complete): Automated generation of human/machine-readable trace maps and validation details.
+- **Phase 6.4: Readability Readiness Quality Gate** (Complete): Logic-based staging gate deciding if the compiler layout is ready for readability promotion.
+
+### Phase 7 — Human-Readable Readability Reconstruction
+- **Phase 7.1: Static Predicate Recovery** (Complete): Replaces low-level conditional branch loops and select structures with statically inferred boolean expressions.
+- **Phase 7.2: Named Local Variable Promotion** (Complete): Promotes stack variables and params to readable names, and function names to canonical symbols.
+  - **Phase 7.2.1: Compile-Shape Hardening** (Complete): Resolves forward declarations and guarantees syntax rollback safety.
+  - **Phase 7.2.2: Hosted Main Signature Guardrails** (Complete): Normalizes hosted entry point arguments signatures.
+- **Phase 7.3: Static Expression Simplification** (Complete): Gated token-safe RHS identity constants folding and parenthetical simplification.
+  - **Phase 7.3.1: Expression Simplification Hardening** (Complete): Decoupled three-module structure and introduced Category E (self-assignment), Category F (double parens), Category G (temp roundtrip), and Category H (mask-cast).
+
+### Phase 8 — Data-Layout Synthesis & Struct Reconstruction
+- **Phase 8.1: Struct Recovery** (Future Work): Synthesis of layout access patterns into C struct definitions and field member renames.
 

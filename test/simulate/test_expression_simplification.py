@@ -7,10 +7,33 @@ import pytest
 from src.readability.expression_simplification import (
     simplify_expressions,
     _is_rhs_safe,
-    _try_simplify_identity_arithmetic,
-    _try_simplify_parentheses
+    # Phase 7.3.1 re-exports
+    ExprSimplification,
+    ExprSimplificationStats,
 )
+from src.readability.expression_rules import (
+    rule_identity_arithmetic,
+    rule_redundant_parentheses,
+    rule_self_assignment,
+    rule_double_parentheses,
+    rule_mask_cast,
+)
+from src.readability.expression_models import RuleResult
 from src.readability.report import build_readability_report
+
+# Backward-compat aliases (the old private functions now live in expression_rules)
+def _try_simplify_identity_arithmetic(expr):
+    result = rule_identity_arithmetic(expr)
+    if result is None:
+        return None
+    return (result.new_expr, result.reason)
+
+def _try_simplify_parentheses(expr):
+    result = rule_redundant_parentheses(expr)
+    if result is None:
+        return None
+    return (result.new_expr, result.reason)
+
 
 def test_rhs_safety_checks():
     # Safe RHS cases
@@ -176,3 +199,208 @@ def test_schema_version_and_phase_conditional():
     )
     assert report_rolled["schema_version"] == "readability-1.2"
     assert report_rolled["phase"] == "7.2.1"
+
+
+# ---------------------------------------------------------------------------
+# Phase 7.3.1 — New category tests
+# ---------------------------------------------------------------------------
+
+def test_import_continuity():
+    """Ensure Phase 7.3 public symbols are still importable (backward compat)."""
+    # Data models re-exported from expression_simplification
+    assert ExprSimplification is not None
+    assert ExprSimplificationStats is not None
+    # Rule functions importable from expression_rules
+    assert rule_identity_arithmetic is not None
+    assert rule_redundant_parentheses is not None
+    assert rule_self_assignment is not None
+    assert rule_double_parentheses is not None
+    assert rule_mask_cast is not None
+    assert RuleResult is not None
+
+
+def test_category_e_self_assignment():
+    """Category E: self-assignment lines are removed and replaced with evidence comment."""
+    c_in = """\
+void func() {
+    tmp_w8 = tmp_w8;
+    local_20 = local_20; /* orig */
+    tmp_x0 = tmp_x0;
+}
+"""
+    c_out, simplifications, _, stats = simplify_expressions(c_in)
+
+    assert stats.self_assignment == 3
+    assert stats.simplified == 3
+    # Original assignment lines should be gone, replaced by evidence comments
+    assert "tmp_w8 = tmp_w8;" not in c_out
+    assert "local_20 = local_20;" not in c_out
+    assert "tmp_x0 = tmp_x0;" not in c_out
+    # Evidence comments should be present
+    assert "self-assignment removed" in c_out
+
+    # rule_self_assignment directly
+    result = rule_self_assignment("tmp_w8", "tmp_w8")
+    assert result is not None
+    assert result.category == "self_assignment"
+    assert result.new_expr == ""
+
+    # Distinct LHS/RHS should not match
+    assert rule_self_assignment("tmp_w8", "tmp_w9") is None
+    # Non-simple operand LHS should not match
+    assert rule_self_assignment("arr[0]", "arr[0]") is None
+
+
+def test_category_f_double_parentheses():
+    """Category F: double-wrapped parentheses around a simple operand are collapsed."""
+    c_in = """\
+void func() {
+    tmp_w8 = ((tmp_w9));
+    local_20 = ((42));
+}
+"""
+    c_out, simplifications, _, stats = simplify_expressions(c_in)
+
+    assert stats.double_parentheses == 2
+    assert stats.simplified == 2
+    assert "tmp_w8 = tmp_w9;" in c_out
+    assert "local_20 = 42;" in c_out
+
+    # rule_double_parentheses directly
+    result = rule_double_parentheses("((tmp_w8))")
+    assert result is not None
+    assert result.new_expr == "tmp_w8"
+    assert result.category == "double_parentheses"
+
+    # Single-wrap: should not match (that's Category B)
+    assert rule_double_parentheses("(tmp_w8)") is None
+
+    # Type name inside: should be skipped
+    assert rule_double_parentheses("((u64))") is None
+
+    # More than two levels: should not match
+    assert rule_double_parentheses("(((tmp_w8)))") is None
+
+
+def test_category_g_temp_copy_roundtrip():
+    """Category G: tmp = src; src = tmp; is folded into an evidence comment."""
+    c_in = """\
+void func() {
+    tmp_w8 = local_20;
+    local_20 = tmp_w8;
+}
+"""
+    c_out, simplifications, _, stats = simplify_expressions(c_in)
+
+    assert stats.temp_copy_roundtrip == 1
+    assert stats.simplified == 1
+    # The original lines must NOT appear as standalone code (they may appear inside comments)
+    for line in c_out.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("/*") or stripped.startswith("//"):
+            continue  # evidence comment line, ok
+        assert "tmp_w8 = local_20;" not in stripped, f"Unexpected code line: {stripped!r}"
+        assert "local_20 = tmp_w8;" not in stripped, f"Unexpected code line: {stripped!r}"
+    # Evidence comment should be present
+    assert "temp copy roundtrip removed" in c_out
+
+    # Unsafe: tmp used in surrounding region
+    c_region = """\
+void func() {
+    tmp_w8 = local_20;
+    local_20 = tmp_w8;
+    tmp_w8 = 42;
+}
+"""
+    _, _, _, stats_r = simplify_expressions(c_region)
+    assert stats_r.temp_copy_roundtrip == 0
+
+    # Unsafe: width mismatch
+    c_width = """\
+void func() {
+    tmp_x8 = local_20;
+    local_20 = tmp_w8;
+}
+"""
+    _, _, _, stats_w = simplify_expressions(c_width)
+    assert stats_w.temp_copy_roundtrip == 0
+
+    # Unsafe: identical var on both sides
+    c_same = """\
+void func() {
+    local_20 = local_20;
+    local_20 = local_20;
+}
+"""
+    # Both lines are self-assignments (Category E), not roundtrips
+    _, _, _, stats_s = simplify_expressions(c_same)
+    assert stats_s.temp_copy_roundtrip == 0
+
+    # Unsafe: boundary line in between
+    c_boundary = """\
+void func() {
+    tmp_w8 = local_20;
+    if (cond) {}
+    local_20 = tmp_w8;
+}
+"""
+    _, _, _, stats_b = simplify_expressions(c_boundary)
+    assert stats_b.temp_copy_roundtrip == 0
+
+
+def test_category_h_mask_cast_disabled_by_default():
+    """Category H: mask-cast is disabled by default; not applied unless enabled."""
+    c_in = """\
+void func() {
+    tmp_w8 = (u32)(u32)tmp_w8;
+}
+"""
+    # Default: disabled
+    c_out_default, _, _, stats_default = simplify_expressions(c_in, enable_mask_cast=False)
+    assert stats_default.mask_cast == 0
+    assert "(u32)(u32)tmp_w8" in c_out_default
+
+    # Enabled: simplifies x = (T)(T)x; -> x = x;
+    c_out_enabled, _, _, stats_enabled = simplify_expressions(c_in, enable_mask_cast=True)
+    assert stats_enabled.mask_cast == 1
+    assert "tmp_w8 = tmp_w8;" in c_out_enabled
+
+    # rule_mask_cast directly: disabled
+    assert rule_mask_cast("tmp_w8", "(u32)(u32)tmp_w8", enabled=False) is None
+
+    # rule_mask_cast directly: enabled, same type double-cast
+    result = rule_mask_cast("tmp_w8", "(u32)(u32)tmp_w8", enabled=True)
+    assert result is not None
+    assert result.new_expr == "tmp_w8"
+    assert result.category == "mask_cast"
+
+    # rule_mask_cast: different types should NOT simplify (outer != inner)
+    assert rule_mask_cast("tmp_w8", "(u32)(u64)tmp_w8", enabled=True) is None
+
+    # rule_mask_cast: LHS does not match inner operand
+    assert rule_mask_cast("tmp_w9", "(u32)(u32)tmp_w8", enabled=True) is None
+
+    # rule_mask_cast: unknown type not in safe set
+    assert rule_mask_cast("tmp_w8", "(my_type)(my_type)tmp_w8", enabled=True) is None
+
+
+def test_category_e_rhs_safety_gate():
+    """Category E respects the safety gate: x = x is fine but complex forms are not."""
+    # Self-assignment of simple identifier → should be removed (Category E)
+    c_simple = """\
+void func() {
+    tmp_w8 = tmp_w8;
+}
+"""
+    _, _, _, stats = simplify_expressions(c_simple)
+    assert stats.self_assignment == 1
+
+    # Non-simple RHS form should NOT trigger Category E (e.g., tmp = tmp + 0 goes to Category A)
+    c_arithmetic = """\
+void func() {
+    tmp_w8 = tmp_w8 + 0;
+}
+"""
+    _, _, _, stats2 = simplify_expressions(c_arithmetic)
+    assert stats2.self_assignment == 0
+    assert stats2.identity_arithmetic == 1

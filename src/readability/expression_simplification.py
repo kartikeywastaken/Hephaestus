@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Phase 7.3 Static Expression Simplification
+Phase 7.3 / 7.3.1 Static Expression Simplification
 
-Applies conservative, evidence-preserving simplifications to the code chunks
-of recovered_readable.c.  This module is token-safe: it only touches
-identifiers and expressions that appear in executable C code positions.
-String literals, character literals, line comments, and block comments are
-never modified.
+Orchestration layer.  Individual rule logic lives in expression_rules.py.
+Data models live in expression_models.py.
+
+This module is token-safe: it only touches identifiers and expressions that
+appear in executable C code positions.  String literals, character literals,
+line comments, and block comments are never modified.
 
 Core rule:
     Missing evidence is acceptable.
@@ -21,67 +22,63 @@ Pipeline position:
     Before clang -fsyntax-only gate.
 
 Simplification categories:
-    A — Identity arithmetic  (x + 0  ->  x,  x * 1  ->  x, etc.)
-    B — Redundant parentheses on simple identifiers/literals
-    C — Assignment RHS simplification  (x = x + 0;  ->  x = x;)
-    D — Three-line copy-op-store folding  (conservative)
+    A — Identity arithmetic     (x + 0  ->  x,  x * 1  ->  x, etc.)
+    B — Redundant parentheses   ((ident) -> ident)
+    C — Assignment RHS gating   (restricts A/B/E/F/H to simple assignment RHS)
+    D — Copy-op-store folding   (three consecutive lines, conservative)
+    E — Self-assignment removal (x = x;  -> evidence comment)
+    F — Double parentheses      (((ident)) -> ident)
+    G — Temp copy roundtrip     (tmp = x; x = tmp; -> removed with evidence)
+    H — Mask-cast               (disabled by default; --enable-mask-cast-simplification)
 """
 
 from __future__ import annotations
 
 import re
 import logging
-from dataclasses import dataclass, field
 from typing import List, Dict, Tuple, Optional, Any
 
 from src.ir.source.c_tokens import split_c_line
 
-logger = logging.getLogger("readability.expression_simplification")
-
-# ---------------------------------------------------------------------------
-# Data models
-# ---------------------------------------------------------------------------
-
-@dataclass
-class ExprSimplification:
-    """One accepted simplification record."""
-    site_id: str
-    function: str
-    line_number: int           # 1-indexed, relative to the whole file
-    category: str              # identity_arithmetic | redundant_parentheses |
-                               # assignment_rhs | copy_op_store
-    old_text: str              # original line text (stripped)
-    new_text: str              # simplified line text (stripped)
-    reason: str
-    evidence_preserved: bool
-    confidence: str = "static_safe"
-
-
-@dataclass
-class ExprSimplificationStats:
-    """Aggregate statistics for expression simplification."""
-    sites_total: int = 0
-    simplified: int = 0
-    skipped: int = 0
-    identity_arithmetic: int = 0
-    redundant_parentheses: int = 0
-    assignment_rhs: int = 0
-    copy_op_store: int = 0
-
-
-# ---------------------------------------------------------------------------
-# Safe identifier / literal patterns
-# ---------------------------------------------------------------------------
-
-# A word-boundary identifier
-_IDENT = r"[a-zA-Z_][a-zA-Z0-9_]*"
-
-# A simple operand: identifier or integer literal with optional suffixes
-_SIMPLE_OPERAND_RE = re.compile(
-    r"^(?:[a-zA-Z_][a-zA-Z0-9_]*|0[xX][0-9a-fA-F]+|0[0-7]*|[1-9][0-9]*)(?:[uU]|[uU]ll|[uU]LL|[lL]l|[lL]L)?$"
+# Re-export models so existing imports from this module continue to work.
+from src.readability.expression_models import (  # noqa: F401  (re-exported)
+    RuleResult,
+    ExprSimplification,
+    ExprSimplificationStats,
 )
 
-# A "simple parenthesised expression": matches ( <identifier> ) or ( <int_lit> )
+from src.readability.expression_rules import (
+    rule_identity_arithmetic,
+    rule_redundant_parentheses,
+    rule_self_assignment,
+    rule_double_parentheses,
+    rule_temp_copy_roundtrip,
+    rule_mask_cast,
+)
+
+logger = logging.getLogger("readability.expression_simplification")
+
+
+# ---------------------------------------------------------------------------
+# Patterns used only by the orchestration layer
+# ---------------------------------------------------------------------------
+
+_IDENT = r"[a-zA-Z_][a-zA-Z0-9_]*"
+
+# C type keywords (to detect cast context)
+_C_TYPE_NAMES = frozenset({
+    "u8", "u16", "u32", "u64", "i8", "i16", "i32", "i64",
+    "uint8_t", "uint16_t", "uint32_t", "uint64_t",
+    "int8_t", "int16_t", "int32_t", "int64_t",
+    "char", "int", "float", "double", "long", "short",
+    "void", "size_t", "uintptr_t", "intptr_t",
+    "unsigned", "signed",
+})
+
+# For exact identity constant detection (used in _is_rhs_safe)
+_ONE_CONSTANTS = {"1", "1u", "1U", "1ull", "1ULL", "1ll", "1LL"}
+
+# Simple parenthesised expression: ( ident ) or ( int_lit )
 _SIMPLE_PAREN_RE = re.compile(
     r"""^
     \(                              # opening paren
@@ -92,16 +89,6 @@ _SIMPLE_PAREN_RE = re.compile(
     $""",
     re.VERBOSE,
 )
-
-# C type keywords (to detect cast context and avoid mis-simplifying)
-_C_TYPE_NAMES = frozenset({
-    "u8", "u16", "u32", "u64", "i8", "i16", "i32", "i64",
-    "uint8_t", "uint16_t", "uint32_t", "uint64_t",
-    "int8_t", "int16_t", "int32_t", "int64_t",
-    "char", "int", "float", "double", "long", "short",
-    "void", "size_t", "uintptr_t", "intptr_t",
-    "unsigned", "signed",
-})
 
 # Assignment pattern:  <lhs_ident>  =  <rhs_expr> ;
 _ASSIGN_RE = re.compile(
@@ -114,7 +101,7 @@ _ASSIGN_RE = re.compile(
     re.VERBOSE | re.DOTALL,
 )
 
-# Three-line copy-op-store patterns
+# Three-line copy-op-store patterns (Category D)
 _COS_LINE1_RE = re.compile(
     r"""^
     (?P<tmp>[a-zA-Z_][a-zA-Z0-9_]*)
@@ -147,7 +134,7 @@ _COS_LINE3_RE = re.compile(
     re.VERBOSE,
 )
 
-# Control flow boundaries
+# Control flow boundary detector
 _CONTROL_FLOW_BOUNDARY_RE = re.compile(
     r"""
     \b(if|else|while|for|do|switch|case|break|continue|goto|return)\b
@@ -157,9 +144,10 @@ _CONTROL_FLOW_BOUNDARY_RE = re.compile(
     re.VERBOSE,
 )
 
-# Exact identity constants lists
-_ZERO_CONSTANTS = {"0", "0u", "0U", "0ull", "0ULL", "0ll", "0LL"}
-_ONE_CONSTANTS = {"1", "1u", "1U", "1ull", "1ULL", "1ll", "1LL"}
+# Simple operand pattern (identifier or integer literal with optional suffixes)
+_SIMPLE_OPERAND_RE = re.compile(
+    r"^(?:[a-zA-Z_][a-zA-Z0-9_]*|0[xX][0-9a-fA-F]+|0[0-7]*|[1-9][0-9]*)(?:[uU]|[uU]ll|[uU]LL|[lL]l|[lL]L)?$"
+)
 
 
 # ---------------------------------------------------------------------------
@@ -179,8 +167,7 @@ def _extract_code_text(line: str) -> Tuple[str, str, bool]:
         elif kind == "comment":
             comment_parts.append(text)
     code_text = "".join(code_parts).strip()
-    
-    # Reconstruct the trailing comment (strip the /* */ markers for readability)
+
     trailing = ""
     if comment_parts:
         trailing = "".join(comment_parts).strip()
@@ -192,7 +179,6 @@ def _extract_code_text(line: str) -> Tuple[str, str, bool]:
 
 
 def _is_simple_operand(text: str) -> bool:
-    """Return True iff text is a bare identifier or bare integer literal (with suffixes)."""
     return bool(_SIMPLE_OPERAND_RE.match(text.strip()))
 
 
@@ -200,7 +186,7 @@ def _is_boundary_line(line: str) -> bool:
     """Return True if line is a control-flow or comment barrier."""
     stripped = line.strip()
     if not stripped:
-        return True  # blank lines are boundaries
+        return True
     if stripped.startswith("//") or stripped.startswith("/*"):
         return True
     if _CONTROL_FLOW_BOUNDARY_RE.search(line):
@@ -209,7 +195,6 @@ def _is_boundary_line(line: str) -> bool:
 
 
 def _get_width_bits(name: str) -> Optional[int]:
-    """Extract register width size (32 or 64) from variable name."""
     if re.search(r'\b(?:tmp|temp)_w\d+\b', name) or re.search(r'\b[wW]\d+\b', name):
         return 32
     if re.search(r'\b(?:tmp|temp)_x\d+\b', name) or re.search(r'\b[xX]\d+\b', name):
@@ -227,9 +212,7 @@ def _rebuild_line_with_new_code(original_line: str, new_code: str, evidence: str
 
 
 def _make_evidence_comment(original_comment: str, reason: str, old_rhs: str, new_rhs: str) -> str:
-    """
-    Build evidence comment placing original comment first.
-    """
+    """Build evidence comment placing original comment first."""
     desc = f"{reason}: {old_rhs} -> {new_rhs}"
     if original_comment:
         return f"{original_comment}; {desc}"
@@ -237,7 +220,7 @@ def _make_evidence_comment(original_comment: str, reason: str, old_rhs: str, new
 
 
 # ---------------------------------------------------------------------------
-# RHS Gating & Safety Checks
+# RHS Gating & Safety Checks (Category C gate)
 # ---------------------------------------------------------------------------
 
 def _is_rhs_safe(rhs: str) -> bool:
@@ -246,18 +229,17 @@ def _is_rhs_safe(rhs: str) -> bool:
     array indexing, function calls, macros, helpers, etc.
     """
     rhs_stripped = rhs.strip()
-    
+
     if "->" in rhs_stripped:
         return False
     if "[" in rhs_stripped or "]" in rhs_stripped:
         return False
     if re.search(r'\b[a-zA-Z_]\w*\s*\(', rhs_stripped):
         return False
-        
-    # Check for pointer dereferences: if '*' is present, it is ONLY allowed
-    # if it's a Category A multiplication of 1.
+
+    # Check for pointer dereferences: * is ONLY allowed if it's a Category A
+    # multiplication of 1.
     if "*" in rhs_stripped:
-        # Check if it matches a valid multiplication of 1
         m_mul = re.match(r"^(.+?)\s*\*\s*(.+)$", rhs_stripped)
         if not m_mul:
             return False
@@ -270,119 +252,32 @@ def _is_rhs_safe(rhs: str) -> bool:
         if not is_valid_mul:
             return False
 
-    # Check for parentheses: ONLY allowed if it's a simple paren Category B match.
+    # Check for parentheses: ONLY allowed if it's a simple paren or double paren match
     if "(" in rhs_stripped or ")" in rhs_stripped:
+        # Allow single-level paren
         m_paren = _SIMPLE_PAREN_RE.match(rhs_stripped)
-        if not m_paren:
-            return False
-        inner = m_paren.group("inner").strip()
-        if inner in _C_TYPE_NAMES or inner.endswith("_t"):
-            return False
-            
+        if m_paren:
+            inner = m_paren.group("inner").strip()
+            if inner in _C_TYPE_NAMES or inner.endswith("_t"):
+                return False
+        else:
+            # Allow double-level paren (Category F)
+            from src.readability.expression_rules import _DOUBLE_PAREN_RE
+            m_double = _DOUBLE_PAREN_RE.match(rhs_stripped)
+            if m_double:
+                inner = m_double.group("inner").strip()
+                if inner in _C_TYPE_NAMES or inner.endswith("_t"):
+                    return False
+            else:
+                # Allow mask-cast pattern: (type)(type)ident
+                m_mask = re.match(
+                    r'^\([a-zA-Z_][a-zA-Z0-9_]*\)\s*\([a-zA-Z_][a-zA-Z0-9_]*\)\s*[a-zA-Z_][a-zA-Z0-9_]*$',
+                    rhs_stripped,
+                )
+                if not m_mask:
+                    return False
+
     return True
-
-
-# ---------------------------------------------------------------------------
-# Category A — Identity Arithmetic
-# ---------------------------------------------------------------------------
-
-def _try_simplify_identity_arithmetic(expr: str) -> Optional[Tuple[str, str]]:
-    """
-    Simplify arithmetic expressions using exact identity constants.
-    """
-    expr = expr.strip()
-    
-    # Match binary expression
-    m = re.match(r"^(.+?)\s*(<<|>>|[+\-*/|^])\s*(.+)$", expr)
-    if not m:
-        return None
-    lhs = m.group(1).strip()
-    op = m.group(2)
-    rhs = m.group(3).strip()
-
-    # Zero identity operators: +, -, |, ^, <<, >> (RHS is 0)
-    if op in {"+", "-", "|", "^", "<<", ">>"}:
-        if rhs in _ZERO_CONSTANTS and _is_simple_operand(lhs):
-            return lhs, "simplified identity expression"
-            
-    # Commutative zero identity operators: +, |, ^ (LHS is 0)
-    if op in {"+", "|", "^"}:
-        if lhs in _ZERO_CONSTANTS and _is_simple_operand(rhs):
-            return rhs, "simplified identity expression"
-
-    # One identity operators: *, / (RHS is 1)
-    if op in {"*", "/"}:
-        if rhs in _ONE_CONSTANTS and _is_simple_operand(lhs):
-            return lhs, "simplified identity expression"
-
-    # Commutative one identity operator: * (LHS is 1)
-    if op == "*":
-        if lhs in _ONE_CONSTANTS and _is_simple_operand(rhs):
-            return rhs, "simplified identity expression"
-
-    return None
-
-
-# ---------------------------------------------------------------------------
-# Category B — Redundant Parentheses
-# ---------------------------------------------------------------------------
-
-def _try_simplify_parentheses(expr: str) -> Optional[Tuple[str, str]]:
-    """
-    Remove redundant parentheses around simple identifiers or literals.
-    """
-    expr = expr.strip()
-    m = _SIMPLE_PAREN_RE.match(expr)
-    if not m:
-        return None
-    inner = m.group("inner").strip()
-    if inner in _C_TYPE_NAMES or inner.endswith("_t"):
-        return None
-    return inner, "simplified redundant parentheses"
-
-
-# ---------------------------------------------------------------------------
-# Single-line Statement Simplification
-# ---------------------------------------------------------------------------
-
-def _simplify_statement(
-    stmt_code: str,
-    comment: str,
-) -> Optional[Tuple[str, str, str, bool]]:
-    """
-    Try to simplify a single assignment statement.
-    """
-    stmt = stmt_code.strip()
-    if not stmt.endswith(";"):
-        return None
-
-    # We strictly enforce only simple assignment statements
-    m = _ASSIGN_RE.match(stmt)
-    if not m:
-        return None
-
-    lhs = m.group("lhs_ident")
-    rhs = m.group("rhs").strip()
-
-    # Gate RHS to make sure it contains no casts, pointers, array indexing, calls, etc.
-    if not _is_rhs_safe(rhs):
-        return None
-
-    # Try Category A: identity arithmetic
-    result = _try_simplify_identity_arithmetic(rhs)
-    if result:
-        new_rhs, reason = result
-        new_stmt = f"{lhs} = {new_rhs};"
-        return new_stmt, "identity_arithmetic", reason, True
-
-    # Try Category B: redundant parentheses
-    result = _try_simplify_parentheses(rhs)
-    if result:
-        new_rhs, reason = result
-        new_stmt = f"{lhs} = {new_rhs};"
-        return new_stmt, "redundant_parentheses", reason, True
-
-    return None
 
 
 # ---------------------------------------------------------------------------
@@ -403,7 +298,6 @@ def _try_copy_op_store(
     raw2 = lines[start_idx + 1]
     raw3 = lines[start_idx + 2]
 
-    # No boundaries, comment lines, or blank lines inside/between
     if _is_boundary_line(raw1) or _is_boundary_line(raw2) or _is_boundary_line(raw3):
         return None
 
@@ -439,13 +333,12 @@ def _try_copy_op_store(
     if tmp1 == src:
         return None
 
-    # Width check
     w_tmp = _get_width_bits(tmp1)
     w_src = _get_width_bits(src)
     if w_tmp is not None and w_src is not None and w_tmp != w_src:
         return None
 
-    # Region check: temp appears nowhere else in the 5 lines before or 5 lines after
+    # Region check: temp appears nowhere else in the 5 lines before or after
     window_start = max(0, start_idx - 5)
     window_end = min(len(lines), start_idx + 3 + 5)
     for idx in range(window_start, window_end):
@@ -454,14 +347,12 @@ def _try_copy_op_store(
         line_code, _, _ = _extract_code_text(lines[idx])
         if not line_code:
             continue
-        # Token-safe word check
         chunks, _ = split_c_line(lines[idx], False)
         for kind, text in chunks:
             if kind == "code":
                 if re.search(r'\b' + re.escape(tmp1) + r'\b', text):
                     return None
 
-    # Clean trailing comments
     comments = [comment1, comment2, comment3]
     evidence_comments = [c.strip() for c in comments if c.strip()]
     combined_comment = "; ".join(evidence_comments) if evidence_comments else ""
@@ -475,16 +366,106 @@ def _try_copy_op_store(
 
 
 # ---------------------------------------------------------------------------
+# Region checker helper (used by Category G via expression_rules)
+# ---------------------------------------------------------------------------
+
+def _make_region_checker(lines: List[str]):
+    """
+    Return a region-checker function compatible with rule_temp_copy_roundtrip.
+    Returns True if tmp is NOT found in the surrounding 5-line window.
+    """
+    def _check(tmp: str, start: int, end: int) -> bool:
+        window_start = max(0, start - 5)
+        window_end = min(len(lines), end + 1 + 5)
+        for idx in range(window_start, window_end):
+            if start <= idx <= end:
+                continue
+            chunks, _ = split_c_line(lines[idx], False)
+            for kind, text in chunks:
+                if kind == "code":
+                    if re.search(r'\b' + re.escape(tmp) + r'\b', text):
+                        return False
+        return True
+    return _check
+
+
+# ---------------------------------------------------------------------------
+# Single-line Statement Simplification (Categories A, B, C, E, F, H)
+# ---------------------------------------------------------------------------
+
+def _simplify_statement(
+    stmt_code: str,
+    comment: str,
+    enable_mask_cast: bool = False,
+) -> Optional[Tuple[str, str, str, bool]]:
+    """
+    Try to simplify a single assignment statement.
+
+    Returns (new_code, category, reason, evidence_preserved) or None.
+    new_code == "" signals line removal (Category E self-assignment).
+    """
+    stmt = stmt_code.strip()
+    if not stmt.endswith(";"):
+        return None
+
+    m = _ASSIGN_RE.match(stmt)
+    if not m:
+        return None
+
+    lhs = m.group("lhs_ident")
+    rhs = m.group("rhs").strip()
+
+    # Category E: self-assignment (before RHS safety gate — it's always safe)
+    e_result = rule_self_assignment(lhs, rhs)
+    if e_result is not None:
+        return "", e_result.category, e_result.reason, e_result.evidence_preserved
+
+    # Gate RHS to make sure it contains no casts, pointers, array indexing, calls, etc.
+    if not _is_rhs_safe(rhs):
+        return None
+
+    # Category A: identity arithmetic
+    a_result = rule_identity_arithmetic(rhs)
+    if a_result is not None:
+        new_stmt = f"{lhs} = {a_result.new_expr};"
+        return new_stmt, a_result.category, a_result.reason, a_result.evidence_preserved
+
+    # Category B: redundant parentheses
+    b_result = rule_redundant_parentheses(rhs)
+    if b_result is not None:
+        new_stmt = f"{lhs} = {b_result.new_expr};"
+        return new_stmt, b_result.category, b_result.reason, b_result.evidence_preserved
+
+    # Category F: double parentheses
+    f_result = rule_double_parentheses(rhs)
+    if f_result is not None:
+        new_stmt = f"{lhs} = {f_result.new_expr};"
+        return new_stmt, f_result.category, f_result.reason, f_result.evidence_preserved
+
+    # Category H: mask-cast (flag-gated)
+    h_result = rule_mask_cast(lhs, rhs, enabled=enable_mask_cast)
+    if h_result is not None:
+        new_stmt = f"{lhs} = {h_result.new_expr};"
+        return new_stmt, h_result.category, h_result.reason, h_result.evidence_preserved
+
+    return None
+
+
+# ---------------------------------------------------------------------------
 # Main Simplification Pass
 # ---------------------------------------------------------------------------
 
 def simplify_expressions(
     c_content: str,
     enable_copy_op_store: bool = True,
+    enable_mask_cast: bool = False,
     _site_counter_start: int = 1,
 ) -> Tuple[str, List[ExprSimplification], List[Dict[str, Any]], ExprSimplificationStats]:
     """
     Simplify expressions in c_content (token-safely).
+
+    Returns:
+        (new_c_content, simplifications, skipped_list, stats)
     """
     from src.readability.symbol_promotion import parse_c_into_functions
 
@@ -513,6 +494,8 @@ def simplify_expressions(
         new_lines: List[str] = []
         file_line_offset = block.get("start_line", 0)
 
+        region_checker = _make_region_checker(lines)
+
         i = 0
         while i < len(lines):
             raw = lines[i]
@@ -525,27 +508,27 @@ def simplify_expressions(
                 i += 1
                 continue
 
-            # Skip lines with boundary elements
             if _is_boundary_line(raw):
                 new_lines.append(raw)
                 i += 1
                 continue
 
-            # Category D: copy-op-store
+            # ----------------------------------------------------------------
+            # Category D: three-line copy-op-store
+            # ----------------------------------------------------------------
             if enable_copy_op_store:
                 cos_res = _try_copy_op_store(lines, i)
                 if cos_res is not None:
                     end_idx, new_stmt, reason, cos_comment = cos_res
                     stats.sites_total += 1
-                    
+
                     orig_texts = [lines[j].strip() for j in range(i, end_idx + 1)]
-                    
-                    # Trailing comment formatting
+
                     if cos_comment:
                         evidence_str = f"{cos_comment}; simplified copy-op-store"
                     else:
                         evidence_str = "simplified copy-op-store"
-                        
+
                     new_raw = _rebuild_line_with_new_code(raw, new_stmt, evidence_str)
                     sid = next_site_id()
                     simplifications.append(ExprSimplification(
@@ -560,13 +543,55 @@ def simplify_expressions(
                     ))
                     stats.simplified += 1
                     stats.copy_op_store += 1
-                    
+
                     new_lines.append(new_raw)
                     i = end_idx + 1
                     continue
 
-            # Categories A, B, C (single assignment RHS)
-            result = _simplify_statement(code, comment)
+            # ----------------------------------------------------------------
+            # Category G: two-line temp copy roundtrip
+            # ----------------------------------------------------------------
+            g_res = rule_temp_copy_roundtrip(
+                lines, i,
+                code_extractor=_extract_code_text,
+                region_checker=region_checker,
+                boundary_checker=_is_boundary_line,
+            )
+            if g_res is not None:
+                stats.sites_total += 1
+                sid = next_site_id()
+                orig_text = lines[i].strip()
+
+                # Build evidence comment line from the two removed lines
+                evidence_parts = [g_res.new_expr] if g_res.new_expr else []
+                evidence_parts.append(g_res.reason)
+                evidence_str = "; ".join(p for p in evidence_parts if p)
+
+                leading_ws = len(raw) - len(raw.lstrip())
+                indent = raw[:leading_ws]
+                evidence_line = f"{indent}/* {evidence_str} */\n"
+
+                simplifications.append(ExprSimplification(
+                    site_id=sid,
+                    function=fn_name,
+                    line_number=line_num,
+                    category="temp_copy_roundtrip",
+                    old_text=orig_text,
+                    new_text="",   # both lines removed
+                    reason=g_res.reason,
+                    evidence_preserved=True,
+                ))
+                stats.simplified += 1
+                stats.temp_copy_roundtrip += 1
+
+                new_lines.append(evidence_line)
+                i += 1 + g_res.lines_consumed  # skip both lines
+                continue
+
+            # ----------------------------------------------------------------
+            # Categories A, B, C, E, F, H — single-line assignment
+            # ----------------------------------------------------------------
+            result = _simplify_statement(code, comment, enable_mask_cast=enable_mask_cast)
             if result is None:
                 new_lines.append(raw)
                 i += 1
@@ -575,15 +600,41 @@ def simplify_expressions(
             new_code, category, reason, evidence_preserved = result
             stats.sites_total += 1
 
-            # Format evidence comment placing original comment first
-            m = _ASSIGN_RE.match(code.strip())
-            old_rhs = m.group("rhs").strip() if m else code
-            m_new = _ASSIGN_RE.match(new_code.strip())
-            new_rhs = m_new.group("rhs").strip() if m_new else new_code
-            
-            evidence_str = _make_evidence_comment(comment, reason, old_rhs, new_rhs)
+            m_assign = _ASSIGN_RE.match(code.strip())
+            old_rhs = m_assign.group("rhs").strip() if m_assign else code
+            if new_code:
+                m_new = _ASSIGN_RE.match(new_code.strip())
+                new_rhs = m_new.group("rhs").strip() if m_new else new_code
+            else:
+                new_rhs = ""
 
+            # Category E: self-assignment — replace with evidence comment line
+            if category == "self_assignment":
+                leading_ws = len(raw) - len(raw.lstrip())
+                indent = raw[:leading_ws]
+                ev = f"{comment}; {reason}" if comment else reason
+                evidence_line = f"{indent}/* {ev} */\n"
+
+                sid = next_site_id()
+                simplifications.append(ExprSimplification(
+                    site_id=sid,
+                    function=fn_name,
+                    line_number=line_num,
+                    category=category,
+                    old_text=code.strip(),
+                    new_text="",
+                    reason=reason,
+                    evidence_preserved=evidence_preserved,
+                ))
+                stats.simplified += 1
+                stats.self_assignment += 1
+                new_lines.append(evidence_line)
+                i += 1
+                continue
+
+            evidence_str = _make_evidence_comment(comment, reason, old_rhs, new_rhs)
             new_raw = _rebuild_line_with_new_code(raw, new_code, evidence_str)
+
             sid = next_site_id()
             simplifications.append(ExprSimplification(
                 site_id=sid,
@@ -601,6 +652,12 @@ def simplify_expressions(
                 stats.assignment_rhs += 1
             elif category == "redundant_parentheses":
                 stats.redundant_parentheses += 1
+                stats.assignment_rhs += 1
+            elif category == "double_parentheses":
+                stats.double_parentheses += 1
+                stats.assignment_rhs += 1
+            elif category == "mask_cast":
+                stats.mask_cast += 1
                 stats.assignment_rhs += 1
 
             new_lines.append(new_raw)
@@ -632,5 +689,9 @@ def build_expression_simplification_report_data(
             "redundant_parentheses": stats.redundant_parentheses,
             "assignment_rhs": stats.assignment_rhs,
             "copy_op_store": stats.copy_op_store,
+            "self_assignment": stats.self_assignment,
+            "double_parentheses": stats.double_parentheses,
+            "temp_copy_roundtrip": stats.temp_copy_roundtrip,
+            "mask_cast": stats.mask_cast,
         },
     }

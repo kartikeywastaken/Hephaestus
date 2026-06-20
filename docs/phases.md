@@ -19,5 +19,10 @@ This document lists the history of developmental milestones for the Hephaestus f
   - **Phase 6.4: Readability Readiness Quality Gate**: Evaluates readiness status (`ready`/`review`/`blocked`) using scoring and blocking rules on coverage, health, traceability, and risk.
 - **Phase 7: Static Readability Reconstruction**:
   - **Phase 7.1: Static Predicate Recovery (Complete)**: Replaces simple conditional adapters (`HEPHAESTUS_UNKNOWN_COND`) with statically recovered boolean relation expressions (`tmp_w8 < 10`, etc.) using local disassembly evidence and polarity indicators.
-  - **Phase 7.2: Named Local Variable Promotion (Future)**: Promotion of pseudo-registers to semantic source variables and expression simplification.
+  - **Phase 7.2: Named Local Variable Promotion (Complete)**: Deterministic promotion of pseudo-registers to semantic source variables (`local_mN`, `local_N`, `param_N`, and canonical function symbols) without semantic guessing.
+    - **Phase 7.2.1: Readable Compile-Shape Hardening (Complete)**: Added declaration stability checks, forward declaration cleanup, and rollback guarantees.
+    - **Phase 7.2.2: Hosted Main Signature Guardrails (Complete)**: Added signature standardization for the hosted `main` function.
+  - **Phase 7.3: Static Expression Simplification (Complete)**: Token-safe expression simplification for assignment RHS expressions, arithmetic identity constants, and redundant parentheses with evidence preservation and Clang rollback gate.
+    - **Phase 7.3.1: Expression Simplification Hardening (Complete)**: Clean three-module architecture refactor (`expression_models.py`, `expression_rules.py`, `expression_simplification.py`) and introduction of four new simplification categories: self-assignment removal (E), double parentheses collapse (F), temp copy roundtrip (G), and flag-gated mask-cast (H).
+
 

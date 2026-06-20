@@ -291,6 +291,7 @@ def run_pipeline(
     strict_readable_clang: bool = False,
     simplify_expressions: bool = True,
     no_copy_op_store_simplification: bool = False,
+    enable_mask_cast_simplification: bool = False,
 ) -> dict:
     """Run Hephaestus pipeline and return execution manifest."""
     from src.utils.artifacts import ensure_out_dir, clean_known_artifacts
@@ -711,6 +712,8 @@ def run_pipeline(
                 argv.append("--no-simplify-expressions")
             if no_copy_op_store_simplification:
                 argv.append("--no-copy-op-store-simplification")
+            if enable_mask_cast_simplification:
+                argv.append("--enable-mask-cast-simplification")
             
             try:
                 code = run_build_readable_cli(argv)
