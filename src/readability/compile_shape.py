@@ -8,6 +8,7 @@ import re
 import logging
 from typing import Dict, Any, List, Set, Tuple, Optional
 from src.readability.symbol_promotion import split_c_line, parse_c_into_functions, extract_identifiers_from_block, C_KEYWORDS
+from src.ir.source.declaration_recovery import is_safe_abi_scratch_identifier
 
 logger = logging.getLogger("readability.compile_shape")
 
@@ -132,8 +133,8 @@ def get_completion_declaration(
     if re.match(r'^(tmp|temp)_x[0-9]+$', name) or name in {"tmp_sp", "tmp_fp", "tmp_lr"}:
         return "u64", "scratch pseudo-register"
         
-    # 3. argN / arg_N / param_N -> u64
-    if re.match(r'^arg_?[0-9]+$', name) or re.match(r'^param_[0-9]+$', name):
+    # 3. ABI scratch identifier -> u64
+    if is_safe_abi_scratch_identifier(name):
         return "u64", "scratch identifier"
         
     # 4. local_mN / local_N -> type from stack_slot or u64
@@ -313,7 +314,8 @@ def harden_compile_shape_functions(
     stats = {
         "missing_predicate_declarations_added": 0,
         "scratch_declarations_added": 0,
-        "main_abi_bridge_declarations_added": 0
+        "main_abi_bridge_declarations_added": 0,
+        "abi_scratch_declarations_added": 0
     }
     
     for b in blocks:
@@ -378,6 +380,16 @@ def harden_compile_shape_functions(
                         "type": type_name,
                         "initializer": init_val,
                         "reason": "preserve ABI-style body identifier after hosted main normalization"
+                    })
+                elif is_safe_abi_scratch_identifier(name):
+                    scratch_decls_to_add.append((type_name, name, "added for readable compile-shape"))
+                    stats["abi_scratch_declarations_added"] += 1
+                    report_items.append({
+                        "kind": "abi_scratch_declaration_added",
+                        "function": fn_name,
+                        "name": name,
+                        "type": type_name,
+                        "reason": "used in body but not declared"
                     })
                 else:
                     scratch_decls_to_add.append((type_name, name, "added for readable compile-shape"))

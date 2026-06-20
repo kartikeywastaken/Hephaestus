@@ -306,7 +306,9 @@ def run_build_readable_cli(argv: List[str]) -> int:
         "predicates_skipped_due_to_undeclared_identifiers": predicates_skipped_due_to_undeclared_identifiers,
         "forward_declarations_removed": 0,
         "forward_declaration_conflicts_resolved": 0,
-        "function_symbol_promotions_skipped_for_collision": 0
+        "function_symbol_promotions_skipped_for_collision": 0,
+        "abi_scratch_declarations_added": 0,
+        "abi_scratch_declarations_inherited": 0
     }
     
     if args.promote_symbols and symbol_promotion_data:
@@ -344,6 +346,8 @@ def run_build_readable_cli(argv: List[str]) -> int:
         compile_shape_stats["missing_predicate_declarations_added"] += added_stats["missing_predicate_declarations_added"]
         compile_shape_stats["scratch_declarations_added"] += added_stats["scratch_declarations_added"]
         compile_shape_stats["main_abi_bridge_declarations_added"] = added_stats.get("main_abi_bridge_declarations_added", 0) + source_recon.get("summary", {}).get("main_abi_bridges_inserted", 0)
+        compile_shape_stats["abi_scratch_declarations_added"] += added_stats.get("abi_scratch_declarations_added", 0)
+        compile_shape_stats["abi_scratch_declarations_inherited"] = source_recon.get("summary", {}).get("abi_scratch_declarations_inserted", 0)
         
     readable_c_path = out_dir / "recovered_readable.c"
     

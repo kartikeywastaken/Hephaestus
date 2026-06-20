@@ -419,6 +419,42 @@ def _emit_function(
         if bridge_lines:
             adapted_body_lines = bridge_lines + [""] + adapted_body_lines
 
+    # Phase 5.7.3: scan final body lines for undeclared ABI scratch identifiers
+    from src.ir.source.declaration_recovery import analyze_abi_scratch_declarations
+    abi_scratch_decls = analyze_abi_scratch_declarations(
+        fn.name, fn.parameters, adapted_body_lines
+    )
+    fn.abi_scratch_declarations = []
+    if abi_scratch_decls:
+        scratch_lines = []
+        scratch_lines.append("    /* ABI scratch declarations: */")
+        for decl_name in abi_scratch_decls:
+            if fn.c_name == "main" and decl_name in {"arg0", "arg1", "param_0", "param_1"}:
+                if decl_name in {"arg0", "param_0"}:
+                    init_val = "(u64)argc"
+                    comment = "main ABI bridge: argc"
+                else:
+                    init_val = "(u64)(uintptr_t)argv"
+                    comment = "main ABI bridge: argv"
+                line_text = f"    u64 {decl_name} = {init_val}; /* {comment} */"
+                fn.abi_scratch_declarations.append({
+                    "name": decl_name,
+                    "ctype": "u64",
+                    "initializer": init_val,
+                    "comment": comment
+                })
+            else:
+                line_text = f"    u64 {decl_name} = 0; /* added for ABI scratch compile-shape */"
+                fn.abi_scratch_declarations.append({
+                    "name": decl_name,
+                    "ctype": "u64",
+                    "initializer": "0",
+                    "comment": "added for ABI scratch compile-shape"
+                })
+            scratch_lines.append(line_text)
+        scratch_lines.append("")
+        adapted_body_lines = scratch_lines + adapted_body_lines
+
     # Phase 5.6: run declaration analysis on final emitted body lines
     from src.ir.source.declaration_recovery import analyze_declarations_for_function
     decls_data = analyze_declarations_for_function(
@@ -616,6 +652,9 @@ def emit_recovered_c(
     total_cset_adapters_inserted = 0
 
     total_bridges_added = 0
+    abi_scratch_declarations_inserted = 0
+    functions_with_abi_scratch_declarations = 0
+
     for fn in artifact.functions:
         fn_lines = []
         bridges_count = _emit_function(fn, fn_lines, global_call_helpers)
@@ -631,6 +670,12 @@ def emit_recovered_c(
             if "HEPHAESTUS_CSET(" in line:
                 total_cset_adapters_inserted += line.count("HEPHAESTUS_CSET(")
                 
+        # Count abi scratch declarations
+        decls = getattr(fn, "abi_scratch_declarations", [])
+        if decls:
+            abi_scratch_declarations_inserted += len(decls)
+            functions_with_abi_scratch_declarations += 1
+
         function_definitions.append((fn, fn_lines))
 
     unknown_condition_helpers_emitted = 1 if total_adapters_inserted > 0 else 0
@@ -644,6 +689,8 @@ def emit_recovered_c(
     artifact.summary["cset_adapters_inserted"] = total_cset_adapters_inserted
     artifact.summary["cset_helper_emitted"] = cset_helper_emitted
     artifact.summary["main_abi_bridges_inserted"] = total_bridges_added
+    artifact.summary["abi_scratch_declarations_inserted"] = abi_scratch_declarations_inserted
+    artifact.summary["functions_with_abi_scratch_declarations"] = functions_with_abi_scratch_declarations
 
     lines: List[str] = []
 

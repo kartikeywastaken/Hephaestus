@@ -137,6 +137,8 @@ def build_readability_report(
         stats_dict.setdefault("main_forward_declarations_normalized", 0)
         stats_dict.setdefault("duplicate_main_definitions_renamed", 0)
         stats_dict.setdefault("main_abi_bridge_declarations_added", 0)
+        stats_dict.setdefault("abi_scratch_declarations_added", 0)
+        stats_dict.setdefault("abi_scratch_declarations_inherited", 0)
         report["compile_shape"] = stats_dict
         report["compile_shape_items"] = cs.get("items", [])
         

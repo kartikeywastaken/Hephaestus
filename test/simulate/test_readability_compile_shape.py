@@ -96,9 +96,10 @@ int32_t test_func()
     
     assert "u64 arg1 = 0;" in hardened
     assert "u64 temp_x9 = 0;" in hardened
-    assert stats["scratch_declarations_added"] == 2
-    assert any(x["name"] == "arg1" and x["type"] == "u64" for x in items)
-    assert any(x["name"] == "temp_x9" and x["type"] == "u64" for x in items)
+    assert stats["scratch_declarations_added"] == 1
+    assert stats["abi_scratch_declarations_added"] == 1
+    assert any(x["name"] == "arg1" and x["type"] == "u64" and x["kind"] == "abi_scratch_declaration_added" for x in items)
+    assert any(x["name"] == "temp_x9" and x["type"] == "u64" and x["kind"] == "declaration_added" for x in items)
 
 def test_harden_compile_shape_functions_promoted_inserts():
     # C content where stack slot was promoted to local_m16, which is used in body but not declared.

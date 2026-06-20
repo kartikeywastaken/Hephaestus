@@ -755,6 +755,7 @@ def build_source_reconstruction(
             callsite_refinement=fn_callsite_refinement,
             condition_recovery=fn_condition_recovery,
             declaration_recovery=fn_declaration_recovery,
+            abi_scratch_declarations=[],
         )
         reconstructed.append(rec)
 
@@ -913,6 +914,9 @@ def build_source_reconstruction(
         # Phase 5.7.2 cset adapter
         "cset_adapters_inserted": 0,
         "cset_helper_emitted": 0,
+        # Phase 5.7.3 ABI scratch declarations
+        "abi_scratch_declarations_inserted": 0,
+        "functions_with_abi_scratch_declarations": 0,
         # Phase 7.2.2 Compile-Shape normalization
         "main_compile_shape_normalized": True,
         "duplicate_main_functions_renamed": duplicate_main_functions_renamed,

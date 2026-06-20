@@ -279,3 +279,98 @@ def analyze_declarations_for_function(
         "warnings": warnings,
         "call_helpers": sorted(list(found_helpers))
     }
+
+
+def is_safe_abi_scratch_identifier(name: str) -> bool:
+    """
+    Check if the name matches standard ABI scratch/parameter patterns:
+    - arg0 to arg7
+    - arg_0 to arg_7
+    - param_0 to param_7
+    - arg_10h to arg_60h (stack parameter offsets in hex)
+    """
+    if re.match(r'^(arg[0-7]|arg_[0-7]|param_[0-7])$', name):
+        return True
+    
+    # Check for stack parameter offset format: arg_XXh
+    m = re.match(r'^arg_([0-9a-fA-F]+)h$', name)
+    if m:
+        try:
+            val = int(m.group(1), 16)
+            return 0x10 <= val <= 0x60
+        except ValueError:
+            return False
+            
+    return False
+
+
+def infer_abi_scratch_type(name: str) -> str:
+    """Return default type for ABI scratch variables."""
+    return "u64"
+
+
+def collect_declared_identifiers(lines: List[str], parameters: List[Dict[str, Any]]) -> Set[str]:
+    """Collect all parameters and locally declared variables in the C code lines."""
+    declared = set()
+    for p in parameters:
+        if isinstance(p, dict) and p.get("name"):
+            declared.add(p["name"])
+            
+    decl_regex = re.compile(
+        r'^\s*(?:const\s+|volatile\s+|static\s+)*([a-zA-Z_][a-zA-Z0-9_]*)\s*\*?\s*\*?\s*([a-zA-Z_][a-zA-Z0-9_]*)\b'
+    )
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("/*") or stripped.startswith("//"):
+            continue
+        m = decl_regex.match(stripped)
+        if m:
+            type_name = m.group(1)
+            var_name = m.group(2)
+            if (type_name in DECL_TYPES or type_name.endswith('_t') or type_name in {"char", "int", "void", "float", "double", "long", "short"}) and var_name not in {"const", "volatile", "static", "struct", "union", "enum"}:
+                declared.add(var_name)
+    return declared
+
+
+def collect_used_identifiers(lines: List[str]) -> Set[str]:
+    """
+    Find all C identifiers inside executable code chunks.
+    Avoids comments, string/char literals, and the HEPHAESTUS_UNKNOWN_COND/HEPHAESTUS_CSET helper names.
+    """
+    from src.readability.symbol_promotion import split_c_line
+    
+    used = set()
+    inside_block_comment = False
+    for line in lines:
+        chunks, inside_block_comment = split_c_line(line, inside_block_comment)
+        for chunk_type, content in chunks:
+            if chunk_type == "code":
+                # Find all word-boundary identifiers
+                words = re.findall(r'\b([a-zA-Z_][a-zA-Z0-9_]*)\b', content)
+                for word in words:
+                    if word not in {"HEPHAESTUS_UNKNOWN_COND", "HEPHAESTUS_CSET"}:
+                        used.add(word)
+    return used
+
+
+def analyze_abi_scratch_declarations(
+    function_name: str,
+    parameters: List[Dict[str, Any]],
+    emitted_body_lines: List[str],
+) -> List[str]:
+    """
+    Scans the final emitted body lines of a function to find ABI-style scratch
+    identifiers that are used but not declared.
+    Returns the list of identifiers to declare.
+    """
+    declared = collect_declared_identifiers(emitted_body_lines, parameters)
+    used = collect_used_identifiers(emitted_body_lines)
+    
+    scratch_to_declare = []
+    for identifier in used:
+        if identifier not in declared:
+            if is_safe_abi_scratch_identifier(identifier):
+                scratch_to_declare.append(identifier)
+                
+    return sorted(scratch_to_declare)
+

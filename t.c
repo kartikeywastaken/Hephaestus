@@ -1,215 +1,262 @@
+#include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
-typedef struct {
-  uint32_t id;
-  int32_t score;
-  uint8_t flags;
-  uint8_t level;
-  uint16_t weight;
-} Item;
+typedef struct Node {
+  int32_t value;
+  uint32_t flags;
+  struct Node *next;
+} Node;
 
-static uint32_t rotl32(uint32_t x, unsigned r) {
-  r &= 31;
-  return (x << r) | (x >> ((32 - r) & 31));
+typedef struct Context {
+  Node *head;
+  uint32_t seed;
+  int32_t bias;
+  uint8_t table[32];
+} Context;
+
+static uint32_t scramble(uint32_t x) {
+  x ^= x << 13;
+  x ^= x >> 17;
+  x ^= x << 5;
+  return x;
 }
 
-static int mix_score(int a, int b, uint32_t flags) {
-  int result = 0;
-
-  if (a == 0) {
-    result += 11;
-  } else {
-    result += a * 3;
+static int recursive_sum(Node *n, int depth) {
+  if (n == NULL) {
+    return 0;
   }
 
-  if (b != 0) {
-    result -= b * 2;
-  } else {
-    result += 7;
+  if (depth <= 0) {
+    return n->value;
   }
 
-  if (flags & (1u << 3)) {
-    result ^= 0x55;
+  int base = n->value;
+
+  if ((n->flags & (1u << 2)) != 0) {
+    base += 7;
   }
 
-  if ((flags & (1u << 7)) == 0) {
-    result += 19;
+  if ((n->flags & (1u << 5)) == 0) {
+    base -= 3;
   }
 
-  if ((uint32_t)a < flags) {
-    result += 5;
-  } else {
-    result -= 5;
-  }
-
-  return result;
+  return base + recursive_sum(n->next, depth - 1);
 }
 
-static int scan_items(Item *items, int n, uint32_t seed) {
-  if (items == NULL) {
-    return -1000;
+static int odd_path(int x);
+
+static int even_path(int x) {
+  if (x <= 0) {
+    return 1;
   }
 
-  if (n <= 0) {
-    return -2000;
+  if ((x & 1) != 0) {
+    return odd_path(x - 1) + x;
+  }
+
+  return even_path(x - 2) + 2;
+}
+
+static int odd_path(int x) {
+  if (x <= 1) {
+    return x + 3;
+  }
+
+  if ((x & 2) != 0) {
+    return even_path(x - 1) - x;
+  }
+
+  return odd_path(x - 2) + 1;
+}
+
+static int classify_value(int x, uint32_t flags) {
+  int out = 0;
+
+  switch ((unsigned)x & 7u) {
+  case 0:
+    out = x + 10;
+    break;
+  case 1:
+    out = x - 11;
+    break;
+  case 2:
+  case 3:
+    out = x ^ 0x55;
+    break;
+  case 4:
+    out = -x;
+    break;
+  default:
+    out = x * 3;
+    break;
+  }
+
+  if (flags == 0) {
+    out += 100;
+  }
+
+  if (flags != 0) {
+    out -= 9;
+  }
+
+  if ((flags & 0xffu) < (uint32_t)x) {
+    out += 5;
+  }
+
+  if ((flags & (1u << 31)) != 0) {
+    out ^= 0x7f;
+  }
+
+  return out;
+}
+
+static int table_walk(Context *ctx, int limit) {
+  if (ctx == NULL) {
+    return -100;
+  }
+
+  if (limit < 0) {
+    return -200;
   }
 
   int total = 0;
-  int i = 0;
-  uint32_t state = seed;
+  uint32_t state = ctx->seed;
 
-  while (i < n) {
-    Item *it = &items[i];
+  for (int i = 0; i < limit && i < 32; i++) {
+    uint8_t v = ctx->table[i];
 
-    if (it->id == 0) {
-      total -= 3;
-      i++;
+    if (v == 0) {
+      total += i;
       continue;
     }
 
-    if (it->flags & 1u) {
-      total += it->score;
+    if ((v & 1u) != 0) {
+      total += v;
     } else {
-      total -= it->score;
+      total -= v;
     }
 
-    if (it->flags & (1u << 2)) {
-      total += mix_score(it->score, it->level, it->flags);
+    if ((v & 8u) == 0) {
+      total ^= i * 3;
     }
 
-    if ((it->flags & (1u << 5)) == 0) {
-      total += it->weight;
-    } else {
-      total -= it->weight;
-    }
+    state = scramble(state ^ v ^ (uint32_t)i);
 
-    switch (it->level & 3u) {
-    case 0:
-      total += 10;
-      break;
-    case 1:
-      total += 20;
-      break;
-    case 2:
-      total -= 30;
-      break;
-    default:
-      total ^= 0x33;
+    if ((state & 0xffffu) == 0xbeefu) {
       break;
     }
-
-    state = rotl32(state ^ it->id ^ (uint32_t)total, (unsigned)(it->level + 1));
-
-    if ((state & 0xffu) == 0x42u) {
-      break;
-    }
-
-    i++;
   }
 
-  return total ^ (int)(state & 0x7fffffff);
+  return total + (int)(state & 0x3ffu);
 }
 
-static int nested_control(int x, int y, int z) {
+static int apply_callback(int (*fn)(int, uint32_t), int *values, size_t n,
+                          uint32_t flags) {
+  if (fn == NULL || values == NULL) {
+    return -1;
+  }
+
   int acc = 0;
 
-  for (int i = 0; i < x; i++) {
-    int inner = y;
+  for (size_t i = 0; i < n; i++) {
+    int v = values[i];
 
-    while (inner > 0) {
-      if ((inner & 1) != 0) {
-        acc += i ^ inner;
-      } else {
-        acc -= i + inner;
-      }
+    if ((unsigned)v > flags) {
+      acc += fn(v, flags);
+    } else {
+      acc -= fn(v + 1, flags ^ (uint32_t)i);
+    }
 
-      if (z != 0 && (acc % z) == 0) {
-        acc += z * 3;
-      }
+    if (acc > 10000) {
+      return acc;
+    }
 
-      if (acc > 5000) {
-        return acc;
-      }
-
-      inner--;
+    if (acc < -10000) {
+      return acc / 2;
     }
   }
 
   return acc;
 }
 
-static int pointer_walk(uint8_t *buf, size_t len, uint8_t key) {
+static int pointer_churn(uint8_t *buf, size_t len) {
   if (!buf) {
-    return -1;
+    return -9;
   }
 
-  int hits = 0;
-  size_t i = 0;
+  int score = 0;
+  uint8_t *p = buf;
+  uint8_t *end = buf + len;
 
-  while (i < len) {
-    uint8_t v = buf[i];
-
-    if (v == key) {
-      hits++;
-    }
+  while (p < end) {
+    uint8_t v = *p;
 
     if ((v & 0x80u) != 0) {
-      hits += 2;
+      score += 4;
     }
 
-    if ((v & 0x08u) == 0) {
-      hits--;
+    if ((v & 0x10u) == 0) {
+      score -= 2;
     }
 
-    if (i + 3 < len) {
-      uint32_t chunk = ((uint32_t)buf[i] << 24) | ((uint32_t)buf[i + 1] << 16) |
-                       ((uint32_t)buf[i + 2] << 8) | ((uint32_t)buf[i + 3]);
+    if ((size_t)(end - p) >= 4) {
+      uint32_t word = ((uint32_t)p[0] << 24) | ((uint32_t)p[1] << 16) |
+                      ((uint32_t)p[2] << 8) | ((uint32_t)p[3]);
 
-      if ((chunk ^ 0xA5A5A5A5u) < 0x01000000u) {
-        hits += 9;
+      if ((word ^ 0x41424344u) == 0) {
+        score += 100;
       }
     }
 
-    i++;
+    p++;
   }
 
-  return hits;
+  return score;
 }
 
 int main(int argc, char **argv) {
-  uint32_t seed = 0x12345678u;
+  Node nodes[6];
 
-  if (argc > 1) {
-    seed ^= (uint32_t)strlen(argv[1]);
+  for (int i = 0; i < 6; i++) {
+    nodes[i].value = (i % 2 == 0) ? i * 13 : -i * 17;
+    nodes[i].flags = (uint32_t)(i * 37 + argc);
+    nodes[i].next = (i + 1 < 6) ? &nodes[i + 1] : NULL;
   }
 
-  Item items[8];
+  Context ctx;
+  ctx.head = &nodes[0];
+  ctx.seed = 0xC001D00Du ^ (uint32_t)argc;
+  ctx.bias = argc * 3;
 
-  for (int i = 0; i < 8; i++) {
-    items[i].id = (uint32_t)(i * 17 + 3);
-    items[i].score = (i % 2 == 0) ? i * 11 : -i * 7;
-    items[i].flags = (uint8_t)((i * 29) ^ seed);
-    items[i].level = (uint8_t)(i & 7);
-    items[i].weight = (uint16_t)(100 + i * 13);
+  for (int i = 0; i < 32; i++) {
+    ctx.table[i] = (uint8_t)((i * 11) ^ (ctx.seed >> (i & 7)));
   }
 
-  items[3].id = 0;
-  items[5].flags |= (1u << 5);
-
-  uint8_t buffer[16];
-
-  for (int i = 0; i < 16; i++) {
-    buffer[i] = (uint8_t)((seed >> (i % 8)) ^ (i * 31));
+  if (argc > 1 && argv[1] != NULL) {
+    ctx.seed ^= (uint32_t)strlen(argv[1]);
   }
 
-  int a = scan_items(items, 8, seed);
-  int b = nested_control(5, 7, 3);
-  int c = pointer_walk(buffer, sizeof(buffer), buffer[2]);
+  int values[10];
 
-  int final = a + b + c;
+  for (int i = 0; i < 10; i++) {
+    values[i] = (int)((ctx.seed >> (i & 15)) & 0xff) - 100;
+  }
+
+  uint8_t bytes[20];
+
+  for (int i = 0; i < 20; i++) {
+    bytes[i] = (uint8_t)(values[i % 10] + i * 7);
+  }
+
+  int a = recursive_sum(ctx.head, 5);
+  int b = even_path(9);
+  int c = table_walk(&ctx, 32);
+  int d = apply_callback(classify_value, values, 10, ctx.seed & 0xffu);
+  int e = pointer_churn(bytes, sizeof(bytes));
+
+  int final = a + b + c + d + e + ctx.bias;
 
   if (final == 0) {
     puts("zero");

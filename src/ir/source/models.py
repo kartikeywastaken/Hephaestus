@@ -97,6 +97,7 @@ class ReconstructedFunction:
     condition_recovery: Dict[str, Any] = field(default_factory=dict)
     declaration_recovery: Dict[str, Any] = field(default_factory=dict)
     condition_adapter: Dict[str, Any] = field(default_factory=dict)
+    abi_scratch_declarations: List[Dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -126,6 +127,7 @@ class ReconstructedFunction:
             "condition_recovery": dict(self.condition_recovery) if self.condition_recovery else {},
             "declaration_recovery": dict(self.declaration_recovery) if self.declaration_recovery else {},
             "condition_adapter": dict(self.condition_adapter) if self.condition_adapter else {},
+            "abi_scratch_declarations": list(self.abi_scratch_declarations),
         }
 
 
@@ -212,6 +214,9 @@ class SourceReconstructionArtifact:
         # Phase 5.7.2 cset adapter
         "cset_adapters_inserted": 0,
         "cset_helper_emitted": 0,
+        # Phase 5.7.3 ABI scratch declarations
+        "abi_scratch_declarations_inserted": 0,
+        "functions_with_abi_scratch_declarations": 0,
         # Phase 5.7.1 analytics
         "unsupported_instruction_kinds": {},
     })
