@@ -5,8 +5,8 @@ Readability Models and Schema Constants
 
 from typing import Dict, List, Any, Optional
 
-SCHEMA_VERSION = "readability-1.0"
-PHASE = "7.1"
+SCHEMA_VERSION = "readability-1.3"
+PHASE = "7.3"
 
 # Branch Mappings
 BRANCH_MAP = {
