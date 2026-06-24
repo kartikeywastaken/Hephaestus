@@ -1,0 +1,8 @@
+{
+  "schema_version": "dynamic-inputs-1.0",
+  "runs": [
+    {"name": "no_args",   "argv": [],            "stdin": "", "env": {}},
+    {"name": "short_arg", "argv": ["hello"],      "stdin": "", "env": {}},
+    {"name": "long_arg",  "argv": ["AAAAAAAAAA"], "stdin": "", "env": {}}
+  ]
+}

@@ -19,6 +19,8 @@ OPTIONAL_PIPELINE_STAGES = [
     "build_trace_report",
     "quality_gate",
     "build_readable",
+    "run_dynamic",
+    "fuse_behavior",
 ]
 
 STAGE_OUTPUTS = {
@@ -65,6 +67,16 @@ STAGE_OUTPUTS = {
         "recovered_readable.c",
         "readability_report.json",
         "readability_report.md",
+    ],
+    "run_dynamic": [
+        "dynamic_inputs.resolved.json",
+        "dynamic_runs.json",
+        "behavior_profile.json",
+        "dynamic_report.json",
+    ],
+    "fuse_behavior": [
+        "behavior_model.json",
+        "behavior_fusion_report.json",
     ],
 }
 

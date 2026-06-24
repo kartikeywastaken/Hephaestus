@@ -33,6 +33,14 @@ KNOWN_ARTIFACT_FILES = {
     "recovered_readable.c",
     "readability_report.json",
     "readability_report.md",
+    # Phase 8 — Dynamic Behavior Capture
+    "dynamic_inputs.resolved.json",
+    "dynamic_runs.json",
+    "behavior_profile.json",
+    "dynamic_report.json",
+    # Phase 9 — Static-Dynamic Behavior Fusion
+    "behavior_model.json",
+    "behavior_fusion_report.json",
 }
 
 

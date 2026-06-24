@@ -769,7 +769,15 @@ def handle_run_all_cli():
     parser.add_argument("--no-simplify-expressions", action="store_false", dest="simplify_expressions", help="Disable Phase 7.3 expression simplification.")
     parser.add_argument("--no-copy-op-store-simplification", action="store_true", dest="no_copy_op_store_simplification", default=False, help="Disable copy-op-store category of expression simplification.")
     parser.add_argument("--enable-mask-cast-simplification", action="store_true", dest="enable_mask_cast_simplification", default=False, help="Enable Phase 7.3.1 mask-cast simplification (disabled by default).")
-    
+    # Phase 8 — Dynamic Behavior Capture
+    parser.add_argument("--dynamic", action="store_true", help="Run Phase 8 dynamic behavior capture (opt-in).")
+    parser.add_argument("--dynamic-inputs", default=None, metavar="PATH", help="Path to dynamic_inputs.json for Phase 8.")
+    parser.add_argument("--dynamic-timeout-s", type=float, default=5.0, metavar="N", help="Per-run timeout in seconds for Phase 8. (default: 5.0)")
+    parser.add_argument("--dynamic-max-output-bytes", type=int, default=1_048_576, metavar="N", help="Max captured bytes per stream in Phase 8. (default: 1048576)")
+    # Phase 9 — Static-Dynamic Behavior Fusion
+    parser.add_argument("--fuse-behavior", action="store_true", dest="fuse_behavior", help="Run Phase 9 static-dynamic fusion (does not execute binary unless --dynamic also passed).")
+    parser.add_argument("--require-dynamic", action="store_true", dest="require_dynamic", help="Fail Phase 9 fusion if dynamic artifacts are missing.")
+
     args = parser.parse_args(sys.argv[2:])
     
     if not (args.ghidra or args.radare2):
@@ -802,6 +810,13 @@ def handle_run_all_cli():
             simplify_expressions=args.simplify_expressions,
             no_copy_op_store_simplification=args.no_copy_op_store_simplification,
             enable_mask_cast_simplification=getattr(args, "enable_mask_cast_simplification", False),
+            # Phase 8 / Phase 9
+            dynamic=args.dynamic,
+            dynamic_inputs=args.dynamic_inputs,
+            dynamic_timeout_s=args.dynamic_timeout_s,
+            dynamic_max_output_bytes=args.dynamic_max_output_bytes,
+            fuse_behavior=args.fuse_behavior,
+            require_dynamic=args.require_dynamic,
         )
 
 
@@ -877,6 +892,14 @@ def main():
     	elif first_arg == "build-readable":
             from src.readability.cli import run_build_readable_cli
             code = run_build_readable_cli(sys.argv[2:])
+            sys.exit(code)
+    	elif first_arg == "run-dynamic":
+            from src.dynamic.cli import run_dynamic_cli
+            code = run_dynamic_cli(sys.argv[2:])
+            sys.exit(code)
+    	elif first_arg == "fuse-behavior":
+            from src.behavior.cli import run_fuse_behavior_cli
+            code = run_fuse_behavior_cli(sys.argv[2:])
             sys.exit(code)
 
 

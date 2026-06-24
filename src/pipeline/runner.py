@@ -292,6 +292,14 @@ def run_pipeline(
     simplify_expressions: bool = True,
     no_copy_op_store_simplification: bool = False,
     enable_mask_cast_simplification: bool = False,
+    # Phase 8 — Dynamic Behavior Capture
+    dynamic: bool = False,
+    dynamic_inputs: str | None = None,
+    dynamic_timeout_s: float = 5.0,
+    dynamic_max_output_bytes: int = 1_048_576,
+    # Phase 9 — Static-Dynamic Behavior Fusion
+    fuse_behavior: bool = False,
+    require_dynamic: bool = False,
 ) -> dict:
     """Run Hephaestus pipeline and return execution manifest."""
     from src.utils.artifacts import ensure_out_dir, clean_known_artifacts
@@ -337,6 +345,10 @@ def run_pipeline(
             combined_stages.append("quality_gate")
         if stop_after == "build_readable" or readable:
             combined_stages.append("build_readable")
+        if stop_after == "run_dynamic" or dynamic:
+            combined_stages.append("run_dynamic")
+        if stop_after == "fuse_behavior" or fuse_behavior:
+            combined_stages.append("fuse_behavior")
             
         if stop_after in combined_stages:
             idx = combined_stages.index(stop_after)
@@ -750,6 +762,120 @@ def run_pipeline(
             started_at=started_at,
             finished_at=finished_at,
             duration_ms=duration_ms
+        )
+        write_manifest(manifest, out_dir)
+
+    # Phase 8 — Dynamic Behavior Capture
+    if dynamic:
+        logger.info("[run-all] running run_dynamic stage")
+        started_at = now_iso()
+        start_time = time.perf_counter()
+        stage_status = "ok"
+        error_msg = None
+        outputs = []
+
+        from src.dynamic.cli import run_dynamic_cli
+        argv = [
+            binary_path,
+            "--out-dir", out_dir,
+            "--timeout-s", str(dynamic_timeout_s),
+            "--max-output-bytes", str(dynamic_max_output_bytes),
+        ]
+        if dynamic_inputs:
+            argv += ["--inputs", dynamic_inputs]
+
+        try:
+            code = run_dynamic_cli(argv)
+            if code == 2:
+                stage_status = "failed"
+                error_msg = "Safety violation: static artifact was modified during dynamic execution"
+                status = "failed"
+                manifest["status"] = "failed"
+            elif code != 0:
+                stage_status = "failed"
+                error_msg = f"run-dynamic CLI returned exit code {code}"
+                status = "failed"
+                manifest["status"] = "failed"
+            else:
+                for filename in [
+                    "dynamic_inputs.resolved.json",
+                    "dynamic_runs.json",
+                    "behavior_profile.json",
+                    "dynamic_report.json",
+                ]:
+                    p = os.path.join(out_dir, filename)
+                    if os.path.exists(p):
+                        outputs.append(filename)
+                        manifest["final_outputs"][filename.replace(".", "_")] = p
+        except Exception as e:
+            logger.exception("[run-all] run_dynamic stage crashed: %s", e)
+            stage_status = "failed"
+            error_msg = str(e)
+            status = "failed"
+            manifest["status"] = "failed"
+
+        finished_at = now_iso()
+        duration_ms = int((time.perf_counter() - start_time) * 1000)
+        record_stage(
+            manifest=manifest,
+            name="run_dynamic",
+            status=stage_status,
+            outputs=outputs,
+            error=error_msg,
+            metrics={},
+            started_at=started_at,
+            finished_at=finished_at,
+            duration_ms=duration_ms,
+        )
+        write_manifest(manifest, out_dir)
+
+    # Phase 9 — Static-Dynamic Behavior Fusion
+    # IMPORTANT: fuse_behavior reads existing artifacts only; it never executes the binary.
+    if fuse_behavior:
+        logger.info("[run-all] running fuse_behavior stage")
+        started_at = now_iso()
+        start_time = time.perf_counter()
+        stage_status = "ok"
+        error_msg = None
+        outputs = []
+
+        from src.behavior.cli import run_fuse_behavior_cli
+        argv = ["--out-dir", out_dir]
+        if require_dynamic:
+            argv.append("--require-dynamic")
+
+        try:
+            code = run_fuse_behavior_cli(argv)
+            if code != 0:
+                stage_status = "failed"
+                error_msg = f"fuse-behavior CLI returned exit code {code}"
+                status = "failed"
+                manifest["status"] = "failed"
+            else:
+                for filename in ["behavior_model.json", "behavior_fusion_report.json"]:
+                    p = os.path.join(out_dir, filename)
+                    if os.path.exists(p):
+                        outputs.append(filename)
+                        manifest["final_outputs"][filename.replace(".", "_")] = p
+        except Exception as e:
+            logger.exception("[run-all] fuse_behavior stage crashed: %s", e)
+            stage_status = "failed"
+            error_msg = str(e)
+            status = "failed"
+            manifest["status"] = "failed"
+
+        finished_at = now_iso()
+        duration_ms = int((time.perf_counter() - start_time) * 1000)
+        record_stage(
+            manifest=manifest,
+            name="fuse_behavior",
+            status=stage_status,
+            outputs=outputs,
+            error=error_msg,
+            metrics={},
+            started_at=started_at,
+            finished_at=finished_at,
+            duration_ms=duration_ms,
         )
         write_manifest(manifest, out_dir)
 
