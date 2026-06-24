@@ -8,6 +8,7 @@ coverage/
 !.env.example
 .pytest_cache/
 __pycache__/
+*.py[cod]
 .vscode/    
 assets/     
 assets/.aistudio/   
@@ -16,11 +17,19 @@ assets/.aistudio/
 /check_addresses.py
 /prompt.txt
 
-__pycache__/
-*.py[cod]
-
-__pycache__/
-*.py[cod]
 *.dSYM/
 t
 artifacts/
+
+# Generated binaries and test outputs
+/hephaestus_param_layout_*
+/test_case_bin
+
+# Root-level generated reports and files
+/recovered.c
+/recovered_readable.c
+/validation_report.json
+/evidence_index.json
+/trace_report.md
+/quality_gate.md
+/readability_report.md
