@@ -45,6 +45,11 @@ KNOWN_ARTIFACT_FILES = {
     "agent_packet_manifest.json",
     "agent_debate_report.json",
     "agent_suggestions.json",
+    # Phase 11 — Agent-Assisted Source Generation
+    "recovered_agent.c",
+    "agent_source_plan.json",
+    "agent_source_report.json",
+    "agent_source_validation.json",
 }
 
 

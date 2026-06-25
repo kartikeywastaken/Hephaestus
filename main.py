@@ -788,6 +788,14 @@ def handle_run_all_cli():
     parser.add_argument("--agent-temperature", type=float, default=0.0, dest="agent_temperature", help="Sampling temperature for Phase 10 (default: 0.0).")
     parser.add_argument("--agent-num-ctx", type=int, default=8192, dest="agent_num_ctx", help="Context window tokens for Phase 10 Ollama (default: 8192).")
     parser.add_argument("--agent-max-functions", type=int, default=None, dest="agent_max_functions", help="Max functions to debate in Phase 10.")
+    # Phase 11 — Agent-Assisted Source Generation
+    parser.add_argument("--generate-agent-source", action="store_true", dest="generate_agent_source", help="Run Phase 11 agent-assisted source generation (opt-in, requires provider).")
+    parser.add_argument("--source-provider", default="ollama", choices=["ollama", "groq"], dest="source_provider", help="LLM provider for Phase 11 (ollama or groq).")
+    parser.add_argument("--source-model", default=None, dest="source_model", help="Model name for Phase 11 (overrides default for chosen provider).")
+    parser.add_argument("--source-max-functions", type=int, default=1, dest="source_max_functions", help="Max functions to generate in Phase 11 (default: 1).")
+    parser.add_argument("--source-api-key-env", default=None, metavar="ENV_NAME", dest="source_api_key_env", help="Env var name containing the API key for Phase 11 groq provider.")
+    parser.add_argument("--allow-human-suggestions", action="store_true", dest="allow_human_suggestions", help="Enable suggestions requiring human approval in Phase 11.")
+    parser.add_argument("--overwrite-agent-source", action="store_true", dest="overwrite_agent_source", help="Allow overwriting existing recovered_agent.c in Phase 11.")
 
     args = parser.parse_args(sys.argv[2:])
     
@@ -839,6 +847,14 @@ def handle_run_all_cli():
             agent_temperature=args.agent_temperature,
             agent_num_ctx=args.agent_num_ctx,
             agent_max_functions=args.agent_max_functions,
+            # Phase 11 — Agent-Assisted Source Generation
+            generate_agent_source=args.generate_agent_source,
+            source_provider=args.source_provider,
+            source_model=args.source_model,
+            source_max_functions=args.source_max_functions,
+            source_api_key_env=args.source_api_key_env,
+            allow_human_suggestions=args.allow_human_suggestions,
+            overwrite_agent_source=args.overwrite_agent_source,
         )
 
 
@@ -930,6 +946,10 @@ def main():
     	elif first_arg == "agent-debate":
             from src.agent.cli import run_agent_debate_cli
             code = run_agent_debate_cli(sys.argv[2:])
+            sys.exit(code)
+    	elif first_arg == "generate-agent-source":
+            from src.agent_source.cli import run_generate_agent_source_cli
+            code = run_generate_agent_source_cli(sys.argv[2:])
             sys.exit(code)
 
 

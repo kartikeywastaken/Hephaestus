@@ -311,6 +311,14 @@ def run_pipeline(
     agent_temperature: float = 0.0,
     agent_num_ctx: int = 8192,
     agent_max_functions: int | None = None,
+    # Phase 11 — Agent-Assisted Source Generation
+    generate_agent_source: bool = False,
+    source_provider: str = "ollama",
+    source_model: str | None = None,
+    source_max_functions: int = 1,
+    source_api_key_env: str | None = None,
+    allow_human_suggestions: bool = False,
+    overwrite_agent_source: bool = False,
 ) -> dict:
     """Run Hephaestus pipeline and return execution manifest."""
     from src.utils.artifacts import ensure_out_dir, clean_known_artifacts
@@ -364,6 +372,8 @@ def run_pipeline(
             combined_stages.append("build_agent_packets")
         if stop_after == "agent_debate" or agent_debate:
             combined_stages.append("agent_debate")
+        if stop_after == "generate_agent_source" or generate_agent_source:
+            combined_stages.append("generate_agent_source")
             
         if stop_after in combined_stages:
             idx = combined_stages.index(stop_after)
@@ -1000,6 +1010,76 @@ def run_pipeline(
         record_stage(
             manifest=manifest,
             name="agent_debate",
+            status=stage_status,
+            outputs=outputs,
+            error=error_msg,
+            metrics={},
+            started_at=started_at,
+            finished_at=finished_at,
+            duration_ms=duration_ms,
+        )
+        write_manifest(manifest, out_dir)
+
+    # Phase 11 — Agent-Assisted Source Generation
+    if generate_agent_source:
+        logger.info("[run-all] running generate_agent_source stage")
+        started_at = now_iso()
+        start_time = time.perf_counter()
+        stage_status = "ok"
+        error_msg = None
+        outputs = []
+
+        from src.agent_source.cli import run_generate_agent_source_cli
+        argv = [
+            "--out-dir", str(out_dir),
+            "--provider", source_provider,
+            "--max-functions", str(source_max_functions),
+        ]
+        if source_model:
+            argv += ["--model", source_model]
+        if source_api_key_env:
+            argv += ["--api-key-env", source_api_key_env]
+        if allow_human_suggestions:
+            argv.append("--allow-human-suggestions")
+        if overwrite_agent_source:
+            argv.append("--overwrite")
+
+        try:
+            code = run_generate_agent_source_cli(argv)
+            if code == 2:
+                stage_status = "failed"
+                error_msg = "Safety violation: guarded artifact modified during Phase 11"
+                status = "failed"
+                manifest["status"] = "failed"
+            elif code != 0:
+                stage_status = "failed"
+                error_msg = f"generate-agent-source returned exit code {code}"
+                status = "failed"
+                manifest["status"] = "failed"
+            else:
+                for filename in [
+                    "recovered_agent.c",
+                    "agent_source_plan.json",
+                    "agent_source_report.json",
+                    "agent_source_validation.json",
+                ]:
+                    p = os.path.join(str(out_dir), filename)
+                    if os.path.exists(p):
+                        outputs.append(filename)
+                        key = filename.replace(".", "_")
+                        manifest["final_outputs"][key] = p
+        except Exception as e:
+            logger.exception("[run-all] generate_agent_source stage crashed: %s", e)
+            stage_status = "failed"
+            error_msg = str(e)
+            status = "failed"
+            manifest["status"] = "failed"
+
+        finished_at = now_iso()
+        duration_ms = int((time.perf_counter() - start_time) * 1000)
+        record_stage(
+            manifest=manifest,
+            name="generate_agent_source",
             status=stage_status,
             outputs=outputs,
             error=error_msg,

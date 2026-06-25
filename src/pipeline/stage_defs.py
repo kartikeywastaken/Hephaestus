@@ -23,6 +23,7 @@ OPTIONAL_PIPELINE_STAGES = [
     "fuse_behavior",
     "build_agent_packets",
     "agent_debate",
+    "generate_agent_source",
 ]
 
 STAGE_OUTPUTS = {
@@ -86,6 +87,12 @@ STAGE_OUTPUTS = {
     "agent_debate": [
         "agent_debate_report.json",
         "agent_suggestions.json",
+    ],
+    "generate_agent_source": [
+        "recovered_agent.c",
+        "agent_source_plan.json",
+        "agent_source_report.json",
+        "agent_source_validation.json",
     ],
 }
 
