@@ -88,6 +88,26 @@ def run_dynamic_cli(args_list: list[str]) -> int:
         "--json", dest="json_output", action="store_true",
         help="Print compact JSON summary to stdout.",
     )
+    parser.add_argument(
+        "--auto-inputs", action="store_true",
+        help="Enable automatic dynamic input generation."
+    )
+    parser.add_argument(
+        "--dynamic-max-generated-inputs", type=int, default=20,
+        help="Max number of auto-generated inputs. (default: 20)"
+    )
+    parser.add_argument(
+        "--adaptive-dynamic", action="store_true",
+        help="Enable adaptive dynamic exploration."
+    )
+    parser.add_argument(
+        "--dynamic-mutation-rounds", type=int, default=2,
+        help="Number of mutation rounds for adaptive exploration. (default: 2)"
+    )
+    parser.add_argument(
+        "--dynamic-max-adaptive-inputs", type=int, default=30,
+        help="Max number of adaptive inputs generated. (default: 30)"
+    )
 
     try:
         args = parser.parse_args(args_list)
@@ -108,11 +128,39 @@ def run_dynamic_cli(args_list: list[str]) -> int:
     # ---- Resolve inputs ----
     from src.dynamic.input_spec import resolve_input_spec
 
-    try:
-        spec, using_default = resolve_input_spec(args.inputs)
-    except (ValueError, FileNotFoundError) as e:
-        _error(args.json_output, f"Input spec error: {e}")
-        return 1
+    if args.auto_inputs:
+        from src.dynamic.input_generator import (
+            generate_default_input_cases,
+            merge_and_deduplicate,
+            build_input_spec_from_cases,
+            write_generated_inputs_artifact,
+        )
+        try:
+            spec, using_default = resolve_input_spec(args.inputs)
+        except (ValueError, FileNotFoundError) as e:
+            _error(args.json_output, f"Input spec error: {e}")
+            return 1
+
+        gen_cases = generate_default_input_cases(max_cases=args.dynamic_max_generated_inputs)
+        user_cases = spec.get("runs", [])
+        merged_cases = merge_and_deduplicate(user_cases, gen_cases)
+        spec = build_input_spec_from_cases(
+            merged_cases,
+            generated=True,
+            max_cases=args.dynamic_max_generated_inputs,
+        )
+        write_generated_inputs_artifact(
+            merged_cases,
+            out_dir,
+            max_cases=args.dynamic_max_generated_inputs,
+        )
+        using_default = False
+    else:
+        try:
+            spec, using_default = resolve_input_spec(args.inputs)
+        except (ValueError, FileNotFoundError) as e:
+            _error(args.json_output, f"Input spec error: {e}")
+            return 1
 
     # ---- Parse --env overlays ----
     extra_env: dict[str, str] = {}
@@ -172,6 +220,131 @@ def run_dynamic_cli(args_list: list[str]) -> int:
                 f"SAFETY VIOLATION: {name} was modified during dynamic execution!",
             )
             return 2
+
+    # ---- Adaptive Dynamic Exploration (Phase 11.6 Part C) ----
+    adaptive_results = []
+    adaptive_cases = []
+    explorer_diag = []
+    if args.adaptive_dynamic:
+        from src.dynamic.explorer import (
+            generate_adaptive_inputs,
+            build_input_influence_report,
+            build_exploration_report,
+        )
+        initial_dynamic_runs = {"runs": results}
+        adaptive_cases, explorer_diag = generate_adaptive_inputs(
+            initial_dynamic_runs,
+            max_new_cases=args.dynamic_max_adaptive_inputs,
+            mutation_rounds=args.dynamic_mutation_rounds,
+        )
+
+        # Build input spec for adaptive runs
+        adaptive_spec = build_input_spec_from_cases(
+            adaptive_cases,
+            generated=True,
+            max_cases=args.dynamic_max_adaptive_inputs,
+        )
+        # Write to adaptive_inputs.json
+        adaptive_inputs_path = out_dir / "adaptive_inputs.json"
+        with open(adaptive_inputs_path, "w", encoding="utf-8") as f:
+            json.dump(adaptive_spec, f, indent=2, sort_keys=False)
+            f.write("\n")
+
+        if adaptive_cases:
+            # Run them
+            try:
+                adaptive_results, _ = run_all(
+                    Path(args.binary_path),
+                    adaptive_spec,
+                    timeout_s=args.timeout_s,
+                    max_output_bytes=args.max_output_bytes,
+                    cwd=cwd,
+                    inherit_env=args.inherit_env,
+                    fail_fast=args.fail_fast,
+                )
+            except SafetyError as e:
+                _error(args.json_output, f"Safety error in adaptive exploration: {e}")
+                return 1
+            except Exception as e:
+                _error(args.json_output, f"Unexpected error in adaptive exploration: {e}")
+                return 1
+
+            # Check read-only guard again!
+            hash_after2 = {
+                "recovered.c": _file_sha256(recovered_c),
+                "recovered_readable.c": _file_sha256(recovered_readable_c),
+            }
+            for name, h_before in hash_before.items():
+                h_after2 = hash_after2.get(name)
+                if h_before is not None and h_before != h_after2:
+                    _error(
+                        args.json_output,
+                        f"SAFETY VIOLATION: {name} was modified during adaptive dynamic execution!",
+                    )
+                    return 2
+
+            # Write adaptive_dynamic_runs.json
+            adaptive_runs_completed = sum(1 for r in adaptive_results if r.get("status") == "ok")
+            adaptive_runs_timed_out = sum(1 for r in adaptive_results if r.get("timed_out"))
+            adaptive_runs_crashed = sum(1 for r in adaptive_results if r.get("signal") is not None)
+            from src.dynamic.writer import _now_iso
+            adaptive_runs_payload = {
+                "schema_version": SCHEMA_DYNAMIC_RUNS,
+                "phase": "11.6",
+                "generated_at": _now_iso(),
+                "binary_path": str(args.binary_path),
+                "binary_sha256": binary_sha256,
+                "timeout_s": args.timeout_s,
+                "runs_total": len(adaptive_results),
+                "runs_completed": adaptive_runs_completed,
+                "runs_timed_out": adaptive_runs_timed_out,
+                "runs_crashed": adaptive_runs_crashed,
+                "runs": adaptive_results,
+                "diagnostics": explorer_diag,
+            }
+            adaptive_runs_path = out_dir / "adaptive_dynamic_runs.json"
+            with open(adaptive_runs_path, "w", encoding="utf-8") as f:
+                json.dump(adaptive_runs_payload, f, indent=2, sort_keys=False)
+                f.write("\n")
+        else:
+            from src.dynamic.writer import _now_iso
+            adaptive_runs_payload = {
+                "schema_version": SCHEMA_DYNAMIC_RUNS,
+                "phase": "11.6",
+                "generated_at": _now_iso(),
+                "binary_path": str(args.binary_path),
+                "binary_sha256": binary_sha256,
+                "timeout_s": args.timeout_s,
+                "runs_total": 0,
+                "runs_completed": 0,
+                "runs_timed_out": 0,
+                "runs_crashed": 0,
+                "runs": [],
+                "diagnostics": explorer_diag,
+            }
+            adaptive_runs_path = out_dir / "adaptive_dynamic_runs.json"
+            with open(adaptive_runs_path, "w", encoding="utf-8") as f:
+                json.dump(adaptive_runs_payload, f, indent=2, sort_keys=False)
+                f.write("\n")
+
+        # build input influence report
+        influence_report = build_input_influence_report(results, adaptive_results)
+        influence_path = out_dir / "input_influence_report.json"
+        with open(influence_path, "w", encoding="utf-8") as f:
+            json.dump(influence_report, f, indent=2, sort_keys=False)
+            f.write("\n")
+
+        # build exploration report
+        exploration_report = build_exploration_report(
+            explorer_diag,
+            initial_run_count=len(results),
+            adaptive_run_count=len(adaptive_results),
+            new_cases_count=len(adaptive_cases),
+        )
+        exploration_path = out_dir / "dynamic_exploration_report.json"
+        with open(exploration_path, "w", encoding="utf-8") as f:
+            json.dump(exploration_report, f, indent=2, sort_keys=False)
+            f.write("\n")
 
     # ---- Build and write artifacts ----
     from src.dynamic.profiler import build_behavior_profile

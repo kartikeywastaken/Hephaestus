@@ -20,8 +20,10 @@ OPTIONAL_PIPELINE_STAGES = [
     "quality_gate",
     "build_readable",
     "run_dynamic",
+    "adaptive_dynamic",
     "fuse_behavior",
     "build_agent_packets",
+    "optimize_agent_context",
     "agent_debate",
     "generate_agent_source",
 ]
@@ -77,12 +79,21 @@ STAGE_OUTPUTS = {
         "behavior_profile.json",
         "dynamic_report.json",
     ],
+    "adaptive_dynamic": [
+        "adaptive_inputs.json",
+        "adaptive_dynamic_runs.json",
+        "input_influence_report.json",
+        "dynamic_exploration_report.json",
+    ],
     "fuse_behavior": [
         "behavior_model.json",
         "behavior_fusion_report.json",
     ],
     "build_agent_packets": [
         "agent_packet_manifest.json",
+    ],
+    "optimize_agent_context": [
+        "agent_packet_optimization_report.json",
     ],
     "agent_debate": [
         "agent_debate_report.json",

@@ -196,6 +196,20 @@ def run_agent_debate_cli(argv: List[str]) -> int:
                         help="Abort on first function failure.")
     parser.add_argument("--json", action="store_true",
                         help="Print clean JSON result on stdout.")
+    parser.add_argument("--packet-mode", default="compact", choices=["compact", "full"],
+                        help="Packet mode: compact or full (default: compact).")
+    parser.add_argument("--max-packet-chars", type=int, default=16000,
+                        help="Max characters per optimized packet (default: 16000).")
+    parser.add_argument("--max-evidence-items", type=int, default=20,
+                        help="Max evidence items inside optimized packet (default: 20).")
+    parser.add_argument("--retry-on-413", action="store_true", default=True,
+                        help="Retry on 413 Payload Too Large (default: True).")
+    parser.add_argument("--no-retry-on-413", dest="retry_on_413", action="store_false",
+                        help="Disable retry on 413 Payload Too Large.")
+    parser.add_argument("--wait-on-429", action="store_true", default=False,
+                        help="Retry on 429 Rate Limit (default: False).")
+    parser.add_argument("--max-provider-retries", type=int, default=1,
+                        help="Max provider retries for 413/429 (default: 1).")
 
     try:
         args = parser.parse_args(argv)
@@ -236,6 +250,16 @@ def run_agent_debate_cli(argv: List[str]) -> int:
             else:
                 print(f"Error: {msg}", file=sys.stderr)
             return rc
+
+    if args.packet_mode == "compact":
+        from src.agent.context_optimizer import optimize_agent_packets
+        optimize_agent_packets(
+            out_dir,
+            packet_mode="compact",
+            max_packet_chars=args.max_packet_chars,
+            max_evidence_items=args.max_evidence_items,
+        )
+        packets_dir = out_dir / "agent_packets_compact"
 
     packets = _load_packets(packets_dir, args.function)
     if not packets:
@@ -298,6 +322,9 @@ def run_agent_debate_cli(argv: List[str]) -> int:
             provider,
             fail_fast=args.fail_fast,
             max_functions=args.max_functions,
+            retry_on_413=args.retry_on_413,
+            wait_on_429=args.wait_on_429,
+            max_provider_retries=args.max_provider_retries,
         )
     except DebateFailFastError as e:
         if json_mode:

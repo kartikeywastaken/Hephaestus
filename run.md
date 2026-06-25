@@ -528,13 +528,6 @@ python3 main.py reconstruct ./target_binary \
   --clean
 ```
 
-python3 main.py reconstruct ./t \
-  --out-dir artifacts/full_run \
-  --provider groq \
-  --model llama-3.3-70b-versatile \
-  --max-functions 5 \
-  --clean
-
 ### Options:
 - `binary_path` (positional): Path to the target binary or trace file.
 - `--out-dir DIR`: Output directory for generated JSON and C artifacts (defaults to `artifacts`).
@@ -559,6 +552,44 @@ If you need to run specific downstream phases of the orchestrator using already 
 - `--skip-fusion`: Skip static-dynamic behavior fusion.
 - `--skip-agent-debate`: Skip multi-agent debate (requires an existing `agent_suggestions.json`).
 - `--skip-agent-source`: Skip generating `recovered_agent.c`.
+
+---
+
+## Phase 11.6 — Adaptive Dynamic Exploration + Compact LLM Context
+
+Phase 11.6 introduces advanced features to enhance dynamic testing sensitivity and manage large LLM prompts to prevent payload size errors on Groq.
+
+### 1. Automatic Dynamic Input Generation
+When running `reconstruct` without providing an explicit `--dynamic-inputs` file, the orchestrator automatically generates a diverse, safe test suite of default test cases (`dynamic_inputs.generated.json`).
+- Enable/disable: `--auto-inputs` (enabled by default on `reconstruct`) or `--no-auto-inputs`.
+- Limits: `--dynamic-max-generated-inputs INT` (defaults to `20`).
+
+### 2. Adaptive Dynamic Exploration
+After the initial execution pass, Hephaestus analyzes outputs, exit codes, and string sensitivities. It deterministically mutates inputs to explore code behavior in a second pass.
+- Enable/disable: `--adaptive-dynamic` (enabled by default on `reconstruct`) or `--no-adaptive-dynamic`.
+- Rounds: `--dynamic-mutation-rounds INT` (defaults to `2`).
+- Max adaptive runs: `--dynamic-max-adaptive-inputs INT` (defaults to `30`).
+- Generated artifacts:
+  - `adaptive_inputs.json` (the list of mutated inputs)
+  - `adaptive_dynamic_runs.json` (execution results)
+  - `input_influence_report.json` (sensitivities: argv, exit codes, stdout)
+  - `dynamic_exploration_report.json` (exploration run stats)
+
+### 3. Compact LLM Context Optimizer
+To fit within Groq context windows, LLM packets are compressed, stripping redundant elements (such as raw instructions, PLT stubs, and repeats) and keeping vital indicators.
+- Mode: `--packet-mode {compact,full}` (defaults to `compact` for both groq and ollama).
+- Size constraints: `--max-packet-chars INT` (defaults to `16000`).
+- Evidence limit: `--max-evidence-items INT` (defaults to `20`).
+- Generated artifacts:
+  - `agent_packets_compact/` (optimized packets directory)
+  - `agent_packet_optimization_report.json` (size delta and dropped field logs)
+
+### 4. Provider Error Handling & Retries
+Specific handlers intercept 413 Payload Too Large and 429 Rate Limit responses.
+- Retry on 413: `--retry-on-413` (defaults to `True`) or `--no-retry-on-413` (progressive downsizing occurs on retry).
+- Wait on 429: `--wait-on-429` (default: `False`).
+- Retries count: `--max-provider-retries INT` (default: `1`).
+
 
 
 

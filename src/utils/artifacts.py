@@ -50,12 +50,20 @@ KNOWN_ARTIFACT_FILES = {
     "agent_source_plan.json",
     "agent_source_report.json",
     "agent_source_validation.json",
+    # Phase 11.6 — Adaptive Dynamic Exploration + Compact LLM Context
+    "dynamic_inputs.generated.json",
+    "adaptive_inputs.json",
+    "adaptive_dynamic_runs.json",
+    "input_influence_report.json",
+    "dynamic_exploration_report.json",
+    "agent_packet_optimization_report.json",
 }
 
 
 KNOWN_ARTIFACT_DIRS = {
     "ghidra_temp_proj",
     "agent_packets",
+    "agent_packets_compact",
 }
 
 def ensure_out_dir(out_dir: str | Path) -> Path:

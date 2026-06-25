@@ -788,6 +788,21 @@ def handle_run_all_cli():
     parser.add_argument("--agent-temperature", type=float, default=0.0, dest="agent_temperature", help="Sampling temperature for Phase 10 (default: 0.0).")
     parser.add_argument("--agent-num-ctx", type=int, default=8192, dest="agent_num_ctx", help="Context window tokens for Phase 10 Ollama (default: 8192).")
     parser.add_argument("--agent-max-functions", type=int, default=None, dest="agent_max_functions", help="Max functions to debate in Phase 10.")
+    # Phase 11.6 — Adaptive Dynamic
+    parser.add_argument("--auto-inputs", action="store_true", help="Enable auto-inputs.")
+    parser.add_argument("--adaptive-dynamic", action="store_true", help="Enable adaptive dynamic exploration.")
+    parser.add_argument("--dynamic-mutation-rounds", type=int, default=2, help="Number of mutation rounds.")
+    parser.add_argument("--dynamic-max-generated-inputs", type=int, default=20, help="Max generated inputs.")
+    parser.add_argument("--dynamic-max-adaptive-inputs", type=int, default=30, help="Max adaptive inputs.")
+    # Phase 11.6 — Compact Context
+    parser.add_argument("--packet-mode", default="compact", choices=["compact", "full"], help="Packet mode (default: compact).")
+    parser.add_argument("--max-packet-chars", type=int, default=16000, help="Max packet chars.")
+    parser.add_argument("--max-evidence-items", type=int, default=20, help="Max evidence items.")
+    # Phase 11.6 — Provider Retry
+    parser.add_argument("--retry-on-413", action="store_true", default=True, help="Retry on 413 Payload Too Large (default: True).")
+    parser.add_argument("--no-retry-on-413", dest="retry_on_413", action="store_false", help="Disable retry on 413.")
+    parser.add_argument("--wait-on-429", action="store_true", default=False, help="Wait on 429 Rate Limit (default: False).")
+    parser.add_argument("--max-provider-retries", type=int, default=1, help="Max provider retries.")
     # Phase 11 — Agent-Assisted Source Generation
     parser.add_argument("--generate-agent-source", action="store_true", dest="generate_agent_source", help="Run Phase 11 agent-assisted source generation (opt-in, requires provider).")
     parser.add_argument("--source-provider", default="ollama", choices=["ollama", "groq"], dest="source_provider", help="LLM provider for Phase 11 (ollama or groq).")
@@ -834,6 +849,11 @@ def handle_run_all_cli():
             dynamic_inputs=args.dynamic_inputs,
             dynamic_timeout_s=args.dynamic_timeout_s,
             dynamic_max_output_bytes=args.dynamic_max_output_bytes,
+            auto_inputs=args.auto_inputs,
+            adaptive_dynamic=args.adaptive_dynamic,
+            dynamic_mutation_rounds=args.dynamic_mutation_rounds,
+            dynamic_max_generated_inputs=args.dynamic_max_generated_inputs,
+            dynamic_max_adaptive_inputs=args.dynamic_max_adaptive_inputs,
             fuse_behavior=args.fuse_behavior,
             require_dynamic=args.require_dynamic,
             # Phase 10 — Agent Orchestration
@@ -847,6 +867,12 @@ def handle_run_all_cli():
             agent_temperature=args.agent_temperature,
             agent_num_ctx=args.agent_num_ctx,
             agent_max_functions=args.agent_max_functions,
+            packet_mode=args.packet_mode,
+            max_packet_chars=args.max_packet_chars,
+            max_evidence_items=args.max_evidence_items,
+            retry_on_413=args.retry_on_413,
+            wait_on_429=args.wait_on_429,
+            max_provider_retries=args.max_provider_retries,
             # Phase 11 — Agent-Assisted Source Generation
             generate_agent_source=args.generate_agent_source,
             source_provider=args.source_provider,

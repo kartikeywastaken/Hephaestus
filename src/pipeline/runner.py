@@ -297,6 +297,12 @@ def run_pipeline(
     dynamic_inputs: str | None = None,
     dynamic_timeout_s: float = 5.0,
     dynamic_max_output_bytes: int = 1_048_576,
+    # Phase 11.6 — Adaptive Dynamic
+    auto_inputs: bool = False,
+    adaptive_dynamic: bool = False,
+    dynamic_mutation_rounds: int = 2,
+    dynamic_max_generated_inputs: int = 20,
+    dynamic_max_adaptive_inputs: int = 30,
     # Phase 9 — Static-Dynamic Behavior Fusion
     fuse_behavior: bool = False,
     require_dynamic: bool = False,
@@ -311,6 +317,14 @@ def run_pipeline(
     agent_temperature: float = 0.0,
     agent_num_ctx: int = 8192,
     agent_max_functions: int | None = None,
+    # Phase 11.6 — Compact Context
+    packet_mode: str = "compact",
+    max_packet_chars: int = 16000,
+    max_evidence_items: int = 20,
+    # Phase 11.6 — Provider Retry
+    retry_on_413: bool = True,
+    wait_on_429: bool = False,
+    max_provider_retries: int = 1,
     # Phase 11 — Agent-Assisted Source Generation
     generate_agent_source: bool = False,
     source_provider: str = "ollama",
@@ -368,10 +382,14 @@ def run_pipeline(
             combined_stages.append("build_readable")
         if stop_after == "run_dynamic" or dynamic:
             combined_stages.append("run_dynamic")
+        if stop_after == "adaptive_dynamic" or adaptive_dynamic:
+            combined_stages.append("adaptive_dynamic")
         if stop_after == "fuse_behavior" or fuse_behavior:
             combined_stages.append("fuse_behavior")
         if stop_after == "build_agent_packets" or agent_debate:
             combined_stages.append("build_agent_packets")
+        if stop_after == "optimize_agent_context" or agent_debate:
+            combined_stages.append("optimize_agent_context")
         if stop_after == "agent_debate" or agent_debate:
             combined_stages.append("agent_debate")
         if stop_after == "generate_agent_source" or generate_agent_source:
@@ -683,7 +701,6 @@ def run_pipeline(
                 manifest["final_outputs"]["quality_gate"] = json_path
                 
                 # Check status inside quality_gate.json to block pipeline status if blocked
-                import json
                 with open(json_path, "r", encoding="utf-8") as f:
                     qg_data = json.load(f)
                 if qg_data.get("status") == "blocked":
@@ -818,6 +835,9 @@ def run_pipeline(
         ]
         if dynamic_inputs:
             argv += ["--inputs", dynamic_inputs]
+        if auto_inputs:
+            argv.append("--auto-inputs")
+            argv += ["--dynamic-max-generated-inputs", str(dynamic_max_generated_inputs)]
 
         try:
             code = run_dynamic_cli(argv)
@@ -842,6 +862,12 @@ def run_pipeline(
                     if os.path.exists(p):
                         outputs.append(filename)
                         manifest["final_outputs"][filename.replace(".", "_")] = p
+                # Also record dynamic_inputs.generated.json if auto_inputs was used
+                if auto_inputs:
+                    gen_inputs_path = os.path.join(out_dir, "dynamic_inputs.generated.json")
+                    if os.path.exists(gen_inputs_path):
+                        outputs.append("dynamic_inputs.generated.json")
+                        manifest["final_outputs"]["dynamic_inputs_generated_json"] = gen_inputs_path
         except Exception as e:
             logger.exception("[run-all] run_dynamic stage crashed: %s", e)
             stage_status = "failed"
@@ -854,6 +880,167 @@ def run_pipeline(
         record_stage(
             manifest=manifest,
             name="run_dynamic",
+            status=stage_status,
+            outputs=outputs,
+            error=error_msg,
+            metrics={},
+            started_at=started_at,
+            finished_at=finished_at,
+            duration_ms=duration_ms,
+        )
+        write_manifest(manifest, out_dir)
+
+    # Phase 11.6 — Adaptive Dynamic Exploration
+    if adaptive_dynamic and (not stop_after or "adaptive_dynamic" in active_stages):
+        logger.info("[run-all] running adaptive_dynamic stage")
+        started_at = now_iso()
+        start_time = time.perf_counter()
+        stage_status = "ok"
+        error_msg = None
+        outputs = []
+
+        def _file_sha256(path: Path) -> str | None:
+            import hashlib
+            if not path.exists():
+                return None
+            h = hashlib.sha256()
+            try:
+                with path.open("rb") as f:
+                    for chunk in iter(lambda: f.read(65536), b""):
+                        h.update(chunk)
+                return h.hexdigest()
+            except Exception:
+                return None
+
+        runs_path = os.path.join(out_dir, "dynamic_runs.json")
+        if not os.path.exists(runs_path):
+            stage_status = "failed"
+            error_msg = f"Missing required input dynamic_runs.json at {runs_path}"
+            logger.error(f"[run-all] adaptive_dynamic failed: {error_msg}")
+            status = "failed"
+            manifest["status"] = "failed"
+        else:
+            try:
+                with open(runs_path, "r", encoding="utf-8") as f:
+                    initial_runs_data = json.load(f)
+
+                from src.dynamic.explorer import (
+                    generate_adaptive_inputs,
+                    build_input_influence_report,
+                    build_exploration_report,
+                )
+                from src.dynamic.input_generator import build_input_spec_from_cases
+                from src.dynamic.runner import run_all
+                from src.dynamic.safety import SafetyError
+
+                # Safety check read-only guard
+                recovered_c = Path(out_dir) / "recovered.c"
+                recovered_readable_c = Path(out_dir) / "recovered_readable.c"
+                hash_before = {
+                    "recovered.c": _file_sha256(recovered_c),
+                    "recovered_readable.c": _file_sha256(recovered_readable_c),
+                }
+
+                adaptive_cases, explorer_diag = generate_adaptive_inputs(
+                    initial_runs_data,
+                    max_new_cases=dynamic_max_adaptive_inputs,
+                    mutation_rounds=dynamic_mutation_rounds,
+                )
+
+                # Write adaptive_inputs.json
+                adaptive_spec = build_input_spec_from_cases(
+                    adaptive_cases,
+                    generated=True,
+                    max_cases=dynamic_max_adaptive_inputs,
+                )
+                adaptive_inputs_path = os.path.join(out_dir, "adaptive_inputs.json")
+                with open(adaptive_inputs_path, "w", encoding="utf-8") as f:
+                    json.dump(adaptive_spec, f, indent=2)
+
+                adaptive_results = []
+                if adaptive_cases:
+                    # Run adaptive inputs
+                    adaptive_results, _ = run_all(
+                        Path(binary_path),
+                        adaptive_spec,
+                        timeout_s=dynamic_timeout_s,
+                        max_output_bytes=dynamic_max_output_bytes,
+                        cwd=None,
+                        inherit_env=False,
+                        fail_fast=False,
+                    )
+
+                    # Check read-only guard
+                    hash_after = {
+                        "recovered.c": _file_sha256(recovered_c),
+                        "recovered_readable.c": _file_sha256(recovered_readable_c),
+                    }
+                    for name, h_before in hash_before.items():
+                        h_after_val = hash_after.get(name)
+                        if h_before is not None and h_before != h_after_val:
+                            raise PipelineError(f"SAFETY VIOLATION: {name} was modified during adaptive execution")
+
+                # Write adaptive_dynamic_runs.json
+                from src.dynamic.writer import _now_iso
+                binary_sha256 = initial_runs_data.get("binary_sha256", "")
+                adaptive_runs_completed = sum(1 for r in adaptive_results if r.get("status") == "ok")
+                adaptive_runs_timed_out = sum(1 for r in adaptive_results if r.get("timed_out"))
+                adaptive_runs_crashed = sum(1 for r in adaptive_results if r.get("signal") is not None)
+
+                adaptive_runs_payload = {
+                    "schema_version": "dynamic-runs-1.0",
+                    "phase": "11.6",
+                    "generated_at": _now_iso(),
+                    "binary_path": str(binary_path),
+                    "binary_sha256": binary_sha256,
+                    "timeout_s": dynamic_timeout_s,
+                    "runs_total": len(adaptive_results),
+                    "runs_completed": adaptive_runs_completed,
+                    "runs_timed_out": adaptive_runs_timed_out,
+                    "runs_crashed": adaptive_runs_crashed,
+                    "runs": adaptive_results,
+                    "diagnostics": explorer_diag,
+                }
+                adaptive_runs_path = os.path.join(out_dir, "adaptive_dynamic_runs.json")
+                with open(adaptive_runs_path, "w", encoding="utf-8") as f:
+                    json.dump(adaptive_runs_payload, f, indent=2)
+
+                # Write input_influence_report.json
+                influence_report = build_input_influence_report(initial_runs_data.get("runs", []), adaptive_results)
+                influence_path = os.path.join(out_dir, "input_influence_report.json")
+                with open(influence_path, "w", encoding="utf-8") as f:
+                    json.dump(influence_report, f, indent=2)
+
+                # Write dynamic_exploration_report.json
+                exploration_report = build_exploration_report(
+                    explorer_diag,
+                    initial_run_count=len(initial_runs_data.get("runs", [])),
+                    adaptive_run_count=len(adaptive_results),
+                    new_cases_count=len(adaptive_cases),
+                )
+                exploration_path = os.path.join(out_dir, "dynamic_exploration_report.json")
+                with open(exploration_path, "w", encoding="utf-8") as f:
+                    json.dump(exploration_report, f, indent=2)
+
+                # Add output files to list
+                for fn in ["adaptive_inputs.json", "adaptive_dynamic_runs.json", "input_influence_report.json", "dynamic_exploration_report.json"]:
+                    p = os.path.join(out_dir, fn)
+                    if os.path.exists(p):
+                        outputs.append(fn)
+                        manifest["final_outputs"][fn.replace(".", "_")] = p
+
+            except Exception as e:
+                stage_status = "failed"
+                error_msg = str(e)
+                logger.error(f"[stage adaptive_dynamic] failed: {e}")
+                status = "failed"
+                manifest["status"] = "failed"
+
+        finished_at = now_iso()
+        duration_ms = int((time.perf_counter() - start_time) * 1000)
+        record_stage(
+            manifest=manifest,
+            name="adaptive_dynamic",
             status=stage_status,
             outputs=outputs,
             error=error_msg,
@@ -962,6 +1149,50 @@ def run_pipeline(
         )
         write_manifest(manifest, out_dir)
 
+    # Phase 11.6 — Compact LLM Context Optimizer
+    if (agent_debate or stop_after == "optimize_agent_context") and (not stop_after or "optimize_agent_context" in active_stages):
+        logger.info("[run-all] running optimize_agent_context stage")
+        started_at = now_iso()
+        start_time = time.perf_counter()
+        stage_status = "ok"
+        error_msg = None
+        outputs = []
+
+        from src.agent.context_optimizer import optimize_agent_packets
+        try:
+            compact_paths, report = optimize_agent_packets(
+                Path(out_dir),
+                packet_mode=packet_mode,
+                max_packet_chars=max_packet_chars,
+                max_evidence_items=max_evidence_items,
+            )
+            p = os.path.join(out_dir, "agent_packet_optimization_report.json")
+            if os.path.exists(p):
+                outputs.append("agent_packet_optimization_report.json")
+                manifest["final_outputs"]["agent_packet_optimization_report_json"] = p
+        except Exception as e:
+            stage_status = "failed"
+            error_msg = str(e)
+            logger.error(f"[stage optimize_agent_context] failed: {e}")
+            if stop_after == "optimize_agent_context":
+                status = "failed"
+                manifest["status"] = "failed"
+
+        finished_at = now_iso()
+        duration_ms = int((time.perf_counter() - start_time) * 1000)
+        record_stage(
+            manifest=manifest,
+            name="optimize_agent_context",
+            status=stage_status,
+            outputs=outputs,
+            error=error_msg,
+            metrics={},
+            started_at=started_at,
+            finished_at=finished_at,
+            duration_ms=duration_ms,
+        )
+        write_manifest(manifest, out_dir)
+
     # Phase 10.2 — Agent Debate
     if agent_debate:
         logger.info("[run-all] running agent_debate stage")
@@ -978,6 +1209,10 @@ def run_pipeline(
             "--timeout-s", str(agent_timeout_s),
             "--temperature", str(agent_temperature),
             "--num-ctx", str(agent_num_ctx),
+            "--packet-mode", packet_mode,
+            "--max-packet-chars", str(max_packet_chars),
+            "--max-evidence-items", str(max_evidence_items),
+            "--max-provider-retries", str(max_provider_retries),
         ]
         if agent_model:
             argv += ["--model", agent_model]
@@ -991,6 +1226,12 @@ def run_pipeline(
             argv += ["--max-functions", str(agent_max_functions)]
         if function:
             argv += ["--function", function]
+        if retry_on_413:
+            argv.append("--retry-on-413")
+        else:
+            argv.append("--no-retry-on-413")
+        if wait_on_429:
+            argv.append("--wait-on-429")
 
         try:
             code = run_agent_debate_cli(argv)

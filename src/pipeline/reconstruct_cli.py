@@ -115,6 +115,90 @@ def run_reconstruct_cli(argv: List[str]) -> int:
         action="store_true",
         help="Output final manifest as JSON on stdout."
     )
+    parser.add_argument(
+        "--auto-inputs",
+        action="store_true",
+        default=None,
+        help="Enable auto input generation when no --dynamic-inputs is provided."
+    )
+    parser.add_argument(
+        "--no-auto-inputs",
+        dest="auto_inputs",
+        action="store_false",
+        help="Disable auto input generation."
+    )
+    parser.add_argument(
+        "--adaptive-dynamic",
+        action="store_true",
+        default=None,
+        help="Enable adaptive dynamic exploration (default: True when dynamic is enabled)."
+    )
+    parser.add_argument(
+        "--no-adaptive-dynamic",
+        dest="adaptive_dynamic",
+        action="store_false",
+        help="Disable adaptive dynamic exploration."
+    )
+    parser.add_argument(
+        "--dynamic-mutation-rounds",
+        type=int,
+        default=2,
+        help="Number of mutation rounds for adaptive exploration (default: 2)."
+    )
+    parser.add_argument(
+        "--dynamic-max-generated-inputs",
+        type=int,
+        default=20,
+        help="Max generated inputs for auto generation (default: 20)."
+    )
+    parser.add_argument(
+        "--dynamic-max-adaptive-inputs",
+        type=int,
+        default=30,
+        help="Max generated inputs for adaptive exploration (default: 30)."
+    )
+    parser.add_argument(
+        "--packet-mode",
+        choices=["compact", "full"],
+        default="compact",
+        help="Packet mode: compact or full (default: compact)."
+    )
+    parser.add_argument(
+        "--max-packet-chars",
+        type=int,
+        default=16000,
+        help="Max characters per compact packet (default: 16000)."
+    )
+    parser.add_argument(
+        "--max-evidence-items",
+        type=int,
+        default=20,
+        help="Max evidence items per compact packet (default: 20)."
+    )
+    parser.add_argument(
+        "--retry-on-413",
+        action="store_true",
+        default=True,
+        help="Retry on 413 Payload Too Large (default: True)."
+    )
+    parser.add_argument(
+        "--no-retry-on-413",
+        dest="retry_on_413",
+        action="store_false",
+        help="Disable retry on 413 Payload Too Large."
+    )
+    parser.add_argument(
+        "--wait-on-429",
+        action="store_true",
+        default=False,
+        help="Retry on 429 Rate Limit (default: False)."
+    )
+    parser.add_argument(
+        "--max-provider-retries",
+        type=int,
+        default=1,
+        help="Max provider retries for 413/429 (default: 1)."
+    )
 
     # Debug/skip flags
     parser.add_argument(
@@ -195,6 +279,15 @@ def run_reconstruct_cli(argv: List[str]) -> int:
         elif args.provider == "ollama":
             model_name = os.environ.get("HEPHAESTUS_AGENT_MODEL", "llama3.3:70b")
 
+    # Resolve dynamic defaults
+    auto_inputs = args.auto_inputs
+    if auto_inputs is None:
+        auto_inputs = (args.dynamic_inputs is None)
+
+    adaptive_dynamic = args.adaptive_dynamic
+    if adaptive_dynamic is None:
+        adaptive_dynamic = not args.skip_dynamic
+
     # Run the pipeline runner
     from src.pipeline.runner import run_pipeline, PipelineError
 
@@ -224,11 +317,18 @@ def run_reconstruct_cli(argv: List[str]) -> int:
             no_copy_op_store_simplification=False,
             enable_mask_cast_simplification=False,
             skip_static=args.skip_static,
+            # Forward function filter
+            function=args.function,
             # Phase 8 — Dynamic Behavior Capture
             dynamic=not args.skip_dynamic,
             dynamic_inputs=args.dynamic_inputs,
             dynamic_timeout_s=args.dynamic_timeout_s,
             dynamic_max_output_bytes=args.dynamic_max_output_bytes,
+            auto_inputs=auto_inputs,
+            adaptive_dynamic=adaptive_dynamic,
+            dynamic_mutation_rounds=args.dynamic_mutation_rounds,
+            dynamic_max_generated_inputs=args.dynamic_max_generated_inputs,
+            dynamic_max_adaptive_inputs=args.dynamic_max_adaptive_inputs,
             # Phase 9 — Static-Dynamic Behavior Fusion
             fuse_behavior=not args.skip_fusion,
             require_dynamic=False,
@@ -243,6 +343,12 @@ def run_reconstruct_cli(argv: List[str]) -> int:
             agent_temperature=0.0,
             agent_num_ctx=8192,
             agent_max_functions=args.max_functions,
+            packet_mode=args.packet_mode,
+            max_packet_chars=args.max_packet_chars,
+            max_evidence_items=args.max_evidence_items,
+            retry_on_413=args.retry_on_413,
+            wait_on_429=args.wait_on_429,
+            max_provider_retries=args.max_provider_retries,
             # Phase 11 — Agent-Assisted Source Generation
             generate_agent_source=not args.skip_agent_source,
             source_provider=args.provider,
@@ -251,8 +357,6 @@ def run_reconstruct_cli(argv: List[str]) -> int:
             source_api_key_env=args.api_key_env,
             allow_human_suggestions=args.allow_human_suggestions,
             overwrite_agent_source=args.overwrite,
-            # Forward function filter
-            function=args.function,
         )
 
         if args.json:
