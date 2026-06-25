@@ -274,9 +274,15 @@ def run_agent_debate_cli(argv: List[str]) -> int:
         return 1
 
     if not json_mode:
+        # Compute the actual count that will be debated (after filtering)
+        from src.agent.library_filter import filter_debatable_packets
+        _preview_debatable, _preview_skipped = filter_debatable_packets(
+            packets, max_functions=args.max_functions,
+        )
         print(
             f"[agent-debate] provider={provider_name} model={model_name} "
-            f"functions={len(packets)}"
+            f"functions={len(_preview_debatable)}"
+            + (f" skipped_library={len(_preview_skipped)}" if _preview_skipped else "")
         )
 
     # ── Hash guard (before debate) ─────────────────────────────────────────

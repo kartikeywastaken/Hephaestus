@@ -13,6 +13,10 @@ Pipeline per function:
 Each agent failure is caught at function scope.
 One failed function does NOT abort the debate unless --fail-fast is set.
 The Finalizer receives validation errors so it can exclude invalid items.
+
+Provider retry handling (Phase 11.6):
+  413 (Payload Too Large) — mark function as oversized; optionally retry
+  429 (Rate Limited)      — wait retry_after_s + 1; optionally retry
 """
 
 from __future__ import annotations
@@ -20,10 +24,12 @@ from __future__ import annotations
 import datetime
 import json
 import logging
+import time
 from pathlib import Path
 from typing import Any
 
 from src.agent.providers.base import AgentProvider
+from src.agent.library_filter import filter_debatable_packets
 from src.agent.prompts import (
     EVIDENCE_AGENT_SYSTEM,
     DYNAMIC_BEHAVIOR_AGENT_SYSTEM,
@@ -54,6 +60,10 @@ def _now_iso() -> str:
 def run_debate_for_function(
     packet: dict,
     provider: AgentProvider,
+    *,
+    retry_on_413: bool = False,
+    wait_on_429: bool = False,
+    max_provider_retries: int = 1,
 ) -> tuple[dict, list[dict]]:
     """
     Run the full 5-agent debate for a single function packet.
@@ -61,6 +71,10 @@ def run_debate_for_function(
     Returns (function_record, suggestions_list).
     On provider or parse failure the function_record has status="failed".
     Suggestions are empty on failure.
+
+    Provider retry behaviour (Phase 11.6):
+      413 — if retry_on_413, mark as oversized (no retry by default)
+      429 — if wait_on_429, sleep(retry_after_s + 1) then retry once
     """
     fn_name = packet.get("function", "unknown")
     logger.info("[debate] starting debate for function '%s'", fn_name)
@@ -182,6 +196,61 @@ def run_debate_for_function(
         return fn_record, suggestions
 
     except Exception as e:
+        # ── Provider-specific retry handling (Phase 11.6) ─────────────
+        from src.agent.providers.groq import (
+            GroqPayloadTooLargeError,
+            GroqRateLimitError,
+        )
+        if isinstance(e, GroqPayloadTooLargeError):
+            logger.warning(
+                "[debate] function '%s' got 413 (payload too large)", fn_name,
+            )
+            fn_record = {
+                "function": fn_name,
+                "status": "oversized",
+                "error": str(e),
+                "steps": steps,
+                "suggestions_count": 0,
+                "final_summary": {},
+                "final_rejected": [],
+                "critic_findings": [],
+                "validation_errors": [],
+            }
+            return fn_record, []
+
+        if isinstance(e, GroqRateLimitError) and wait_on_429:
+            delay = (e.retry_after_s or 5.0) + 1.0
+            logger.warning(
+                "[debate] function '%s' rate-limited; waiting %.1fs",
+                fn_name, delay,
+            )
+            time.sleep(delay)
+            # Retry once
+            try:
+                return run_debate_for_function(
+                    packet, provider,
+                    retry_on_413=False,
+                    wait_on_429=False,  # do not recurse again
+                    max_provider_retries=0,
+                )
+            except Exception as retry_e:
+                logger.exception(
+                    "[debate] function '%s' retry also failed: %s",
+                    fn_name, retry_e,
+                )
+                fn_record = {
+                    "function": fn_name,
+                    "status": "rate_limited",
+                    "error": str(retry_e),
+                    "steps": steps,
+                    "suggestions_count": 0,
+                    "final_summary": {},
+                    "final_rejected": [],
+                    "critic_findings": [],
+                    "validation_errors": [],
+                }
+                return fn_record, []
+
         logger.exception("[debate] function '%s' failed: %s", fn_name, e)
         fn_record = {
             "function": fn_name,
@@ -205,21 +274,39 @@ def run_debate(
     *,
     fail_fast: bool = False,
     max_functions: int | None = None,
+    retry_on_413: bool = False,
+    wait_on_429: bool = False,
+    max_provider_retries: int = 1,
 ) -> tuple[list[dict], list[dict]]:
     """
     Run the agent debate for all packets (up to max_functions).
 
+    Library / import / PLT-stub functions are automatically skipped.
+    ``max_functions`` limits only *user-defined* functions debated.
+
     Returns (function_records, all_suggestions).
     """
-    target_packets = packets
-    if max_functions is not None and max_functions > 0:
-        target_packets = packets[:max_functions]
+    # Filter library stubs and apply max_functions to user-defined only
+    target_packets, skipped_packets = filter_debatable_packets(
+        packets, max_functions=max_functions,
+    )
+
+    for pkt in skipped_packets:
+        logger.info(
+            "[debate] skipping library function '%s'",
+            pkt.get("function", "unknown"),
+        )
 
     function_records: list[dict] = []
     all_suggestions: list[dict] = []
 
     for packet in target_packets:
-        fn_record, suggestions = run_debate_for_function(packet, provider)
+        fn_record, suggestions = run_debate_for_function(
+            packet, provider,
+            retry_on_413=retry_on_413,
+            wait_on_429=wait_on_429,
+            max_provider_retries=max_provider_retries,
+        )
         function_records.append(fn_record)
         all_suggestions.extend(suggestions)
 

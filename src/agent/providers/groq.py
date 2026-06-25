@@ -304,6 +304,21 @@ class GroqProvider(AgentProvider):
                 raw_response = resp.read().decode("utf-8", errors="replace")
         except urllib.error.HTTPError as e:
             body_snippet = _read_error_body(e, self._api_key)
+            if e.code == 413:
+                raise GroqPayloadTooLargeError(
+                    f"Groq HTTP 413 for schema '{schema_name}': payload too large. {body_snippet}",
+                    schema_name=schema_name,
+                    body_snippet=body_snippet,
+                ) from e
+            if e.code == 429:
+                # Try to parse retry-after from header or body
+                retry_after_s = _parse_retry_after(e, body_snippet)
+                raise GroqRateLimitError(
+                    f"Groq HTTP 429 for schema '{schema_name}': rate limited. {body_snippet}",
+                    schema_name=schema_name,
+                    retry_after_s=retry_after_s,
+                    body_snippet=body_snippet,
+                ) from e
             raise GroqProviderError(
                 f"Groq HTTP {e.code} for schema '{schema_name}': {body_snippet}"
             ) from e
@@ -407,3 +422,60 @@ class GroqApiKeyMissingError(RuntimeError):
 class GroqProviderError(RuntimeError):
     """Raised on unrecoverable HTTP/network errors from the Groq provider."""
     pass
+
+
+class GroqPayloadTooLargeError(GroqProviderError):
+    """Raised on HTTP 413 — payload exceeds Groq's context/token limit."""
+    def __init__(self, msg: str, *, schema_name: str = "", body_snippet: str = ""):
+        super().__init__(msg)
+        self.schema_name = schema_name
+        self.body_snippet = body_snippet
+
+
+class GroqRateLimitError(GroqProviderError):
+    """Raised on HTTP 429 — Groq rate limit exceeded."""
+    def __init__(
+        self,
+        msg: str,
+        *,
+        schema_name: str = "",
+        retry_after_s: float | None = None,
+        body_snippet: str = "",
+    ):
+        super().__init__(msg)
+        self.schema_name = schema_name
+        self.retry_after_s = retry_after_s
+        self.body_snippet = body_snippet
+
+
+def _parse_retry_after(
+    exc: urllib.error.HTTPError,
+    body_snippet: str,
+) -> float | None:
+    """
+    Extract retry-after delay from the HTTP 429 response.
+
+    Checks:
+      1. Retry-After header (seconds or date)
+      2. Body JSON field (e.g. Groq's "error.message" with delay)
+    Returns None if not parseable.
+    """
+    import re as _re
+
+    # 1. Header
+    retry_hdr = exc.headers.get("Retry-After") if exc.headers else None
+    if retry_hdr:
+        try:
+            return float(retry_hdr)
+        except (ValueError, TypeError):
+            pass
+
+    # 2. Body — look for "Please try again in Xs" or similar
+    match = _re.search(r"try again in ([\d.]+)s", body_snippet)
+    if match:
+        try:
+            return float(match.group(1))
+        except (ValueError, TypeError):
+            pass
+
+    return None
