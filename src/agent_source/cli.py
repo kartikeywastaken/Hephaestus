@@ -87,6 +87,8 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def run_generate_agent_source_cli(argv: list[str]) -> int:
+    from src.utils.env_loader import load_default_env_files
+    load_default_env_files()
     """
     Entry point for generate-agent-source subcommand.
     Returns exit code: 0 (success), 1 (input error), 2 (safety violation).

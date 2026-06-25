@@ -897,6 +897,10 @@ def handle_stress_test_cli():
 
 
 def main():
+    # Load default env files (.env.local, .env) before parsing/construction
+    from src.utils.env_loader import load_default_env_files
+    load_default_env_files()
+
     # If help flag is present, avoid running setup_logging to prevent creating output directory unnecessarily
     if "--help" in sys.argv or "-h" in sys.argv:
         parse_args()
@@ -904,50 +908,54 @@ def main():
 
     # Check for run-all and stress-test subcommands before early logging setup
     if len(sys.argv) > 1:
-    	first_arg = sys.argv[1]
-    	if first_arg == "run-all":
+        first_arg = sys.argv[1]
+        if first_arg == "reconstruct":
+            from src.pipeline.reconstruct_cli import run_reconstruct_cli
+            code = run_reconstruct_cli(sys.argv[2:])
+            sys.exit(code)
+        elif first_arg == "run-all":
             handle_run_all_cli()
             return
-    	elif first_arg == "stress-test":
+        elif first_arg == "stress-test":
             handle_stress_test_cli()
             return
-    	elif first_arg == "validate":
+        elif first_arg == "validate":
             from src.validation.cli import run_validate_cli
             code = run_validate_cli(sys.argv[2:])
             sys.exit(code)
-    	elif first_arg == "build-evidence-index":
+        elif first_arg == "build-evidence-index":
             from src.validation.evidence_index.cli import run_build_evidence_index_cli
             code = run_build_evidence_index_cli(sys.argv[2:])
             sys.exit(code)
-    	elif first_arg == "build-trace-report":
+        elif first_arg == "build-trace-report":
             from src.validation.trace_report.cli import run_build_trace_report_cli
             code = run_build_trace_report_cli(sys.argv[2:])
             sys.exit(code)
-    	elif first_arg == "quality-gate":
+        elif first_arg == "quality-gate":
             from src.validation.quality_gate.cli import run_quality_gate_cli
             code = run_quality_gate_cli(sys.argv[2:])
             sys.exit(code)
-    	elif first_arg == "build-readable":
+        elif first_arg == "build-readable":
             from src.readability.cli import run_build_readable_cli
             code = run_build_readable_cli(sys.argv[2:])
             sys.exit(code)
-    	elif first_arg == "run-dynamic":
+        elif first_arg == "run-dynamic":
             from src.dynamic.cli import run_dynamic_cli
             code = run_dynamic_cli(sys.argv[2:])
             sys.exit(code)
-    	elif first_arg == "fuse-behavior":
+        elif first_arg == "fuse-behavior":
             from src.behavior.cli import run_fuse_behavior_cli
             code = run_fuse_behavior_cli(sys.argv[2:])
             sys.exit(code)
-    	elif first_arg == "build-agent-packets":
+        elif first_arg == "build-agent-packets":
             from src.agent.cli import run_build_agent_packets_cli
             code = run_build_agent_packets_cli(sys.argv[2:])
             sys.exit(code)
-    	elif first_arg == "agent-debate":
+        elif first_arg == "agent-debate":
             from src.agent.cli import run_agent_debate_cli
             code = run_agent_debate_cli(sys.argv[2:])
             sys.exit(code)
-    	elif first_arg == "generate-agent-source":
+        elif first_arg == "generate-agent-source":
             from src.agent_source.cli import run_generate_agent_source_cli
             code = run_generate_agent_source_cli(sys.argv[2:])
             sys.exit(code)

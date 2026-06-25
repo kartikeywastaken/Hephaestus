@@ -4,7 +4,8 @@ dist/
 coverage/
 .DS_Store
 *.log
-.env*
+.env
+.env.local
 !.env.example
 .pytest_cache/
 __pycache__/

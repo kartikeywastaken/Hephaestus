@@ -40,6 +40,8 @@ SUPPORTED_PROVIDERS = ("ollama", "groq")
 # ── build-agent-packets ───────────────────────────────────────────────────────
 
 def run_build_agent_packets_cli(argv: List[str]) -> int:
+    from src.utils.env_loader import load_default_env_files
+    load_default_env_files()
     """
     Build per-function agent packets from all available artifacts.
 
@@ -154,6 +156,8 @@ def run_build_agent_packets_cli(argv: List[str]) -> int:
 # ── agent-debate ──────────────────────────────────────────────────────────────
 
 def run_agent_debate_cli(argv: List[str]) -> int:
+    from src.utils.env_loader import load_default_env_files
+    load_default_env_files()
     """
     Run the 5-agent debate against a real LLM provider.
 

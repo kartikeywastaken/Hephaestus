@@ -319,6 +319,8 @@ def run_pipeline(
     source_api_key_env: str | None = None,
     allow_human_suggestions: bool = False,
     overwrite_agent_source: bool = False,
+    skip_static: bool = False,
+    function: str | None = None,
 ) -> dict:
     """Run Hephaestus pipeline and return execution manifest."""
     from src.utils.artifacts import ensure_out_dir, clean_known_artifacts
@@ -389,6 +391,14 @@ def run_pipeline(
         if "build_evidence_index" in active_stages:
             active_stages.remove("build_evidence_index")
             
+    if skip_static:
+        for s in [
+            "extract", "analyze_cfg", "recover_semantics", "refine_semantics",
+            "recover_layouts", "finalize_semantics", "reconstruct_source"
+        ]:
+            if s in active_stages:
+                active_stages.remove(s)
+                
     status = "ok"
     
     for stage in active_stages:
@@ -979,6 +989,8 @@ def run_pipeline(
             argv += ["--api-key-env", agent_api_key_env]
         if agent_max_functions is not None:
             argv += ["--max-functions", str(agent_max_functions)]
+        if function:
+            argv += ["--function", function]
 
         try:
             code = run_agent_debate_cli(argv)
@@ -1043,6 +1055,8 @@ def run_pipeline(
             argv.append("--allow-human-suggestions")
         if overwrite_agent_source:
             argv.append("--overwrite")
+        if function:
+            argv += ["--function", function]
 
         try:
             code = run_generate_agent_source_cli(argv)
