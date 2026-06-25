@@ -41,11 +41,16 @@ KNOWN_ARTIFACT_FILES = {
     # Phase 9 — Static-Dynamic Behavior Fusion
     "behavior_model.json",
     "behavior_fusion_report.json",
+    # Phase 10 — Agent Orchestration
+    "agent_packet_manifest.json",
+    "agent_debate_report.json",
+    "agent_suggestions.json",
 }
 
 
 KNOWN_ARTIFACT_DIRS = {
     "ghidra_temp_proj",
+    "agent_packets",
 }
 
 def ensure_out_dir(out_dir: str | Path) -> Path:

@@ -300,6 +300,17 @@ def run_pipeline(
     # Phase 9 — Static-Dynamic Behavior Fusion
     fuse_behavior: bool = False,
     require_dynamic: bool = False,
+    # Phase 10 — Agent Orchestration
+    agent_debate: bool = False,
+    agent_provider: str = "ollama",
+    agent_model: str | None = None,
+    agent_ollama_host: str | None = None,
+    agent_groq_host: str | None = None,
+    agent_api_key_env: str | None = None,
+    agent_timeout_s: int = 300,
+    agent_temperature: float = 0.0,
+    agent_num_ctx: int = 8192,
+    agent_max_functions: int | None = None,
 ) -> dict:
     """Run Hephaestus pipeline and return execution manifest."""
     from src.utils.artifacts import ensure_out_dir, clean_known_artifacts
@@ -349,6 +360,10 @@ def run_pipeline(
             combined_stages.append("run_dynamic")
         if stop_after == "fuse_behavior" or fuse_behavior:
             combined_stages.append("fuse_behavior")
+        if stop_after == "build_agent_packets" or agent_debate:
+            combined_stages.append("build_agent_packets")
+        if stop_after == "agent_debate" or agent_debate:
+            combined_stages.append("agent_debate")
             
         if stop_after in combined_stages:
             idx = combined_stages.index(stop_after)
@@ -869,6 +884,122 @@ def run_pipeline(
         record_stage(
             manifest=manifest,
             name="fuse_behavior",
+            status=stage_status,
+            outputs=outputs,
+            error=error_msg,
+            metrics={},
+            started_at=started_at,
+            finished_at=finished_at,
+            duration_ms=duration_ms,
+        )
+        write_manifest(manifest, out_dir)
+
+    # Phase 10.1 — Build Agent Packets
+    if agent_debate:
+        logger.info("[run-all] running build_agent_packets stage")
+        started_at = now_iso()
+        start_time = time.perf_counter()
+        stage_status = "ok"
+        error_msg = None
+        outputs = []
+
+        from src.agent.cli import run_build_agent_packets_cli
+        argv = ["--out-dir", str(out_dir)]
+
+        try:
+            code = run_build_agent_packets_cli(argv)
+            if code == 2:
+                stage_status = "failed"
+                error_msg = "Safety violation: input artifact modified during packet build"
+                status = "failed"
+                manifest["status"] = "failed"
+            elif code != 0:
+                stage_status = "failed"
+                error_msg = f"build-agent-packets returned exit code {code}"
+                # Non-fatal: continue to attempt debate if packets partial
+            else:
+                p = os.path.join(str(out_dir), "agent_packet_manifest.json")
+                if os.path.exists(p):
+                    outputs.append("agent_packet_manifest.json")
+                    manifest["final_outputs"]["agent_packet_manifest_json"] = p
+        except Exception as e:
+            logger.exception("[run-all] build_agent_packets stage crashed: %s", e)
+            stage_status = "failed"
+            error_msg = str(e)
+
+        finished_at = now_iso()
+        duration_ms = int((time.perf_counter() - start_time) * 1000)
+        record_stage(
+            manifest=manifest,
+            name="build_agent_packets",
+            status=stage_status,
+            outputs=outputs,
+            error=error_msg,
+            metrics={},
+            started_at=started_at,
+            finished_at=finished_at,
+            duration_ms=duration_ms,
+        )
+        write_manifest(manifest, out_dir)
+
+    # Phase 10.2 — Agent Debate
+    if agent_debate:
+        logger.info("[run-all] running agent_debate stage")
+        started_at = now_iso()
+        start_time = time.perf_counter()
+        stage_status = "ok"
+        error_msg = None
+        outputs = []
+
+        from src.agent.cli import run_agent_debate_cli
+        argv = [
+            "--out-dir", str(out_dir),
+            "--provider", agent_provider,
+            "--timeout-s", str(agent_timeout_s),
+            "--temperature", str(agent_temperature),
+            "--num-ctx", str(agent_num_ctx),
+        ]
+        if agent_model:
+            argv += ["--model", agent_model]
+        if agent_ollama_host:
+            argv += ["--ollama-host", agent_ollama_host]
+        if agent_groq_host:
+            argv += ["--groq-host", agent_groq_host]
+        if agent_api_key_env:
+            argv += ["--api-key-env", agent_api_key_env]
+        if agent_max_functions is not None:
+            argv += ["--max-functions", str(agent_max_functions)]
+
+        try:
+            code = run_agent_debate_cli(argv)
+            if code == 2:
+                stage_status = "failed"
+                error_msg = "Safety violation: input artifact modified during agent debate"
+                status = "failed"
+                manifest["status"] = "failed"
+            elif code != 0:
+                stage_status = "failed"
+                error_msg = f"agent-debate returned exit code {code}"
+                status = "failed"
+                manifest["status"] = "failed"
+            else:
+                for filename in ["agent_debate_report.json", "agent_suggestions.json"]:
+                    p = os.path.join(str(out_dir), filename)
+                    if os.path.exists(p):
+                        outputs.append(filename)
+                        manifest["final_outputs"][filename.replace(".", "_")] = p
+        except Exception as e:
+            logger.exception("[run-all] agent_debate stage crashed: %s", e)
+            stage_status = "failed"
+            error_msg = str(e)
+            status = "failed"
+            manifest["status"] = "failed"
+
+        finished_at = now_iso()
+        duration_ms = int((time.perf_counter() - start_time) * 1000)
+        record_stage(
+            manifest=manifest,
+            name="agent_debate",
             status=stage_status,
             outputs=outputs,
             error=error_msg,

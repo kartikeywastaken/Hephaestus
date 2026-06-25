@@ -777,6 +777,17 @@ def handle_run_all_cli():
     # Phase 9 — Static-Dynamic Behavior Fusion
     parser.add_argument("--fuse-behavior", action="store_true", dest="fuse_behavior", help="Run Phase 9 static-dynamic fusion (does not execute binary unless --dynamic also passed).")
     parser.add_argument("--require-dynamic", action="store_true", dest="require_dynamic", help="Fail Phase 9 fusion if dynamic artifacts are missing.")
+    # Phase 10 — Agent Orchestration
+    parser.add_argument("--agent-debate", action="store_true", dest="agent_debate", help="Run Phase 10 multi-agent debate (opt-in, requires provider).")
+    parser.add_argument("--agent-provider", default="ollama", choices=["ollama", "groq"], dest="agent_provider", help="LLM provider for Phase 10 (ollama or groq).")
+    parser.add_argument("--agent-model", default=None, dest="agent_model", help="Model name for Phase 10 (overrides default for chosen provider).")
+    parser.add_argument("--agent-ollama-host", default=None, dest="agent_ollama_host", help="Ollama host URL for Phase 10 (ollama provider).")
+    parser.add_argument("--agent-groq-host", default=None, dest="agent_groq_host", help="Groq API host for Phase 10 (groq provider).")
+    parser.add_argument("--agent-api-key-env", default=None, metavar="ENV_NAME", dest="agent_api_key_env", help="Env var name containing the Groq API key (groq provider).")
+    parser.add_argument("--agent-timeout-s", type=int, default=300, dest="agent_timeout_s", help="Request timeout in seconds for Phase 10 (default: 300).")
+    parser.add_argument("--agent-temperature", type=float, default=0.0, dest="agent_temperature", help="Sampling temperature for Phase 10 (default: 0.0).")
+    parser.add_argument("--agent-num-ctx", type=int, default=8192, dest="agent_num_ctx", help="Context window tokens for Phase 10 Ollama (default: 8192).")
+    parser.add_argument("--agent-max-functions", type=int, default=None, dest="agent_max_functions", help="Max functions to debate in Phase 10.")
 
     args = parser.parse_args(sys.argv[2:])
     
@@ -817,6 +828,17 @@ def handle_run_all_cli():
             dynamic_max_output_bytes=args.dynamic_max_output_bytes,
             fuse_behavior=args.fuse_behavior,
             require_dynamic=args.require_dynamic,
+            # Phase 10 — Agent Orchestration
+            agent_debate=args.agent_debate,
+            agent_provider=args.agent_provider,
+            agent_model=args.agent_model,
+            agent_ollama_host=args.agent_ollama_host,
+            agent_groq_host=args.agent_groq_host,
+            agent_api_key_env=args.agent_api_key_env,
+            agent_timeout_s=args.agent_timeout_s,
+            agent_temperature=args.agent_temperature,
+            agent_num_ctx=args.agent_num_ctx,
+            agent_max_functions=args.agent_max_functions,
         )
 
 
@@ -900,6 +922,14 @@ def main():
     	elif first_arg == "fuse-behavior":
             from src.behavior.cli import run_fuse_behavior_cli
             code = run_fuse_behavior_cli(sys.argv[2:])
+            sys.exit(code)
+    	elif first_arg == "build-agent-packets":
+            from src.agent.cli import run_build_agent_packets_cli
+            code = run_build_agent_packets_cli(sys.argv[2:])
+            sys.exit(code)
+    	elif first_arg == "agent-debate":
+            from src.agent.cli import run_agent_debate_cli
+            code = run_agent_debate_cli(sys.argv[2:])
             sys.exit(code)
 
 

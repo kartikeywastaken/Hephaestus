@@ -21,6 +21,8 @@ OPTIONAL_PIPELINE_STAGES = [
     "build_readable",
     "run_dynamic",
     "fuse_behavior",
+    "build_agent_packets",
+    "agent_debate",
 ]
 
 STAGE_OUTPUTS = {
@@ -77,6 +79,13 @@ STAGE_OUTPUTS = {
     "fuse_behavior": [
         "behavior_model.json",
         "behavior_fusion_report.json",
+    ],
+    "build_agent_packets": [
+        "agent_packet_manifest.json",
+    ],
+    "agent_debate": [
+        "agent_debate_report.json",
+        "agent_suggestions.json",
     ],
 }
 

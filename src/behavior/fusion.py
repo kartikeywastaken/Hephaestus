@@ -30,7 +30,7 @@ def _get_functions(arts: BehaviorArtifacts) -> list[dict]:
     """Return per-function records from source_reconstruction.json."""
     if arts.source_reconstruction is None:
         return []
-    fns = arts.source_reconstruction.get("functions", [])
+    fns = arts.source_reconstruction.get("data", {}).get("functions", []) or arts.source_reconstruction.get("functions", [])
     if not isinstance(fns, list):
         return []
     return fns
