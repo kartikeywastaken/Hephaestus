@@ -124,13 +124,16 @@ class TestProviderValidation:
         assert rc == 1
 
     def test_groq_provider_requires_api_key(self, out_dir, monkeypatch):
+        # Remove env vars first
         monkeypatch.delenv("GROQ_API_KEY", raising=False)
         monkeypatch.delenv("HEPHAESTUS_GROQ_API_KEY", raising=False)
-
-        rc = run_agent_debate_cli([
-            "--out-dir", str(out_dir),
-            "--provider", "groq",
-        ])
+        # Suppress .env.local loader so the real key cannot be re-injected
+        # by the CLI startup call to load_default_env_files().
+        with patch("src.utils.env_loader.load_default_env_files", return_value=None):
+            rc = run_agent_debate_cli([
+                "--out-dir", str(out_dir),
+                "--provider", "groq",
+            ])
         assert rc == 1
 
     def test_groq_reads_groq_api_key_env(self, out_dir, monkeypatch):

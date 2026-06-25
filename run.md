@@ -512,4 +512,53 @@ Generate the readable skeleton automatically at the end of the decompiler pipeli
 python3 main.py run-all ./target_binary --ghidra --radare2 --out-dir artifacts --clean --readable
 ```
 
+---
+
+## One-Command Reconstruction Orchestrator (Phase 11.5)
+
+To run the complete reconstruction pipeline all the way from target binary parsing through static extraction, dynamic tracing, static-dynamic fusion, multi-agent debate, and agent-assisted source generation (`recovered_agent.c`) in one go:
+
+```bash
+python3 main.py reconstruct ./target_binary \
+  --out-dir artifacts/full_run \
+  --provider groq \
+  --model llama-3.3-70b-versatile \
+  --dynamic-inputs ./tests/inputs.json \
+  --max-functions 5 \
+  --clean
+```
+
+python3 main.py reconstruct ./t \
+  --out-dir artifacts/full_run \
+  --provider groq \
+  --model llama-3.3-70b-versatile \
+  --max-functions 5 \
+  --clean
+
+### Options:
+- `binary_path` (positional): Path to the target binary or trace file.
+- `--out-dir DIR`: Output directory for generated JSON and C artifacts (defaults to `artifacts`).
+- `--provider {ollama,groq}`: LLM provider (defaults to `groq`).
+- `--model MODEL`: Model name (overrides the provider's default model).
+- `--api-key-env ENV_NAME`: Custom environment variable name to load the Groq API key from.
+- `--ollama-host URL` / `--groq-host URL`: Custom host URL override for the selected LLM provider.
+- `--dynamic-inputs PATH`: Path to a JSON file containing dynamic inputs/arguments to run against the binary.
+- `--dynamic-timeout-s FLOAT`: Timeout in seconds for each dynamic trace execution (defaults to `5.0`).
+- `--dynamic-max-output-bytes INT`: Maximum stdout/stderr output bytes captured per execution.
+- `--max-functions INT`: Maximum number of functions to analyze, debate, and generate (defaults to `1`).
+- `--function NAME`: Run analysis and generation only for a specific function by name.
+- `--allow-human-suggestions`: Incorporate human-approved suggestions (from the `agent_suggestions.json` review status) when emitting the final agent C source code.
+- `--overwrite`: Overwrite existing output C source files.
+- `--clean`: Clean the output directory before running.
+- `--json`: Output final manifest as a JSON object on stdout (logs are redirected to stderr).
+
+### Debug / Skip Flags:
+If you need to run specific downstream phases of the orchestrator using already generated artifacts, use the skip flags:
+- `--skip-static`: Assume static artifacts exist and skip static extraction/analysis.
+- `--skip-dynamic`: Skip dynamic behavior capture.
+- `--skip-fusion`: Skip static-dynamic behavior fusion.
+- `--skip-agent-debate`: Skip multi-agent debate (requires an existing `agent_suggestions.json`).
+- `--skip-agent-source`: Skip generating `recovered_agent.c`.
+
+
 

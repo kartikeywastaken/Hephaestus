@@ -24,6 +24,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import re
 import time
 import urllib.error
 import urllib.request
@@ -37,6 +38,62 @@ logger = logging.getLogger("agent.providers.groq")
 DEFAULT_GROQ_HOST  = "https://api.groq.com/openai/v1"
 DEFAULT_GROQ_MODEL = "llama-3.3-70b-versatile"
 
+_USER_AGENT = "Hephaestus/1.0 Python urllib"
+
+
+# ── Secret redaction ──────────────────────────────────────────────────────────
+
+def _redact_secrets(text: str, api_key: str | None = None) -> str:
+    """
+    Remove API key material from a string before it is used in error messages
+    or logs.  Never store or print the key itself.
+    """
+    if not text:
+        return text
+    redacted = text
+    # Redact the literal key value if we know it
+    if api_key:
+        redacted = redacted.replace(api_key, "[REDACTED_API_KEY]")
+    # Defensively redact common Groq key prefixes
+    redacted = re.sub(r"gsk_[A-Za-z0-9_\-]+", "gsk_[REDACTED]", redacted)
+    # Redact bare Bearer tokens
+    redacted = re.sub(
+        r"Bearer\s+[A-Za-z0-9_\-\.]+", "Bearer [REDACTED]", redacted
+    )
+    return redacted
+
+
+# ── Request helpers ───────────────────────────────────────────────────────────
+
+def _make_headers(api_key: str) -> dict[str, str]:
+    """
+    Build the canonical Groq request headers.
+
+    Every outgoing request (GET /models and POST /chat/completions) MUST use
+    these headers so that Groq's API fingerprinting accepts the request.
+    """
+    return {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "User-Agent": _USER_AGENT,
+    }
+
+
+def _read_error_body(exc: urllib.error.HTTPError, api_key: str | None) -> str:
+    """
+    Safely read and redact the response body from an HTTPError.
+
+    Returns at most 1 000 characters so error messages stay readable.
+    """
+    try:
+        raw = exc.read().decode("utf-8", errors="replace")
+    except Exception:
+        raw = ""
+    return _redact_secrets(raw, api_key)[:1000]
+
+
+# ── Key resolution ────────────────────────────────────────────────────────────
 
 def resolve_groq_api_key(
     explicit_key: str | None = None,
@@ -80,6 +137,8 @@ def resolve_groq_api_key(
         "Groq API key missing. Set GROQ_API_KEY or HEPHAESTUS_GROQ_API_KEY."
     )
 
+
+# ── Provider ──────────────────────────────────────────────────────────────────
 
 class GroqProvider(AgentProvider):
     """
@@ -125,29 +184,38 @@ class GroqProvider(AgentProvider):
         req = urllib.request.Request(
             url,
             method="GET",
-            headers={
-                "Authorization": f"Bearer {self._api_key}",
-                "Content-Type": "application/json",
-            },
+            headers=_make_headers(self._api_key),
         )
         try:
             with urllib.request.urlopen(req, timeout=15) as resp:
                 raw = resp.read().decode("utf-8", errors="replace")
                 data = json.loads(raw)
         except urllib.error.HTTPError as e:
+            body = _read_error_body(e, self._api_key)
             if e.code == 401:
                 return {
                     "available": False,
                     "host": self.host,
                     "model": self.model,
-                    "error": "Groq API key rejected or expired (HTTP 401).",
+                    "error": f"Groq API key rejected or expired (HTTP 401): {body}",
                     "suggestion": "Set a valid GROQ_API_KEY environment variable.",
+                }
+            if e.code == 403:
+                return {
+                    "available": False,
+                    "host": self.host,
+                    "model": self.model,
+                    "error": f"Groq API access forbidden (HTTP 403): {body}",
+                    "suggestion": (
+                        "Check that your GROQ_API_KEY is active and the endpoint "
+                        "is correct. Body: " + body
+                    ),
                 }
             return {
                 "available": False,
                 "host": self.host,
                 "model": self.model,
-                "error": f"Groq API HTTP error: {e.code}",
+                "error": f"Groq API HTTP error: {e.code}: {body}",
                 "suggestion": "Check GROQ_API_KEY and network connectivity.",
             }
         except urllib.error.URLError as e:
@@ -157,6 +225,14 @@ class GroqProvider(AgentProvider):
                 "model": self.model,
                 "error": f"Groq API unreachable: {e.reason}",
                 "suggestion": "Check network connectivity.",
+            }
+        except json.JSONDecodeError:
+            return {
+                "available": False,
+                "host": self.host,
+                "model": self.model,
+                "error": "Groq /models response was not valid JSON.",
+                "suggestion": "Check GROQ_API_KEY and network connectivity.",
             }
         except Exception as e:
             return {
@@ -178,7 +254,7 @@ class GroqProvider(AgentProvider):
                     f"Groq model not found: {self.model}. "
                     f"Available: {model_ids or '(none)'}"
                 ),
-                "suggestion": f"Use a supported model name. Check `groq.com` for available models.",
+                "suggestion": "Use a supported model name. Check `groq.com` for available models.",
             }
 
         return {
@@ -219,10 +295,7 @@ class GroqProvider(AgentProvider):
             url,
             data=body_bytes,
             method="POST",
-            headers={
-                "Authorization": f"Bearer {self._api_key}",
-                "Content-Type": "application/json",
-            },
+            headers=_make_headers(self._api_key),
         )
 
         t0 = time.perf_counter()
@@ -230,11 +303,7 @@ class GroqProvider(AgentProvider):
             with urllib.request.urlopen(req, timeout=self.timeout_s) as resp:
                 raw_response = resp.read().decode("utf-8", errors="replace")
         except urllib.error.HTTPError as e:
-            body_snippet = ""
-            try:
-                body_snippet = e.read().decode("utf-8", errors="replace")[:500]
-            except Exception:
-                pass
+            body_snippet = _read_error_body(e, self._api_key)
             raise GroqProviderError(
                 f"Groq HTTP {e.code} for schema '{schema_name}': {body_snippet}"
             ) from e
@@ -242,6 +311,10 @@ class GroqProvider(AgentProvider):
             raise GroqProviderError(
                 f"Groq network error for schema '{schema_name}': {e.reason}"
             ) from e
+        except TimeoutError:
+            raise GroqProviderError(
+                f"Groq request timed out after {self.timeout_s}s for schema '{schema_name}'"
+            )
         except Exception as e:
             raise GroqProviderError(
                 f"Groq unexpected error for schema '{schema_name}': {type(e).__name__}"

@@ -107,12 +107,16 @@ class TestProviderRejection:
         assert rc == 1
 
     def test_groq_missing_key_exits_1(self, out_dir, monkeypatch):
+        # Remove env vars first
         monkeypatch.delenv("GROQ_API_KEY", raising=False)
         monkeypatch.delenv("HEPHAESTUS_GROQ_API_KEY", raising=False)
-        rc = run_agent_debate_cli([
-            "--out-dir", str(out_dir),
-            "--provider", "groq",
-        ])
+        # Also suppress load_default_env_files so .env.local cannot re-inject
+        # the key after monkeypatch.delenv (the CLI calls it on startup).
+        with patch("src.utils.env_loader.load_default_env_files", return_value=None):
+            rc = run_agent_debate_cli([
+                "--out-dir", str(out_dir),
+                "--provider", "groq",
+            ])
         assert rc == 1
 
 
