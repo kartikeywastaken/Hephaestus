@@ -45,9 +45,14 @@ from src.agent_source.models import (
 from src.agent_source.plan_builder import (
     get_approved_transforms_for_function,
     get_forbidden_transforms,
+    has_source_transforms,
 )
 from src.agent_source.prompts import build_system_prompt, build_user_payload
 from src.agent_source.sanitizer import sanitize_function_output, sanitize_whole_file_output
+from src.agent_source.source_assembler import (
+    find_top_level_functions,
+    replace_function_body_preserving_file,
+)
 
 logger = logging.getLogger("agent_source.generator")
 
@@ -311,7 +316,15 @@ def _generate_function_by_function(
     function_filter: str | None,
     fail_fast: bool,
 ) -> tuple[str, list[dict], list[str]]:
-    """Generate functions one at a time, building up recovered_agent.c."""
+    """Generate functions one at a time, building up recovered_agent.c.
+
+    Uses source_assembler for safe incremental function replacement
+    (preserving prelude, helpers, non-target functions exactly).
+    Applies transactional validation gate: invalid AI output falls back
+    to the original function from recovered_readable.c.
+    Functions are ordered by plan priority (debate-suggested first).
+    Metadata-only suggestions do not trigger LLM calls.
+    """
     global_diagnostics: list[str] = []
     function_records: list[dict] = []
 
@@ -349,12 +362,25 @@ def _generate_function_by_function(
             )
             return "", [], global_diagnostics
 
+    # ── Fix 5: Reorder by plan priority ──────────────────────────────────────
+    # Functions with enabled source-transform suggestions come first.
+    def _plan_priority(pair: tuple[str, str]) -> int:
+        canonical_name, c_name = pair
+        if has_source_transforms(plan_entries, canonical_name):
+            return 0
+        if has_source_transforms(plan_entries, c_name):
+            return 0
+        return 1
+
+    fn_pairs = sorted(fn_pairs, key=_plan_priority)
+
     system_prompt = build_system_prompt()
     forbidden_transforms = get_forbidden_transforms()
 
-    # Build the output file as sections
-    sections: list[str] = []
+    # ── Fix 3: Start with readable_c as the base; apply incremental replacements ──
+    working_text = readable_c
     llm_count = 0
+    metadata_suggestions_ignored = 0
 
     for canonical_name, c_name in fn_pairs:
         # Find the function text in recovered_readable.c
@@ -379,10 +405,49 @@ def _generate_function_by_function(
             })
             continue
 
+        # ── Fix 5: Skip functions without source-transform suggestions ─────────
+        fn_has_source_xforms = (
+            has_source_transforms(plan_entries, canonical_name) or
+            has_source_transforms(plan_entries, c_name)
+        )
+        approved_transforms = get_approved_transforms_for_function(
+            plan_entries, canonical_name
+        ) or get_approved_transforms_for_function(plan_entries, c_name)
+
+        if approved_transforms and not fn_has_source_xforms:
+            # Has suggestions but all are metadata-only — skip LLM
+            metadata_suggestions_ignored += 1
+            function_records.append({
+                "function": canonical_name,
+                "c_name": c_name,
+                "status": "metadata_only_skipped",
+                "generated": False,
+                "diagnostics": [],
+                "applied_transformations": [],
+                "skipped_transformations": [e.get("kind", "") for e in approved_transforms],
+                "uncertainties": [],
+                "notes": ["all suggestions are metadata-only; no LLM generation needed"],
+            })
+            continue
+
+        if not fn_has_source_xforms:
+            # No enabled source-transform suggestions — copy unchanged
+            function_records.append({
+                "function": canonical_name,
+                "c_name": c_name,
+                "status": "copied_unchanged",
+                "generated": False,
+                "diagnostics": [],
+                "applied_transformations": [],
+                "skipped_transformations": [],
+                "uncertainties": [],
+                "notes": ["no enabled source-transform suggestions; copied from recovered_readable.c"],
+            })
+            continue
+
         # Decide: LLM generate or copy unchanged?
         if max_functions is not None and llm_count >= max_functions:
-            # Copy unchanged
-            sections.append(full_fn)
+            # Copy unchanged (already in working_text from readable_c)
             function_records.append({
                 "function": canonical_name,
                 "c_name": c_name,
@@ -396,10 +461,7 @@ def _generate_function_by_function(
             })
             continue
 
-        # LLM generation
-        approved_transforms = get_approved_transforms_for_function(
-            plan_entries, canonical_name
-        ) or get_approved_transforms_for_function(plan_entries, c_name)
+        # ── LLM generation ───────────────────────────────────────────────────
 
         # Conservative C slice for this function
         cons_fn, _, _ = _extract_function_with_header(
@@ -469,7 +531,33 @@ def _generate_function_by_function(
                     f"Sanitizer rejected output for '{c_name}': {san_issues}"
                 )
 
-            sections.append(sanitized_c)
+            # ── Fix 3+4: Transactional validation gate ───────────────────────
+            # Try assembling the replacement into the working copy
+            candidate_text, replaced, asm_diag = replace_function_body_preserving_file(
+                working_text, c_name, sanitized_c,
+            )
+            record["diagnostics"].extend(asm_diag)
+
+            if not replaced:
+                raise RuntimeError(
+                    f"Source assembler could not replace '{c_name}': {asm_diag}"
+                )
+
+            # Validate the candidate full file: balanced braces check
+            if not _validate_balanced_braces(candidate_text):
+                raise RuntimeError(
+                    f"Candidate file after replacing '{c_name}' has unbalanced braces — rejecting"
+                )
+
+            # Scan for forbidden phrases in generated function
+            forbidden_in_gen = _scan_forbidden_in_text(sanitized_c)
+            if forbidden_in_gen:
+                raise RuntimeError(
+                    f"Generated function '{c_name}' contains forbidden phrases: {forbidden_in_gen}"
+                )
+
+            # Accept: update working text
+            working_text = candidate_text
             record["applied_transformations"] = response.get("applied_transformations", [])
             record["skipped_transformations"] = response.get("skipped_transformations", [])
             record["uncertainties"] = response.get("uncertainties", [
@@ -485,14 +573,14 @@ def _generate_function_by_function(
             logger.warning(
                 "[generator] function '%s' generation failed: %s", c_name, e
             )
-            record["status"] = "failed"
+            # ── Fix 4: Fallback — keep original from recovered_readable.c ────
+            record["status"] = "fallback"
             record["generated"] = False
             record["diagnostics"].append(f"generator error: {e}")
-            record["notes"].append("copied from recovered_readable.c unchanged due to error")
-
-            # Copy original unchanged with failure comment
-            wrapped = _fallback_comment_wrap(full_fn, c_name, str(e)[:200])
-            sections.append(wrapped)
+            record["notes"].append(
+                "AI generation rejected; original recovered_readable.c function preserved"
+            )
+            # working_text already contains the original function; no change needed.
 
             if fail_fast:
                 function_records.append(record)
@@ -502,17 +590,16 @@ def _generate_function_by_function(
 
         function_records.append(record)
 
-    # Assemble full file
-    if not sections:
-        global_diagnostics.append(
-            "generator: no function sections produced — generated_c will be empty"
-        )
-        return "", function_records, global_diagnostics
+    # The working_text IS the full assembled file (readable_c with replacements).
+    # If no functions were generated at all, working_text == readable_c.
+    full_text = working_text.strip() + "\n"
 
-    # Build file: prelude headers from recovered_readable.c + generated sections
-    prelude = _extract_prelude(readable_c)
-    body = "\n\n".join(sections)
-    full_text = (prelude + "\n\n" + body).strip() + "\n"
+    # Record metadata_suggestions_ignored in global diagnostics
+    if metadata_suggestions_ignored > 0:
+        global_diagnostics.append(
+            f"generator: {metadata_suggestions_ignored} function(s) had metadata-only suggestions; "
+            f"LLM generation skipped for those"
+        )
 
     return full_text, function_records, global_diagnostics
 
@@ -636,3 +723,86 @@ def _extract_prelude(c_source: str) -> str:
         start += 1
 
     return c_source[:start].strip()
+
+
+def _validate_balanced_braces(c_text: str) -> bool:
+    """Check that a C source text has balanced top-level braces.
+
+    Properly handles comments, string literals, and char literals.
+    Returns True if balanced.
+    """
+    depth = 0
+    i = 0
+    n = len(c_text)
+    in_string = in_char = in_block_comment = in_line_comment = escape_next = False
+
+    while i < n:
+        ch = c_text[i]
+        if escape_next:
+            escape_next = False
+            i += 1
+            continue
+        if ch == "\\" and (in_string or in_char):
+            escape_next = True
+            i += 1
+            continue
+        if in_line_comment:
+            if ch == "\n":
+                in_line_comment = False
+            i += 1
+            continue
+        if in_block_comment:
+            if ch == "*" and i + 1 < n and c_text[i + 1] == "/":
+                in_block_comment = False
+                i += 2
+            else:
+                i += 1
+            continue
+        if in_string:
+            if ch == '"':
+                in_string = False
+            i += 1
+            continue
+        if in_char:
+            if ch == "'":
+                in_char = False
+            i += 1
+            continue
+        if ch == '"':
+            in_string = True
+            i += 1
+            continue
+        if ch == "'":
+            in_char = True
+            i += 1
+            continue
+        if ch == "/" and i + 1 < n and c_text[i + 1] == "*":
+            in_block_comment = True
+            i += 2
+            continue
+        if ch == "/" and i + 1 < n and c_text[i + 1] == "/":
+            in_line_comment = True
+            i += 2
+            continue
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth < 0:
+                return False
+        i += 1
+
+    return depth == 0
+
+
+def _scan_forbidden_in_text(c_text: str) -> list[str]:
+    """Scan C text for forbidden certainty phrases.
+
+    Returns list of found phrases (empty if clean).
+    """
+    found = []
+    text_lower = c_text.lower()
+    for phrase in FORBIDDEN_SOURCE_PHRASES:
+        if phrase in text_lower:
+            found.append(phrase)
+    return found

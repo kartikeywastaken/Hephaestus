@@ -111,6 +111,12 @@ def run_reconstruct_cli(argv: List[str]) -> int:
         help="Clean the output directory before running."
     )
     parser.add_argument(
+        "--artifact-mode",
+        choices=["flat", "debug"],
+        default="flat",
+        help="Artifact mode: flat or debug (default: flat)."
+    )
+    parser.add_argument(
         "--json",
         action="store_true",
         help="Output final manifest as JSON on stdout."
@@ -357,6 +363,7 @@ def run_reconstruct_cli(argv: List[str]) -> int:
             source_api_key_env=args.api_key_env,
             allow_human_suggestions=args.allow_human_suggestions,
             overwrite_agent_source=args.overwrite,
+            artifact_mode=args.artifact_mode,
         )
 
         if args.json:

@@ -17,7 +17,7 @@ DISCLAIMER_HEADER = """/*
  * Hephaestus recovered_readable.c
  * Phase 7.1 static predicate recovery.
  * Best-effort human-readable approximation.
- * Not guaranteed semantically equivalent to the original binary.
+ * No semantic equivalence is claimed.
  * See readability_report.json for inferred predicates and skipped sites.
  */
 """
@@ -98,7 +98,7 @@ def emit_readable_c(
         right_str = line_no_ending[m.end():]
         
         # Inject the uncertainty comment
-        comment_text = f"/* inferred from {source_name}; not guaranteed */"
+        comment_text = f"/* inferred from {source_name}; uncertain */"
         
         if '{' in right_str:
             left_brace, right_brace = right_str.split('{', 1)

@@ -54,7 +54,8 @@ def test_pipeline_plain_does_not_build_readable(tmp_path):
             binary_path="mock.bin",
             out_dir=str(tmp_path),
             use_ghidra=True,
-            clean=False
+            clean=False,
+            artifact_mode="debug"
         )
         
         # Check build_readable did not run
@@ -62,7 +63,7 @@ def test_pipeline_plain_does_not_build_readable(tmp_path):
         build_readable_stage = next((s for s in stages if s.get("name") == "build_readable"), None)
         assert build_readable_stage is None
         assert not (tmp_path / "recovered_readable.c").exists()
-        assert not (tmp_path / "readability_report.json").exists()
+        assert not (tmp_path / ".work" / "readability_report.json").exists()
         
         # Run with readable=True
         manifest_readable = run_pipeline(
@@ -70,7 +71,8 @@ def test_pipeline_plain_does_not_build_readable(tmp_path):
             out_dir=str(tmp_path),
             use_ghidra=True,
             clean=False,
-            readable=True
+            readable=True,
+            artifact_mode="debug"
         )
         
         # Check build_readable ran
@@ -80,7 +82,7 @@ def test_pipeline_plain_does_not_build_readable(tmp_path):
         assert build_readable_stage["status"] == "ok"
         
         assert (tmp_path / "recovered_readable.c").exists()
-        assert (tmp_path / "readability_report.json").exists()
+        assert (tmp_path / ".work" / "readability_report.json").exists()
         
         # Check outputs are mapped in manifest
         assert "recovered_readable_c" in manifest_readable.get("final_outputs", {})
@@ -93,10 +95,11 @@ def test_pipeline_plain_does_not_build_readable(tmp_path):
             use_ghidra=True,
             clean=False,
             readable=True,
-            promote_symbols=False
+            promote_symbols=False,
+            artifact_mode="debug"
         )
         assert manifest_no_promo.get("status") == "ok"
-        with open(tmp_path / "readability_report.json") as f:
+        with open(tmp_path / ".work" / "readability_report.json") as f:
             rep = json.load(f)
             assert rep["mode"] == "static_predicate_recovery_only"
             assert rep["symbol_promotion"] == {"enabled": False}

@@ -87,7 +87,7 @@ def test_pipeline_trace_report_success(mock_clang, mock_stages):
     }
     
     with tempfile.TemporaryDirectory() as tmpdir:
-        out_dir = Path(tmpdir)
+        out_dir = Path(tmpdir).resolve()
         create_dummy_decompilation_output(out_dir)
         
         manifest = run_pipeline(
@@ -97,7 +97,8 @@ def test_pipeline_trace_report_success(mock_clang, mock_stages):
             use_radare2=True,
             clean=False,
             validate=True,
-            trace_report=True
+            trace_report=True,
+            artifact_mode="debug"
         )
         
         assert manifest["status"] == "ok"
@@ -109,16 +110,16 @@ def test_pipeline_trace_report_success(mock_clang, mock_stages):
         assert "build_trace_report" in stages_run
         
         # Verify trace files exist
-        assert (out_dir / "evidence_index.json").exists()
-        assert (out_dir / "trace_report.json").exists()
-        assert (out_dir / "trace_report.md").exists()
-        assert (out_dir / "validation_report.json").exists()
+        assert (out_dir / ".work" / "evidence_index.json").exists()
+        assert (out_dir / ".work" / "trace_report.json").exists()
+        assert (out_dir / ".work" / "trace_report.md").exists()
+        assert (out_dir / ".work" / "validation_report.json").exists()
         
         # Verify final_outputs registry
         assert "trace_report" in manifest["final_outputs"]
         assert "trace_report_markdown" in manifest["final_outputs"]
-        assert manifest["final_outputs"]["trace_report"] == str(out_dir / "trace_report.json")
-        assert manifest["final_outputs"]["trace_report_markdown"] == str(out_dir / "trace_report.md")
+        assert manifest["final_outputs"]["trace_report"] == str(out_dir / ".work" / "trace_report.json")
+        assert manifest["final_outputs"]["trace_report_markdown"] == str(out_dir / ".work" / "trace_report.md")
 
 @patch("src.validation.clang_check.run_clang_syntax_check")
 def test_pipeline_require_trace_report_missing(mock_clang, mock_stages):
@@ -131,7 +132,7 @@ def test_pipeline_require_trace_report_missing(mock_clang, mock_stages):
     }
     
     with tempfile.TemporaryDirectory() as tmpdir:
-        out_dir = Path(tmpdir)
+        out_dir = Path(tmpdir).resolve()
         create_dummy_decompilation_output(out_dir)
         
         # Run validate and require trace report, but do NOT run trace report generation stage
@@ -143,14 +144,15 @@ def test_pipeline_require_trace_report_missing(mock_clang, mock_stages):
             validate=True,
             validate_strict=True,
             require_trace_report=True,
-            trace_report=False
+            trace_report=False,
+            artifact_mode="debug"
         )
         
         # Overall status should fail because validation failed
         assert manifest["status"] == "failed"
         
         # Check validation report findings
-        report_path = out_dir / "validation_report.json"
+        report_path = out_dir / ".work" / "validation_report.json"
         assert report_path.exists()
         with open(report_path, "r", encoding="utf-8") as f:
             report = json.load(f)
@@ -178,7 +180,7 @@ def test_pipeline_require_trace_report_present(mock_clang, mock_stages):
     }
     
     with tempfile.TemporaryDirectory() as tmpdir:
-        out_dir = Path(tmpdir)
+        out_dir = Path(tmpdir).resolve()
         create_dummy_decompilation_output(out_dir)
         
         # Run validate and require trace report, AND run trace report generation stage
@@ -189,13 +191,14 @@ def test_pipeline_require_trace_report_present(mock_clang, mock_stages):
             use_radare2=True,
             validate=True,
             require_trace_report=True,
-            trace_report=True
+            trace_report=True,
+            artifact_mode="debug"
         )
         
         # Should succeed because trace report is present
         assert manifest["status"] == "ok"
         
-        report_path = out_dir / "validation_report.json"
+        report_path = out_dir / ".work" / "validation_report.json"
         assert report_path.exists()
         with open(report_path, "r", encoding="utf-8") as f:
             report = json.load(f)

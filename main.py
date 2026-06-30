@@ -939,6 +939,26 @@ def main():
             from src.pipeline.reconstruct_cli import run_reconstruct_cli
             code = run_reconstruct_cli(sys.argv[2:])
             sys.exit(code)
+        elif first_arg == "clean-artifacts":
+            import argparse
+            import json
+            parser = argparse.ArgumentParser(prog="clean-artifacts", description="Safe cleanup of generated Hephaestus artifacts.")
+            parser.add_argument("--out-dir", required=True, help="Artifact output directory to clean.")
+            parser.add_argument("--dry-run", action="store_true", help="Report what would be deleted without actually deleting.")
+            parser.add_argument("--yes", action="store_true", help="Confirm deletion.")
+            args = parser.parse_args(sys.argv[2:])
+            if not args.dry_run and not args.yes:
+                print("Error: clean-artifacts requires either --dry-run or --yes to execute.", file=sys.stderr)
+                print("Usage: python3 main.py clean-artifacts --out-dir PATH [--dry-run | --yes]", file=sys.stderr)
+                sys.exit(1)
+            from src.pipeline.clean_artifacts import clean_artifacts
+            try:
+                res = clean_artifacts(args.out_dir, dry_run=args.dry_run, yes=args.yes)
+                print(json.dumps(res, indent=2))
+                sys.exit(0)
+            except Exception as e:
+                print(f"Error: {e}", file=sys.stderr)
+                sys.exit(1)
         elif first_arg == "run-all":
             handle_run_all_cli()
             return

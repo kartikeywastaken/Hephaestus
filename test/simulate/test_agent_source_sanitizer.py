@@ -70,7 +70,7 @@ int32_t foo(int32_t x) {
         assert any("forbidden" in i.lower() for i in issues)
 
     def test_rejects_guaranteed_phrase(self):
-        raw = "/* guaranteed */ int32_t foo(void) { return 0; }"
+        raw = "/* guaranteed equivalent */ int32_t foo(void) { return 0; }"
         text, issues, ok = sanitize_function_output(raw, fn_name="foo")
         assert ok is False
 

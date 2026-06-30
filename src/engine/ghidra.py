@@ -58,9 +58,10 @@ class GhidraExtractor(BaseExtractor):
             else:
                 raise ExtractorError(f"analyzeHeadless executable not found in {ghidra_home}/support/")
 
-        # Use temporary project directory within workspace (Tweak 8: absolute path)
-        project_dir = os.path.abspath(os.path.join(os.path.dirname(self.output_path), "ghidra_temp_proj"))
-        os.makedirs(project_dir, exist_ok=True)
+        # Use a temporary project directory in /tmp to avoid dot-prefixed path
+        # segments (e.g. .work/) that Ghidra rejects with:
+        #   "Path element starting with '.' is not permitted"
+        project_dir = tempfile.mkdtemp(prefix="hephaestus-ghidra-")
         project_name = "temp_ghidra_proj"
         
         script_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "scripts"))

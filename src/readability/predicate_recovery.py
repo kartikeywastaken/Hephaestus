@@ -125,10 +125,10 @@ def recover_predicate(site: Dict[str, Any], inst_lookup: Dict[str, Dict[str, Any
     notes = []
     # If assumed direct, add warning note
     if polarity == "assumed_direct":
-        notes.append("Predicate polarity inferred from adapter text; not guaranteed.")
+        notes.append("Predicate polarity inferred from adapter text; uncertain.")
     else:
         notes.append("Predicate inferred from local compare/branch evidence.")
-    notes.append("Not a semantic equivalence guarantee.")
+    notes.append("No semantic equivalence is claimed.")
     
     # 1. cbz / cbnz
     if site_type in ("cbz", "cbnz"):

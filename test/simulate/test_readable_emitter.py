@@ -53,7 +53,7 @@ void test_fn() {
     
     # Verify replaced line
     # Should preserve indentation and add inline comment after the brace {
-    assert "    if (tmp_w8 == 0) { /* inferred from cbz; not guaranteed */" in readable_c
+    assert "    if (tmp_w8 == 0) { /* inferred from cbz; uncertain */" in readable_c
     
     # Verify unchanged line is unchanged
     assert '        while (HEPHAESTUS_UNKNOWN_COND("condition unknown: block 0x1000")) {' in readable_c

@@ -48,7 +48,8 @@ def test_run_pipeline_success(mock_stages):
             out_dir=str(out_dir),
             use_ghidra=False,
             use_radare2=True,
-            clean=False
+            clean=False,
+            artifact_mode="debug"
         )
         
         assert manifest["status"] == "ok"
@@ -57,7 +58,7 @@ def test_run_pipeline_success(mock_stages):
             mock.assert_called_once()
             
         # Check manifest output files
-        manifest_path = out_dir / "pipeline_manifest.json"
+        manifest_path = out_dir / ".work" / "pipeline_manifest.json"
         assert manifest_path.exists()
         with open(manifest_path, "r", encoding="utf-8") as f:
             data = json.load(f)

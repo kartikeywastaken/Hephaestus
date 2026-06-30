@@ -139,7 +139,8 @@ def test_pipeline_with_quality_gate_success(mock_eval, mock_clang, mock_stages):
             use_ghidra=False,
             use_radare2=True,
             clean=False,
-            quality_gate=True
+            quality_gate=True,
+            artifact_mode="debug"
         )
         
         assert manifest["status"] == "ok"
@@ -152,8 +153,8 @@ def test_pipeline_with_quality_gate_success(mock_eval, mock_clang, mock_stages):
         assert "quality_gate" in stages_run
         
         # Verify files exist
-        assert (out_dir / "quality_gate.json").exists()
-        assert (out_dir / "quality_gate.md").exists()
+        assert (out_dir / ".work" / "quality_gate.json").exists()
+        assert (out_dir / ".work" / "quality_gate.md").exists()
         
         # Verify final outputs registry
         assert "quality_gate" in manifest["final_outputs"]

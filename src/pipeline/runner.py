@@ -335,9 +335,10 @@ def run_pipeline(
     overwrite_agent_source: bool = False,
     skip_static: bool = False,
     function: str | None = None,
+    artifact_mode: str = "flat",
 ) -> dict:
     """Run Hephaestus pipeline and return execution manifest."""
-    from src.utils.artifacts import ensure_out_dir, clean_known_artifacts
+    from src.utils.artifacts import ensure_out_dir
     
     if quality_gate:
         evidence_index = True
@@ -346,13 +347,39 @@ def run_pipeline(
     from main import setup_logging
     from src.pipeline.stage_defs import OPTIONAL_PIPELINE_STAGES
     
+    original_out_dir = out_dir
+    
     # Clean previous run artifacts if requested
     if clean:
-        clean_known_artifacts(out_dir)
-        
-    ensure_out_dir(out_dir)
+        from src.pipeline.clean_artifacts import clean_artifacts
+        try:
+            clean_artifacts(original_out_dir, yes=True)
+        except Exception as e:
+            logger.warning("Could not clean out-dir: %s", e)
+            
+    # Resolve work directory using ArtifactLayout
+    from src.utils.artifact_layout import ArtifactLayout
+    layout = ArtifactLayout(Path(original_out_dir), mode=artifact_mode)
+    layout.ensure_dirs()
+    work_dir = str(layout.work_dir)
     
-    # Consolidate log file
+    # Backward compatibility: copy existing known legacy files from original_out_dir to work_dir
+    import shutil
+    from src.pipeline.clean_artifacts import KNOWN_GENERATED_FILES
+    for name in KNOWN_GENERATED_FILES:
+        src = Path(original_out_dir) / name
+        dst = Path(work_dir) / name
+        if src.exists() and src.is_file() and not dst.exists():
+            try:
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(src, dst)
+            except Exception:
+                pass
+    
+    # Reassign out_dir to work_dir so all intermediate stages write there
+    out_dir = work_dir
+    
+    # Consolidate log file inside work_dir (e.g. artifacts/.work/run.log)
     setup_logging(out_dir)
     logger.info("[run-all] start")
     
@@ -1346,5 +1373,26 @@ def run_pipeline(
         write_manifest(manifest, out_dir)
 
     logger.info(f"[run-all] finished status={status}")
+    
+    # Close file handlers to release run.log before cleanup
+    import logging
+    root_logger = logging.getLogger()
+    for handler in list(root_logger.handlers):
+        if isinstance(handler, logging.FileHandler):
+            try:
+                handler.close()
+                root_logger.removeHandler(handler)
+            except Exception:
+                pass
+                
+    # Finalize artifacts: move outputs to top-level and build report
+    from src.pipeline.artifact_finalizer import finalize_artifacts
+    finalize_artifacts(
+        out_dir=original_out_dir,
+        work_dir=work_dir,
+        artifact_mode=artifact_mode,
+        binary_path=binary_path
+    )
+    
     return manifest
 

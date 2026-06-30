@@ -209,6 +209,12 @@ def write_agent_source_artifacts(
     failed_count = sum(
         1 for r in function_records if r.get("status") == "failed"
     )
+    fallback_count = sum(
+        1 for r in function_records if r.get("status") == "fallback"
+    )
+    metadata_ignored_count = sum(
+        1 for r in function_records if r.get("status") == "metadata_only_skipped"
+    )
 
     report_payload = {
         "schema_version": SCHEMA_AGENT_SOURCE_REPORT,
@@ -222,6 +228,8 @@ def write_agent_source_artifacts(
         "functions_generated": generated_count,
         "functions_copied_unchanged": copied_count,
         "functions_failed": failed_count,
+        "functions_fallback": fallback_count,
+        "metadata_suggestions_ignored": metadata_ignored_count,
         "global_diagnostics": global_diagnostics or [],
         "function_records": function_records,
         "known_uncertainties": [
@@ -244,8 +252,8 @@ def write_agent_source_artifacts(
     _atomic_write_json(report_path, report_payload)
     logger.info(
         "[writer] wrote agent_source_report.json "
-        "(generated=%d copied=%d failed=%d)",
-        generated_count, copied_count, failed_count,
+        "(generated=%d copied=%d failed=%d fallback=%d)",
+        generated_count, copied_count, failed_count, fallback_count,
     )
 
     # ── agent_source_validation.json ──────────────────────────────────────────

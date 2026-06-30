@@ -90,14 +90,15 @@ class TestPhase11_6Integration:
                     adaptive_dynamic=True,
                     dynamic_max_adaptive_inputs=5,
                     dynamic_mutation_rounds=1,
+                    artifact_mode="debug"
                 )
 
                 assert res["status"] in ("ok", "partial")
                 # Verify that all 4 artifacts are written
-                assert (out_dir / "adaptive_inputs.json").exists()
-                assert (out_dir / "adaptive_dynamic_runs.json").exists()
-                assert (out_dir / "input_influence_report.json").exists()
-                assert (out_dir / "dynamic_exploration_report.json").exists()
+                assert (out_dir / ".work" / "adaptive_inputs.json").exists()
+                assert (out_dir / ".work" / "adaptive_dynamic_runs.json").exists()
+                assert (out_dir / ".work" / "input_influence_report.json").exists()
+                assert (out_dir / ".work" / "dynamic_exploration_report.json").exists()
 
     def test_compact_packet_artifacts_written(self):
         """3. Compact packet artifacts are written."""

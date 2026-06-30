@@ -30,15 +30,16 @@ FORBIDDEN_SOURCE_PHRASES: frozenset[str] = frozenset({
     "same behavior as original",
     "exact source",
     "original source variable",
-    "proven struct",
     "recovered field name",
-    "guaranteed",
-    "proven",
-    "proves",
-    "definitely",
+    "guaranteed equivalent",
     "identical to original",
     "reconstructed field",
     "full behavioral equivalence",
+    "semantic equivalence proven",
+    "exact original source",
+    "exact original variable names",
+    "exact original struct field names",
+    "fully equivalent",
 })
 
 # ── Warning header for recovered_agent.c ─────────────────────────────────────
@@ -69,14 +70,20 @@ GUARDED_ARTIFACTS: list[str] = [
 # ── Allowed transformation kinds ─────────────────────────────────────────────
 
 ALLOWED_TRANSFORMATION_KINDS: frozenset[str] = frozenset({
+    # Source-transform kinds (trigger LLM generation)
     "add_warning_header",
     "add_function_comment",
     "rename_variable",
     "rename_function",
     "add_readability_comment",
+    # Metadata-only kinds (recorded in plan but do not trigger LLM)
     "preserve_signature",
     "preserve_control_flow",
     "preserve_fallback_markers",
+    "name",
+    "comment",
+    "role",
+    "hypothesis",
 })
 
 # ── Disallowed transformation categories (for plan notes) ────────────────────

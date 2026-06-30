@@ -41,6 +41,33 @@ ALLOWED_EVIDENCE_LEVELS = frozenset({
 
 ALLOWED_CONFIDENCE_LEVELS = frozenset({"high", "medium", "low", "unknown"})
 
+# Classification of suggestion kinds for target selection.
+# Source-transform kinds trigger LLM generation.
+# Metadata-only kinds are recorded in the plan but do NOT trigger generation.
+
+SOURCE_TRANSFORM_KINDS: frozenset[str] = frozenset({
+    "rename_variable",
+    "rename_function",
+    "add_function_comment",
+    "add_readability_comment",
+    "source_rewrite",
+    "condition_refinement",
+    "loop_refinement",
+    "type_refinement",
+    "body_reconstruction",
+})
+
+METADATA_ONLY_KINDS: frozenset[str] = frozenset({
+    "name",
+    "comment",
+    "role",
+    "hypothesis",
+    "preserve_signature",
+    "preserve_control_flow",
+    "preserve_fallback_markers",
+    "add_warning_header",
+})
+
 
 def _scan_forbidden(value: Any) -> list[str]:
     """Recursively scan for forbidden phrases in any string value."""
@@ -225,3 +252,17 @@ def _map_suggestion_kind(kind: str) -> str:
         "preserve_fallback": "preserve_fallback_markers",
     }
     return mapping.get(kind_lower, kind_lower)
+
+
+def has_source_transforms(plan_entries: list[dict], fn_name: str) -> bool:
+    """Return True if fn_name has at least one enabled source-transform entry."""
+    for e in plan_entries:
+        if not e.get("enabled"):
+            continue
+        efn = e.get("function", "")
+        if efn not in (fn_name, "*", "all", ""):
+            continue
+        kind = e.get("kind", "")
+        if kind in SOURCE_TRANSFORM_KINDS:
+            return True
+    return False
